@@ -1,5 +1,6 @@
 {
   pkgs,
+  config,
   # osConfig,
   ...
 }: {
@@ -100,6 +101,39 @@
       scroll_buffer_size = 10000;
       copy_on_select = true;
       pane_frames = false;
+    };
+    zsh.shellAliases.zz = "f() { zellij attach -c ''\${1:-default} };f";
+    zsh.shellAliases.zr = "zellij run --";
+    zsh.shellAliases.rf = "zellij run --floating --";
+    zsh.shellAliases.a = "f() { zellij attach ''\${1:-default} };f";
+    zsh.shellAliases.l = "zellij list-sessions";
+    zsh.shellAliases.k = "zellij kill-session";
+    zsh.shellAliases.ka = "zellij kill-all-sessions";
+
+    zsh = {
+      enable = true;
+
+      dotDir = "${config.home.homeDirectory}/.config/zsh";
+
+      history = {
+        size = 10000;
+        save = 10000;
+        path = "$HOME/.config/zsh/.zshinfo";
+        share = true;
+
+        ignoreSpace = true;
+        ignoreDups = true;
+        extended = true;
+        expireDuplicatesFirst = true;
+      };
+
+      # Useful directory navigation aliases
+      shellAliases.".." = "cd ..";
+      shellAliases."..." = "cd ../..";
+      shellAliases."...." = "cd ../../..";
+      shellAliases."-- -" = "cd -";
+      shellAliases."-- --" = "cd -2";
+      shellAliases."-- ---" = "cd -3";
     };
   };
 
