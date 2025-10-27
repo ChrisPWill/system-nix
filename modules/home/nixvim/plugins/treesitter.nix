@@ -1,4 +1,4 @@
-{inputs, ...}: {
+{config, ...}: {
   programs.nixvim = {
     plugins.treesitter = {
       enable = true;
@@ -13,7 +13,7 @@
       enable = true;
       settings.separator = "-";
     };
-    highlight = with inputs.self.theme.default; {
+    highlight = with config.theme; {
       TreesitterContext = {
         fg = foreground;
         bg = "NONE";

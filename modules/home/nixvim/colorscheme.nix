@@ -1,7 +1,6 @@
-{inputs, ...}:
-with inputs.self.theme.default;
-with theme.normal; {
-  programs.nixvim.highlight = {
+{config, ...}: {
+  programs.nixvim.highlight = with config.theme;
+  with theme.normal; {
     # group-name
     Comment = {
       fg = lightgray;

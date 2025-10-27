@@ -6,6 +6,8 @@
   ...
 }: {
   imports = [
+    ./theme.nix
+
     # Temporary until moved to nixCats
     inputs.nixvim.homeModules.nixvim
     ./nixvim
