@@ -1,11 +1,13 @@
 {
   pkgs,
   config,
+  inputs,
   # osConfig,
   ...
 }: {
   imports = [
     # Temporary until moved to nixCats
+    inputs.nixvim.homeModules.nixvim
     ./nixvim
   ];
 
