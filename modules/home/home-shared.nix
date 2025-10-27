@@ -65,6 +65,26 @@
       fileWidgetCommand = "fd --type f";
     };
 
+    git = {
+      enable = true;
+      userName = "Chris Williams";
+
+      lfs.enable = true;
+      diff-so-fancy = {
+        enable = true;
+      };
+
+      extraConfig = {
+        push.autoSetupRemote = true;
+        core = {
+          # Improved performance on MacOS
+          # https://github.blog/2022-06-29-improve-git-monorepo-performance-with-a-file-system-monitor/
+          fsmonitor = true;
+          untrackedcache = true;
+        };
+      };
+    };
+
     wezterm.enable = true;
     wezterm.enableZshIntegration = true;
 
