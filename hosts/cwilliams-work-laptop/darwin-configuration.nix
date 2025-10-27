@@ -28,6 +28,7 @@
   nixpkgs.hostPlatform = "aarch64-darwin";
 
   users.users.cwilliams.home = /Users/cwilliams;
+  system.primaryUser = "cwilliams";
 
   system.stateVersion = 4;
 }
