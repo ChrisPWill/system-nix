@@ -75,14 +75,11 @@
 
     git = {
       enable = true;
-      userName = "Chris Williams";
 
       lfs.enable = true;
-      diff-so-fancy = {
-        enable = true;
-      };
 
-      extraConfig = {
+      settings = {
+        user.name = "Chris Williams";
         push.autoSetupRemote = true;
         core = {
           # Improved performance on MacOS
@@ -92,6 +89,8 @@
         };
       };
     };
+    diff-so-fancy.enable = true;
+    diff-so-fancy.enableGitIntegration = true;
 
     wezterm.enable = true;
     wezterm.enableZshIntegration = true;
