@@ -1,5 +1,5 @@
-{theme, ...}:
-with theme;
+{inputs, ...}:
+with inputs.self.theme.default;
 with theme.normal; {
   programs.nixvim.highlight = {
     # group-name
