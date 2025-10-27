@@ -1,4 +1,4 @@
-{pkgs}:
+{pkgs, ...}:
 pkgs.mkShell {
   # Add build dependencies
   packages = with pkgs; [

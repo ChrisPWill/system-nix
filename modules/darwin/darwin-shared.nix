@@ -1,4 +1,4 @@
-{inputs}: {pkgs}: {
+{inputs, ...}: {pkgs, ...}: {
   nix-homebrew = {
     enable = true;
     enableRosetta = true;
