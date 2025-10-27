@@ -4,6 +4,11 @@
   # osConfig,
   ...
 }: {
+  imports = [
+    # Temporary until moved to nixCats
+    ./nixvim
+  ];
+
   # only available on linux, disabled on macos
   services.ssh-agent.enable = pkgs.stdenv.isLinux;
 
