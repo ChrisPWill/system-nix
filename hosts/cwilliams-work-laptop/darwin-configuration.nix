@@ -1,5 +1,8 @@
 {inputs, ...}: {
-  imports = [inputs.self.darwinModules.darwin-shared];
+  imports = [
+    inputs.self.darwinModules.darwin-shared
+    inputs.self.nixosModules.host-shared
+  ];
 
   homebrew = {
     brews = ["awscli"];
