@@ -92,6 +92,15 @@
     # https://github.com/ajeetdsouza/zoxide
     zoxide.enable = true;
     zoxide.enableZshIntegration = true;
+
+    # Terminal multiplexer
+    # https://zellij.dev
+    zellij.enable = true;
+    zellij.settings = {
+      scroll_buffer_size = 10000;
+      copy_on_select = true;
+      pane_frames = false;
+    };
   };
 
   home.stateVersion = "25.05";
