@@ -15,10 +15,14 @@
     ];
 
     casks = [
+      "cloudtoken"
+
       # AI VSCode wrapper
       "cursor"
 
       "docker-desktop"
+
+      "google-drive"
 
       # For testing Atlassian service calls
       "lanyard"

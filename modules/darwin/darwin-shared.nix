@@ -2,6 +2,7 @@
   imports = [
     inputs.nix-homebrew.darwinModules.nix-homebrew
   ];
+  nix.settings.experimental-features = ["nix-command" "flakes"];
 
   nix-homebrew = {
     enable = true;

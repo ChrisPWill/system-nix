@@ -13,6 +13,8 @@
     ./nixvim
   ];
 
+  nix.settings.experimental-features = ["nix-command" "flakes"];
+
   # only available on linux, disabled on macos
   services.ssh-agent.enable = pkgs.stdenv.isLinux;
 
@@ -26,6 +28,9 @@
 
         # A good font
         nerd-fonts.fantasque-sans-mono
+
+        # Fast grep
+        ripgrep
 
         # Runs with "tldr" - quick facts about an app
         # https://github.com/dbrgn/tealdeer
