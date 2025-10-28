@@ -99,6 +99,10 @@
     diff-so-fancy.enable = true;
     diff-so-fancy.enableGitIntegration = true;
 
+    # Modern alternative prompt
+    starship.enable = true;
+    starship.enableZshIntegration = true;
+
     wezterm.enable = true;
     wezterm.enableZshIntegration = true;
 
