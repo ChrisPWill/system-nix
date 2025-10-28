@@ -1,6 +1,6 @@
 {config, ...}: {
   programs.nixvim.highlight = with config.theme;
-  with theme.normal; {
+  with config.theme.normal; {
     # group-name
     Comment = {
       fg = lightgray;
