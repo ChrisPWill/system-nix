@@ -12,6 +12,11 @@
         name = "atlassian/lanyard";
         clone_target = "git@bitbucket.org:atlassian/lanyard-tap.git";
       }
+      {
+        name = "atlassian/cloudtoken";
+        clone_target = "git@bitbucket.org:atlassian/cloudtoken-homebrew-tap.git";
+        force_auto_update = true;
+      }
     ];
 
     casks = [
