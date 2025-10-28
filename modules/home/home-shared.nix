@@ -18,6 +18,12 @@
       description = "The directory containing the home module";
       default = "${config.nixConfigDir}/modules/home";
     };
+
+    userEmail = mkOption {
+      type = types.str;
+      description = "The email address of the user";
+      default = "chris@chrispwill.com";
+    };
   };
 
   imports = [
@@ -106,6 +112,7 @@
 
       settings = {
         user.name = "Chris Williams";
+        user.email = config.userEmail;
         push.autoSetupRemote = true;
         core = {
           # Improved performance on MacOS
@@ -122,6 +129,8 @@
     # VCS built on top of git
     # Experimenting with this for personal projects
     programs.jujutsu.enable = true;
+    programs.jujutsu.settings.user.name = "Chris Williams";
+    programs.jujutsu.settings.user.email = config.userEmail;
 
     # Modern alternative prompt
     programs.starship.enable = true;
