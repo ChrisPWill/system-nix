@@ -29,11 +29,17 @@
 
       "google-drive"
 
+      # Test requests
+      "insomnia"
+
       # For testing Atlassian service calls
       "lanyard"
 
       # Screen recordings
       "loom"
+
+      # Music
+      "spotify"
     ];
   };
 
