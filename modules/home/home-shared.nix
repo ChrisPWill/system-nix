@@ -51,6 +51,10 @@
           # Runs with "tldr" - quick facts about an app
           # https://github.com/dbrgn/tealdeer
           tealdeer
+
+          # Neat TUI for jujutsu
+          # https://github.com/Cretezy/lazyjj
+          lazyjj
         ]
         # Can access the host configuration using osConfig e.g.
         # ++ (
@@ -113,6 +117,11 @@
     };
     programs.diff-so-fancy.enable = true;
     programs.diff-so-fancy.enableGitIntegration = true;
+
+    # https://jj-vcs.github.io/jj/latest/
+    # VCS built on top of git
+    # Experimenting with this for personal projects
+    programs.jujutsu.enable = true;
 
     # Modern alternative prompt
     programs.starship.enable = true;
