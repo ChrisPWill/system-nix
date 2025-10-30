@@ -10,12 +10,12 @@ pkgs.mkShell {
 
   env = {
     # Set npm global packages path
-    npm_config_prefix = "$HOME/.node20-packages";
+    npm_config_prefix = "/Users/cwilliams/.node20-packages";
   };
 
   # Load custom bash code
   shellHook = ''
     # Add node20 packages bin to PATH
-    export PATH="$HOME/.node20-packages/bin:$PATH";
+    export PATH="/Users/cwilliams/.node20-packages/bin:$PATH";
   '';
 }
