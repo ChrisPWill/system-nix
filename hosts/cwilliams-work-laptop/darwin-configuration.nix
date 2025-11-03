@@ -5,7 +5,7 @@
   ];
 
   homebrew = {
-    brews = ["awscli"];
+    brews = ["awscli" "terraform"];
 
     taps = [
       {
