@@ -75,12 +75,6 @@
           pkgs.lib.optionals (pkgs.stdenv.isDarwin) []
         );
 
-    # Command history manager
-    # https://github.com/atuinsh/atuin
-    programs.atuin.enable = true;
-    programs.atuin.enableZshIntegration = true;
-    programs.atuin.daemon.enable = true;
-
     # Nice colourful cat alternative
     # https://github.com/sharkdp/bat
     programs.bat.enable = true;
