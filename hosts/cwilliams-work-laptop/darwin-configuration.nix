@@ -5,7 +5,13 @@
   ];
 
   homebrew = {
-    brews = ["awscli" "terraform"];
+    brews = [
+      "awscli"
+
+      # Used for managing terraform versions. Simpler than nixifying for now
+      # https://github.com/tofuutils/tenv
+      "tenv"
+    ];
 
     taps = [
       {
