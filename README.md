@@ -1,3 +1,8 @@
+# Useful zsh aliases
+
+* Run home-manager switch with `hms`
+* Switch into one of the `/devshells` with `nd <devshell name>` e.g. `nd node22`
+
 # Installation
 
 ## Initial steps
