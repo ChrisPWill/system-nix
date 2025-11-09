@@ -24,3 +24,11 @@ After that, it should be possible to run the alias from anywhere
 ```zsh
 hms
 ```
+
+# (not ready) Building an ISO
+
+This hasn't been isn't ready as of writing, but this in theory should be how to build an ISO:
+
+```zsh
+nix run github:nix-community/nixos-generators -- --flake .#<hostname> --format install-iso 
+```
