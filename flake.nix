@@ -19,6 +19,8 @@
 
     nixvim.url = "github:nix-community/nixvim";
     nixvim.inputs.nixpkgs.follows = "nixpkgs";
+
+    nixCats.url = "github:BirdeeHub/nixCats-nvim";
   };
 
   # Load config via blueprint https://github.com/numtide/blueprint

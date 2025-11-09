@@ -32,6 +32,9 @@
     # Temporary until moved to nixCats
     inputs.nixvim.homeModules.nixvim
     ./nixvim
+
+    # My config to replace nixvim
+    ./nixCats
   ];
 
   config = {
@@ -215,7 +218,6 @@
         extended = true;
         expireDuplicatesFirst = true;
       };
-
     };
     # Useful directory navigation aliases
     programs.zsh.shellAliases.".." = "cd ..";
