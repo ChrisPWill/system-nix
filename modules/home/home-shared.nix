@@ -44,7 +44,6 @@
 
   config = {
     nix.settings.experimental-features = ["nix-command" "flakes"];
-    nix.package = pkgs.nix;
 
     # only available on linux, disabled on macos
     services.ssh-agent.enable = pkgs.stdenv.isLinux;
