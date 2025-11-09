@@ -35,6 +35,11 @@
 
     # My config to replace nixvim
     ./nixCats
+
+    # https://github.com/dfrankland/envoluntary
+    # direnv-like matcher that avoids needing to create gitignored nix files in projects
+    inputs.envoluntary.homeModules.default
+    ({pkgs, ...}: {programs.envoluntary.package = inputs.envoluntary.packages.${pkgs.system}.default;})
   ];
 
   config = {
@@ -88,6 +93,12 @@
     programs.eza.enable = true;
     programs.eza.git = true;
     programs.eza.icons = "auto";
+
+    programs.envoluntary = {
+      enable = true;
+      enableZshIntegration = true;
+    };
+    xdg.configFile."envoluntary/config.toml".source = config.lib.file.mkOutOfStoreSymlink "${config.homeModuleDir}/out-of-store/envoluntary.toml";
 
     # Command line fuzzy finder
     # https://github.com/junegunn/fzf

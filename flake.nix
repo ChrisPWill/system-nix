@@ -9,6 +9,12 @@
     blueprint.url = "github:numtide/blueprint";
     blueprint.inputs.nixpkgs.follows = "nixpkgs";
 
+    # https://github.com/dfrankland/envoluntary
+    # direnv-like matcher that avoids needing to create gitignored nix files in projects
+    envoluntary.url = "github:dfrankland/envoluntary";
+    envoluntary.inputs.nixpkgs.follows = "nixpkgs";
+    envoluntary.inputs.home-manager.follows = "home-manager";
+
     # Darwin things
     nix-darwin.url = "github:LnL7/nix-darwin";
     nix-darwin.inputs.nixpkgs.follows = "nixpkgs";
@@ -17,9 +23,11 @@
     home-manager.url = "github:nix-community/home-manager";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
 
+    # My old neovim configuration - migrating from this
     nixvim.url = "github:nix-community/nixvim";
     nixvim.inputs.nixpkgs.follows = "nixpkgs";
 
+    # Migrating to nixCats
     nixCats.url = "github:BirdeeHub/nixCats-nvim";
   };
 
