@@ -1,4 +1,8 @@
-{inputs, ...}: let
+{
+  inputs,
+  config,
+  ...
+}: let
   utils = inputs.nixCats.utils;
 in {
   imports = [
@@ -16,7 +20,7 @@ in {
       # See packageDefinitions - says which one to install
       packageNames = ["meow"];
 
-      luaPath = ./.;
+      luaPath = config.lib.file.mkOutOfStoreSymlink "${config.homeModuleDir}/nixCats/config";
 
       # the .replace vs .merge options are for modules based on existing configurations,
       # they refer to how multiple categoryDefinitions get merged together by the module.
