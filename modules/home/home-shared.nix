@@ -140,6 +140,9 @@
     # Useful home-manager alias if enabled
     programs.zsh.shellAliases."hms" = lib.mkIf config.programs.home-manager.enable "home-manager switch --flake ${config.nixConfigDir}/.";
 
+    # Quick alias to enable a devshell
+    programs.zsh.shellAliases."nd" = "f() { nix develop ${config.nixConfigDir}/.#$1 --command zsh };f";
+
     # https://jj-vcs.github.io/jj/latest/
     # VCS built on top of git
     # Experimenting with this for personal projects
