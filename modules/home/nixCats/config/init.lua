@@ -26,7 +26,7 @@ require("lze").load({
 				keymap = {
 					preset = "default",
 
-					['<C-a>'] = { 'select_and_accept', 'fallback' },
+					['<C-e>'] = { 'select_and_accept', 'fallback' },
 				},
 				-- Default keymaps
 				-- ['<C-space>'] = { 'show', 'show_documentation', 'hide_documentation' },
