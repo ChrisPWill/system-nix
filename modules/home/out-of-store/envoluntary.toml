@@ -1,0 +1,3 @@
+[[entries]]
+pattern = "~/dev-env"
+flake_reference = "~/.system-nix/templates/node22"
