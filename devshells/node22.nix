@@ -17,6 +17,8 @@ pkgs.mkShell {
   # Load custom bash code
   shellHook = ''
     # Add node22 packages bin to PATH
-    export PATH="${if stdenv.isDarwin then "/Users" else "/home"}/cwilliams/.node22-packages:$PATH";
+    export PATH="${if stdenv.isDarwin then "/Users" else "/home"}/cwilliams/.node22-packages:$PATH"
+
+    export PS1="(node22) $PS1"
   '';
 }
