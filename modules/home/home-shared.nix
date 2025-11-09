@@ -215,14 +215,14 @@
         expireDuplicatesFirst = true;
       };
 
-      # Useful directory navigation aliases
-      shellAliases.".." = "cd ..";
-      shellAliases."..." = "cd ../..";
-      shellAliases."...." = "cd ../../..";
-      shellAliases."-- -" = "cd -";
-      shellAliases."-- --" = "cd -2";
-      shellAliases."-- ---" = "cd -3";
     };
+    # Useful directory navigation aliases
+    programs.zsh.shellAliases.".." = "cd ..";
+    programs.zsh.shellAliases."..." = "cd ../..";
+    programs.zsh.shellAliases."...." = "cd ../../..";
+    programs.zsh.shellAliases."-- -" = "cd -";
+    programs.zsh.shellAliases."-- --" = "cd -2";
+    programs.zsh.shellAliases."-- ---" = "cd -3";
 
     # Aerospace window manager config
     xdg.configFile."aerospace/aerospace.toml".source = config.lib.file.mkOutOfStoreSymlink "${config.homeModuleDir}/out-of-store/aerospace.toml";
