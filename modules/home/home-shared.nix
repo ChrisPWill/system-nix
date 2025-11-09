@@ -48,6 +48,9 @@
 
     # only available on linux, disabled on macos
     services.ssh-agent.enable = pkgs.stdenv.isLinux;
+    # Soon available on MacOS https://github.com/nix-community/home-manager/pull/8137
+    # services.ssh-agent.enable = true;
+    # services.ssh-agent.enableZshIntegration = true;
 
     home.packages =
       # Must-have packages for all systems
