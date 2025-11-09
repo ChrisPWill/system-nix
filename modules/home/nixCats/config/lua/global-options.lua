@@ -18,6 +18,9 @@ vim.opt.inccommand = "split"
 -- Minimal number of screen lines to keep above and below the cursor.
 vim.opt.scrolloff = 10
 
+-- Highlight the current line
+vim.opt.cursorline = true
+
 -- Make line numbers default
 vim.wo.number = true
 
@@ -28,14 +31,16 @@ vim.o.mouse = "a"
 -- vim.o.smarttab = true
 vim.opt.cpoptions:append("I")
 vim.o.expandtab = true
--- vim.o.smartindent = true
--- vim.o.autoindent = true
--- vim.o.tabstop = 4
--- vim.o.softtabstop = 4
--- vim.o.shiftwidth = 4
+vim.o.smartindent = true
+vim.o.autoindent = true
+-- TODO: Consider dynamically setting this based on project
+vim.o.tabstop = 2
+vim.o.shiftwidth = 2
 
 -- stops line wrapping from being confusing
 vim.o.breakindent = true
+vim.o.breakindentopt = "sbr,shift:1" -- shows the showbreak character, shifts by 1
+vim.o.showbreak = "↪ "
 
 -- Save undo history
 vim.o.undofile = true
@@ -48,7 +53,7 @@ vim.o.smartcase = true
 vim.wo.signcolumn = "yes"
 vim.wo.relativenumber = true
 
--- Decrease update time
+-- Decrease update time for swapfile
 vim.o.updatetime = 250
 vim.o.timeoutlen = 300
 
