@@ -143,6 +143,8 @@
     programs.jujutsu.enable = true;
     programs.jujutsu.settings.user.name = "Chris Williams";
     programs.jujutsu.settings.user.email = config.userEmail;
+    # LazyJJ - easy TUI for jujutsu VCS
+    programs.zsh.shellAliases.ljj = "lazyjj";
 
     # Modern alternative prompt
     programs.starship.enable = true;
