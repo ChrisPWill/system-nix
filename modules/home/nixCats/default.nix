@@ -55,6 +55,13 @@ in {
             nixd
             alejandra
           ];
+          node = with pkgs; [
+            nodePackages.typescript-language-server
+            prettierd
+            eslint_d
+            nodePackages.graphql-language-service-cli
+            vscode-js-debug
+          ];
           # go = with pkgs; [
           #   gopls
           #   delve
@@ -166,6 +173,8 @@ in {
             general = true;
             lua = true;
             nix = true;
+            node = true;
+
             # go = false;
           };
           # anything else to pass and grab in lua with `nixCats.extra`

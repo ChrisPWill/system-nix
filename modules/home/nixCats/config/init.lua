@@ -298,8 +298,8 @@ require("lze").load({
 				-- NOTE: download some linters in lspsAndRuntimeDeps
 				-- and configure them here
 				-- markdown = {'vale',},
-				-- javascript = { 'eslint' },
-				-- typescript = { 'eslint' },
+				javascript = nixCats("node") and { 'eslint_d' } or nil,
+				typescript = nixCats("node") and { 'eslint_d' } or nil,
 				go = nixCats("go") and { "golangcilint" } or nil,
 			}
 
@@ -326,11 +326,9 @@ require("lze").load({
 					-- and configure them here
 					lua = nixCats("lua") and { "stylua" } or nil,
 					go = nixCats("go") and { "gofmt", "golint" } or nil,
-					-- templ = { "templ" },
-					-- Conform will run multiple formatters sequentially
-					-- python = { "isort", "black" },
 					-- Use a sub-list to run only the first available formatter
-					-- javascript = { { "prettierd", "prettier" } },
+					javascript = nixCats("node") and { { "prettierd", "prettier" } } or nil,
+					typescript = nixCats("node") and { { "prettierd", "prettier" } } or nil,
 				},
 			})
 
@@ -549,6 +547,13 @@ require("lze").load({
 				on_attach = lsp_on_attach,
 			})
 		end,
+	},
+	{
+		"ts_ls",
+		enabled = nixCats("node") or false,
+		lsp = {
+			fileTypes = { "typescript", "typescriptreact", "javascript", "javascriptreact" }
+		},
 	},
 	{
 		-- name of the lsp
