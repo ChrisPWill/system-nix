@@ -298,8 +298,8 @@ require("lze").load({
 				-- NOTE: download some linters in lspsAndRuntimeDeps
 				-- and configure them here
 				-- markdown = {'vale',},
-				javascript = nixCats("node") and { 'eslint_d' } or nil,
-				typescript = nixCats("node") and { 'eslint_d' } or nil,
+				javascript = nixCats("node") and { "eslint_d" } or nil,
+				typescript = nixCats("node") and { "eslint_d" } or nil,
 				go = nixCats("go") and { "golangcilint" } or nil,
 			}
 
@@ -552,7 +552,7 @@ require("lze").load({
 		"ts_ls",
 		enabled = nixCats("node") or false,
 		lsp = {
-			fileTypes = { "typescript", "typescriptreact", "javascript", "javascriptreact" }
+			fileTypes = { "typescript", "typescriptreact", "javascript", "javascriptreact" },
 		},
 	},
 	{

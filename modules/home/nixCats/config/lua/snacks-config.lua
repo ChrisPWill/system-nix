@@ -137,4 +137,3 @@ end, { desc = "Resume" })
 vim.keymap.set("n", "<leader>su", function()
 	Snacks.picker.undo()
 end, { desc = "Undo History" })
-
