@@ -17,5 +17,5 @@ nix-shell -p home-manager --run "home-manager switch --extra-experimental-featur
 After that, it should be possible to run the alias from anywhere
 
 ```zsh
-hws
+hms
 ```

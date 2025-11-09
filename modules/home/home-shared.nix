@@ -135,7 +135,7 @@
     programs.diff-so-fancy.enableGitIntegration = true;
 
     # Useful home-manager alias if enabled
-    programs.zsh.shellAliases."hws" = lib.mkIf config.programs.home-manager.enable "home-manager switch --flake ${config.nixConfigDir}/.";
+    programs.zsh.shellAliases."hms" = lib.mkIf config.programs.home-manager.enable "home-manager switch --flake ${config.nixConfigDir}/.";
 
     # https://jj-vcs.github.io/jj/latest/
     # VCS built on top of git
