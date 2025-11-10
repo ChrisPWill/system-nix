@@ -50,7 +50,7 @@ require("lze").load({
 				},
 				signature = { enabled = true },
 				sources = {
-					default = { "copilot", "lsp", "path", "snippets", "buffer" },
+					default = { "lsp", "path", "snippets", "buffer" },
 					providers = {
 						copilot = {
 							name = "copilot",
