@@ -700,11 +700,19 @@ require("lze").load({
 		ft = { "javascript", "javascriptreact", "typescript", "typescriptreact" },
 		after = function(plugin)
 			require("typescript-tools").setup({
+				on_attach = lsp_on_attach,
 				settings = {
 					-- possible values: ("off"|"all"|"implementations_only"|"references_only")
 					code_lens = "implementations_only",
 				},
 			})
+
+			vim.keymap.set("n", "<leader>cio", "<cmd>TSToolsOrganizeImports<CR>", { desc = "[C]ode [I]mport [O]rganise" })
+			vim.keymap.set("n", "<leader>cis", "<cmd>TSToolsSortImports<CR>", { desc = "[C]ode [I]mport [S]ort" })
+			vim.keymap.set("n", "<leader>cim", "<cmd>TSToolsAddMissingImports<CR>", { desc = "[C]ode [I]mport [M]issing" })
+			vim.keymap.set("n", "<leader>cfa", "<cmd>TSToolsFixAll<CR>", { desc = "[C]ode [F]ix [A]ll" })
+			vim.keymap.set("n", "<leader>cFe", "<cmd>TSToolsRenameFile<CR>", { desc = "[C]ode [F]ILE r[E]name" })
+			vim.keymap.set("n", "<leader>cFr", "<cmd>TSToolsFileReferences<CR>", { desc = "[C]ode [F]ILE [R]eferences" })
 		end,
 	},
 	{
