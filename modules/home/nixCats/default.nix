@@ -2,9 +2,11 @@
   inputs,
   config,
   lib,
+  pkgs,
   ...
 }: let
   utils = inputs.nixCats.utils;
+  mainNixCatsPackageName = "meow";
 in {
   imports = [
     inputs.nixCats.homeModule
@@ -17,6 +19,9 @@ in {
   };
 
   config = {
+    # Easy config editing alias
+    programs.zsh.shellAliases."nvimconfig" = "(cd ${config.homeModuleDir}/nixCats; ${mainNixCatsPackageName} ./config/init.lua)";
+
     nixCats = {
       enable = true;
 
@@ -25,7 +30,7 @@ in {
       addOverlays = [(utils.standardPluginOverlay inputs)];
 
       # See packageDefinitions - says which one to install
-      packageNames = ["meow"];
+      packageNames = [mainNixCatsPackageName];
 
       luaPath = config.lib.file.mkOutOfStoreSymlink "${config.homeModuleDir}/nixCats/config";
 
@@ -171,7 +176,7 @@ in {
       packageDefinitions.replace = {
         # These are the names of your packages
         # you can include as many as you wish.
-        meow = {
+        "${mainNixCatsPackageName}" = {
           pkgs,
           name,
           ...
