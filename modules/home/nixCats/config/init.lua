@@ -26,7 +26,7 @@ require("lze").load({
 				keymap = {
 					preset = "default",
 
-					['<C-e>'] = { 'select_and_accept', 'fallback' },
+					["<C-e>"] = { "select_and_accept", "fallback" },
 				},
 				-- Default keymaps
 				-- ['<C-space>'] = { 'show', 'show_documentation', 'hide_documentation' },
@@ -50,7 +50,16 @@ require("lze").load({
 				},
 				signature = { enabled = true },
 				sources = {
-					default = { "lsp", "path", "snippets", "buffer" },
+					default = { "copilot", "lsp", "path", "snippets", "buffer" },
+					providers = {
+						copilot = {
+							name = "copilot",
+							enabled = nixCats("copilot") or false,
+							module = "blink-copilot",
+							score_offset = 100,
+							async = true,
+						},
+					},
 				},
 			})
 		end,
@@ -192,11 +201,37 @@ require("lze").load({
 				},
 				tabline = {
 					lualine_a = { "buffers" },
-					lualine_b = { "lsp_progress" },
+					lualine_b = { "copilot", "lsp_progress" },
 					lualine_z = { "tabs" },
 				},
 			})
 		end,
+	},
+	{
+		"copilot.lua",
+		enabled = nixCats("copilot") or false,
+		event = "DeferredUIEnter",
+		on_require = "copilot",
+		after = function(plugin)
+			require("copilot").setup({
+				suggestion = { enabled = false },
+				panel = { enabled = false },
+			})
+		end,
+	},
+	{
+		"blink-copilot",
+		enabled = nixCats("copilot") or false,
+		event = "DeferredUIEnter",
+		on_plugin = "blink.cmp",
+		on_require = "blink-copilot",
+	},
+	{
+		"copilot-lualine",
+		enabled = nixCats("copilot") or false,
+		event = "DeferredUIEnter",
+		on_require = "copilot-lualine",
+		on_plugin = "lualine.nvim",
 	},
 	{
 		"gitsigns.nvim",
