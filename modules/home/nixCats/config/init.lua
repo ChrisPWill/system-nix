@@ -553,6 +553,11 @@ require("lze").load({
 			})
 		end,
 	},
+	{
+		"markview.nvim",
+		enabled = nixCats("general") or false,
+		ft = "markdown",
+	},
 })
 
 local function lsp_on_attach(_, bufnr)

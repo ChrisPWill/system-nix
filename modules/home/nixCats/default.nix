@@ -128,6 +128,7 @@ in {
             nvim-dap
             nvim-dap-ui
             nvim-dap-virtual-text
+            markview-nvim
           ];
           copilot = with pkgs.vimPlugins; [
             copilot-lua
@@ -211,4 +212,3 @@ in {
     };
   };
 }
-
