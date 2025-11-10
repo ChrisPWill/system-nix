@@ -137,10 +137,7 @@ require("lze").load({
 					},
 				},
 			})
-			require('treesitter-context').setup({
-				max_lines = 15,
-				enable = true,
-			})
+			require('treesitter-context').setup({})
 		end,
 	},
 	{
