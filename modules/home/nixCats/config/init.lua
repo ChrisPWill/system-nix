@@ -359,6 +359,7 @@ require("lze").load({
 				javascript = nixCats("node") and { "eslint_d" } or nil,
 				typescript = nixCats("node") and { "eslint_d" } or nil,
 				go = nixCats("go") and { "golangcilint" } or nil,
+				rust = nixCats("rust") and { "clippy" } or nil,
 			}
 
 			vim.api.nvim_create_autocmd({ "BufWritePost" }, {
@@ -388,6 +389,7 @@ require("lze").load({
 					javascript = nixCats("node") and { "prettierd", "prettier" } or nil,
 					typescript = nixCats("node") and { "prettierd", "prettier" } or nil,
 					nix = nixCats("nix") and { "alejandra" } or nil,
+					rust = nixCats("rust") and { "rustfmt" } or nil,
 				},
 
 				format_on_save = function(bufnr)
@@ -640,6 +642,22 @@ require("lze").load({
 		enabled = nixCats("node") or false,
 		lsp = {
 			fileTypes = { "typescript", "typescriptreact", "javascript", "javascriptreact" },
+		},
+	},
+	{
+		"rust_analyzer",
+		enabled = nixCats("rust") or false,
+		lsp = {
+			fileTypes = { "rust" },
+		},
+	},
+	{
+		"tombi",
+		enabled = nixCats("rust") or false,
+		lsp = {
+			cmd = { "tombi", "lsp" },
+			fileTypes = { "toml" },
+			root_markers = { "tombi.toml", "pyproject.toml", ".git" },
 		},
 	},
 	{

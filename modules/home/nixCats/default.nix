@@ -69,6 +69,12 @@ in {
             nodePackages.graphql-language-service-cli
             vscode-js-debug
           ];
+          rust = with pkgs; [
+            rust-analyzer
+            rustfmt
+            clippy
+            tombi
+          ];
           # go = with pkgs; [
           #   gopls
           #   delve
@@ -187,6 +193,7 @@ in {
             lua = true;
             nix = true;
             node = true;
+            rust = true;
             copilot = config.nixCats.custom.enableCopilot;
 
             # go = false;
