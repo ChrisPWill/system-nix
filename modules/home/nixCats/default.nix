@@ -97,6 +97,10 @@ in {
             onedark-nvim
             vim-sleuth
           ];
+          rust = with pkgs.vimPlugins; [
+            # Already lazy
+            rustaceanvim
+          ];
         };
 
         # not loaded automatically at startup.
@@ -207,3 +211,4 @@ in {
     };
   };
 }
+

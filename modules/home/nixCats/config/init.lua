@@ -559,12 +559,11 @@ local function lsp_on_attach(_, bufnr)
 	-- we create a function that lets us more easily define mappings specific
 	-- for LSP related items. It sets the mode, buffer and description for us each time.
 
-	local nmap = function(keys, func, desc, noremap)
+	local nmap = function(keys, func, desc)
 		if desc then
 			desc = "LSP: " .. desc
 		end
-		local noremapValue = noremap == nil and true or noremap
-		vim.keymap.set("n", keys, func, { buffer = bufnr, desc = desc, noremap = noremapValue })
+		vim.keymap.set("n", keys, func, { buffer = bufnr, desc = desc })
 	end
 
 	nmap("<leader>rn", vim.lsp.buf.rename, "[R]e[n]ame")
@@ -642,13 +641,6 @@ require("lze").load({
 		enabled = nixCats("node") or false,
 		lsp = {
 			fileTypes = { "typescript", "typescriptreact", "javascript", "javascriptreact" },
-		},
-	},
-	{
-		"rust_analyzer",
-		enabled = nixCats("rust") or false,
-		lsp = {
-			fileTypes = { "rust" },
 		},
 	},
 	{
@@ -763,3 +755,9 @@ end)
 au("InsertLeave", nil, function()
 	vim.diagnostic.enable(true)
 end)
+
+vim.g.rustaceanvim = {
+	server = {
+		on_attach = lsp_on_attach,
+	},
+}
