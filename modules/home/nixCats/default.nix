@@ -140,6 +140,9 @@ in {
             copilot-lualine
             blink-copilot
           ];
+          node = with pkgs.vimPlugins; [
+            typescript-tools-nvim
+          ];
         };
 
         # shared libraries to be added to LD_LIBRARY_PATH

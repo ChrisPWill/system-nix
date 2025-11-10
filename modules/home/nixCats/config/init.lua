@@ -653,13 +653,13 @@ require("lze").load({
 			})
 		end,
 	},
-	{
-		"ts_ls",
-		enabled = nixCats("node") or false,
-		lsp = {
-			fileTypes = { "typescript", "typescriptreact", "javascript", "javascriptreact" },
-		},
-	},
+	-- {
+	-- 	"ts_ls",
+	-- 	enabled = nixCats("node") or false,
+	-- 	lsp = {
+	-- 		fileTypes = { "typescript", "typescriptreact", "javascript", "javascriptreact" },
+	-- 	},
+	-- },
 	{
 		"tombi",
 		enabled = nixCats("rust") or false,
@@ -695,6 +695,18 @@ require("lze").load({
 			},
 		},
 		-- also these are regular specs and you can use before and after and all the other normal fields
+	},
+	{
+		"typescript-tools.nvim",
+		ft = { "javascript", "javascriptreact", "typescript", "typescriptreact" },
+		after = function(plugin)
+			require("typescript-tools").setup({
+				settings = {
+					-- possible values: ("off"|"all"|"implementations_only"|"references_only")
+					code_lens = "implementations_only",
+				},
+			})
+		end,
 	},
 	{
 		"gopls",
