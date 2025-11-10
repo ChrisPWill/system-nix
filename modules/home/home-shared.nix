@@ -100,7 +100,6 @@
       enable = true;
       enableZshIntegration = true;
     };
-    xdg.configFile."envoluntary/config.toml".source = config.lib.file.mkOutOfStoreSymlink "${config.homeModuleDir}/out-of-store/envoluntary.toml";
 
     # Command line fuzzy finder
     # https://github.com/junegunn/fzf
