@@ -19,6 +19,12 @@ require("lze").load({
 		enabled = nixCats("general") or false,
 		event = "DeferredUIEnter",
 		on_require = "blink",
+		load = function(name)
+			vim.cmd.packadd(name)
+			if nixCats("copilot") then
+				vim.cmd.packadd("blink-copilot")
+			end
+		end,
 		after = function(plugin)
 			require("blink.cmp").setup({
 				-- 'default' (recommended) for mappings similar to built-in completions (C-y to accept)
@@ -50,7 +56,7 @@ require("lze").load({
 				},
 				signature = { enabled = true },
 				sources = {
-					default = { "lsp", "path", "snippets", "buffer" },
+					default = { "copilot", "lsp", "path", "snippets", "buffer" },
 					providers = {
 						copilot = nixCats("copilot") and {
 							name = "copilot",
@@ -220,13 +226,6 @@ require("lze").load({
 				panel = { enabled = false },
 			})
 		end,
-	},
-	{
-		"blink-copilot",
-		enabled = nixCats("copilot") or false,
-		event = "DeferredUIEnter",
-		on_plugin = nixCats("copilot") and "blink.cmp" or nil,
-		on_require = "blink-copilot",
 	},
 	{
 		"copilot-lualine",
