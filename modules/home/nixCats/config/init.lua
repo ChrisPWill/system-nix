@@ -52,13 +52,13 @@ require("lze").load({
 				sources = {
 					default = { "lsp", "path", "snippets", "buffer" },
 					providers = {
-						copilot = {
+						copilot = nixCats("copilot") and {
 							name = "copilot",
-							enabled = nixCats("copilot") or false,
+							enabled = true,
 							module = "blink-copilot",
 							score_offset = 100,
 							async = true,
-						},
+						} or nil,
 					},
 				},
 			})
@@ -223,7 +223,7 @@ require("lze").load({
 		"blink-copilot",
 		enabled = nixCats("copilot") or false,
 		event = "DeferredUIEnter",
-		on_plugin = "blink.cmp",
+		on_plugin = nixCats("copilot") and "blink.cmp" or nil,
 		on_require = "blink-copilot",
 	},
 	{
@@ -529,11 +529,12 @@ local function lsp_on_attach(_, bufnr)
 	-- we create a function that lets us more easily define mappings specific
 	-- for LSP related items. It sets the mode, buffer and description for us each time.
 
-	local nmap = function(keys, func, desc)
+	local nmap = function(keys, func, desc, noremap)
 		if desc then
 			desc = "LSP: " .. desc
 		end
-		vim.keymap.set("n", keys, func, { buffer = bufnr, desc = desc })
+		local noremapValue = noremap == nil and true or noremap
+		vim.keymap.set("n", keys, func, { buffer = bufnr, desc = desc, noremap = noremapValue })
 	end
 
 	nmap("<leader>rn", vim.lsp.buf.rename, "[R]e[n]ame")
@@ -690,30 +691,29 @@ require("lze").load({
 })
 
 -- Improve diagnostics in insert mode and show them in a floating window by default:wqa
-local group = vim.api.nvim_create_augroup('OoO', {})
+local group = vim.api.nvim_create_augroup("OoO", {})
 
 local function au(typ, pattern, cmdOrFn)
-	if type(cmdOrFn) == 'function' then
+	if type(cmdOrFn) == "function" then
 		vim.api.nvim_create_autocmd(typ, { pattern = pattern, callback = cmdOrFn, group = group })
 	else
 		vim.api.nvim_create_autocmd(typ, { pattern = pattern, command = cmdOrFn, group = group })
 	end
 end
 
-au({ 'CursorHold', 'InsertLeave' }, nil, function()
+au({ "CursorHold", "InsertLeave" }, nil, function()
 	local opts = {
 		focusable = false,
-		scope = 'cursor',
-		close_events = { 'BufLeave', 'CursorMoved', 'InsertEnter' },
+		scope = "cursor",
+		close_events = { "BufLeave", "CursorMoved", "InsertEnter" },
 	}
 	vim.diagnostic.open_float(nil, opts)
 end)
 
-au('InsertEnter', nil, function()
+au("InsertEnter", nil, function()
 	vim.diagnostic.enable(false)
 end)
 
-au('InsertLeave', nil, function()
+au("InsertLeave", nil, function()
 	vim.diagnostic.enable(true)
 end)
-
