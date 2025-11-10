@@ -567,7 +567,13 @@ local function lsp_on_attach(_, bufnr)
 	end
 
 	nmap("<leader>rn", vim.lsp.buf.rename, "[R]e[n]ame")
-	nmap("<leader>ca", vim.lsp.buf.code_action, "[C]ode [A]ction")
+	nmap("<leader>ca", function()
+		if vim.bo.filetype == "rust" then
+			vim.cmd.RustLsp("codeAction")
+		else
+			vim.lsp.buf.code_action()
+		end
+	end, "[C]ode [A]ction")
 
 	nmap("gd", vim.lsp.buf.definition, "[G]oto [D]efinition")
 
@@ -589,7 +595,13 @@ local function lsp_on_attach(_, bufnr)
 	nmap("<leader>D", vim.lsp.buf.type_definition, "Type [D]efinition")
 
 	-- See `:help K` for why this keymap
-	nmap("K", vim.lsp.buf.hover, "Hover Documentation")
+	nmap("K", function()
+		if vim.bo.filetype == "rust" then
+			vim.cmd.RustLsp({ "hover", "actions" })
+		else
+			vim.lsp.buf.hover()
+		end
+	end, "Hover Documentation")
 	nmap("<C-k>", vim.lsp.buf.signature_help, "Signature Documentation")
 
 	-- Lesser used LSP functionality
