@@ -50,6 +50,7 @@
   };
 
   nixpkgs.hostPlatform = "aarch64-darwin";
+  networking.hostName = "cwilliams-work-laptop";
 
   users.users.cwilliams.home = /Users/cwilliams;
   system.primaryUser = "cwilliams";
