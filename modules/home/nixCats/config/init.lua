@@ -75,6 +75,7 @@ require("lze").load({
 		load = function(name)
 			vim.cmd.packadd(name)
 			vim.cmd.packadd("nvim-treesitter-textobjects")
+			vim.cmd.packadd("nvim-treesitter-context")
 		end,
 		after = function(plugin)
 			-- [[ Configure Treesitter ]]
@@ -135,6 +136,10 @@ require("lze").load({
 						},
 					},
 				},
+			})
+			require('treesitter-context').setup({
+				max_lines = 15,
+				enable = true,
 			})
 		end,
 	},

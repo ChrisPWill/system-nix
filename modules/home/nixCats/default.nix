@@ -108,6 +108,7 @@ in {
             vim-startuptime
             blink-cmp
             nvim-treesitter.withAllGrammars
+            nvim-treesitter-context
             lualine-nvim
             lualine-lsp-progress
             gitsigns-nvim
