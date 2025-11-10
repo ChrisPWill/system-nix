@@ -1,6 +1,7 @@
 {
   inputs,
   config,
+  lib,
   ...
 }: let
   utils = inputs.nixCats.utils;
@@ -8,6 +9,12 @@ in {
   imports = [
     inputs.nixCats.homeModule
   ];
+
+  options = {
+    nixCats.custom = {
+      enableCopilot = lib.mkEnableOption "Enable Copilot in Neovim (nixCats)";
+    };
+  };
 
   config = {
     nixCats = {
@@ -111,6 +118,11 @@ in {
             nvim-dap-ui
             nvim-dap-virtual-text
           ];
+          copilot = with pkgs.vimPlugins; [
+            copilot-lua
+            copilot-lualine
+            blink-copilot
+          ];
         };
 
         # shared libraries to be added to LD_LIBRARY_PATH
@@ -174,6 +186,7 @@ in {
             lua = true;
             nix = true;
             node = true;
+            copilot = config.nixCats.custom.enableCopilot;
 
             # go = false;
           };

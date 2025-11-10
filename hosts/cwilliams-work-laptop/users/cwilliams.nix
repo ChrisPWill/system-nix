@@ -5,4 +5,7 @@
 
   # Add Atlassian tools to PATH
   home.sessionPath = ["/opt/atlassian/bin"];
+
+  # Enable copilot
+  nixCats.custom.enableCopilot = true;
 }
