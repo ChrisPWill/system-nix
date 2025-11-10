@@ -101,6 +101,7 @@ in {
             snacks-nvim
             onedark-nvim
             vim-sleuth
+            plenary-nvim
           ];
           rust = with pkgs.vimPlugins; [
             # Already lazy
