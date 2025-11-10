@@ -348,8 +348,8 @@ require("lze").load({
 					lua = nixCats("lua") and { "stylua" } or nil,
 					go = nixCats("go") and { "gofmt", "golint" } or nil,
 					-- Use a sub-list to run only the first available formatter
-					javascript = nixCats("node") and { { "prettierd", "prettier" } } or nil,
-					typescript = nixCats("node") and { { "prettierd", "prettier" } } or nil,
+					javascript = nixCats("node") and { "prettierd", "prettier" } or nil,
+					typescript = nixCats("node") and { "prettierd", "prettier" } or nil,
 				},
 			})
 
@@ -358,6 +358,7 @@ require("lze").load({
 					lsp_fallback = true,
 					async = false,
 					timeout_ms = 1000,
+					stop_after_first = true,
 				})
 			end, { desc = "[F]ormat [F]ile" })
 		end,
