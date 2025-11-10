@@ -2,7 +2,7 @@
   options = with lib; {
     workLaptopHomeDir = mkOption {
       type = types.str;
-      description = "The home directory for Chris Williams' work laptop";
+      description = "The directory this file lives in (for out of store symlinks)";
       default = "${config.nixConfigDir}/hosts/cwilliams-work-laptop/users";
     };
   };
