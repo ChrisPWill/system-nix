@@ -385,6 +385,7 @@ require("lze").load({
 					-- Use a sub-list to run only the first available formatter
 					javascript = nixCats("node") and { "prettierd", "prettier" } or nil,
 					typescript = nixCats("node") and { "prettierd", "prettier" } or nil,
+					nix = nixCats("nix") and { "alejandra" } or nil,
 				},
 			})
 
