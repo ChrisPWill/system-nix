@@ -1,4 +1,9 @@
-{config, inputs, lib, ...}: {
+{
+  config,
+  inputs,
+  lib,
+  ...
+}: {
   options = with lib; {
     workLaptopHomeDir = mkOption {
       type = types.str;
