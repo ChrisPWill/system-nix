@@ -144,7 +144,6 @@ in {
           ];
           node = with pkgs.vimPlugins; [
             typescript-tools-nvim
-            neotest-jest
           ];
         };
 
