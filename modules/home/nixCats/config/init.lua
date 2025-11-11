@@ -56,7 +56,8 @@ require("lze").load({
 				},
 				signature = { enabled = true },
 				sources = {
-					default = { "copilot", "lsp", "path", "snippets", "buffer" },
+					default = nixCats("copilot") and { "copilot", "path", "snippets", "buffer" }
+						or { "lsp", "path", "snippets", "buffer" },
 					providers = {
 						copilot = nixCats("copilot") and {
 							name = "copilot",
