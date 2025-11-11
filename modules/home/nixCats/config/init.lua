@@ -76,6 +76,7 @@ require("lze").load({
 		enabled = nixCats("general") or false,
 		-- cmd = { "" },
 		event = "DeferredUIEnter",
+		dep_of = { "neotest" },
 		-- ft = "",
 		-- keys = "",
 		-- colorscheme = "",
@@ -426,6 +427,18 @@ require("lze").load({
 				vim.g.disable_autoformat = false
 			end, {
 				desc = "Re-enable autoformat-on-save",
+			})
+		end,
+	},
+	{
+		"neotest",
+		enabled = nixCats("general") or false,
+		event = "DeferredUIEnter",
+		after = function(plugin)
+			require('neotest').setup({
+				adapters = {
+					nixCats("rust") and require('rustaceanvim.neotest') or nil,
+				}
 			})
 		end,
 	},

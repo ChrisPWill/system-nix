@@ -135,6 +135,7 @@ in {
             nvim-dap-ui
             nvim-dap-virtual-text
             markview-nvim
+            neotest
           ];
           copilot = with pkgs.vimPlugins; [
             copilot-lua
@@ -143,6 +144,7 @@ in {
           ];
           node = with pkgs.vimPlugins; [
             typescript-tools-nvim
+            neotest-jest
           ];
         };
 
