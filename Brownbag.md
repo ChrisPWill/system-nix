@@ -24,10 +24,10 @@ Yo I herd wtfutil is a cool dashboard, should I try it?
 nix-shell -p wtfutil --run wtfutil
 ```
 
-I need gradle as a one-off to run a graphql-gateway validation command
+I need gradle and java as a one-off to run a graphql-gateway validation command
 
 ```zsh
-nix-shell -p gradle
+nix-shell -p gradle jdk24
 gradle <command>
 ```
 
@@ -61,6 +61,12 @@ gradle <command>
     flake-utils.lib.eachDefaultSystem (system: let
       pkgs = nixpkgs.legacyPackages.${system};
     in {
+      packages.default = pkgs.writeShellScriptBin "simple-web-server" ''
+        DATE="$(${pkgs.ddate}/bin/ddate +'the %e of %B%, %Y')"
+        echo "Hello, World! Today is $DATE." > test.txt
+        echo "Yo check out our cool site https://localhost:8765/test.txt"
+        ${pkgs.simplehttp2server}/bin/simplehttp2server -listen :8765
+      '';
       devShells.default = pkgs.mkShell {
         packages = with pkgs; [
           # Can add more packages
