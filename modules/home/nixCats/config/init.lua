@@ -640,6 +640,7 @@ require("lze").load({
 		-- the on require handler will be needed here if you want to use the
 		-- fallback method of getting filetypes if you don't provide any
 		on_require = { "lspconfig" },
+		dep_of = { "typescript-tools.nvim" },
 		-- define a function to run over all type(plugin.lsp) == table
 		-- when their filetype trigger loads them
 		lsp = function(plugin)
@@ -698,21 +699,58 @@ require("lze").load({
 	{
 		"typescript-tools.nvim",
 		ft = { "javascript", "javascriptreact", "typescript", "typescriptreact" },
+		on_require = { "typescript-tools" },
+		event = {
+			"BufRead *.js,*.jsx,*.mjs,*.cjs,*.ts,*.tsx",
+			"BufNewFile *.js,*.jsx,*.mjs,*.cjs,*.ts,*.tsx",
+		},
 		after = function(plugin)
 			require("typescript-tools").setup({
-				on_attach = lsp_on_attach,
+				on_attach = function(client, bufnr)
+					-- Provided by prettierd and conform
+					client.server_capabilities.documentFormattingProvider = false
+					client.server_capabilities.documentRangeFormattingProvider = false
+
+					lsp_on_attach(client, bufnr)
+
+					-- Custom TypeScript keymaps
+					vim.keymap.set(
+						"n",
+						"<leader>cio",
+						"<cmd>TSToolsOrganizeImports<CR>",
+						{ desc = "[C]ode [I]mport [O]rganise" }
+					)
+					vim.keymap.set(
+						"n",
+						"<leader>cis",
+						"<cmd>TSToolsSortImports<CR>",
+						{ desc = "[C]ode [I]mport [S]ort" }
+					)
+					vim.keymap.set(
+						"n",
+						"<leader>cim",
+						"<cmd>TSToolsAddMissingImports<CR>",
+						{ desc = "[C]ode [I]mport [M]issing" }
+					)
+					vim.keymap.set("n", "<leader>cfa", "<cmd>TSToolsFixAll<CR>", { desc = "[C]ode [F]ix [A]ll" })
+					vim.keymap.set(
+						"n",
+						"<leader>cFe",
+						"<cmd>TSToolsRenameFile<CR>",
+						{ desc = "[C]ode [F]ILE r[E]name" }
+					)
+					vim.keymap.set(
+						"n",
+						"<leader>cFr",
+						"<cmd>TSToolsFileReferences<CR>",
+						{ desc = "[C]ode [F]ILE [R]eferences" }
+					)
+				end,
 				settings = {
 					-- possible values: ("off"|"all"|"implementations_only"|"references_only")
 					code_lens = "implementations_only",
 				},
 			})
-
-			vim.keymap.set("n", "<leader>cio", "<cmd>TSToolsOrganizeImports<CR>", { desc = "[C]ode [I]mport [O]rganise" })
-			vim.keymap.set("n", "<leader>cis", "<cmd>TSToolsSortImports<CR>", { desc = "[C]ode [I]mport [S]ort" })
-			vim.keymap.set("n", "<leader>cim", "<cmd>TSToolsAddMissingImports<CR>", { desc = "[C]ode [I]mport [M]issing" })
-			vim.keymap.set("n", "<leader>cfa", "<cmd>TSToolsFixAll<CR>", { desc = "[C]ode [F]ix [A]ll" })
-			vim.keymap.set("n", "<leader>cFe", "<cmd>TSToolsRenameFile<CR>", { desc = "[C]ode [F]ILE r[E]name" })
-			vim.keymap.set("n", "<leader>cFr", "<cmd>TSToolsFileReferences<CR>", { desc = "[C]ode [F]ILE [R]eferences" })
 		end,
 	},
 	{
