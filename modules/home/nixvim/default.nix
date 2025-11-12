@@ -1,3 +1,14 @@
+# !!!!!!!!!!!!!!!!!!!!!!
+# !!!!!!!!!!!!!!!!!!!!!!
+# !!!!!!!!!!!!!!!!!!!!!!
+# This is now deprecated, I'm keeping it here as a reference
+# and to have the option to re-enable it while keeping it up
+# to date with the rest of the config, but it will eventually
+# be dropped.
+# !!!!!!!!!!!!!!!!!!!!!!
+# !!!!!!!!!!!!!!!!!!!!!!
+# !!!!!!!!!!!!!!!!!!!!!!
+
 {
   pkgs,
   lib,
@@ -15,6 +26,7 @@
   };
 
   config.programs.nixvim = {
+    # Deprecated, see above
     enable = false;
     defaultEditor = false;
 
