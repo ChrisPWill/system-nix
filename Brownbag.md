@@ -85,6 +85,11 @@ Links
 * https://numtide.github.io/blueprint/main/
 * https://github.com/dfrankland/envoluntary
 
+How to activate?
+```zsh
+sudo /run/current-system/sw/bin/darwin-rebuild switch --flake .
+```
+
 # Guiding principles
 
 1. Less is more
