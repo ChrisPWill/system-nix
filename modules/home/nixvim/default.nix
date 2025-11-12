@@ -15,8 +15,8 @@
   };
 
   config.programs.nixvim = {
-    enable = true;
-    defaultEditor = true;
+    enable = false;
+    defaultEditor = false;
 
     clipboard.register = "unnamedplus";
     # If re-implementing, do smarter detection. Breaks in WSL
