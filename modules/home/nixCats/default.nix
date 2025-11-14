@@ -148,6 +148,7 @@ in {
           ];
           node = with pkgs.vimPlugins; [
             typescript-tools-nvim
+            nvim-dap-vscode-js
           ];
         };
 

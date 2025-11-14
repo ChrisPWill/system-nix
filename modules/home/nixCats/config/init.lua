@@ -435,10 +435,10 @@ require("lze").load({
 		enabled = nixCats("general") or false,
 		event = "DeferredUIEnter",
 		after = function(plugin)
-			require('neotest').setup({
+			require("neotest").setup({
 				adapters = {
-					nixCats("rust") and require('rustaceanvim.neotest') or nil,
-				}
+					nixCats("rust") and require("rustaceanvim.neotest") or nil,
+				},
 			})
 		end,
 	},
@@ -542,6 +542,9 @@ require("lze").load({
 
 			-- NOTE: Install lang specific config
 			-- either in here, or in a separate plugin spec as demonstrated for go below.
+			-- for _, language in ipairs({ "typescript", "javascript" }) do
+			-- 	dap.configurations[language] = {}
+			-- end
 		end,
 	},
 	{
@@ -550,6 +553,16 @@ require("lze").load({
 		on_plugin = { "nvim-dap" },
 		after = function(plugin)
 			require("dap-go").setup()
+		end,
+	},
+	{
+		"nvim-dap-vscode-js",
+		enabled = nixCats("node") or false,
+		on_plugin = { "nvim-dap" },
+		after = function(plugin)
+			require("dap-vscode-js").setup({
+				adapters = { "pwa-node", "pwa-chrome", "pwa-msedge", "node-terminal", "pwa-extensionHost" }, -- which adapters to register in nvim-dap
+			})
 		end,
 	},
 	{
