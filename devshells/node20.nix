@@ -26,7 +26,7 @@ in
         if stdenv.isDarwin
         then "/Users"
         else "/home"
-      }/cwilliams/.node22-packages:$PATH"
+      }/cwilliams/.node22-packages/bin:$PATH"
 
       export PS1="(node20) $PS1"
     '';
