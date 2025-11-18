@@ -71,6 +71,11 @@ vim.keymap.set("n", "<leader>sg", function()
 	Snacks.picker.grep()
 end, { desc = "Grep" })
 
+-- Grep All "<leader>sg"
+vim.keymap.set("n", "<leader>/", function()
+	Snacks.picker.grep()
+end, { desc = "Search All" })
+
 -- Grep Visual / Word "<leader>sw"
 vim.keymap.set({ "n", "x" }, "<leader>sw", function()
 	Snacks.picker.grep_word()
