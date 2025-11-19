@@ -39,7 +39,7 @@
     # https://github.com/dfrankland/envoluntary
     # direnv-like matcher that avoids needing to create gitignored nix files in projects
     inputs.envoluntary.homeModules.default
-    ({pkgs, ...}: {programs.envoluntary.package = inputs.envoluntary.packages.${pkgs.system}.default;})
+    ({pkgs, ...}: {programs.envoluntary.package = inputs.envoluntary.packages.${pkgs.stdenv.hostPlatform.system}.default;})
   ];
 
   config = {
