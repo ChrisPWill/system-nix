@@ -9,11 +9,16 @@
     blueprint.url = "github:numtide/blueprint";
     blueprint.inputs.nixpkgs.follows = "nixpkgs";
 
+    # Needed to overcome error in envoluntary, can maybe remove later
+    rust-overlay.url = "github:oxalica/rust-overlay";
+    rust-overlay.inputs.nixpkgs.follows = "nixpkgs";
+
     # https://github.com/dfrankland/envoluntary
     # direnv-like matcher that avoids needing to create gitignored nix files in projects
     envoluntary.url = "github:dfrankland/envoluntary";
     envoluntary.inputs.nixpkgs.follows = "nixpkgs";
     envoluntary.inputs.home-manager.follows = "home-manager";
+    envoluntary.inputs.rust-overlay.follows = "rust-overlay";
 
     # Darwin things
     nix-darwin.url = "github:LnL7/nix-darwin";
