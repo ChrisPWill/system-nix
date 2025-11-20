@@ -3,6 +3,7 @@
   config,
   inputs,
   lib,
+  perSystem,
   # osConfig,
   ...
 }: {
@@ -67,7 +68,9 @@
 
           # Runs with "tldr" - quick facts about an app
           # https://github.com/dbrgn/tealdeer
-          tealdeer
+          # Temp from nixpkgs-small due to https://github.com/nixos/nixpkgs/pull/462776
+          # Can drop this after 2025-11-22 or so
+          perSystem.nixpkgs-small.tealdeer
 
           # Neat TUI for jujutsu
           # https://github.com/Cretezy/lazyjj
