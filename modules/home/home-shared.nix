@@ -75,6 +75,11 @@
           # Neat TUI for jujutsu
           # https://github.com/Cretezy/lazyjj
           lazyjj
+
+          # TUI to browse quite a few journals/logs.
+          # Great for docker, journald, systemd logs etc.
+          # https://github.com/Lifailon/lazyjournal
+          lazyjournal
         ]
         # Can access the host configuration using osConfig e.g.
         # ++ (
