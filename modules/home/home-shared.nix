@@ -138,6 +138,12 @@
     programs.diff-so-fancy.enable = true;
     programs.diff-so-fancy.enableGitIntegration = true;
 
+    # Neat TUI for git
+    # https://github.com/jesseduffield/lazygit
+    programs.lazygit.enable = true;
+    programs.lazygit.enableZshIntegration = true;
+    programs.zsh.shellAliases.lg = "lazygit";
+
     # Useful home-manager alias if enabled
     programs.zsh.shellAliases."hms" = lib.mkIf config.programs.home-manager.enable "home-manager switch --flake ${config.nixConfigDir}/.";
     # Darwin-rebuild alias added for MacOS systems
