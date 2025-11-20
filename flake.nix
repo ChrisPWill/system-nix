@@ -17,8 +17,7 @@
     # https://github.com/dfrankland/envoluntary
     # direnv-like matcher that avoids needing to create gitignored nix files in projects
     # Return dfrankland to config when https://github.com/dfrankland/envoluntary/pull/29 is merged
-    # envoluntary.url = "github:dfrankland/envoluntary";
-    envoluntary.url = "github:ChrisPWill/envoluntary";
+    envoluntary.url = "github:dfrankland/envoluntary";
     envoluntary.inputs.nixpkgs.follows = "nixpkgs";
     envoluntary.inputs.home-manager.follows = "home-manager";
     envoluntary.inputs.rust-overlay.follows = "rust-overlay";

@@ -87,15 +87,15 @@
         ]
       },
       "locked": {
-        "lastModified": 1763589375,
+        "lastModified": 1763616996,
         "narHash": "sha256-GDPKdIAmAW4b2w/u6HMJF+qveFcG3YXI7PKB0pLm6mw=",
-        "owner": "ChrisPWill",
+        "owner": "dfrankland",
         "repo": "envoluntary",
-        "rev": "2055b69dead774f9c4d457e86cc30f091a7caadc",
+        "rev": "528bfbfd1935705e75489bb16db8746f26aed93f",
         "type": "github"
       },
       "original": {
-        "owner": "ChrisPWill",
+        "owner": "dfrankland",
         "repo": "envoluntary",
         "type": "github"
       }
