@@ -363,7 +363,9 @@ require("lze").load({
 				rust = nixCats("rust") and { "clippy" } or nil,
 			}
 
-			vim.api.nvim_create_autocmd({ "BufWritePost" }, {
+			-- Re-enable this if InsertLeave is too aggressive
+			-- vim.api.nvim_create_autocmd({ "BufWritePost" }, {
+			vim.api.nvim_create_autocmd({ "InsertLeave" }, {
 				callback = function()
 					require("lint").try_lint()
 				end,
