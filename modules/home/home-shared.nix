@@ -54,6 +54,7 @@
 
     home.packages =
       # Must-have packages for all systems
+      # Note: can use perSystem.nixpkgs-small.<package> if a bugfix is recently merged and I want to get it sooner
       with pkgs;
         [
           # Fast alternative to find
@@ -68,9 +69,7 @@
 
           # Runs with "tldr" - quick facts about an app
           # https://github.com/dbrgn/tealdeer
-          # Temp from nixpkgs-small due to https://github.com/nixos/nixpkgs/pull/462776
-          # Can drop this after 2025-11-22 or so
-          perSystem.nixpkgs-small.tealdeer
+          tealdeer
 
           # Neat TUI for jujutsu
           # https://github.com/Cretezy/lazyjj
