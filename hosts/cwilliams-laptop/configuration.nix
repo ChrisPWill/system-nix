@@ -1,5 +1,4 @@
-{ inputs, ... }:
-{
+{inputs, ...}: {
   imports = [
     ./hardware-configuration.nix
     inputs.self.nixosModules.host-shared
@@ -26,7 +25,7 @@
   users.users.cwilliams = {
     isNormalUser = true;
     description = "Chris Williams";
-    extraGroups = [ "networkmanager" "wheel" ];
+    extraGroups = ["networkmanager" "wheel"];
   };
 
   environment.systemPackages = [];
