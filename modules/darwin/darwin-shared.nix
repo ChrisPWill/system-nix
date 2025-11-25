@@ -1,6 +1,7 @@
-{inputs, ...}: {...}: {
+{inputs, ...}: {config, ...}: {
   imports = [
     inputs.nix-homebrew.darwinModules.nix-homebrew
+    inputs.self.modules.theming.theme
   ];
   nix.settings.experimental-features = ["nix-command" "flakes"];
 
@@ -40,7 +41,14 @@
     ];
   };
 
-  services.jankyborders.enable = true;
+  services.jankyborders = let
+    theme = config.theme;
+  in {
+    enable = true;
+    active_color = theme.background;
+    inactive_color = theme.background-defocused;
+    width = 7.0;
+  };
 
   system = {
     keyboard.enableKeyMapping = true;
