@@ -40,6 +40,8 @@
     ];
   };
 
+  services.jankyborders.enable = true;
+
   system = {
     keyboard.enableKeyMapping = true;
     keyboard.remapCapsLockToEscape = true;
