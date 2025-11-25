@@ -11,7 +11,7 @@
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
 
-  boot.initrd.luks.devices."luks-807dc0f3-a8da-4981-9b17-f2fb0cd6b6e4".device = "/dev/disk/by-uuid/807dc0f3-a8da-4981-9b17-f2fb0cd6b6e4";
+  boot.initrd.luks.devices."luks-3d722d8b-ae18-4ff6-ba21-e4743d9f9250".device = "/dev/disk/by-uuid/3d722d8b-ae18-4ff6-ba21-e4743d9f9250";
   networking.hostName = "cwilliams-laptop"; # Define your hostname.
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
 
