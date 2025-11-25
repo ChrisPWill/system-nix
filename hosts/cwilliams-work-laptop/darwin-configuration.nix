@@ -1,6 +1,8 @@
 {inputs, ...}: {
   imports = [
+    # Typical darwin configuration that isn't work or personal specific
     inputs.self.darwinModules.darwin-shared
+    # Shared host settings across nixos and darwin
     inputs.self.nixosModules.host-shared
   ];
 
