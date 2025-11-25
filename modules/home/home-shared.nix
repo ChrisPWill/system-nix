@@ -3,8 +3,6 @@
   config,
   inputs,
   lib,
-  perSystem,
-  # osConfig,
   ...
 }: {
   options = with lib; {

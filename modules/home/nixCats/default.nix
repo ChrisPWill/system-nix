@@ -2,7 +2,6 @@
   inputs,
   config,
   lib,
-  pkgs,
   ...
 }: let
   utils = inputs.nixCats.utils;
@@ -43,13 +42,13 @@ in {
       # for useage of this section, refer to :h nixCats.flake.outputs.categories
       categoryDefinitions.replace = {
         pkgs,
-        settings,
-        categories,
-        extra,
-        name,
-        mkPlugin,
+        # settings,
+        # categories,
+        # extra,
+        # name,
+        # mkPlugin,
         ...
-      } @ packageDef: {
+      }: {
         # to define and use a new category, simply add a new list to a set here,
         # and later, you will include categoryname = true; in the set you
         # provide when you build the package using this builder function.
@@ -155,7 +154,7 @@ in {
         # shared libraries to be added to LD_LIBRARY_PATH
         # variable available to nvim runtime
         sharedLibraries = {
-          general = with pkgs; [];
+          general = [];
         };
 
         # environmentVariables:
@@ -186,11 +185,7 @@ in {
       packageDefinitions.replace = {
         # These are the names of your packages
         # you can include as many as you wish.
-        "${mainNixCatsPackageName}" = {
-          pkgs,
-          name,
-          ...
-        }: {
+        "${mainNixCatsPackageName}" = {pkgs, ...}: {
           # they contain a settings set defined above
           # see :help nixCats.flake.outputs.settings
           settings = {
