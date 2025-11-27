@@ -729,10 +729,6 @@ require("lze").load({
 		"typescript-tools.nvim",
 		ft = { "javascript", "javascriptreact", "typescript", "typescriptreact" },
 		on_require = { "typescript-tools" },
-		event = {
-			"BufRead *.js,*.jsx,*.mjs,*.cjs,*.ts,*.tsx",
-			"BufNewFile *.js,*.jsx,*.mjs,*.cjs,*.ts,*.tsx",
-		},
 		after = function(plugin)
 			require("typescript-tools").setup({
 				on_attach = function(client, bufnr)
