@@ -363,9 +363,7 @@ require("lze").load({
 				rust = nixCats("rust") and { "clippy" } or nil,
 			}
 
-			-- Re-enable this if InsertLeave is too aggressive
-			-- vim.api.nvim_create_autocmd({ "BufWritePost" }, {
-			vim.api.nvim_create_autocmd({ "InsertLeave" }, {
+			vim.api.nvim_create_autocmd({ "CursorHold", "BufWritePost", "InsertLeave" }, {
 				callback = function()
 					require("lint").try_lint()
 				end,
@@ -375,9 +373,7 @@ require("lze").load({
 	{
 		"conform.nvim",
 		enabled = nixCats("general") or false,
-		keys = {
-			{ "<leader>FF", desc = "[F]ormat [F]ile" },
-		},
+		event = "DeferredUIEnter",
 		-- colorscheme = "",
 		after = function(plugin)
 			local conform = require("conform")
@@ -389,18 +385,25 @@ require("lze").load({
 					lua = nixCats("lua") and { "stylua" } or nil,
 					go = nixCats("go") and { "gofmt", "golint" } or nil,
 					-- Use a sub-list to run only the first available formatter
-					javascript = nixCats("node") and { "prettierd", "prettier" } or nil,
-					typescript = nixCats("node") and { "prettierd", "prettier" } or nil,
+					javascript = nixCats("node") and { "eslint_d" } or nil,
+					typescript = nixCats("node") and { "eslint_d" } or nil,
 					nix = nixCats("nix") and { "alejandra" } or nil,
 					rust = nixCats("rust") and { "rustfmt" } or nil,
 				},
+			})
 
-				format_on_save = function(bufnr)
+			vim.api.nvim_create_autocmd("BufWritePre", {
+				pattern = "*",
+				callback = function(args)
 					-- Disable with a global or buffer-local variable
-					if vim.g.disable_autoformat or vim.b[bufnr].disable_autoformat then
+					if vim.g.disable_autoformat or vim.b[args.buf].disable_autoformat then
 						return
 					end
-					return { timeout_ms = 1000, lsp_format = "fallback" }
+					require("conform").format({
+						bufnr = args.buf,
+						async = false,
+						timeout_ms = 5000,
+					})
 				end,
 			})
 
@@ -408,8 +411,7 @@ require("lze").load({
 				conform.format({
 					lsp_fallback = true,
 					async = false,
-					timeout_ms = 1000,
-					stop_after_first = true,
+					timeout_ms = 5000,
 				})
 			end, { desc = "[F]ormat [F]ile" })
 
