@@ -142,3 +142,16 @@ end, { desc = "Resume" })
 vim.keymap.set("n", "<leader>su", function()
 	Snacks.picker.undo()
 end, { desc = "Undo History" })
+
+vim.keymap.set("n", "<leader>ggg", function()
+	Snacks.gitbrowse.open({
+		what = "permalink",
+	})
+end, { desc = "Open in Browser (permalink current branch)" })
+
+vim.keymap.set("n", "<leader>ggm", function()
+	Snacks.gitbrowse.open({
+		what = "file",
+		branch = "master",
+	})
+end, { desc = "Open in Browser (permalink master)" })
