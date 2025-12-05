@@ -146,6 +146,10 @@ require("lze").load({
 				},
 			})
 			require("treesitter-context").setup({})
+			-- Folding
+			vim.o.foldmethod = "expr"
+			vim.o.foldexpr = "nvim_treesitter#foldexpr()"
+			vim.opt.foldenable = false
 		end,
 	},
 	{
