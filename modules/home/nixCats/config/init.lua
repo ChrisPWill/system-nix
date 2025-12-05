@@ -24,6 +24,7 @@ require("lze").load({
 			if nixCats("copilot") then
 				vim.cmd.packadd("blink-copilot")
 			end
+			vim.cmd.packadd("luasnip")
 		end,
 		after = function()
 			require("blink.cmp").setup({
@@ -34,6 +35,7 @@ require("lze").load({
 
 					["<C-e>"] = { "select_and_accept", "fallback" },
 				},
+				snippets = { preset = "luasnip" },
 				-- Default keymaps
 				-- ['<C-space>'] = { 'show', 'show_documentation', 'hide_documentation' },
 				-- ['<C-e>'] = { 'hide', 'fallback' },
@@ -56,9 +58,13 @@ require("lze").load({
 				},
 				signature = { enabled = true },
 				sources = {
-					default = nixCats("copilot") and { "copilot", "lsp", "path", "snippets", "buffer" }
-						or { "lsp", "path", "snippets", "buffer" },
+					default = nixCats("copilot") and { "snippets", "copilot", "lsp", "path", "buffer" }
+						or { "snippets", "lsp", "path", "buffer" },
 					providers = {
+						snippets = {
+							min_keyword_length = 2,
+							score_offset = 1000,
+						},
 						copilot = nixCats("copilot") and {
 							name = "copilot",
 							enabled = true,
@@ -75,7 +81,6 @@ require("lze").load({
 		"nvim-treesitter",
 		enabled = nixCats("general") or false,
 		-- cmd = { "" },
-		event = "DeferredUIEnter",
 		dep_of = { "neotest" },
 		-- ft = "",
 		-- keys = "",
@@ -591,6 +596,26 @@ require("lze").load({
 		"markview.nvim",
 		enabled = nixCats("general") or false,
 		ft = "markdown",
+	},
+	{
+		"luasnip",
+		enabled = nixCats("general") or false,
+		event = "DeferredUIEnter",
+		load = function(name)
+			vim.cmd.packadd(name)
+			vim.cmd.packadd("friendly-snippets")
+		end,
+		after = function()
+			require("luasnip.loaders.from_vscode").lazy_load()
+			require("luasnip.loaders.from_lua").lazy_load({ paths = (nixCats.configDir or "") .. "/snippets" })
+			local ls = require("luasnip")
+			vim.keymap.set({ "i", "s" }, "<C-L>", function()
+				ls.jump(1)
+			end, { silent = true, desc = "Luasnip: Jump forward" })
+			vim.keymap.set({ "i", "s" }, "<C-J>", function()
+				ls.jump(-1)
+			end, { silent = true, desc = "Luasnip: Jump backward" })
+		end,
 	},
 })
 
