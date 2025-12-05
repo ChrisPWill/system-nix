@@ -25,7 +25,7 @@ require("lze").load({
 				vim.cmd.packadd("blink-copilot")
 			end
 		end,
-		after = function(plugin)
+		after = function()
 			require("blink.cmp").setup({
 				-- 'default' (recommended) for mappings similar to built-in completions (C-y to accept)
 				-- See :h blink-cmp-config-keymap for configuring keymaps
@@ -85,7 +85,7 @@ require("lze").load({
 			vim.cmd.packadd("nvim-treesitter-textobjects")
 			vim.cmd.packadd("nvim-treesitter-context")
 		end,
-		after = function(plugin)
+		after = function()
 			-- [[ Configure Treesitter ]]
 			-- See `:help nvim-treesitter`
 			require("nvim-treesitter.configs").setup({
@@ -152,7 +152,7 @@ require("lze").load({
 		"mini.nvim",
 		enabled = nixCats("general") or false,
 		event = "DeferredUIEnter",
-		after = function(plugin)
+		after = function()
 			require("mini.pairs").setup()
 			require("mini.icons").setup()
 			require("mini.ai").setup()
@@ -182,7 +182,7 @@ require("lze").load({
 			vim.cmd.packadd(name)
 			vim.cmd.packadd("lualine-lsp-progress")
 		end,
-		after = function(plugin)
+		after = function()
 			require("lualine").setup({
 				options = {
 					icons_enabled = false,
@@ -222,7 +222,7 @@ require("lze").load({
 		enabled = nixCats("copilot") or false,
 		event = "DeferredUIEnter",
 		on_require = "copilot",
-		after = function(plugin)
+		after = function()
 			require("copilot").setup({
 				suggestion = { enabled = false },
 				panel = { enabled = false },
@@ -244,7 +244,7 @@ require("lze").load({
 		-- ft = "",
 		-- keys = "",
 		-- colorscheme = "",
-		after = function(plugin)
+		after = function()
 			require("gitsigns").setup({
 				-- See `:help gitsigns.txt`
 				signs = {
@@ -324,7 +324,7 @@ require("lze").load({
 		"which-key.nvim",
 		enabled = nixCats("general") or false,
 		event = "DeferredUIEnter",
-		after = function(plugin)
+		after = function()
 			require("which-key").setup({})
 			require("which-key").add({
 				{ "<leader><leader>", group = "buffer commands" },
@@ -352,7 +352,7 @@ require("lze").load({
 		"nvim-lint",
 		enabled = nixCats("general") or false,
 		event = "FileType",
-		after = function(plugin)
+		after = function()
 			require("lint").linters_by_ft = {
 				-- NOTE: download some linters in lspsAndRuntimeDeps
 				-- and configure them here
@@ -375,7 +375,7 @@ require("lze").load({
 		enabled = nixCats("general") or false,
 		event = "DeferredUIEnter",
 		-- colorscheme = "",
-		after = function(plugin)
+		after = function()
 			local conform = require("conform")
 
 			conform.setup({
@@ -438,7 +438,7 @@ require("lze").load({
 		"neotest",
 		enabled = nixCats("general") or false,
 		event = "DeferredUIEnter",
-		after = function(plugin)
+		after = function()
 			require("neotest").setup({
 				adapters = {
 					nixCats("rust") and require("rustaceanvim.neotest") or nil,
@@ -467,7 +467,7 @@ require("lze").load({
 			vim.cmd.packadd("nvim-dap-ui")
 			vim.cmd.packadd("nvim-dap-virtual-text")
 		end,
-		after = function(plugin)
+		after = function()
 			local dap = require("dap")
 			local dapui = require("dapui")
 
@@ -527,7 +527,7 @@ require("lze").load({
 				--- node userdata tree-sitter node identified as variable definition of reference (see `:h tsnode`)
 				--- options nvim_dap_virtual_text_options Current options for nvim-dap-virtual-text
 				--- string|nil A text how the virtual text should be displayed or nil, if this variable shouldn't be displayed
-				display_callback = function(variable, buf, stackframe, node, options)
+				display_callback = function(variable, _, _, _, options)
 					if options.virt_text_pos == "inline" then
 						return " = " .. variable.value
 					else
@@ -555,7 +555,7 @@ require("lze").load({
 		"nvim-dap-go",
 		enabled = nixCats("go") or false,
 		on_plugin = { "nvim-dap" },
-		after = function(plugin)
+		after = function()
 			require("dap-go").setup()
 		end,
 	},
@@ -563,7 +563,7 @@ require("lze").load({
 		"nvim-dap-vscode-js",
 		enabled = nixCats("node") or false,
 		on_plugin = { "nvim-dap" },
-		after = function(plugin)
+		after = function()
 			require("dap-vscode-js").setup({
 				adapters = { "pwa-node", "pwa-chrome", "pwa-msedge", "node-terminal", "pwa-extensionHost" }, -- which adapters to register in nvim-dap
 			})
@@ -613,6 +613,7 @@ local function lsp_on_attach(_, bufnr)
 	nmap("gd", vim.lsp.buf.definition, "[G]oto [D]efinition")
 
 	if nixCats("general") then
+		require("snacks")
 		nmap("gr", function()
 			Snacks.picker.lsp_references()
 		end, "[G]oto [R]eferences")
@@ -731,7 +732,7 @@ require("lze").load({
 		"typescript-tools.nvim",
 		ft = { "javascript", "javascriptreact", "typescript", "typescriptreact" },
 		on_require = { "typescript-tools" },
-		after = function(plugin)
+		after = function()
 			require("typescript-tools").setup({
 				on_attach = function(client, bufnr)
 					-- Provided by prettierd and conform
