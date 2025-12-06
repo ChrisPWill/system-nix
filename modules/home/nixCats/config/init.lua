@@ -80,6 +80,7 @@ require("lze").load({
 	{
 		"nvim-treesitter",
 		enabled = nixCats("general") or false,
+		event = "DeferredUIEnter",
 		-- cmd = { "" },
 		dep_of = { "neotest" },
 		-- ft = "",
