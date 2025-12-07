@@ -142,8 +142,7 @@ in {
             luasnip
             cmp_luasnip
             friendly-snippets
-            # Set up soon
-            # nvim-scissors
+            nvim-scissors
           ];
           copilot = with pkgs.vimPlugins; [
             copilot-lua

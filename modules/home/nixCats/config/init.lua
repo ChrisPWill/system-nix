@@ -64,6 +64,11 @@ require("lze").load({
 						snippets = {
 							min_keyword_length = 2,
 							score_offset = 1000,
+							opts = {
+								search_paths = {
+									(nixCats.configDir or "") .. "/snippets",
+								},
+							},
 						},
 						copilot = nixCats("copilot") and {
 							name = "copilot",
@@ -608,6 +613,7 @@ require("lze").load({
 		end,
 		after = function()
 			require("luasnip.loaders.from_vscode").lazy_load()
+			require("luasnip.loaders.from_vscode").lazy_load({ paths = (nixCats.configDir or "") .. "/snippets" })
 			require("luasnip.loaders.from_lua").lazy_load({ paths = (nixCats.configDir or "") .. "/snippets" })
 			local ls = require("luasnip")
 			vim.keymap.set({ "i", "s" }, "<C-L>", function()
@@ -616,6 +622,16 @@ require("lze").load({
 			vim.keymap.set({ "i", "s" }, "<C-J>", function()
 				ls.jump(-1)
 			end, { silent = true, desc = "Luasnip: Jump backward" })
+		end,
+	},
+	{
+		"nvim-scissors",
+		enabled = nixCats("general") or false,
+		event = "DeferredUIEnter",
+		after = function()
+			require("scissors").setup({
+				snippetDir = (nixCats.configDir or "") .. "/snippets",
+			})
 		end,
 	},
 })
