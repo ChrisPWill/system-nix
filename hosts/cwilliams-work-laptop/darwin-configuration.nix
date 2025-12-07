@@ -13,6 +13,9 @@
       # Used for managing terraform versions. Simpler than nixifying for now
       # https://github.com/tofuutils/tenv
       "tenv"
+
+      # For SignalFM
+      "pipx"
     ];
 
     taps = [
