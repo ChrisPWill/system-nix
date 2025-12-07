@@ -17,8 +17,12 @@
   config = {
     userEmail = "cwilliams@atlassian.com";
 
-    # Add Atlassian tools to PATH
-    home.sessionPath = ["/opt/atlassian/bin"];
+    home.sessionPath = [
+      # Add Atlassian tools to PATH
+      "/opt/atlassian/bin"
+      # pip and other stuff
+      "${config.home.homeDirectory}/.local/bin"
+    ];
 
     # Envoluntary configuration
     xdg.configFile."envoluntary/config.toml".source = config.lib.file.mkOutOfStoreSymlink "${config.workLaptopHomeDir}/out-of-store/envoluntary.toml";
