@@ -143,6 +143,7 @@ in {
             cmp_luasnip
             friendly-snippets
             nvim-scissors
+            arrow-nvim
           ];
           copilot = with pkgs.vimPlugins; [
             copilot-lua

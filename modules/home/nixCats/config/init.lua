@@ -164,6 +164,17 @@ require("lze").load({
 		end,
 	},
 	{
+		"arrow.nvim",
+		event = "DeferredUIEnter",
+		after = function()
+			require("arrow").setup({
+				show_icons = true,
+				leader_key = ";",
+				buffer_leader_key = "m",
+			})
+		end,
+	},
+	{
 		"mini.nvim",
 		enabled = nixCats("general") or false,
 		event = "DeferredUIEnter",
