@@ -165,6 +165,7 @@ require("lze").load({
 	},
 	{
 		"arrow.nvim",
+		enabled = nixCats("general") or false,
 		event = "DeferredUIEnter",
 		after = function()
 			require("arrow").setup({
@@ -172,6 +173,20 @@ require("lze").load({
 				leader_key = ";",
 				buffer_leader_key = "m",
 			})
+		end,
+	},
+	{
+		"leap.nvim",
+		enabled = nixCats("general") or false,
+		event = "DeferredUIEnter",
+		after = function()
+			vim.keymap.set({ "n", "x", "o" }, "\\", "<Plug>(leap)", { desc = "Leap" })
+			-- Treesitter
+			vim.keymap.set({ "n", "x", "o" }, "<leader>\\s", function()
+				require("leap.treesitter").select({
+					opts = require("leap.user").with_traversal_keys("R", "r"),
+				})
+			end, { desc = "Leap with Treesitter" })
 		end,
 	},
 	{

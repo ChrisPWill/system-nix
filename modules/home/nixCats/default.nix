@@ -144,6 +144,7 @@ in {
             friendly-snippets
             nvim-scissors
             arrow-nvim
+            leap-nvim
           ];
           copilot = with pkgs.vimPlugins; [
             copilot-lua
