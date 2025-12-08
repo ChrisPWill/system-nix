@@ -2,7 +2,7 @@
 pattern = "~/atlassian"
 flake_reference = "~/.system-nix/templates/node22"
 
-[[entries]]
-pattern = "~/atlassian/dashboards/ecosystem-platform-dashboards"
-flake_reference = "~/.system-nix/templates/python"
+# [[entries]]
+# pattern = "~/atlassian/dashboards/ecosystem-platform-dashboards"
+# flake_reference = "~/.system-nix/templates/python"
 
