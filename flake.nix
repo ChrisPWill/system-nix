@@ -36,12 +36,25 @@
 
     # Migrating to nixCats
     nixCats.url = "github:BirdeeHub/nixCats-nvim";
+
+    niri.url = "github:sodiboo/niri-flake";
+    niri.inputs.nixpkgs.follows = "nixpkgs";
+
+    dgop.url = "github:AvengeMedia/dgop";
+    dgop.inputs.nixpkgs.follows = "nixpkgs";
+
+    dankMaterialShell = {
+      url = "github:AvengeMedia/DankMaterialShell";
+      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.dgop.follows = "dgop";
+    };
   };
 
   # Load config via blueprint https://github.com/numtide/blueprint
-  outputs = inputs: inputs.blueprint {
-    inherit inputs;
+  outputs = inputs:
+    inputs.blueprint {
+      inherit inputs;
 
-    nixpkgs.config.allowUnfree = true;
-  };
+      nixpkgs.config.allowUnfree = true;
+    };
 }
