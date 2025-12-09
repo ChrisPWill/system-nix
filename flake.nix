@@ -30,10 +30,6 @@
     home-manager.url = "github:nix-community/home-manager";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
 
-    # My old neovim configuration - migrating from this
-    nixvim.url = "github:nix-community/nixvim";
-    nixvim.inputs.nixpkgs.follows = "nixpkgs";
-
     # Migrating to nixCats
     nixCats.url = "github:BirdeeHub/nixCats-nvim";
 

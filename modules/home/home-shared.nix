@@ -28,11 +28,6 @@
   imports = [
     inputs.self.homeModules.theme
 
-    # Temporary until moved to nixCats
-    inputs.nixvim.homeModules.nixvim
-    ./nixvim
-
-    # My config to replace nixvim
     ./nixCats
 
     # https://github.com/dfrankland/envoluntary
