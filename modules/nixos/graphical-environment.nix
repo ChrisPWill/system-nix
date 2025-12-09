@@ -1,4 +1,4 @@
-{inputs, ...}: {...}: {
+{inputs, ...}: {pkgs, ...}: {
   imports = [
     inputs.dankMaterialShell.nixosModules.greeter
     inputs.niri.nixosModules.niri
@@ -13,6 +13,7 @@
       compositor.name = "niri";
     };
     programs.niri.enable = true;
+    programs.niri.package = pkgs.niri;
 
     # Enable CUPS to print documents.
     services.printing.enable = true;
