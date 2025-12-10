@@ -203,6 +203,28 @@
       };
     };
 
+    programs.yazi = {
+      enable = true;
+      enableZshIntegration = true;
+
+      extraPackages = with pkgs; [
+        ouch
+        glow
+      ];
+
+      plugins = let
+        yz = pkgs.yaziPlugins;
+      in {
+        git = yz.git; # Git status
+        sudo = yz.sudo; # Call sudo
+        ouch = yz.ouch; # Preview archives
+        glow = yz.glow; # Preview markdown files
+        mount = yz.mount; # Mount manager
+        starship = yz.starship; # Starship prompt integration
+        relative-motions = yz."relative-motions"; # Vim-like motions
+      };
+    };
+
     # Nice fast autojump command
     # https://github.com/ajeetdsouza/zoxide
     programs.zoxide.enable = true;
