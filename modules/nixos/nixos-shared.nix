@@ -2,7 +2,7 @@
   users.defaultUserShell = pkgs.zsh;
 
   # Set your time zone.
-  time.timeZone = "Australia/Sydney";
+  time.timeZone = "Asia/Seoul";
 
   # Select internationalisation properties.
   i18n.defaultLocale = "en_GB.UTF-8";
