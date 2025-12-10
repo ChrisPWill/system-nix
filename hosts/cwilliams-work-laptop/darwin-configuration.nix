@@ -51,6 +51,9 @@
 
       # Music
       "spotify"
+
+      # Atlassian's browser
+      "thebrowsercompany-dia"
     ];
   };
 
