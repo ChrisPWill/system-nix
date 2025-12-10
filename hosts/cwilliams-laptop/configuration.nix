@@ -4,6 +4,7 @@
     inputs.self.nixosModules.host-shared
     inputs.self.nixosModules.nixos-shared
     inputs.self.nixosModules.graphical-environment
+    inputs.self.nixosModules.personal-machine
   ];
 
   nixpkgs.hostPlatform = "x86_64-linux";
