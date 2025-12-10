@@ -12,6 +12,11 @@
       enable = true;
       compositor.name = "niri";
     };
+
+    environment.systemPackages = with pkgs; [
+      # Required by niri on nvidia drivers
+      xwayland-satellite
+    ];
     programs.niri.enable = true;
     programs.niri.package = pkgs.niri;
 

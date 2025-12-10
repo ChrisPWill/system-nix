@@ -15,6 +15,11 @@ in {
     # Complete desktop shell for Wayland compositors e.g. niri/hyprland
     programs.dankMaterialShell = {
       enable = true;
+
+      systemd = {
+        enable = true;
+        restartIfChanged = true;
+      };
     };
     # Niri https://yalter.github.io/niri/
     programs.dankMaterialShell.niri = {

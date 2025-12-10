@@ -45,6 +45,7 @@
   hardware.graphics.enable = true;
   services.xserver.videoDrivers = ["nvidia"];
   hardware.nvidia.open = true;
+  hardware.nvidia.modesetting.enable = true;
   hardware.nvidia.prime = {
     sync.enable = true;
     intelBusId = "PCI:0:2:0";
