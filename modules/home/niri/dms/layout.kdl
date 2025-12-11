@@ -8,13 +8,6 @@ layout {
     focus-ring {
         width 2
     }
-
-    tab-indicator {
-        width 8
-        place-within-column
-        position "top"
-        gaps-between-tabs 2
-    }
 }
 window-rule {
     geometry-corner-radius 12

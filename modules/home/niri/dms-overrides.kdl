@@ -1,0 +1,8 @@
+layout {
+    tab-indicator {
+        width 8
+        place-within-column
+        position "top"
+        gaps-between-tabs 2
+    }
+}
