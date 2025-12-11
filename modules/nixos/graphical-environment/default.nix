@@ -1,27 +1,14 @@
-{inputs, ...}: {pkgs, ...}: {
+{pkgs, ...}: {
   imports = [
-    inputs.dankMaterialShell.nixosModules.greeter
-    inputs.niri.nixosModules.niri
+    ./dank.nix
+    ./niri.nix
   ];
 
   config = {
-    # Niri default polkit agent conflicts with dankMaterialShell
-    # See https://danklinux.com/docs/dankmaterialshell/nixos#polkit-agent
-    systemd.user.services.niri-flake-polkit.enable = false;
-    programs.dankMaterialShell.greeter = {
-      enable = true;
-      compositor.name = "niri";
-    };
-
     environment.systemPackages = with pkgs; [
-      # Required by niri on nvidia drivers
-      xwayland-satellite
-
       # Manage monitor layout
       wdisplays
     ];
-    programs.niri.enable = true;
-    programs.niri.package = pkgs.niri;
 
     # Enable CUPS to print documents.
     services.printing.enable = true;

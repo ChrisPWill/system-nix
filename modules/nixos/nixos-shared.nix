@@ -1,6 +1,13 @@
 {pkgs, ...}: {
   users.defaultUserShell = pkgs.zsh;
 
+  # Define a user account. Don't forget to set a password with ‘passwd’.
+  users.users.cwilliams = {
+    isNormalUser = true;
+    description = "Chris Williams";
+    extraGroups = ["networkmanager" "wheel"];
+  };
+
   # Set your time zone.
   time.timeZone = "Asia/Seoul";
 
