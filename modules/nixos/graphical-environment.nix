@@ -16,6 +16,9 @@
     environment.systemPackages = with pkgs; [
       # Required by niri on nvidia drivers
       xwayland-satellite
+
+      # Manage monitor layout
+      wdisplays
     ];
     programs.niri.enable = true;
     programs.niri.package = pkgs.niri;
