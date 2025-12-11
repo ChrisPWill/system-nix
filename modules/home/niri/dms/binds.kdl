@@ -38,10 +38,6 @@ binds {
     Mod+W { toggle-column-tabbed-display; }
 
     // === Focus Navigation ===
-    Mod+Left  { focus-column-left; }
-    Mod+Down  { focus-window-down; }
-    Mod+Up    { focus-window-up; }
-    Mod+Right { focus-column-right; }
     Mod+H     { focus-column-left; }
     Mod+J     { focus-window-down; }
     Mod+K     { focus-window-up; }
