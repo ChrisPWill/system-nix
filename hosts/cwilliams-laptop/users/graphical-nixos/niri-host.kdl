@@ -1,0 +1,9 @@
+output "AU Optronics 0x329D Unknown" {
+    mode "1920x1080@144"
+    position x=3440 y=480
+}
+
+output "Computer Diagnostic Systems 34CM16501Q 0000000000001" {
+    mode "3440x1440@144"
+    position x=0 y=0
+}
