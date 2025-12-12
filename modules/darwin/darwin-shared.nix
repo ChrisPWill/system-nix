@@ -1,6 +1,11 @@
-{inputs, ...}: {config, ...}: {
+{
+  inputs,
+  pkgs,
+  ...
+}: {config, ...}: {
   imports = [
     inputs.nix-homebrew.darwinModules.nix-homebrew
+    inputs.stylix.darwinModules.stylix
     inputs.self.modules.theming.theme
   ];
   nix.settings.experimental-features = ["nix-command" "flakes"];
@@ -40,6 +45,9 @@
       "scroll-reverser"
     ];
   };
+
+  stylix.enable = true;
+  stylix.base16Scheme = "${pkgs.base16-schemes}/share/themes/gruvbox-dark-hard.yaml";
 
   services.jankyborders = let
     theme = config.theme;
