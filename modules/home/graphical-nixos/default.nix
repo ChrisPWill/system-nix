@@ -4,7 +4,7 @@
   pkgs,
   ...
 }: let
-  niriDir = "${config.homeModuleDir}/niri";
+  niriDir = "${config.homeModuleDir}/graphical-nixos/niri";
 in {
   imports = [
     inputs.dankMaterialShell.homeModules.dankMaterialShell.default
