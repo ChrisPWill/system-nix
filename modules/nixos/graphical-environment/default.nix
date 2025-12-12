@@ -15,10 +15,26 @@
 
       kdePackages.qtsvg # required by dolphin
       kdePackages.dolphin
+
+      # Needed for xdg portal file picker
+      nautilus
+    ];
+
+    xdg.portal.enable = true;
+    xdg.portal.xdgOpenUsePortal = true;
+    xdg.portal.config.common.default = ["termfilechooser" "gnome" "gtk"];
+    xdg.portal.extraPortals = with pkgs; [
+      xdg-desktop-portal-gtk
+      xdg-desktop-portal-gnome
+      xdg-desktop-portal-termfilechooser
+      gnome-keyring
     ];
 
     # Enable CUPS to print documents.
     services.printing.enable = true;
+
+    services.dbus.enable = true;
+    services.upower.enable = true;
 
     # Enable sound with pipewire.
     services.pulseaudio.enable = false;

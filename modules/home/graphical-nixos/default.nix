@@ -32,6 +32,16 @@ in {
     programs.niri.config = null;
     programs.niri.package = pkgs.niri;
 
+    xdg.portal.enable = true;
+    xdg.portal.xdgOpenUsePortal = true;
+    xdg.portal.config.common.default = ["termfilechooser" "gnome" "gtk"];
+    xdg.portal.extraPortals = with pkgs; [
+      xdg-desktop-portal-gtk
+      xdg-desktop-portal-gnome
+      xdg-desktop-portal-termfilechooser
+      gnome-keyring
+    ];
+
     xdg.configFile."niri/config.kdl".source = config.lib.file.mkOutOfStoreSymlink "${niriDir}/config.kdl";
     xdg.configFile."niri/dms-overrides.kdl".source = config.lib.file.mkOutOfStoreSymlink "${niriDir}/dms-overrides.kdl";
     xdg.configFile."niri/dms/alttab.kdl".source = config.lib.file.mkOutOfStoreSymlink "${niriDir}/dms/alttab.kdl";
