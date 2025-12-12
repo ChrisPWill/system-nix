@@ -12,6 +12,9 @@
       # Try out vivaldi
       vivaldi
       vivaldi-ffmpeg-codecs
+
+      kdePackages.qtsvg # required by dolphin
+      kdePackages.dolphin
     ];
 
     # Enable CUPS to print documents.
