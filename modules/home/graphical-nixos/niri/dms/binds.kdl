@@ -7,7 +7,7 @@ binds {
     // === Application Launchers ===
     Mod+T hotkey-overlay-title="Open Terminal" { spawn "wezterm"; }
     Mod+R hotkey-overlay-title="Application Launcher" { spawn "dms" "ipc" "call" "spotlight" "toggle"; }
-    Mod+B hotkey-overlay-title="Browser" { spawn "firefox"; }
+    Mod+B hotkey-overlay-title="Browser" { spawn "vivaldi"; }
     Mod+V hotkey-overlay-title="Clipboard Manager" { spawn "dms" "ipc" "call" "clipboard" "toggle"; }
     Mod+M hotkey-overlay-title="Task Manager" { spawn "dms" "ipc" "call" "processlist" "focusOrToggle"; }
     Mod+Comma hotkey-overlay-title="Settings" { spawn "dms" "ipc" "call" "settings" "focusOrToggle"; }

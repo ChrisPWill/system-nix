@@ -8,6 +8,10 @@
     environment.systemPackages = with pkgs; [
       # Manage monitor layout
       wdisplays
+
+      # Try out vivaldi
+      vivaldi
+      vivaldi-ffmpeg-codecs
     ];
 
     # Enable CUPS to print documents.
