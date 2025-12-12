@@ -5,5 +5,7 @@
     # steam extras
     steamcmd
     steam-tui
+
+    anki-bin
   ];
 }
