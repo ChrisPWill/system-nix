@@ -34,11 +34,10 @@ in {
 
     xdg.portal.enable = true;
     xdg.portal.xdgOpenUsePortal = true;
-    xdg.portal.config.common.default = ["termfilechooser" "gnome" "gtk"];
+    xdg.portal.config.common.default = ["gnome" "gtk"];
     xdg.portal.extraPortals = with pkgs; [
       xdg-desktop-portal-gtk
       xdg-desktop-portal-gnome
-      xdg-desktop-portal-termfilechooser
       gnome-keyring
     ];
 
