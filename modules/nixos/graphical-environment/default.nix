@@ -31,8 +31,5 @@
       # If you want to use JACK applications, uncomment this
       #jack.enable = true;
     };
-
-    # Install firefox.
-    programs.firefox.enable = true;
   };
 }

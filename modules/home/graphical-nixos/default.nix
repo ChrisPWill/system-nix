@@ -9,6 +9,8 @@ in {
   imports = [
     inputs.dankMaterialShell.homeModules.dankMaterialShell.default
     inputs.dankMaterialShell.homeModules.dankMaterialShell.niri
+
+    ./default-apps.nix
   ];
 
   config = {
