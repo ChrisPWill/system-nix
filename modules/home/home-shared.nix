@@ -26,8 +26,6 @@
   };
 
   imports = [
-    inputs.self.homeModules.theme
-
     ./nixCats
     ./fonts.nix
 
