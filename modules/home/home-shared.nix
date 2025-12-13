@@ -29,6 +29,7 @@
     inputs.self.homeModules.theme
 
     ./nixCats
+    ./fonts.nix
 
     # https://github.com/dfrankland/envoluntary
     # direnv-like matcher that avoids needing to create gitignored nix files in projects
@@ -53,9 +54,6 @@
           # Fast alternative to find
           # https://github.com/sharkdp/fd
           fd
-
-          # A good font
-          nerd-fonts.fantasque-sans-mono
 
           # Fast grep
           ripgrep
