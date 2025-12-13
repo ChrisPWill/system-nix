@@ -165,39 +165,6 @@
     # Copy the wezterm.lua file to the home module directory
     xdg.configFile."wezterm/extraWezterm.lua".source = config.lib.file.mkOutOfStoreSymlink "${config.homeModuleDir}/out-of-store/wezterm.lua";
     programs.wezterm.extraConfig = "local extraConfig = require('extraWezterm'); return extraConfig";
-    programs.wezterm.colorSchemes = {
-      chrisTheme = with config.theme; {
-        foreground = foreground;
-        background = background;
-        cursor_bg = foreground;
-        cursor_fg = background;
-        cursor_border = light.silver;
-        split = normal.silver;
-        scrollbar_thumb = light.silver;
-
-        ansi = with normal; [
-          black
-          red
-          green
-          yellow
-          blue
-          magenta
-          cyan
-          silver
-        ];
-
-        brights = with light; [
-          gray
-          red
-          green
-          yellow
-          blue
-          magenta
-          cyan
-          silver
-        ];
-      };
-    };
 
     programs.yazi = {
       enable = true;
