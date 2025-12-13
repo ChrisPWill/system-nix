@@ -7,5 +7,7 @@
     steam-tui
 
     anki-bin
+    mplayer # needed by anki
+    mpv # needed by anki
   ];
 }
