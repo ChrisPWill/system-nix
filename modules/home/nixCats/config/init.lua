@@ -8,9 +8,7 @@ require("global-options")
 -- [[ Basic Keymaps ]]
 require("keymaps")
 
-require("onedark").setup({
-	style = "darker",
-})
+require("onedark").setup({})
 vim.cmd.colorscheme("onedark")
 
 require("snacks-config")
