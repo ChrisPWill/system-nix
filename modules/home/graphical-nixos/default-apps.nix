@@ -12,7 +12,19 @@
       "x-scheme-handler/unknown" = vivaldi;
       "application/pdf" = vivaldi;
 
+      # File management
       "inode/directory" = "dolphin.desktop";
+
+      # Image viewing
+      "image/jpeg" = "qimgv.desktop";
+      "image/png" = "qimgv.desktop";
+      "image/gif" = "qimgv.desktop";
+      "image/bmp" = "qimgv.desktop";
+      "image/webp" = "qimgv.desktop";
+      "image/tiff" = "qimgv.desktop";
+      "image/svg+xml" = "qimgv.desktop";
+      "image/x-xcf" = "qimgv.desktop"; # GIMP's native format
+      "image/vnd.adobe.photoshop" = "qimgv.desktop"; # PSD files
     };
   };
 }

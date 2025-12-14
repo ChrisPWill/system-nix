@@ -29,5 +29,9 @@
       xdg-desktop-portal-gnome
       gnome-keyring
     ];
+
+    home.packages = with pkgs; [
+      qimgv # quick image viewer
+    ];
   };
 }
