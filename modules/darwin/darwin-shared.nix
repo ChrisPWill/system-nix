@@ -1,8 +1,8 @@
-{
-  inputs,
+{inputs, ...}: {
+  config,
   pkgs,
   ...
-}: {config, ...}: {
+}: {
   imports = [
     inputs.nix-homebrew.darwinModules.nix-homebrew
     inputs.stylix.darwinModules.stylix
