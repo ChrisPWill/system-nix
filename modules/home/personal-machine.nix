@@ -9,5 +9,8 @@
     anki-bin
     mplayer # needed by anki
     mpv # needed by anki
+
+    # messaging app
+    signal-desktop
   ];
 }
