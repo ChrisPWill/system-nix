@@ -1,8 +1,4 @@
-{inputs, ...}: {
-  config,
-  pkgs,
-  ...
-}: {
+{inputs, ...}: {pkgs, ...}: {
   imports = [
     inputs.nix-homebrew.darwinModules.nix-homebrew
     inputs.stylix.darwinModules.stylix
@@ -54,12 +50,8 @@
   stylix.enable = true;
   stylix.base16Scheme = "${pkgs.base16-schemes}/share/themes/onedark.yaml";
 
-  services.jankyborders = let
-    theme = config.theme;
-  in {
+  services.jankyborders = {
     enable = true;
-    active_color = theme.background;
-    inactive_color = theme.background-defocused;
     width = 7.0;
   };
 
