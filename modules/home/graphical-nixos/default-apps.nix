@@ -26,5 +26,17 @@
       "image/x-xcf" = "qimgv.desktop"; # GIMP's native format
       "image/vnd.adobe.photoshop" = "qimgv.desktop"; # PSD files
     };
+
+    associations.removed = let
+      vivaldi = "vivaldi-stable.desktop";
+    in {
+      "image/jpeg" = [vivaldi];
+      "image/png" = [vivaldi];
+      "image/gif" = [vivaldi];
+      "image/bmp" = [vivaldi];
+      "image/webp" = [vivaldi];
+      "image/tiff" = [vivaldi];
+      "image/svg+xml" = [vivaldi];
+    };
   };
 }
