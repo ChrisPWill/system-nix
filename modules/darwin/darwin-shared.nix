@@ -9,6 +9,11 @@
     inputs.self.modules.theming.theme
   ];
   nix.settings.experimental-features = ["nix-command" "flakes"];
+  nix.gc.interval = {
+    Hour = 3;
+    Minute = 15;
+    Weekday = 2;
+  };
 
   nix-homebrew = {
     enable = true;
