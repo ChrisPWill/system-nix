@@ -40,7 +40,9 @@
     dgop.inputs.nixpkgs.follows = "nixpkgs";
 
     dankMaterialShell = {
-      url = "github:AvengeMedia/DankMaterialShell";
+      # Temp override due to bug
+      # url = "github:AvengeMedia/DankMaterialShell";
+      url = "github:redybcs/DankMaterialShell?rev=59683edbd01731633a9af71070c5a0081078c7eb";
       inputs.nixpkgs.follows = "nixpkgs";
       inputs.dgop.follows = "dgop";
     };
