@@ -5,6 +5,7 @@
     inputs.self.nixosModules.nixos-shared
     inputs.self.nixosModules.graphical-environment
     inputs.self.nixosModules.personal-machine
+    inputs.self.nixosModules.gamemode
   ];
 
   nixpkgs.hostPlatform = "x86_64-linux";
