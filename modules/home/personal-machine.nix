@@ -13,4 +13,6 @@
     # messaging app
     signal-desktop
   ];
+
+  isPersonalMachine = true;
 }

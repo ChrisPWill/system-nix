@@ -2,6 +2,7 @@
   inputs,
   config,
   lib,
+  pkgs,
   ...
 }: let
   utils = inputs.nixCats.utils;
@@ -33,7 +34,7 @@ in {
       addOverlays = [(utils.standardPluginOverlay inputs)];
 
       # See packageDefinitions - says which one to install
-      packageNames = [mainNixCatsPackageName];
+      packageNames = [mainNixCatsPackageName] ++ pkgs.lib.optionals config.isPersonalMachine ["leet"];
 
       luaPath = config.lib.file.mkOutOfStoreSymlink "${config.homeModuleDir}/nixCats/config";
 
@@ -83,6 +84,9 @@ in {
             clippy
             tombi
           ];
+          python = with pkgs; [
+            basedpyright
+          ];
           # go = with pkgs; [
           #   gopls
           #   delve
@@ -109,6 +113,10 @@ in {
           rust = with pkgs.vimPlugins; [
             # Already lazy
             rustaceanvim
+          ];
+          leet = with pkgs.vimPlugins; [
+            nui-nvim
+            leetcode-nvim
           ];
         };
 
@@ -189,8 +197,6 @@ in {
 
       # see :help nixCats.flake.outputs.packageDefinitions
       packageDefinitions.replace = {
-        # These are the names of your packages
-        # you can include as many as you wish.
         "${mainNixCatsPackageName}" = {pkgs, ...}: {
           # they contain a settings set defined above
           # see :help nixCats.flake.outputs.settings
@@ -218,6 +224,26 @@ in {
             copilot = config.nixCats.custom.enableCopilot;
 
             # go = false;
+          };
+          # anything else to pass and grab in lua with `nixCats.extra`
+          extra = {
+            nixdExtras.nixpkgs = ''import ${pkgs.path} {}'';
+          };
+        };
+
+        "leet" = {pkgs, ...}: {
+          settings = {
+            suffix-path = true;
+            suffix-LD = true;
+            wrapRc = true;
+            # aliases = ["nvim" "neovim" "nv"];
+            hosts.python3.enable = true;
+            hosts.node.enable = true;
+          };
+          categories = {
+            general = true;
+            python = true;
+            leet = true;
           };
           # anything else to pass and grab in lua with `nixCats.extra`
           extra = {

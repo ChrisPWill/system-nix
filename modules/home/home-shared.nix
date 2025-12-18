@@ -23,6 +23,8 @@
       description = "The email address of the user";
       default = "chris@chrispwill.com";
     };
+
+    isPersonalMachine = mkEnableOption "personal machine packages/config";
   };
 
   imports = [

@@ -775,6 +775,13 @@ require("lze").load({
 		},
 	},
 	{
+		"basedpyright",
+		enabled = nixCats("python") or false,
+		lsp = {
+			fileTypes = { "python" },
+		},
+	},
+	{
 		-- name of the lsp
 		"lua_ls",
 		enabled = nixCats("lua") or false,
@@ -902,6 +909,25 @@ require("lze").load({
 		},
 	},
 })
+
+if nixCats("leet") then
+	require("leetcode").setup({
+		arg = "start",
+		lang = "python3",
+	})
+	vim.keymap.set("n", "<leader>lii", "<cmd>Leet info<CR>", { desc = "Leet question info" })
+	vim.keymap.set("n", "<leader>liI", "<cmd>Leet inject<CR>", { desc = "Leet re-inject editor code" })
+	vim.keymap.set("n", "<leader>ll", "<cmd>Leet list<CR>", { desc = "Leet question list" })
+	vim.keymap.set("n", "<leader>lL", "<cmd>Leet lang<CR>", { desc = "Leet lang picker" })
+	vim.keymap.set("n", "<leader>lf", "<cmd>Leet fold<CR>", { desc = "Leet fold imports section" })
+	vim.keymap.set("n", "<leader>ldd", "<cmd>Leet desc<CR>", { desc = "Leet toggle description" })
+	vim.keymap.set("n", "<leader>lds", "<cmd>Leet desc stats<CR>", { desc = "Leet toggle description stats" })
+	vim.keymap.set("n", "<leader>lD", "<cmd>Leet daily<CR>", { desc = "Leet daily question" })
+	vim.keymap.set("n", "<leader>lt", "<cmd>Leet test<CR>", { desc = "Leet test" })
+	vim.keymap.set("n", "<leader>lss", "<cmd>Leet submit<CR>", { desc = "Leet submit" })
+	vim.keymap.set("n", "<leader>lsl", "<cmd>Leet last_submit<CR>", { desc = "Leet restore last submitted code" })
+	vim.keymap.set("n", "<leader>lR", "<cmd>Leet restore<CR>", { desc = "Leet restore to original code" })
+end
 
 -- Improve diagnostics in insert mode and show them in a floating window by default:wqa
 local group = vim.api.nvim_create_augroup("OoO", {})
