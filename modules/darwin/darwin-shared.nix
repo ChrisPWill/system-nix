@@ -53,6 +53,7 @@
   services.jankyborders = {
     enable = true;
     width = 7.0;
+    blacklist = ["Loom"];
   };
 
   system = {
