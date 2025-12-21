@@ -32,6 +32,8 @@
 
     home.packages = with pkgs; [
       qimgv # quick image viewer
+
+      wl-clipboard # wl-copy and wl-paste
     ];
   };
 }
