@@ -70,6 +70,9 @@
           # Great for docker, journald, systemd logs etc.
           # https://github.com/Lifailon/lazyjournal
           lazyjournal
+
+          # JSON formatting etc.
+          jq
         ]
         # Can access the host configuration using osConfig e.g.
         # ++ (
