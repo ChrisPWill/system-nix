@@ -12,6 +12,9 @@
 
     # messaging app
     signal-desktop
+
+    # Note taking/docs
+    obsidian
   ];
 
   isPersonalMachine = true;
