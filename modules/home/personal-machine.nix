@@ -15,6 +15,8 @@
 
     # Note taking/docs
     obsidian
+
+    bitwarden-cli
   ];
 
   isPersonalMachine = true;
