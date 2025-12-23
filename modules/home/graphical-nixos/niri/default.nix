@@ -7,7 +7,7 @@
   niriDir = "${config.homeModuleDir}/graphical-nixos/niri";
 in {
   imports = [
-    inputs.dankMaterialShell.homeModules.dankMaterialShell.niri
+    inputs.dankMaterialShell.homeModules.niri
   ];
 
   config = {

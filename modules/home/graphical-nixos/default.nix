@@ -4,7 +4,7 @@
   ...
 }: {
   imports = [
-    inputs.dankMaterialShell.homeModules.dankMaterialShell.default
+    inputs.dankMaterialShell.homeModules.dank-material-shell
 
     ./niri
     ./default-apps.nix
@@ -12,7 +12,7 @@
 
   config = {
     # Complete desktop shell for Wayland compositors e.g. niri/hyprland
-    programs.dankMaterialShell = {
+    programs.dank-material-shell = {
       enable = true;
 
       systemd = {
