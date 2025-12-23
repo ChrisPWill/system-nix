@@ -36,13 +36,12 @@
     niri.url = "github:sodiboo/niri-flake";
     niri.inputs.nixpkgs.follows = "nixpkgs";
 
+    # Used for system monitoring in Dank Material Shell
     dgop.url = "github:AvengeMedia/dgop";
     dgop.inputs.nixpkgs.follows = "nixpkgs";
 
     dankMaterialShell = {
-      # Temp override due to bug
-      # url = "github:AvengeMedia/DankMaterialShell";
-      url = "github:redybcs/DankMaterialShell?rev=59683edbd01731633a9af71070c5a0081078c7eb";
+      url = "github:AvengeMedia/DankMaterialShell";
       inputs.nixpkgs.follows = "nixpkgs";
       inputs.dgop.follows = "dgop";
     };
