@@ -11,7 +11,7 @@ in {
   ];
 
   config = {
-    programs.dankMaterialShell.niri = {
+    programs.dank-material-shell.niri = {
       enableKeybinds = true;
       enableSpawn = true;
     };
