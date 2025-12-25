@@ -73,6 +73,9 @@
 
           # JSON formatting etc.
           jq
+
+          # Note taking
+          logseq
         ]
         # Can access the host configuration using osConfig e.g.
         # ++ (
