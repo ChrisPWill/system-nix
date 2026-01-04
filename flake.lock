@@ -160,26 +160,6 @@
         "type": "github"
       }
     },
-    "dgop": {
-      "inputs": {
-        "nixpkgs": [
-          "nixpkgs"
-        ]
-      },
-      "locked": {
-        "lastModified": 1765838956,
-        "narHash": "sha256-A3a2ZfvjirX8VIdIPI+nAyukWs6vx4vet3fU0mpr7lU=",
-        "owner": "AvengeMedia",
-        "repo": "dgop",
-        "rev": "0ff697a4e3418966caa714c838fc73f1ef6ba59b",
-        "type": "github"
-      },
-      "original": {
-        "owner": "AvengeMedia",
-        "repo": "dgop",
-        "type": "github"
-      }
-    },
     "envoluntary": {
       "inputs": {
         "crane": "crane",
@@ -560,7 +540,6 @@
       "inputs": {
         "blueprint": "blueprint",
         "dankMaterialShell": "dankMaterialShell",
-        "dgop": "dgop",
         "envoluntary": "envoluntary",
         "home-manager": "home-manager",
         "niri": "niri",
