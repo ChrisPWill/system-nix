@@ -18,6 +18,7 @@ in {
 
     programs.niri.config = null;
     programs.niri.package = pkgs.niri;
+    stylix.targets.niri.enable = false;
 
     xdg.portal.xdgOpenUsePortal = true;
 
