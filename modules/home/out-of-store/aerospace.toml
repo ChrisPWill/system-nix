@@ -38,6 +38,9 @@ default-root-container-orientation = 'auto'
 # See https://nikitabobko.github.io/AeroSpace/guide#key-mapping
 key-mapping.preset = 'qwerty'
 
+# Callbacks
+on-focus-changed = ['move-mouse window-lazy-center'] # Mouse lazily follows any focus (window or workspace)
+
 # Gaps between windows (inner-*) and between monitor edges (outer-*).
 # Possible values:
 # - Constant:     gaps.outer.top = 8
@@ -124,6 +127,9 @@ ctrl-alt-cmd-j = 'join-with down'
 ctrl-alt-cmd-k = 'join-with up'
 ctrl-alt-cmd-l = 'join-with right'
 
+ctrl-alt-shift-r = ['flatten-workspace-tree', 'mode main'] # reset layout
+ctrl-alt-shift-f = ['layout floating tiling', 'mode main'] # Toggle between floating and tiling layout
+
 # See: https://nikitabobko.github.io/AeroSpace/commands#resize
 ctrl-alt-shift-minus = 'resize smart -50'
 ctrl-alt-shift-equal = 'resize smart +50'
@@ -176,7 +182,5 @@ ctrl-alt-shift-semicolon = 'mode service'
 # See: https://nikitabobko.github.io/AeroSpace/guide#binding-modes
 [mode.service.binding]
 ctrl-alt-shift-esc = ['reload-config', 'mode main']
-ctrl-alt-shift-r = ['flatten-workspace-tree', 'mode main'] # reset layout
 #s = ['layout sticky tiling', 'mode main'] # sticky is not yet supported https://github.com/nikitabobko/AeroSpace/issues/2
-ctrl-alt-shift-f = ['layout floating tiling', 'mode main'] # Toggle between floating and tiling layout
 backspace = ['close-all-windows-but-current', 'mode main']
