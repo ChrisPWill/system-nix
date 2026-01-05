@@ -118,6 +118,12 @@ ctrl-alt-shift-j = 'move down'
 ctrl-alt-shift-k = 'move up'
 ctrl-alt-shift-l = 'move right'
 
+# See: https://nikitabobko.github.io/AeroSpace/commands#join-with
+ctrl-alt-cmd-h = 'join-with left'
+ctrl-alt-cmd-j = 'join-with down'
+ctrl-alt-cmd-k = 'join-with up'
+ctrl-alt-cmd-l = 'join-with right'
+
 # See: https://nikitabobko.github.io/AeroSpace/commands#resize
 ctrl-alt-shift-minus = 'resize smart -50'
 ctrl-alt-shift-equal = 'resize smart +50'
@@ -174,8 +180,3 @@ ctrl-alt-shift-r = ['flatten-workspace-tree', 'mode main'] # reset layout
 #s = ['layout sticky tiling', 'mode main'] # sticky is not yet supported https://github.com/nikitabobko/AeroSpace/issues/2
 ctrl-alt-shift-f = ['layout floating tiling', 'mode main'] # Toggle between floating and tiling layout
 backspace = ['close-all-windows-but-current', 'mode main']
-
-ctrl-alt-shift-h = ['join-with left', 'mode main']
-ctrl-alt-shift-j = ['join-with down', 'mode main']
-ctrl-alt-shift-k = ['join-with up', 'mode main']
-ctrl-alt-shift-l = ['join-with right', 'mode main']
