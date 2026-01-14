@@ -27,6 +27,11 @@ vim.keymap.set("n", "<leader>_", function()
 	Snacks.lazygit.open()
 end, { desc = "Snacks LazyGit" })
 
+-- Git blame in tig
+vim.keymap.set("n", "<leader>ggb", function()
+	Snacks.terminal.open("tig blame " .. vim.fn.expand("%"))
+end, { desc = "Tig Git Blame" })
+
 -- Terminal LazyJJ "<leader>j"
 vim.keymap.set("n", "<leader>j", function()
 	Snacks.terminal.open("lazyjj")

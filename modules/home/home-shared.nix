@@ -76,6 +76,9 @@
 
           # Note taking
           logseq
+
+          # Another fancy git UI
+          tig
         ]
         # Can access the host configuration using osConfig e.g.
         # ++ (
