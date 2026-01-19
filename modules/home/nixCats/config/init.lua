@@ -8,6 +8,13 @@ require("global-options")
 -- [[ Basic Keymaps ]]
 require("keymaps")
 
+-- Helper function for normal mode keymaps
+local function nmap(keys, func, desc, opts)
+	opts = opts or {}
+	opts.desc = desc
+	vim.keymap.set("n", keys, func, opts)
+end
+
 require("onedark").setup({})
 vim.cmd.colorscheme("onedark")
 
@@ -204,36 +211,16 @@ require("lze").load({
 			require("treewalker").setup({})
 
 			-- Movement
-			vim.keymap.set("n", "<A-h>", "<cmd>Treewalker Left<cr>", { silent = true, desc = "Treewalker: Go Left" })
-			vim.keymap.set("n", "<A-j>", "<cmd>Treewalker Down<cr>", { silent = true, desc = "Treewalker: Go Down" })
-			vim.keymap.set("n", "<A-k>", "<cmd>Treewalker Up<cr>", { silent = true, desc = "Treewalker: Go Up" })
-			vim.keymap.set("n", "<A-l>", "<cmd>Treewalker Right<cr>", { silent = true, desc = "Treewalker: Go Right" })
+			nmap("<A-h>", "<cmd>Treewalker Left<cr>", "Treewalker: Go Left", { silent = true })
+			nmap("<A-j>", "<cmd>Treewalker Down<cr>", "Treewalker: Go Down", { silent = true })
+			nmap("<A-k>", "<cmd>Treewalker Up<cr>", "Treewalker: Go Up", { silent = true })
+			nmap("<A-l>", "<cmd>Treewalker Right<cr>", "Treewalker: Go Right", { silent = true })
 
 			-- Swapping
-			vim.keymap.set(
-				"n",
-				"<A-S-h>",
-				"<cmd>Treewalker SwapLeft<cr>",
-				{ silent = true, desc = "Treewalker: Swap Left" }
-			)
-			vim.keymap.set(
-				"n",
-				"<A-S-j>",
-				"<cmd>Treewalker SwapDown<cr>",
-				{ silent = true, desc = "Treewalker: Swap Down" }
-			)
-			vim.keymap.set(
-				"n",
-				"<A-S-k>",
-				"<cmd>Treewalker SwapUp<cr>",
-				{ silent = true, desc = "Treewalker: Swap Up" }
-			)
-			vim.keymap.set(
-				"n",
-				"<A-S-l>",
-				"<cmd>Treewalker SwapRight<cr>",
-				{ silent = true, desc = "Treewalker: Swap Right" }
-			)
+			nmap("<A-S-h>", "<cmd>Treewalker SwapLeft<cr>", "Treewalker: Swap Left", { silent = true })
+			nmap("<A-S-j>", "<cmd>Treewalker SwapDown<cr>", "Treewalker: Swap Down", { silent = true })
+			nmap("<A-S-k>", "<cmd>Treewalker SwapUp<cr>", "Treewalker: Swap Up", { silent = true })
+			nmap("<A-S-l>", "<cmd>Treewalker SwapRight<cr>", "Treewalker: Swap Right", { silent = true })
 		end,
 	},
 	{
@@ -560,17 +547,17 @@ require("lze").load({
 			local dapui = require("dapui")
 
 			-- Basic debugging keymaps, feel free to change to your liking!
-			vim.keymap.set("n", "<F5>", dap.continue, { desc = "Debug: Start/Continue" })
-			vim.keymap.set("n", "<F1>", dap.step_into, { desc = "Debug: Step Into" })
-			vim.keymap.set("n", "<F2>", dap.step_over, { desc = "Debug: Step Over" })
-			vim.keymap.set("n", "<F3>", dap.step_out, { desc = "Debug: Step Out" })
-			vim.keymap.set("n", "<leader>b", dap.toggle_breakpoint, { desc = "Debug: Toggle Breakpoint" })
-			vim.keymap.set("n", "<leader>B", function()
+			nmap("<F5>", dap.continue, "Debug: Start/Continue")
+			nmap("<F1>", dap.step_into, "Debug: Step Into")
+			nmap("<F2>", dap.step_over, "Debug: Step Over")
+			nmap("<F3>", dap.step_out, "Debug: Step Out")
+			nmap("<leader>b", dap.toggle_breakpoint, "Debug: Toggle Breakpoint")
+			nmap("<leader>B", function()
 				dap.set_breakpoint(vim.fn.input("Breakpoint condition: "))
-			end, { desc = "Debug: Set Breakpoint" })
+			end, "Debug: Set Breakpoint")
 
 			-- Toggle to see last session result. Without this, you can't see session output in case of unhandled exception.
-			vim.keymap.set("n", "<F7>", dapui.toggle, { desc = "Debug: See last session result." })
+			nmap("<F7>", dapui.toggle, "Debug: See last session result.")
 
 			dap.listeners.after.event_initialized["dapui_config"] = dapui.open
 			dap.listeners.before.event_terminated["dapui_config"] = dapui.close
@@ -868,37 +855,12 @@ require("lze").load({
 					lsp_on_attach(client, bufnr)
 
 					-- Custom TypeScript keymaps
-					vim.keymap.set(
-						"n",
-						"<leader>cio",
-						"<cmd>TSToolsOrganizeImports<CR>",
-						{ desc = "[C]ode [I]mport [O]rganise" }
-					)
-					vim.keymap.set(
-						"n",
-						"<leader>cis",
-						"<cmd>TSToolsSortImports<CR>",
-						{ desc = "[C]ode [I]mport [S]ort" }
-					)
-					vim.keymap.set(
-						"n",
-						"<leader>cim",
-						"<cmd>TSToolsAddMissingImports<CR>",
-						{ desc = "[C]ode [I]mport [M]issing" }
-					)
-					vim.keymap.set("n", "<leader>cfa", "<cmd>TSToolsFixAll<CR>", { desc = "[C]ode [F]ix [A]ll" })
-					vim.keymap.set(
-						"n",
-						"<leader>cFe",
-						"<cmd>TSToolsRenameFile<CR>",
-						{ desc = "[C]ode [F]ILE r[E]name" }
-					)
-					vim.keymap.set(
-						"n",
-						"<leader>cFr",
-						"<cmd>TSToolsFileReferences<CR>",
-						{ desc = "[C]ode [F]ILE [R]eferences" }
-					)
+					nmap("<leader>cio", "<cmd>TSToolsOrganizeImports<CR>", "[C]ode [I]mport [O]rganise")
+					nmap("<leader>cis", "<cmd>TSToolsSortImports<CR>", "[C]ode [I]mport [S]ort")
+					nmap("<leader>cim", "<cmd>TSToolsAddMissingImports<CR>", "[C]ode [I]mport [M]issing")
+					nmap("<leader>cfa", "<cmd>TSToolsFixAll<CR>", "[C]ode [F]ix [A]ll")
+					nmap("<leader>cFe", "<cmd>TSToolsRenameFile<CR>", "[C]ode [F]ILE r[E]name")
+					nmap("<leader>cFr", "<cmd>TSToolsFileReferences<CR>", "[C]ode [F]ILE [R]eferences")
 				end,
 				settings = {
 					-- possible values: ("off"|"all"|"implementations_only"|"references_only")
@@ -961,18 +923,18 @@ if nixCats("leet") then
 		arg = "start",
 		lang = "python3",
 	})
-	vim.keymap.set("n", "<leader>lii", "<cmd>Leet info<CR>", { desc = "Leet question info" })
-	vim.keymap.set("n", "<leader>liI", "<cmd>Leet inject<CR>", { desc = "Leet re-inject editor code" })
-	vim.keymap.set("n", "<leader>ll", "<cmd>Leet list<CR>", { desc = "Leet question list" })
-	vim.keymap.set("n", "<leader>lL", "<cmd>Leet lang<CR>", { desc = "Leet lang picker" })
-	vim.keymap.set("n", "<leader>lf", "<cmd>Leet fold<CR>", { desc = "Leet fold imports section" })
-	vim.keymap.set("n", "<leader>ldd", "<cmd>Leet desc<CR>", { desc = "Leet toggle description" })
-	vim.keymap.set("n", "<leader>lds", "<cmd>Leet desc stats<CR>", { desc = "Leet toggle description stats" })
-	vim.keymap.set("n", "<leader>lD", "<cmd>Leet daily<CR>", { desc = "Leet daily question" })
-	vim.keymap.set("n", "<leader>lt", "<cmd>Leet test<CR>", { desc = "Leet test" })
-	vim.keymap.set("n", "<leader>lss", "<cmd>Leet submit<CR>", { desc = "Leet submit" })
-	vim.keymap.set("n", "<leader>lsl", "<cmd>Leet last_submit<CR>", { desc = "Leet restore last submitted code" })
-	vim.keymap.set("n", "<leader>lR", "<cmd>Leet restore<CR>", { desc = "Leet restore to original code" })
+	nmap("<leader>lii", "<cmd>Leet info<CR>", "Leet question info")
+	nmap("<leader>liI", "<cmd>Leet inject<CR>", "Leet re-inject editor code")
+	nmap("<leader>ll", "<cmd>Leet list<CR>", "Leet question list")
+	nmap("<leader>lL", "<cmd>Leet lang<CR>", "Leet lang picker")
+	nmap("<leader>lf", "<cmd>Leet fold<CR>", "Leet fold imports section")
+	nmap("<leader>ldd", "<cmd>Leet desc<CR>", "Leet toggle description")
+	nmap("<leader>lds", "<cmd>Leet desc stats<CR>", "Leet toggle description stats")
+	nmap("<leader>lD", "<cmd>Leet daily<CR>", "Leet daily question")
+	nmap("<leader>lt", "<cmd>Leet test<CR>", "Leet test")
+	nmap("<leader>lss", "<cmd>Leet submit<CR>", "Leet submit")
+	nmap("<leader>lsl", "<cmd>Leet last_submit<CR>", "Leet restore last submitted code")
+	nmap("<leader>lR", "<cmd>Leet restore<CR>", "Leet restore to original code")
 end
 
 -- Improve diagnostics in insert mode and show them in a floating window by default:wqa
