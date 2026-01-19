@@ -153,6 +153,7 @@ in {
             nvim-scissors
             arrow-nvim
             leap-nvim
+            treewalker-nvim
           ];
           copilot = with pkgs.vimPlugins; [
             copilot-lua

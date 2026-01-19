@@ -197,6 +197,46 @@ require("lze").load({
 		end,
 	},
 	{
+		"treewalker.nvim",
+		enabled = nixCats("general") or false,
+		event = "DeferredUIEnter",
+		after = function()
+			require("treewalker").setup({})
+
+			-- Movement
+			vim.keymap.set("n", "<A-h>", "<cmd>Treewalker Left<cr>", { silent = true, desc = "Treewalker: Go Left" })
+			vim.keymap.set("n", "<A-j>", "<cmd>Treewalker Down<cr>", { silent = true, desc = "Treewalker: Go Down" })
+			vim.keymap.set("n", "<A-k>", "<cmd>Treewalker Up<cr>", { silent = true, desc = "Treewalker: Go Up" })
+			vim.keymap.set("n", "<A-l>", "<cmd>Treewalker Right<cr>", { silent = true, desc = "Treewalker: Go Right" })
+
+			-- Swapping
+			vim.keymap.set(
+				"n",
+				"<A-S-h>",
+				"<cmd>Treewalker SwapLeft<cr>",
+				{ silent = true, desc = "Treewalker: Swap Left" }
+			)
+			vim.keymap.set(
+				"n",
+				"<A-S-j>",
+				"<cmd>Treewalker SwapDown<cr>",
+				{ silent = true, desc = "Treewalker: Swap Down" }
+			)
+			vim.keymap.set(
+				"n",
+				"<A-S-k>",
+				"<cmd>Treewalker SwapUp<cr>",
+				{ silent = true, desc = "Treewalker: Swap Up" }
+			)
+			vim.keymap.set(
+				"n",
+				"<A-S-l>",
+				"<cmd>Treewalker SwapRight<cr>",
+				{ silent = true, desc = "Treewalker: Swap Right" }
+			)
+		end,
+	},
+	{
 		"mini.nvim",
 		enabled = nixCats("general") or false,
 		event = "DeferredUIEnter",
