@@ -230,11 +230,11 @@
     };
     programs.zsh.shellAliases.zz = "f() { zellij attach -c ''\${1:-default} };f";
     programs.zsh.shellAliases.zr = "zellij run --";
-    programs.zsh.shellAliases.rf = "zellij run --floating --";
-    programs.zsh.shellAliases.a = "f() { zellij attach ''\${1:-default} };f";
-    programs.zsh.shellAliases.l = "zellij list-sessions";
-    programs.zsh.shellAliases.k = "zellij kill-session";
-    programs.zsh.shellAliases.ka = "zellij kill-all-sessions";
+    programs.zsh.shellAliases.zrf = "zellij run --floating --";
+    programs.zsh.shellAliases.za = "f() { zellij attach ''\${1:-default} };f";
+    programs.zsh.shellAliases.zl = "zellij list-sessions";
+    programs.zsh.shellAliases.zk = "zellij kill-session";
+    programs.zsh.shellAliases.zka = "zellij kill-all-sessions";
 
     programs.zsh = {
       enable = true;
