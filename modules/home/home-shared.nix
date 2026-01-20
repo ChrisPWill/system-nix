@@ -40,11 +40,27 @@
   config = {
     nix.settings.experimental-features = ["nix-command" "flakes"];
 
-    # only available on linux, disabled on macos
-    services.ssh-agent.enable = pkgs.stdenv.isLinux;
-    # Soon available on MacOS https://github.com/nix-community/home-manager/pull/8137
-    # services.ssh-agent.enable = true;
-    # services.ssh-agent.enableZshIntegration = true;
+    services.ssh-agent.enable = true;
+    services.ssh-agent.enableZshIntegration = true;
+    programs.ssh = {
+      enable = true;
+      enableDefaultConfig = false;
+
+      extraConfig = lib.optionalString pkgs.stdenv.isDarwin ''
+        IgnoreUnknown UseKeychain
+        UseKeychain yes
+      '';
+
+      matchBlocks = {
+        "*" = {
+          addKeysToAgent = "yes";
+          compression = true;
+          forwardAgent = true;
+          serverAliveCountMax = 2;
+          serverAliveInterval = 300;
+        };
+      };
+    };
 
     home.packages =
       # Must-have packages for all systems
