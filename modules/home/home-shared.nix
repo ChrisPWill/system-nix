@@ -42,34 +42,13 @@
 
     # Nushell, modern non-POSIX shell
     ./programs/nushell.nix
+
+    # git and jujutsu settings
+    ./programs/version-control.nix
   ];
 
   config = {
     nix.settings.experimental-features = ["nix-command" "flakes"];
-
-    services.ssh-agent.enable = true;
-    services.ssh-agent.enableZshIntegration = true;
-    services.ssh-agent.enableFishIntegration = config.programs.fish.enable;
-    services.ssh-agent.enableNushellIntegration = config.programs.nushell.enable;
-    programs.ssh = {
-      enable = true;
-      enableDefaultConfig = false;
-
-      extraConfig = lib.optionalString pkgs.stdenv.isDarwin ''
-        IgnoreUnknown UseKeychain
-        UseKeychain yes
-      '';
-
-      matchBlocks = {
-        "*" = {
-          addKeysToAgent = "yes";
-          compression = true;
-          forwardAgent = true;
-          serverAliveCountMax = 2;
-          serverAliveInterval = 300;
-        };
-      };
-    };
 
     home.packages =
       # Must-have packages for all systems
@@ -87,10 +66,6 @@
           # https://github.com/dbrgn/tealdeer
           tealdeer
 
-          # Neat TUI for jujutsu
-          # https://github.com/Cretezy/lazyjj
-          lazyjj
-
           # TUI to browse quite a few journals/logs.
           # Great for docker, journald, systemd logs etc.
           # https://github.com/Lifailon/lazyjournal
@@ -101,9 +76,6 @@
 
           # Note taking
           logseq
-
-          # Another fancy git UI
-          tig
         ]
         # Can access the host configuration using osConfig e.g.
         # ++ (
@@ -149,35 +121,6 @@
       fileWidgetCommand = "fd --type f";
     };
 
-    programs.git = {
-      enable = true;
-
-      lfs.enable = true;
-
-      settings = {
-        user.name = "Chris Williams";
-        user.email = config.userEmail;
-        push.autoSetupRemote = true;
-        core = {
-          # Improved performance on MacOS
-          # https://github.blog/2022-06-29-improve-git-monorepo-performance-with-a-file-system-monitor/
-          fsmonitor = true;
-          untrackedcache = true;
-        };
-      };
-    };
-    programs.diff-so-fancy.enable = true;
-    programs.diff-so-fancy.enableGitIntegration = true;
-
-    # Neat TUI for git
-    # https://github.com/jesseduffield/lazygit
-    programs.lazygit.enable = true;
-    programs.lazygit.enableZshIntegration = true;
-    programs.lazygit.enableFishIntegration = config.programs.fish.enable;
-    programs.lazygit.enableNushellIntegration = config.programs.nushell.enable;
-    programs.zsh.shellAliases.lg = "lazygit";
-    programs.nushell.shellAliases.lg = "lazygit";
-
     # Useful home-manager alias if enabled
     programs.zsh.shellAliases."hms" = lib.mkIf config.programs.home-manager.enable "home-manager switch --flake ${config.nixConfigDir}/.";
     programs.nushell.shellAliases."hms" = lib.mkIf config.programs.home-manager.enable "home-manager switch --flake ${config.nixConfigDir}/.";
@@ -190,16 +133,6 @@
 
     # Quick alias to enable a devshell
     programs.zsh.shellAliases."nd" = "f() { nix develop ${config.nixConfigDir}/.#$1 --command zsh };f";
-
-    # https://jj-vcs.github.io/jj/latest/
-    # VCS built on top of git
-    # Experimenting with this for personal projects
-    programs.jujutsu.enable = true;
-    programs.jujutsu.settings.user.name = "Chris Williams";
-    programs.jujutsu.settings.user.email = config.userEmail;
-    # LazyJJ - easy TUI for jujutsu VCS
-    programs.zsh.shellAliases.ljj = "lazyjj";
-    programs.nushell.shellAliases.ljj = "lazyjj";
 
     # Modern alternative prompt
     programs.starship.enable = true;
