@@ -35,6 +35,10 @@
     # direnv-like matcher that avoids needing to create gitignored nix files in projects
     inputs.envoluntary.homeModules.default
     ({pkgs, ...}: {programs.envoluntary.package = inputs.envoluntary.packages.${pkgs.stdenv.hostPlatform.system}.default;})
+
+    # Terminal multiplexer
+    # https://zellij.dev
+    ./programs/zellij.nix
   ];
 
   config = {
@@ -169,13 +173,17 @@
     programs.lazygit.enableFishIntegration = true;
     programs.lazygit.enableNushellIntegration = true;
     programs.zsh.shellAliases.lg = "lazygit";
+    programs.nushell.shellAliases.lg = "lazygit";
 
     # Useful home-manager alias if enabled
     programs.zsh.shellAliases."hms" = lib.mkIf config.programs.home-manager.enable "home-manager switch --flake ${config.nixConfigDir}/.";
+    programs.nushell.shellAliases."hms" = lib.mkIf config.programs.home-manager.enable "home-manager switch --flake ${config.nixConfigDir}/.";
     # darwin-rebuild alias added for MacOS systems
     programs.zsh.shellAliases."drs" = lib.mkIf pkgs.stdenv.isDarwin "sudo /run/current-system/sw/bin/darwin-rebuild switch --flake ${config.nixConfigDir}/.";
+    programs.nushell.shellAliases."drs" = lib.mkIf pkgs.stdenv.isDarwin "sudo /run/current-system/sw/bin/darwin-rebuild switch --flake ${config.nixConfigDir}/.";
     # nixos-rebuild alias added for NixOS systems
     programs.zsh.shellAliases."nrs" = lib.mkIf (pkgs.stdenv.isLinux && !config.programs.home-manager.enable) "sudo nixos-rebuild switch --flake ${config.nixConfigDir}/.";
+    programs.nushell.shellAliases."nrs" = lib.mkIf (pkgs.stdenv.isLinux && !config.programs.home-manager.enable) "sudo nixos-rebuild switch --flake ${config.nixConfigDir}/.";
 
     # Quick alias to enable a devshell
     programs.zsh.shellAliases."nd" = "f() { nix develop ${config.nixConfigDir}/.#$1 --command zsh };f";
@@ -188,6 +196,7 @@
     programs.jujutsu.settings.user.email = config.userEmail;
     # LazyJJ - easy TUI for jujutsu VCS
     programs.zsh.shellAliases.ljj = "lazyjj";
+    programs.nushell.shellAliases.ljj = "lazyjj";
 
     # Modern alternative prompt
     programs.starship.enable = true;
@@ -231,22 +240,6 @@
     programs.zoxide.enableZshIntegration = true;
     programs.zoxide.enableFishIntegration = true;
     programs.zoxide.enableNushellIntegration = true;
-
-    # Terminal multiplexer
-    # https://zellij.dev
-    programs.zellij.enable = true;
-    programs.zellij.settings = {
-      scroll_buffer_size = 10000;
-      copy_on_select = true;
-      pane_frames = false;
-    };
-    programs.zsh.shellAliases.zz = "f() { zellij attach -c ''\${1:-default} };f";
-    programs.zsh.shellAliases.zr = "zellij run --";
-    programs.zsh.shellAliases.zrf = "zellij run --floating --";
-    programs.zsh.shellAliases.za = "f() { zellij attach ''\${1:-default} };f";
-    programs.zsh.shellAliases.zl = "zellij list-sessions";
-    programs.zsh.shellAliases.zk = "zellij kill-session";
-    programs.zsh.shellAliases.zka = "zellij kill-all-sessions";
 
     programs.zsh = {
       enable = true;
@@ -301,6 +294,35 @@
         '';
       };
       extraConfig = ''
+        # fzf support
+        $env.config = ($env.config | upsert keybindings (
+          $env.config.keybindings
+          | append {
+              name: fzf_history
+              modifier: control
+              keycode: char_r
+              mode: [vi_normal, vi_insert]
+              event: [
+                {
+                  send: executehostcommand
+                  cmd: "commandline edit --insert (history | each { |it| $it.command } | uniq | reverse | str join (char -i 0) | fzf --read0 --layout=reverse --height=40% -q (commandline) | decode utf-8 | str trim)"
+                }
+              ]
+            }
+          | append {
+              name: fzf_file_search
+              modifier: control
+              keycode: char_t
+              mode: [vi_normal, vi_insert]
+              event: [
+                {
+                  send: executehostcommand
+                  cmd: "commandline edit --insert (fzf --layout=reverse --height=40% -q (commandline) | decode utf-8 | str trim)"
+                }
+              ]
+            }
+        ))
+
         # Shows system information on startup
         ${pkgs.fastfetch}/bin/fastfetch
 
