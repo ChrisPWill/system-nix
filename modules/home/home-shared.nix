@@ -285,6 +285,18 @@
 
     programs.nushell = {
       enable = true;
+
+      environmentVariables = {
+        PATH = lib.hm.nushell.mkNushellInline ''
+          ($env.PATH |
+            split row (char esep) |
+            append $"($env.HOME)/.nix-profile/bin" |
+            append $"/etc/profiles/per-user/($env.USER)/bin" |
+            append "/run/current-system/sw/bin" |
+            append "/nix/var/nix/profiles/default/bin"
+          )
+        '';
+      };
     };
 
     programs.carapace.enable = true;
