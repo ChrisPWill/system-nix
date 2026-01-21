@@ -286,6 +286,9 @@
     programs.nushell = {
       enable = true;
 
+      settings = {
+        show_banner = false;
+      };
       environmentVariables = {
         PATH = lib.hm.nushell.mkNushellInline ''
           ($env.PATH |
@@ -297,6 +300,12 @@
           )
         '';
       };
+      extraConfig = ''
+        # Shows system information on startup
+        ${pkgs.fastfetch}/bin/fastfetch
+
+        ${pkgs.fortune}/bin/fortune | ${pkgs.cowsay}/bin/cowsay -f dragon-and-cow
+      '';
     };
 
     programs.carapace.enable = true;
