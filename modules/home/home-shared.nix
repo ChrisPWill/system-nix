@@ -39,6 +39,9 @@
     # Terminal multiplexer
     # https://zellij.dev
     ./programs/zellij.nix
+
+    # Nushell, modern non-POSIX shell
+    ./programs/nushell.nix
   ];
 
   config = {
@@ -46,8 +49,8 @@
 
     services.ssh-agent.enable = true;
     services.ssh-agent.enableZshIntegration = true;
-    services.ssh-agent.enableFishIntegration = true;
-    services.ssh-agent.enableNushellIntegration = true;
+    services.ssh-agent.enableFishIntegration = config.programs.fish.enable;
+    services.ssh-agent.enableNushellIntegration = config.programs.nushell.enable;
     programs.ssh = {
       enable = true;
       enableDefaultConfig = false;
@@ -128,7 +131,7 @@
     programs.envoluntary = {
       enable = true;
       enableZshIntegration = true;
-      enableFishIntegration = true;
+      enableFishIntegration = config.programs.fish.enable;
     };
 
     # Command line fuzzy finder
@@ -140,7 +143,7 @@
     programs.fzf = {
       enable = true;
       enableZshIntegration = true;
-      enableFishIntegration = true;
+      enableFishIntegration = config.programs.fish.enable;
       defaultCommand = "fd --hidden";
       changeDirWidgetCommand = "fd --type d";
       fileWidgetCommand = "fd --type f";
@@ -170,8 +173,8 @@
     # https://github.com/jesseduffield/lazygit
     programs.lazygit.enable = true;
     programs.lazygit.enableZshIntegration = true;
-    programs.lazygit.enableFishIntegration = true;
-    programs.lazygit.enableNushellIntegration = true;
+    programs.lazygit.enableFishIntegration = config.programs.fish.enable;
+    programs.lazygit.enableNushellIntegration = config.programs.nushell.enable;
     programs.zsh.shellAliases.lg = "lazygit";
     programs.nushell.shellAliases.lg = "lazygit";
 
@@ -201,8 +204,8 @@
     # Modern alternative prompt
     programs.starship.enable = true;
     programs.starship.enableZshIntegration = true;
-    programs.starship.enableFishIntegration = true;
-    programs.starship.enableNushellIntegration = true;
+    programs.starship.enableFishIntegration = config.programs.fish.enable;
+    programs.starship.enableNushellIntegration = config.programs.nushell.enable;
 
     programs.wezterm.enable = true;
     programs.wezterm.enableZshIntegration = true;
@@ -213,8 +216,8 @@
     programs.yazi = {
       enable = true;
       enableZshIntegration = true;
-      enableFishIntegration = true;
-      enableNushellIntegration = true;
+      enableFishIntegration = config.programs.fish.enable;
+      enableNushellIntegration = config.programs.nushell.enable;
 
       extraPackages = with pkgs; [
         ouch
@@ -238,8 +241,8 @@
     # https://github.com/ajeetdsouza/zoxide
     programs.zoxide.enable = true;
     programs.zoxide.enableZshIntegration = true;
-    programs.zoxide.enableFishIntegration = true;
-    programs.zoxide.enableNushellIntegration = true;
+    programs.zoxide.enableFishIntegration = config.programs.fish.enable;
+    programs.zoxide.enableNushellIntegration = config.programs.nushell.enable;
 
     programs.zsh = {
       enable = true;
@@ -276,64 +279,10 @@
 
     programs.fish.enable = true;
 
-    programs.nushell = {
-      enable = true;
-
-      settings = {
-        show_banner = false;
-      };
-      environmentVariables = {
-        PATH = lib.hm.nushell.mkNushellInline ''
-          ($env.PATH |
-            split row (char esep) |
-            append $"($env.HOME)/.nix-profile/bin" |
-            append $"/etc/profiles/per-user/($env.USER)/bin" |
-            append "/run/current-system/sw/bin" |
-            append "/nix/var/nix/profiles/default/bin"
-          )
-        '';
-      };
-      extraConfig = ''
-        # fzf support
-        $env.config = ($env.config | upsert keybindings (
-          $env.config.keybindings
-          | append {
-              name: fzf_history
-              modifier: control
-              keycode: char_r
-              mode: [vi_normal, vi_insert]
-              event: [
-                {
-                  send: executehostcommand
-                  cmd: "commandline edit --insert (history | each { |it| $it.command } | uniq | reverse | str join (char -i 0) | fzf --read0 --layout=reverse --height=40% -q (commandline) | decode utf-8 | str trim)"
-                }
-              ]
-            }
-          | append {
-              name: fzf_file_search
-              modifier: control
-              keycode: char_t
-              mode: [vi_normal, vi_insert]
-              event: [
-                {
-                  send: executehostcommand
-                  cmd: "commandline edit --insert (fzf --layout=reverse --height=40% -q (commandline) | decode utf-8 | str trim)"
-                }
-              ]
-            }
-        ))
-
-        # Shows system information on startup
-        ${pkgs.fastfetch}/bin/fastfetch
-
-        ${pkgs.fortune}/bin/fortune | ${pkgs.cowsay}/bin/cowsay -f dragon-and-cow
-      '';
-    };
-
     programs.carapace.enable = true;
     programs.carapace.enableZshIntegration = true;
-    programs.carapace.enableFishIntegration = true;
-    programs.carapace.enableNushellIntegration = true;
+    programs.carapace.enableFishIntegration = config.programs.fish.enable;
+    programs.carapace.enableNushellIntegration = config.programs.nushell.enable;
 
     # Aerospace window manager config
     xdg.configFile."aerospace/aerospace.toml" = lib.mkIf pkgs.stdenv.isDarwin {
