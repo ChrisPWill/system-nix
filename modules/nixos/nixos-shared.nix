@@ -12,7 +12,7 @@
     stylix.enable = true;
     stylix.base16Scheme = "${pkgs.base16-schemes}/share/themes/onedark.yaml";
 
-    users.defaultUserShell = pkgs.zsh;
+    users.defaultUserShell = pkgs.fish;
 
     # Define a user account. Don't forget to set a password with ‘passwd’.
     users.users.cwilliams = {

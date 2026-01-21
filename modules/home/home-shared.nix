@@ -42,6 +42,8 @@
 
     services.ssh-agent.enable = true;
     services.ssh-agent.enableZshIntegration = true;
+    services.ssh-agent.enableFishIntegration = true;
+    services.ssh-agent.enableNushellIntegration = true;
     programs.ssh = {
       enable = true;
       enableDefaultConfig = false;
@@ -122,6 +124,7 @@
     programs.envoluntary = {
       enable = true;
       enableZshIntegration = true;
+      enableFishIntegration = true;
     };
 
     # Command line fuzzy finder
@@ -133,6 +136,7 @@
     programs.fzf = {
       enable = true;
       enableZshIntegration = true;
+      enableFishIntegration = true;
       defaultCommand = "fd --hidden";
       changeDirWidgetCommand = "fd --type d";
       fileWidgetCommand = "fd --type f";
@@ -162,6 +166,8 @@
     # https://github.com/jesseduffield/lazygit
     programs.lazygit.enable = true;
     programs.lazygit.enableZshIntegration = true;
+    programs.lazygit.enableFishIntegration = true;
+    programs.lazygit.enableNushellIntegration = true;
     programs.zsh.shellAliases.lg = "lazygit";
 
     # Useful home-manager alias if enabled
@@ -186,6 +192,8 @@
     # Modern alternative prompt
     programs.starship.enable = true;
     programs.starship.enableZshIntegration = true;
+    programs.starship.enableFishIntegration = true;
+    programs.starship.enableNushellIntegration = true;
 
     programs.wezterm.enable = true;
     programs.wezterm.enableZshIntegration = true;
@@ -196,6 +204,8 @@
     programs.yazi = {
       enable = true;
       enableZshIntegration = true;
+      enableFishIntegration = true;
+      enableNushellIntegration = true;
 
       extraPackages = with pkgs; [
         ouch
@@ -219,6 +229,8 @@
     # https://github.com/ajeetdsouza/zoxide
     programs.zoxide.enable = true;
     programs.zoxide.enableZshIntegration = true;
+    programs.zoxide.enableFishIntegration = true;
+    programs.zoxide.enableNushellIntegration = true;
 
     # Terminal multiplexer
     # https://zellij.dev
@@ -268,6 +280,17 @@
     programs.zsh.shellAliases."-- -" = "cd -";
     programs.zsh.shellAliases."-- --" = "cd -2";
     programs.zsh.shellAliases."-- ---" = "cd -3";
+
+    programs.fish.enable = true;
+
+    programs.nushell = {
+      enable = true;
+    };
+
+    programs.carapace.enable = true;
+    programs.carapace.enableZshIntegration = true;
+    programs.carapace.enableFishIntegration = true;
+    programs.carapace.enableNushellIntegration = true;
 
     # Aerospace window manager config
     xdg.configFile."aerospace/aerospace.toml" = lib.mkIf pkgs.stdenv.isDarwin {
