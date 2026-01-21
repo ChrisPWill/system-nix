@@ -8,6 +8,7 @@
 
     settings = {
       show_banner = false;
+      edit_mode = "vi";
     };
     environmentVariables = {
       # Nushell doesn't get some of the Nix binary paths by default
