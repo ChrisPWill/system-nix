@@ -34,7 +34,7 @@
             event: [
               {
                 send: executehostcommand
-                cmd: "commandline edit --insert (history | each { |it| $it.command } | uniq | reverse | str join (char -i 0) | fzf --read0 --layout=reverse --height=40% -q (commandline) | decode utf-8 | str trim)"
+                cmd: "commandline edit --insert (history | each { |it| $it.command } | reverse | uniq  | str join (char -i 0) | fzf --read0 --tiebreak=index --layout=reverse --height=40% -q (commandline) | decode utf-8 | str trim)"
               }
             ]
           }
