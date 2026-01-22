@@ -55,5 +55,7 @@
       # Shows system information on startup
       ${pkgs.fastfetch}/bin/fastfetch -s title:separator:os:cpu:memory:host:chassis:kernel:de:wm:wmtheme:swap:disk:battery:poweradapter:uptime:separator:shell:font:terminal:terminalfont:colors
     '';
+
+    shellAliases.fg = "job unfreeze";
   };
 }
