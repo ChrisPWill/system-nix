@@ -201,7 +201,11 @@
 
     programs.fish.enable = true;
 
+    # Autocompletion in shell
     programs.carapace.enable = true;
+
+    # Command history
+    programs.atuin.enable = true;
 
     # Aerospace window manager config
     xdg.configFile."aerospace/aerospace.toml" = lib.mkIf pkgs.stdenv.isDarwin {

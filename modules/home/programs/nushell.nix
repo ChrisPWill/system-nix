@@ -26,18 +26,18 @@
       # fzf support
       $env.config = ($env.config | upsert keybindings (
         $env.config.keybindings
-        | append {
-            name: fzf_history
-            modifier: control
-            keycode: char_r
-            mode: [vi_normal, vi_insert]
-            event: [
-              {
-                send: executehostcommand
-                cmd: "commandline edit --insert (history | each { |it| $it.command } | reverse | uniq  | str join (char -i 0) | fzf --read0 --tiebreak=index --layout=reverse --height=40% -q (commandline) | decode utf-8 | str trim)"
-              }
-            ]
-          }
+        # | append {
+        #     name: fzf_history
+        #     modifier: control
+        #     keycode: char_r
+        #     mode: [vi_normal, vi_insert]
+        #     event: [
+        #       {
+        #         send: executehostcommand
+        #         cmd: "commandline edit --insert (history | each { |it| $it.command } | reverse | uniq  | str join (char -i 0) | fzf --read0 --tiebreak=index --layout=reverse --height=40% -q (commandline) | decode utf-8 | str trim)"
+        #       }
+        #     ]
+        #   }
         | append {
             name: fzf_file_search
             modifier: control
