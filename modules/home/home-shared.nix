@@ -45,6 +45,8 @@
 
     # git and jujutsu settings
     ./programs/version-control.nix
+
+    ./programs/sketchybar
   ];
 
   config = {
