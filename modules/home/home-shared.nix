@@ -76,6 +76,9 @@
 
           # Note taking
           logseq
+
+          # Rust-based ps replacement
+          procs
         ]
         # Can access the host configuration using osConfig e.g.
         # ++ (
