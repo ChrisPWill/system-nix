@@ -14,9 +14,6 @@
   ];
 
   services.ssh-agent.enable = true;
-  services.ssh-agent.enableZshIntegration = true;
-  services.ssh-agent.enableFishIntegration = config.programs.fish.enable;
-  services.ssh-agent.enableNushellIntegration = config.programs.nushell.enable;
   programs.ssh = {
     enable = true;
     enableDefaultConfig = false;
@@ -55,14 +52,10 @@
     };
   };
   programs.diff-so-fancy.enable = true;
-  programs.diff-so-fancy.enableGitIntegration = true;
 
   # Neat TUI for git
   # https://github.com/jesseduffield/lazygit
   programs.lazygit.enable = true;
-  programs.lazygit.enableZshIntegration = true;
-  programs.lazygit.enableFishIntegration = config.programs.fish.enable;
-  programs.lazygit.enableNushellIntegration = config.programs.nushell.enable;
   programs.zsh.shellAliases.lg = "lazygit";
   programs.nushell.shellAliases.lg = "lazygit";
 

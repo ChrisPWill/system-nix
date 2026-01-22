@@ -105,8 +105,6 @@
 
     programs.envoluntary = {
       enable = true;
-      enableZshIntegration = true;
-      enableFishIntegration = config.programs.fish.enable;
     };
 
     # Command line fuzzy finder
@@ -117,8 +115,6 @@
     # ALT-C to cd into a subdir
     programs.fzf = {
       enable = true;
-      enableZshIntegration = true;
-      enableFishIntegration = config.programs.fish.enable;
       defaultCommand = "fd --hidden";
       changeDirWidgetCommand = "fd --type d";
       fileWidgetCommand = "fd --type f";
@@ -139,21 +135,14 @@
 
     # Modern alternative prompt
     programs.starship.enable = true;
-    programs.starship.enableZshIntegration = true;
-    programs.starship.enableFishIntegration = config.programs.fish.enable;
-    programs.starship.enableNushellIntegration = config.programs.nushell.enable;
 
     programs.wezterm.enable = true;
-    programs.wezterm.enableZshIntegration = true;
     # Copy the wezterm.lua file to the home module directory
     xdg.configFile."wezterm/extraWezterm.lua".source = config.lib.file.mkOutOfStoreSymlink "${config.homeModuleDir}/out-of-store/wezterm.lua";
     programs.wezterm.extraConfig = "local extraConfig = require('extraWezterm'); return extraConfig";
 
     programs.yazi = {
       enable = true;
-      enableZshIntegration = true;
-      enableFishIntegration = config.programs.fish.enable;
-      enableNushellIntegration = config.programs.nushell.enable;
 
       extraPackages = with pkgs; [
         ouch
@@ -176,9 +165,6 @@
     # Nice fast autojump command
     # https://github.com/ajeetdsouza/zoxide
     programs.zoxide.enable = true;
-    programs.zoxide.enableZshIntegration = true;
-    programs.zoxide.enableFishIntegration = config.programs.fish.enable;
-    programs.zoxide.enableNushellIntegration = config.programs.nushell.enable;
 
     programs.zsh = {
       enable = true;
@@ -216,9 +202,6 @@
     programs.fish.enable = true;
 
     programs.carapace.enable = true;
-    programs.carapace.enableZshIntegration = true;
-    programs.carapace.enableFishIntegration = config.programs.fish.enable;
-    programs.carapace.enableNushellIntegration = config.programs.nushell.enable;
 
     # Aerospace window manager config
     xdg.configFile."aerospace/aerospace.toml" = lib.mkIf pkgs.stdenv.isDarwin {
