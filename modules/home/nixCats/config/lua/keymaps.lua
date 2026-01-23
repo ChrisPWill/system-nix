@@ -25,7 +25,8 @@ vim.keymap.set("n", "j", "v:count == 0 ? 'gj' : 'j'", { expr = true, silent = tr
 vim.keymap.set("n", "<leader>e", vim.diagnostic.open_float, { desc = "Open floating diagnostic message" })
 vim.keymap.set("n", "<leader>q", vim.diagnostic.setloclist, { desc = "Open diagnostics list" })
 
--- Screenshot code
+-- Screenshot code (experimental, buggy)
+-- Currently seems to result in an empty screenshot for non-typescript code
 vim.keymap.set("v", "<leader>cs", function()
 	-- Get the current buffer's filetype
 	local ft = vim.bo.filetype
