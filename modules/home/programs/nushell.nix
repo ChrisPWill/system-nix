@@ -34,7 +34,7 @@
             event: [
               {
                 send: executehostcommand
-                cmd: "commandline edit --insert (fzf --layout=reverse --height=40% -q (commandline) | decode utf-8 | str trim)"
+                cmd: "commandline edit --insert (fzf --layout=reverse --height=40% | decode utf-8 | str trim)"
               }
             ]
           }
