@@ -62,6 +62,7 @@ in {
         lspsAndRuntimeDeps = {
           general = with pkgs; [
             lazygit
+            silicon # take code screenshots
           ];
           lua = with pkgs; [
             lua-language-server

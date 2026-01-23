@@ -25,6 +25,14 @@ vim.keymap.set("n", "j", "v:count == 0 ? 'gj' : 'j'", { expr = true, silent = tr
 vim.keymap.set("n", "<leader>e", vim.diagnostic.open_float, { desc = "Open floating diagnostic message" })
 vim.keymap.set("n", "<leader>q", vim.diagnostic.setloclist, { desc = "Open diagnostics list" })
 
+-- Screenshot code
+vim.keymap.set("v", "<leader>cs", function()
+	-- Get the current buffer's filetype
+	local ft = vim.bo.filetype
+	-- Execute the shell command using the selection range
+	vim.cmd("'<,'>w !silicon --to-clipboard --language " .. ft)
+end, { desc = "Take screenshot of visual selection" })
+
 -- These keybindings allow you to copy to system clipboard without `unnamedplus`
 vim.keymap.set({ "v", "x", "n" }, "<leader>y", '"+y', { noremap = true, silent = true, desc = "Yank to clipboard" })
 vim.keymap.set(
