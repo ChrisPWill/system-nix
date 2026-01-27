@@ -1,6 +1,7 @@
 {
   lib,
   pkgs,
+  config,
   ...
 }: {
   programs.nushell = {
@@ -12,15 +13,23 @@
     };
     environmentVariables = {
       # Nushell doesn't get some of the Nix binary paths by default
-      PATH = lib.hm.nushell.mkNushellInline ''
-        ($env.PATH |
-          split row (char esep) |
-          append $"($env.HOME)/.nix-profile/bin" |
-          append $"/etc/profiles/per-user/($env.USER)/bin" |
-          append "/run/current-system/sw/bin" |
-          append "/nix/var/nix/profiles/default/bin"
-        )
-      '';
+      PATH = lib.hm.nushell.mkNushellInline (''
+          ($env.PATH |
+            split row (char esep) |
+            append $"($env.HOME)/.nix-profile/bin" |
+            append $"/etc/profiles/per-user/($env.USER)/bin" |
+            append "/run/current-system/sw/bin" |
+            append "/nix/var/nix/profiles/default/bin"
+        ''
+        + lib.optionalString pkgs.stdenv.isDarwin ''
+          |
+          append "/opt/homebrew/bin"
+        ''
+        + lib.optionalString config.isAtlassianMachine ''
+          |
+          append "/opt/atlassian/bin"
+        ''
+        + ")");
     };
     extraConfig = ''
       # fzf support

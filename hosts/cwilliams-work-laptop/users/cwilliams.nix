@@ -17,6 +17,8 @@
   config = {
     userEmail = "cwilliams@atlassian.com";
 
+    isAtlassianMachine = true;
+
     home.sessionPath = [
       # Add Atlassian tools to PATH
       "/opt/atlassian/bin"

@@ -25,6 +25,7 @@
     };
 
     isPersonalMachine = mkEnableOption "personal machine packages/config";
+    isAtlassianMachine = mkEnableOption "Atlassian work machine packages/config";
   };
 
   imports = [
