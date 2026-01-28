@@ -49,7 +49,34 @@ for monitor in $(aerospace list-monitors --format "%{monitor-appkit-nsscreen-scr
   done
 done
 
-sketchybar --hotload true
+# Currently works when manually executed in bash but not on sketchybar --reload
+# TODO: Need to debug this
+for monitor in $(aerospace list-monitors --format "%{monitor-appkit-nsscreen-screens-id}"); do
+  ACTIVE_WORKSPACE="$(aerospace list-workspaces --monitor "$monitor" --visible)"
+  WINDOWS=$(nu -c 'aerospace list-windows --workspace '"$ACTIVE_WORKSPACE"' --json | from json | insert focused {|row| $row.window-id == (aerospace list-windows --focused --json | from json | get 0.window-id) } | insert symbol {|row| $row.app-name | str substring 0..0 | str upcase } | each { |e| ($e.window-id | into string) + "¬" + $e.symbol + "¬" + $e.window-title + "¬" + ($e.focused | into string) } | to text')
+  while IFS="¬" read -r window_id symbol window_title focused; do
+    sketchybar --add item window.$window_id left \
+      --set window.$window_id display="$monitor" \
+      --subscribe window.$window_id aerospace_workspace_change \
+      --set window.$window_id \
+      drawing=on \
+      background.color=0x44ffffff \
+      background.corner_radius=7 \
+      background.drawing=on \
+      background.border_color=0xAAFFFFFF \
+      background.border_width=0 \
+      background.height=25 \
+      icon="$symbol" \
+      label="$window_title" \
+      label.color=0xffffffff \
+      label.font="FantasqueSansM Nerd Font Mono:Bold:14.0" \
+      label.padding_left=10 \
+      label.padding_right=5 \
+      label.y_offset=-1 \
+      label.shadow.drawing=off \
+      label.shadow.color=0xA0000000
+  done < <(echo "$WINDOWS")
+done
 
 sketchybar --update
 
