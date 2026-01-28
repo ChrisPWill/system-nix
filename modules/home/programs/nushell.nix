@@ -11,6 +11,11 @@
       show_banner = false;
       edit_mode = "vi";
     };
+
+    plugins = with pkgs.nushellPlugins; [
+      formats
+    ];
+
     environmentVariables = {
       # Nushell doesn't get some of the Nix binary paths by default
       PATH = lib.hm.nushell.mkNushellInline (''
