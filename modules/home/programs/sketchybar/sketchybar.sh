@@ -1,3 +1,5 @@
+#!/usr/bin/env zsh
+
 PLUGIN_DIR="$CONFIG_DIR/plugins"
 
 sketchybar --bar display=all position=top height=40 blur_radius=30 color=0x40000000
@@ -67,7 +69,7 @@ for monitor in $(aerospace list-monitors --format "%{monitor-appkit-nsscreen-scr
       background.border_width=0 \
       background.height=25 \
       icon="$symbol" \
-      label="$window_title" \
+      label="$( [ "$focused" = "true" ] && echo "$window_title" )" \
       label.color=0xffffffff \
       label.font="FantasqueSansM Nerd Font Mono:Bold:14.0" \
       label.padding_left=10 \
