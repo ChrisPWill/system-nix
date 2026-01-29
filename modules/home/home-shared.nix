@@ -138,6 +138,43 @@
 
     # Modern alternative prompt
     programs.starship.enable = true;
+    programs.starship.settings = {
+      command_timeout = 1000;
+
+      cmd_duration = {
+        min_time = 200;
+      };
+
+      # Show added/deleted git lines
+      git_metrics = {
+        disabled = false;
+      };
+
+      memory_usage = {
+        disabled = false;
+        threshold = 90; # percentage
+      };
+
+      os = {
+        disabled = false;
+      };
+
+      os.symbols = {
+        Macos = " ";
+        NixOS = " ";
+        Windows = " ";
+      };
+
+      # Shows current shell
+      shell = {
+        disabled = false;
+      };
+
+      # Shows exit code of last command if non-zero
+      status = {
+        disabled = false;
+      };
+    };
 
     programs.wezterm.enable = true;
     # Copy the wezterm.lua file to the home module directory
