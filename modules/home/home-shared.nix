@@ -142,23 +142,15 @@
       right_format = "$os$shell$git_status$git_metrics$memory_usage";
       command_timeout = 1000;
 
-      cmd_duration = {
-        min_time = 200;
-      };
+      cmd_duration.min_time = 200;
 
       # Show added/deleted git lines
-      git_metrics = {
-        disabled = false;
-      };
+      git_metrics.disabled = false;
 
-      memory_usage = {
-        disabled = false;
-        threshold = 90; # percentage
-      };
+      memory_usage.disabled = false;
+      memory_usage.threshold = 90; # percentage
 
-      os = {
-        disabled = false;
-      };
+      os.disabled = false;
 
       os.symbols = {
         Macos = " ";
@@ -167,14 +159,10 @@
       };
 
       # Shows current shell
-      shell = {
-        disabled = false;
-      };
+      shell.disabled = false;
 
       # Shows exit code of last command if non-zero
-      status = {
-        disabled = false;
-      };
+      status.disabled = false;
     };
 
     programs.wezterm.enable = true;
