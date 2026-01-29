@@ -139,6 +139,7 @@
     # Modern alternative prompt
     programs.starship.enable = true;
     programs.starship.settings = {
+      right_format = "$os$shell$git_status$git_metrics$memory_usage";
       command_timeout = 1000;
 
       cmd_duration = {
