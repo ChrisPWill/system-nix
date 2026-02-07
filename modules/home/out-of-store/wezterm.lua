@@ -6,7 +6,7 @@ return {
 	font = wezterm.font({
 		family = "FantasqueSansM Nerd Font Mono",
 	}),
-	font_size = 16.0,
+	font_size = 12.0,
 	-- color_scheme = "chrisTheme",
 	window_background_opacity = 0.9,
 	macos_window_background_blur = 20,
