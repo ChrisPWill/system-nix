@@ -20,7 +20,11 @@ input {
         xkb { }
         numlock
     }
-    touchpad { }
+    touchpad {
+        tap // Tap to click
+        dwt // Disable while typing
+        natural-scroll // Scroll in direction of fingers
+    }
     mouse { }
     focus-follows-mouse max-scroll-amount="20%"
     warp-mouse-to-focus mode="center-xy"
