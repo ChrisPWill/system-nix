@@ -15,6 +15,11 @@ local function nmap(keys, func, desc, opts)
 	vim.keymap.set("n", keys, func, opts)
 end
 
+-- Helper function for finding deno projects
+local function isDeno()
+	return #vim.fs.find({ "deno.json" }, { upward = true, stop = vim.env.HOME }) > 0
+end
+
 require("onedark").setup({})
 vim.cmd.colorscheme("onedark")
 
@@ -429,12 +434,16 @@ require("lze").load({
 		enabled = nixCats("general") or false,
 		event = "FileType",
 		after = function()
+			local jslint = { "eslint_d" }
+			if isDeno() then
+				jslint = { "deno" }
+			end
 			require("lint").linters_by_ft = {
 				-- NOTE: download some linters in lspsAndRuntimeDeps
 				-- and configure them here
 				-- markdown = {'vale',},
-				javascript = nixCats("node") and { "eslint_d" } or nil,
-				typescript = nixCats("node") and { "eslint_d" } or nil,
+				javascript = nixCats("node") and jslint or nil,
+				typescript = nixCats("node") and jslint or nil,
 				go = nixCats("go") and { "golangcilint" } or nil,
 				rust = nixCats("rust") and { "clippy" } or nil,
 			}
@@ -454,6 +463,10 @@ require("lze").load({
 		after = function()
 			local conform = require("conform")
 
+			local jslint = { "eslint_d" }
+			if isDeno() then
+				jslint = { "deno_fmt" }
+			end
 			conform.setup({
 				formatters_by_ft = {
 					-- NOTE: download some formatters in lspsAndRuntimeDeps
@@ -461,10 +474,17 @@ require("lze").load({
 					lua = nixCats("lua") and { "stylua" } or nil,
 					go = nixCats("go") and { "gofmt", "golint" } or nil,
 					-- Use a sub-list to run only the first available formatter
-					javascript = nixCats("node") and { "eslint_d" } or nil,
-					typescript = nixCats("node") and { "eslint_d" } or nil,
+					javascript = nixCats("node") and jslint or nil,
+					typescript = nixCats("node") and jslint or nil,
 					nix = nixCats("nix") and { "alejandra" } or nil,
 					rust = nixCats("rust") and { "rustfmt" } or nil,
+				},
+				formatters = {
+					deno_fmt = {
+						command = "deno",
+						args = { "fmt", "-" },
+						stdin = true,
+					},
 				},
 			})
 
@@ -844,6 +864,9 @@ require("lze").load({
 	},
 	{
 		"typescript-tools.nvim",
+		enabled = function()
+			return nixCats("node") and not isDeno()
+		end,
 		ft = { "javascript", "javascriptreact", "typescript", "typescriptreact" },
 		on_require = { "typescript-tools" },
 		after = function()
@@ -869,6 +892,16 @@ require("lze").load({
 				},
 			})
 		end,
+	},
+	{
+		"denols",
+		enabled = function()
+			return nixCats("node") and isDeno()
+		end,
+		lsp = {
+			filetypes = { "javascript", "javascriptreact", "typescript", "typescriptreact" },
+			root_markers = { "deno.json", "deno.jsonc" },
+		},
 	},
 	{
 		"gopls",
