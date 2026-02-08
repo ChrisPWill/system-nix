@@ -73,9 +73,10 @@ require("lze").load({
 							min_keyword_length = 2,
 							score_offset = 1000,
 							opts = {
-								search_paths = {
-									(nixCats.configDir or "") .. "/snippets",
-								},
+								-- TODO: Fix this, unexpected path - deprecation?
+								-- search_paths = {
+								-- 	(nixCats.configDir or "") .. "/snippets",
+								-- },
 							},
 						},
 						copilot = nixCats("copilot") and {
