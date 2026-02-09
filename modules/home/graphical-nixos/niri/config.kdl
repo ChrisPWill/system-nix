@@ -166,6 +166,12 @@ recent-windows {
     }
 }
 
+switch-events {
+    lid-close {
+        spawn "dms" "ipc" "call" "lock" "lock"
+    }
+}
+
 // Include dms files
 include "dms/alttab.kdl"
 include "dms/binds.kdl"
