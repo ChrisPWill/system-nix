@@ -100,6 +100,10 @@
     # https://github.com/sharkdp/bat
     programs.bat.enable = true;
 
+    # Auto use flakes when in directory (and allowed)
+    # Remember to `direnv allow` in a project to get it going
+    programs.direnv.enable = true;
+
     # ls alternative
     # https://github.com/eza-community/eza
     programs.eza.enable = true;
