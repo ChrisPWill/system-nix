@@ -136,6 +136,8 @@ in {
             vim-startuptime
             blink-cmp
             nvim-treesitter.withAllGrammars
+            nvim-treesitter-parsers.jinja # Useful for nunjucks too
+            nvim-treesitter-parsers.jinja_inline # Useful for nunjucks too
             nvim-treesitter-context
             lualine-nvim
             lualine-lsp-progress
