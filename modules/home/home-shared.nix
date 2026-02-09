@@ -110,9 +110,7 @@
     programs.eza.git = true;
     programs.eza.icons = "auto";
 
-    programs.envoluntary = {
-      enable = true;
-    };
+    programs.envoluntary.enable = true;
 
     # Command line fuzzy finder
     # https://github.com/junegunn/fzf
