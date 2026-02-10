@@ -438,6 +438,7 @@ require("lze").load({
 			if isDeno() then
 				jslint = { "deno" }
 			end
+			require("lint").linters.clippy.ignore_exitcode = true
 			require("lint").linters_by_ft = {
 				-- NOTE: download some linters in lspsAndRuntimeDeps
 				-- and configure them here
