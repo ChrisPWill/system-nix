@@ -199,6 +199,18 @@
 
     programs.zsh = {
       enable = true;
+      completionInit = ''
+        autoload -Uz compinit
+        if [[ -n ''${ZDOTDIR:-$HOME}/.zcompdump(#qN.mh+24) ]]; then
+          compinit
+        else
+          compinit -C
+        fi
+        if [[ ! -f ''${ZDOTDIR:-$HOME}/.zcompdump.zwc || \
+              ''${ZDOTDIR:-$HOME}/.zcompdump -nt ''${ZDOTDIR:-$HOME}/.zcompdump.zwc ]]; then
+          zcompile ''${ZDOTDIR:-$HOME}/.zcompdump
+        fi
+      '';
 
       plugins = [
         {
