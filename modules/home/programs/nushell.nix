@@ -4,6 +4,13 @@
   config,
   ...
 }: {
+  programs.zsh.initContent = lib.mkOrder 500 ''
+    # Launch Nushell if we are interactive and haven't already launched it
+    if [[ $- == *i* && -z "$NU_LAUNCHED" ]]; then
+      export NU_LAUNCHED=true
+      exec nu
+    fi
+  '';
   programs.nushell = {
     enable = true;
 
