@@ -127,6 +127,9 @@
       fileWidgetCommand = "fd --type f";
     };
 
+    # Helix for when I feel like switching it up
+    programs.helix.enable = true;
+
     # Useful home-manager alias if enabled
     programs.zsh.shellAliases."hms" = lib.mkIf config.programs.home-manager.enable "home-manager switch --flake ${config.nixConfigDir}/.";
     programs.nushell.shellAliases."hms" = lib.mkIf config.programs.home-manager.enable "home-manager switch --flake ${config.nixConfigDir}/.";
