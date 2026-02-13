@@ -20,7 +20,7 @@ in {
 
   config = {
     # Easy config editing alias
-    programs.zsh.shellAliases."nvimconfig" = "(cd ${config.homeModuleDir}/nixCats; ${mainNixCatsPackageName} ./config/init.lua)";
+    programs.zsh.shellAliases."nvimconfig" = "(cd ${config.homeModuleDir}/programs/neovim; ${mainNixCatsPackageName} ./config/init.lua)";
 
     home.sessionVariables = {
       EDITOR = "meow";
@@ -36,7 +36,7 @@ in {
       # See packageDefinitions - says which one to install
       packageNames = [mainNixCatsPackageName] ++ pkgs.lib.optionals config.isPersonalMachine ["leet"];
 
-      luaPath = config.lib.file.mkOutOfStoreSymlink "${config.homeModuleDir}/nixCats/config";
+      luaPath = config.lib.file.mkOutOfStoreSymlink "${config.homeModuleDir}/programs/neovim/config";
 
       # the .replace vs .merge options are for modules based on existing configurations,
       # they refer to how multiple categoryDefinitions get merged together by the module.

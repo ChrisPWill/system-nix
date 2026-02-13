@@ -29,7 +29,6 @@
   };
 
   imports = [
-    ./nixCats
     ./fonts.nix
 
     # https://github.com/dfrankland/envoluntary
@@ -40,6 +39,9 @@
     # Terminal multiplexer
     # https://zellij.dev
     ./programs/zellij.nix
+
+    # My neovim setup
+    ./programs/neovim
 
     # Nushell, modern non-POSIX shell
     ./programs/nushell.nix
