@@ -82,6 +82,9 @@
           # Note taking
           logseq
 
+          # Easy zipper/unzipper
+          ouch
+
           # Rust-based ps replacement
           procs
         ]
