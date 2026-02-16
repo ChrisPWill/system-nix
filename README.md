@@ -1,6 +1,8 @@
-# Useful zsh aliases
+# Useful zsh aliases (after first time)
 
 * Run home-manager switch with `hms`
+* Run nixos-rebuild switch with `nrs`
+* Run darwin-rebuild switch with `drs`
 * Switch into one of the `/devshells` with `nd <devshell name>` e.g. `nd node22`
 
 # Installation
@@ -10,6 +12,14 @@
 Clone into `$HOME/.system-nix` using jujutsu (git works too)
 
 If cloning to a different directory, update config.nixConfigDir in the home manager config for the host to ensure home manager config can find the out-of-store config files.
+
+## NixOS
+
+TODO
+
+## MacOS (Darwin)
+
+TODO
 
 ## WSL2
 
