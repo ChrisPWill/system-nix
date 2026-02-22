@@ -183,6 +183,8 @@
     programs.yazi = {
       enable = true;
 
+      shellWrapperName = "y";
+
       extraPackages = with pkgs; [
         ouch
         glow
