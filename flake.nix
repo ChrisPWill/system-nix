@@ -16,9 +16,7 @@
 
     # https://github.com/dfrankland/envoluntary
     # direnv-like matcher that avoids needing to create gitignored nix files in projects
-    # Temporarily on my config until this PR is closed:
-    # https://github.com/dfrankland/envoluntary/pull/95
-    envoluntary.url = "github:chrispwill/envoluntary";
+    envoluntary.url = "github:dfrankland/envoluntary";
     envoluntary.inputs.nixpkgs.follows = "nixpkgs";
     envoluntary.inputs.home-manager.follows = "home-manager";
     envoluntary.inputs.rust-overlay.follows = "rust-overlay";
