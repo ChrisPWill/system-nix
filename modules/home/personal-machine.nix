@@ -17,6 +17,9 @@
     obsidian
 
     bitwarden-cli
+
+    # Time tracking app for personal projects
+    hours
   ];
 
   isPersonalMachine = true;
