@@ -38,7 +38,7 @@
 
     # Terminal multiplexer
     # https://zellij.dev
-    ./programs/zellij.nix
+    ./programs/zellij
 
     # My neovim setup
     ./programs/neovim
