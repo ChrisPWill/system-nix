@@ -22,6 +22,7 @@
   programs.zsh.shellAliases.zka = "zellij kill-all-sessions";
   programs.zsh.shellAliases.zd = "zellij delete-session";
   programs.zsh.shellAliases.zda = "zellij delete-all-sessions";
+  programs.zsh.shellAliases.edit = "f() { if [[ -n \"$1\" ]]; then zellij attach \"$1\" || zellij -s \"$1\" -l dev else zellij -l dev fi };f";
   programs.nushell.shellAliases.zr = "zellij run --";
   programs.nushell.shellAliases.zrf = "zellij run --floating --";
   programs.nushell.shellAliases.zl = "zellij list-sessions";
@@ -38,6 +39,14 @@
     def za [name?: string] {
       let session = ($name | default "default")
       zellij attach $session
+    }
+
+    def edit [name?: string] {
+      if ($name != null) {
+        zellij -l dev attach -c $name
+      } else {
+        zellij -l dev
+      }
     }
   '';
 }
