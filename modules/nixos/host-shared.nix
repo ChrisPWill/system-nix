@@ -11,6 +11,9 @@
     lazy-trees = true;
     eval-cores = 0;
 
+    fsync-metadata = false;
+    http2 = true;
+
     experimental-features = ["nix-command" "flakes"];
     substituters = [
       "https://cache.nixos.org"
