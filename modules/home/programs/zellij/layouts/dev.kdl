@@ -8,18 +8,14 @@ layout {
       plugin location="status-bar"
     }
   }
-  tab name="code" focus=true hide_floating_panes=true {
+  tab name="code" focus=true {
     pane edit="."
 
-    floating_panes {
-      pane name="tests" command="nu" {
-        x 1
-        width "50%"
-      }
-      pane name="shell" command="nu" {
-        x "50%"
-        width "50%"
-      }
+  }
+  tab name="shells" {
+    pane split_direction="vertical" {
+      pane name="tests" command="nu"
+      pane name="shell" command="nu"
     }
   }
   tab name="vcs" {
