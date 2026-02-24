@@ -1,0 +1,24 @@
+#!/usr/bin/env nu
+
+# ---
+# Opens lazyjj or lazygit depending on what type of repo it is
+# ---
+
+let root = (do -i { ^repo-root | str trim })
+
+if ($root | is-empty) {
+    print "Could not find a repository root."
+    return
+}
+
+# Check for .jj first, as you might have a jj repo co-located with a git repo
+let has_jj = ($root | path join ".jj" | path exists)
+let has_git = ($root | path join ".git" | path exists)
+
+if $has_jj {
+    ^lazyjj
+} else if $has_git {
+    ^lazygit
+} else {
+    print $"No .jj or .git directory found at ($root)."
+}
