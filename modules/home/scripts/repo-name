@@ -1,0 +1,12 @@
+#!/usr/bin/env nu
+
+# ---
+# Fetches the name of a repo (i.e. the root dir name) regardless of whether it's jujutsu or git
+# ---
+
+let jjRoot = (do -i { jj root err> /dev/null } | str trim)
+let gitRoot = (do -i { git rev-parse --show-toplevel err> /dev/null } | str trim)
+
+let repoRoot = if $jjRoot != null { $jjRoot } else if $gitRoot != null { $gitRoot } else null
+
+$repoRoot | split row '/' | last

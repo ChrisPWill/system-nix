@@ -42,8 +42,10 @@
     }
 
     def edit [name?: string] {
-      if ($name != null) {
-        zellij -l dev attach -c $name
+      let sessionName = if $name != null { $name } else { repo-name }
+
+      if ($sessionName != null) {
+        zellij -l dev attach -c $sessionName
       } else {
         zellij -l dev
       }

@@ -101,6 +101,11 @@
           pkgs.lib.optionals (pkgs.stdenv.isDarwin) []
         );
 
+    home.sessionPath = ["${config.homeModuleDir}/scripts"];
+    programs.nushell.extraEnv = ''
+      $env.PATH = ($env.PATH | split row (char esep) | append "${config.homeModuleDir}/scripts")
+    '';
+
     # Nice colourful cat alternative
     # https://github.com/sharkdp/bat
     programs.bat.enable = true;
