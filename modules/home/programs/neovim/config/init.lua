@@ -447,6 +447,7 @@ require("lze").load({
 				typescript = nixCats("node") and jslint or nil,
 				go = nixCats("go") and { "golangcilint" } or nil,
 				rust = nixCats("rust") and { "clippy" } or nil,
+				toml = nixCats("rust") and { "tombi" } or nil,
 			}
 
 			vim.api.nvim_create_autocmd({ "CursorHold", "BufWritePost", "InsertLeave" }, {
@@ -479,8 +480,14 @@ require("lze").load({
 					typescript = nixCats("node") and jslint or nil,
 					nix = nixCats("nix") and { "alejandra" } or nil,
 					rust = nixCats("rust") and { "rustfmt" } or nil,
+					toml = nixCats("rust") and { "tombi" } or nil,
 				},
 				formatters = {
+					tombi = {
+						command = "tombi",
+						args = { "format", "-" },
+						stdin = true,
+					},
 					deno_fmt = {
 						command = "deno",
 						args = { "fmt", "-" },
