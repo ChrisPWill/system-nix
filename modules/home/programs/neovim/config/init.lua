@@ -15,9 +15,15 @@ local function nmap(keys, func, desc, opts)
 	vim.keymap.set("n", keys, func, opts)
 end
 
--- Helper function for finding deno projects
+-- Helper function for finding project types
+local function rootHasFiles(files)
+	return #vim.fs.find(files, { upward = true, stop = vim.env.HOME }) > 0
+end
 local function isDeno()
-	return #vim.fs.find({ "deno.json" }, { upward = true, stop = vim.env.HOME }) > 0
+	return rootHasFiles({ "deno.json" })
+end
+local function isTreefmt()
+	return rootHasFiles({ "treefmt.toml", ".treefmt.toml" })
 end
 
 require("onedark").setup({})
@@ -465,22 +471,23 @@ require("lze").load({
 		after = function()
 			local conform = require("conform")
 
-			local jslint = { "eslint_d" }
+			local jslint = { "treefmt", "eslint_d", "prettierd", stop_after_first = true }
 			if isDeno() then
-				jslint = { "deno_fmt" }
+				jslint = { "treefmt", "deno_fmt", stop_after_first = true }
 			end
 			conform.setup({
 				formatters_by_ft = {
+					["*"] = { "treefmt" },
 					-- NOTE: download some formatters in lspsAndRuntimeDeps
 					-- and configure them here
-					lua = nixCats("lua") and { "stylua" } or nil,
-					go = nixCats("go") and { "gofmt", "golint" } or nil,
+					lua = nixCats("lua") and { "treefmt", "stylua", stop_after_first = true } or nil,
+					go = nixCats("go") and { "treefmt", "gofmt", "golint", stop_after_first = true } or nil,
 					-- Use a sub-list to run only the first available formatter
 					javascript = nixCats("node") and jslint or nil,
 					typescript = nixCats("node") and jslint or nil,
-					nix = nixCats("nix") and { "alejandra" } or nil,
-					rust = nixCats("rust") and { "rustfmt" } or nil,
-					toml = nixCats("rust") and { "tombi" } or nil,
+					nix = nixCats("nix") and { "treefmt", "alejandra", stop_after_first = true } or nil,
+					rust = nixCats("rust") and { "treefmt", "rustfmt", stop_after_first = true } or nil,
+					toml = nixCats("rust") and { "treefmt", "tombi", stop_after_first = true } or nil,
 				},
 				formatters = {
 					tombi = {
@@ -491,6 +498,11 @@ require("lze").load({
 					deno_fmt = {
 						command = "deno",
 						args = { "fmt", "-" },
+						stdin = true,
+					},
+					treefmt = {
+						command = "treefmt",
+						args = { "--stdin", "$FILENAME" },
 						stdin = true,
 					},
 				},
