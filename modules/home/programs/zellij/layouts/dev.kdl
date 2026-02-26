@@ -9,7 +9,7 @@ layout {
     }
   }
   tab name="code" focus=true {
-    pane edit="."
+    pane command="nvim" args="."
 
   }
   tab name="shells" {
