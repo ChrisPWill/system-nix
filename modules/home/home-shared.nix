@@ -50,6 +50,8 @@
     ./programs/version-control.nix
 
     ./programs/sketchybar
+
+    ./services/ollama.nix
   ];
 
   config = {

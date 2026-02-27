@@ -5,4 +5,6 @@
 
     ./graphical-nixos
   ];
+
+  services.local-ollama.enable = true;
 }
