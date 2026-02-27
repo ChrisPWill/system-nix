@@ -43,6 +43,9 @@ require("lze").load({
 			if nixCats("copilot") then
 				vim.cmd.packadd("blink-copilot")
 			end
+			if nixCats("local-llm") then
+				vim.cmd.packadd("minuet-ai.nvim")
+			end
 			vim.cmd.packadd("luasnip")
 		end,
 		after = function()
@@ -78,11 +81,11 @@ require("lze").load({
 				signature = { enabled = true },
 				sources = {
 					default = nixCats("copilot") and { "snippets", "copilot", "lsp", "path", "buffer" }
-						or { "snippets", "lsp", "path", "buffer" },
+						or { "snippets", "minuet", "lsp", "path", "buffer" },
 					providers = {
 						snippets = {
 							min_keyword_length = 2,
-							score_offset = 1000,
+							score_offset = 10,
 							opts = {
 								-- TODO: Fix this, unexpected path - deprecation?
 								-- search_paths = {
@@ -97,6 +100,12 @@ require("lze").load({
 							score_offset = 100,
 							async = true,
 						} or nil,
+						minuet = {
+							name = "minuet",
+							enabled = nixCats("local-llm"),
+							module = "minuet.blink",
+							score_offset = 100, -- Forces LLM suggestions to the top of the menu
+						},
 					},
 				},
 			})
@@ -732,6 +741,86 @@ require("lze").load({
 		after = function()
 			require("scissors").setup({
 				snippetDir = (nixCats.configDir or "") .. "/snippets",
+			})
+		end,
+	},
+	{
+		"minuet-ai.nvim",
+		enabled = nixCats("local-llm") or false,
+		after = function()
+			-- Load the required dependency if using lz.n optional loading
+			vim.cmd("packadd plenary.nvim")
+
+			require("minuet").setup({
+				provider = "openai_fim_compatible",
+				-- Requesting 1 completion at a time keeps the RTX 2080 generating as fast as possible
+				n_completions = 1,
+				provider_options = {
+					openai_fim_compatible = {
+						api_key = "TERM",
+						model = "qwen2.5-coder:3b-base",
+						end_point = "http://127.0.0.1:11434/v1/completions",
+						stream = true,
+						optional = {
+							options = {
+								num_predict = 256,
+								temperature = 0.1,
+								top_p = 0.9,
+							},
+						},
+					},
+				},
+			})
+		end,
+	},
+	{
+		"avante.nvim",
+		enabled = nixCats("local-llm") or false,
+		-- Lazy load when executing these commands
+		cmd = { "AvanteAsk", "AvanteToggle", "AvanteChat" },
+		-- Or lazy load on keybinds
+		keys = {
+			{
+				"<leader>aa",
+				function()
+					require("avante.api").ask()
+				end,
+				mode = "n",
+				desc = "Avante Ask",
+			},
+			{
+				"<leader>at",
+				function()
+					require("avante.api").toggle()
+				end,
+				mode = "n",
+				desc = "Avante Toggle",
+			},
+		},
+		after = function()
+			-- lz.n does not auto-load dependency trees like lazy.nvim does.
+			-- If your dependencies are in 'optionalPlugins', you must packadd them here.
+			-- (Skip these if you put them in 'startupPlugins' in nixCats).
+			vim.cmd("packadd plenary.nvim")
+			vim.cmd("packadd nui.nvim")
+			vim.cmd("packadd render-markdown.nvim")
+			vim.cmd("packadd dressing.nvim")
+
+			require("avante").setup({
+				provider = "ollama",
+				-- Keep auto-suggestions disabled here if you are using llm.nvim for FIM
+				auto_suggestions_provider = "ollama",
+				providers = {
+					ollama = {
+						model = "qwen2.5-coder:3b-base",
+						is_env_set = require("avante.providers.ollama").check_endpoint_alive,
+					},
+				},
+				behaviour = {
+					auto_suggestions = false,
+					auto_set_highlight_group = true,
+					auto_set_keymaps = true,
+				},
 			})
 		end,
 	},

@@ -158,14 +158,21 @@ in {
             leap-nvim
             treewalker-nvim
           ];
+          node = with pkgs.vimPlugins; [
+            typescript-tools-nvim
+            nvim-dap-vscode-js
+          ];
           copilot = with pkgs.vimPlugins; [
             copilot-lua
             copilot-lualine
             blink-copilot
           ];
-          node = with pkgs.vimPlugins; [
-            typescript-tools-nvim
-            nvim-dap-vscode-js
+          local-llm = with pkgs.vimPlugins; [
+            nui-nvim
+            render-markdown-nvim
+            dressing-nvim
+            avante-nvim
+            minuet-ai-nvim
           ];
         };
 
@@ -226,6 +233,7 @@ in {
             node = true;
             rust = true;
             copilot = config.nixCats.custom.enableCopilot;
+            local-llm = config.services.local-ollama.enable;
 
             # go = false;
           };
