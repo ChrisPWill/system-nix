@@ -1,3 +1,5 @@
+# NOTE: You will need to manually pull models, e.g.
+# `ollama pull qwen2.5-coder:3b-base`
 {
   config,
   lib,

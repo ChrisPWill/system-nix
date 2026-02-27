@@ -26,6 +26,8 @@ local function isTreefmt()
 	return rootHasFiles({ "treefmt.toml", ".treefmt.toml" })
 end
 
+local base_model = "qwen2.5-coder:3b-base"
+
 require("onedark").setup({})
 vim.cmd.colorscheme("onedark")
 
@@ -758,7 +760,7 @@ require("lze").load({
 				provider_options = {
 					openai_fim_compatible = {
 						api_key = "TERM",
-						model = "qwen2.5-coder:3b-base",
+						model = base_model,
 						end_point = "http://127.0.0.1:11434/v1/completions",
 						stream = true,
 						optional = {
@@ -812,7 +814,7 @@ require("lze").load({
 				auto_suggestions_provider = "ollama",
 				providers = {
 					ollama = {
-						model = "qwen2.5-coder:3b-base",
+						model = base_model,
 						is_env_set = require("avante.providers.ollama").check_endpoint_alive,
 					},
 				},
