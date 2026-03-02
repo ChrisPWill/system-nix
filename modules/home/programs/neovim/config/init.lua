@@ -82,8 +82,10 @@ require("lze").load({
 				},
 				signature = { enabled = true },
 				sources = {
+					-- Need to find a better solution to the issue where `enabled` doesn't work as I'd hope
 					default = nixCats("copilot") and { "snippets", "copilot", "lsp", "path", "buffer" }
-						or { "snippets", "minuet", "lsp", "path", "buffer" },
+						or nixCats("local-llm") and { "snippets", "minuet", "lsp", "path", "buffer" }
+						or { "snippets", "lsp", "path", "buffer" },
 					providers = {
 						snippets = {
 							min_keyword_length = 2,
