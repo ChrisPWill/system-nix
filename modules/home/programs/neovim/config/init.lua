@@ -501,6 +501,7 @@ require("lze").load({
 					nix = nixCats("nix") and { "treefmt", "alejandra", stop_after_first = true } or nil,
 					rust = nixCats("rust") and { "treefmt", "rustfmt", stop_after_first = true } or nil,
 					toml = nixCats("rust") and { "treefmt", "tombi", stop_after_first = true } or nil,
+					python = nixCats("python") and { "ruff_organize_imports", lsp_format = "last" } or nil,
 				},
 				formatters = {
 					tombi = {
@@ -529,6 +530,7 @@ require("lze").load({
 						return
 					end
 					require("conform").format({
+						lsp_fallback = true,
 						bufnr = args.buf,
 						async = false,
 						timeout_ms = 5000,
@@ -943,6 +945,13 @@ require("lze").load({
 	},
 	{
 		"basedpyright",
+		enabled = nixCats("python") or false,
+		lsp = {
+			fileTypes = { "python" },
+		},
+	},
+	{
+		"ruff",
 		enabled = nixCats("python") or false,
 		lsp = {
 			fileTypes = { "python" },

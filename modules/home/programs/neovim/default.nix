@@ -87,6 +87,7 @@ in {
           ];
           python = with pkgs; [
             basedpyright
+            ruff
           ];
           # go = with pkgs; [
           #   gopls
