@@ -234,6 +234,41 @@ in {
             node = true;
             rust = true;
             copilot = config.nixCats.custom.enableCopilot;
+            local-llm = false;
+
+            # go = false;
+          };
+          # anything else to pass and grab in lua with `nixCats.extra`
+          extra = {
+            nixdExtras.nixpkgs = ''import ${pkgs.path} {}'';
+          };
+        };
+
+        "nvim-llm" = {pkgs, ...}: {
+          # they contain a settings set defined above
+          # see :help nixCats.flake.outputs.settings
+          settings = {
+            suffix-path = true;
+            suffix-LD = true;
+            wrapRc = true;
+            # unwrappedCfgPath = "/path/to/here";
+            # IMPORTANT:
+            # your alias may not conflict with your other packages.
+            aliases = ["nvim" "neovim" "nv"];
+            # neovim-unwrapped = inputs.neovim-nightly-overlay.packages.${pkgs.stdenv.hostPlatform.system}.neovim;
+            hosts.python3.enable = true;
+            hosts.node.enable = true;
+          };
+          # and a set of categories that you want
+          # (and other information to pass to lua)
+          # and a set of categories that you want
+          categories = {
+            general = true;
+            lua = true;
+            nix = true;
+            node = true;
+            rust = true;
+            copilot = config.nixCats.custom.enableCopilot;
             local-llm = config.services.local-ollama.enable;
 
             # go = false;
