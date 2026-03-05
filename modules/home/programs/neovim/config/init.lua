@@ -502,6 +502,7 @@ require("lze").load({
 					rust = nixCats("rust") and { "treefmt", "rustfmt", stop_after_first = true } or nil,
 					toml = nixCats("rust") and { "treefmt", "tombi", stop_after_first = true } or nil,
 					python = nixCats("python") and { "ruff_organize_imports", lsp_format = "last" } or nil,
+					nu = { lsp_format = "last" },
 				},
 				formatters = {
 					tombi = {
@@ -948,6 +949,13 @@ require("lze").load({
 		enabled = nixCats("python") or false,
 		lsp = {
 			fileTypes = { "python" },
+		},
+	},
+	{
+		"nushell",
+		enabled = nixCats("general") or false,
+		lsp = {
+			fileTypes = { "nu" },
 		},
 	},
 	{
