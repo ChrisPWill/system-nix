@@ -1087,6 +1087,7 @@ if nixCats("leet") then
 		arg = "start",
 		lang = "python3",
 	})
+	nmap("<leader>lM", "<cmd>Leet menu<CR>", "Leet main menu")
 	nmap("<leader>lii", "<cmd>Leet info<CR>", "Leet question info")
 	nmap("<leader>liI", "<cmd>Leet inject<CR>", "Leet re-inject editor code")
 	nmap("<leader>ll", "<cmd>Leet list<CR>", "Leet question list")
