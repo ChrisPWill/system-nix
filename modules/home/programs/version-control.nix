@@ -57,6 +57,7 @@
   # https://github.com/jesseduffield/lazygit
   programs.lazygit.enable = true;
   programs.zsh.shellAliases.lg = "lazygit";
+  programs.fish.shellAliases.lg = "lazygit";
   programs.nushell.shellAliases.lg = "lazygit";
 
   # https://jj-vcs.github.io/jj/latest/
@@ -67,5 +68,6 @@
   programs.jujutsu.settings.user.email = config.userEmail;
   # LazyJJ - easy TUI for jujutsu VCS
   programs.zsh.shellAliases.ljj = "lazyjj";
+  programs.fish.shellAliases.ljj = "lazyjj";
   programs.nushell.shellAliases.ljj = "lazyjj";
 }
