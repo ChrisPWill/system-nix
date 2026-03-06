@@ -1,27 +1,77 @@
 layout {
-  default_tab_template {
+  // hide_floating_panes bugged with this, manually copied for now
+  // default_tab_template  {
+  //   pane size=1 borderless=true {
+  //     plugin location="tab-bar"
+  //   }
+  //   children
+  //   pane size=1 borderless=true {
+  //     plugin location="status-bar"
+  //   }
+  // }
+  tab name="code" focus=true hide_floating_panes=true {
     pane size=1 borderless=true {
       plugin location="tab-bar"
     }
-    children
+    pane command="nvim" args="."
+    floating_panes {
+        pane name="Lint" command="fish" {
+            x "2%"
+            y "2%"
+            width "48%"
+            height "48%"
+        }
+        pane name="Shell" command="fish" {
+            x "52%"
+            y "2%"
+            width "48%"
+            height "48%"
+        }
+        pane name="Tests" command="fish" {
+            x "2%"
+            y "52%"
+            width "48%"
+            height "48%"
+        }
+        pane name="VCS" command="open-vcs" {
+            x "52%"
+            y "52%"
+            width "48%"
+            height "48%"
+        }
+    }
     pane size=1 borderless=true {
       plugin location="status-bar"
     }
   }
-  tab name="code" focus=true {
-    pane command="nvim" args="."
-
-  }
   tab name="shells" {
+    pane size=1 borderless=true {
+      plugin location="tab-bar"
+    }
     pane split_direction="vertical" {
-      pane name="tests" command="nu"
-      pane name="shell" command="nu"
+      pane name="tests" command="fish"
+      pane name="shell" command="fish"
+    }
+    pane size=1 borderless=true {
+      plugin location="status-bar"
     }
   }
   tab name="vcs" {
+    pane size=1 borderless=true {
+      plugin location="tab-bar"
+    }
     pane command="open-vcs"
+    pane size=1 borderless=true {
+      plugin location="status-bar"
+    }
   }
   tab name="files" {
+    pane size=1 borderless=true {
+      plugin location="tab-bar"
+    }
     pane command="yazi"
+    pane size=1 borderless=true {
+      plugin location="status-bar"
+    }
   }
 }
