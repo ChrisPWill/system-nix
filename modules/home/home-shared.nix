@@ -92,6 +92,9 @@
 
           # Rust-based ps replacement
           procs
+
+          # Watch progress of cp/mv/dd/tar/etc. `tldr progress` for info
+          progress
         ]
         # Can access the host configuration using osConfig e.g.
         # ++ (
