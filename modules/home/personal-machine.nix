@@ -20,6 +20,8 @@
 
     # Time tracking app for personal projects
     hours
+
+    spotify
   ];
 
   isPersonalMachine = true;
