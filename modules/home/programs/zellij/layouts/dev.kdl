@@ -10,9 +10,6 @@ layout {
   //   }
   // }
   tab name="code" focus=true hide_floating_panes=true {
-    pane size=1 borderless=true {
-      plugin location="tab-bar"
-    }
     pane command="nvim" args="."
     floating_panes {
         pane name="Lint" command="fish" {
@@ -40,36 +37,6 @@ layout {
             height "48%"
         }
     }
-    pane size=1 borderless=true {
-      plugin location="status-bar"
-    }
-  }
-  tab name="shells" {
-    pane size=1 borderless=true {
-      plugin location="tab-bar"
-    }
-    pane split_direction="vertical" {
-      pane name="tests" command="fish"
-      pane name="shell" command="fish"
-    }
-    pane size=1 borderless=true {
-      plugin location="status-bar"
-    }
-  }
-  tab name="vcs" {
-    pane size=1 borderless=true {
-      plugin location="tab-bar"
-    }
-    pane command="open-vcs"
-    pane size=1 borderless=true {
-      plugin location="status-bar"
-    }
-  }
-  tab name="files" {
-    pane size=1 borderless=true {
-      plugin location="tab-bar"
-    }
-    pane command="yazi"
     pane size=1 borderless=true {
       plugin location="status-bar"
     }
