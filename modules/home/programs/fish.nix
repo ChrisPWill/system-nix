@@ -25,6 +25,10 @@
 
         ${pkgs.fastfetch}/bin/fastfetch -s title:separator:os:cpu:memory:host:chassis:kernel:de:wm:wmtheme:swap:disk:battery:poweradapter:uptime:separator:shell:font:terminal:terminalfont:break:colors
       '';
+
+      shellAbbrs = {
+        unzip = "ouch";
+      };
     };
   };
 }
