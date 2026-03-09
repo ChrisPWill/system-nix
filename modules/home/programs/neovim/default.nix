@@ -63,6 +63,7 @@ in {
           general = with pkgs; [
             lazygit
             silicon # take code screenshots
+            koji # conventional commit editor
           ];
           lua = with pkgs; [
             lua-language-server
