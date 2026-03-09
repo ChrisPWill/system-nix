@@ -27,6 +27,11 @@
       '';
 
       shellAbbrs = {
+        jjrm = "jj rebase -s @ -d master@origin";
+        jjnm = {
+          expansion = "jj new master@origin -m \"%\"";
+          setCursor = true;
+        };
         unzip = "ouch";
       };
 
