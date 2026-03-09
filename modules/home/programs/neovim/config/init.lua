@@ -51,6 +51,13 @@ require("lze").load({
 			vim.cmd.packadd("luasnip")
 		end,
 		after = function()
+			local defaultSources = { "snippets", "lsp", "path", "buffer" }
+			if nixCats("copilot") then
+				table.insert(defaultSources, 2, "copilot")
+			end
+			if nixCats("local-llm") then
+				table.insert(defaultSources, 2, "minuet")
+			end
 			require("blink.cmp").setup({
 				-- 'default' (recommended) for mappings similar to built-in completions (C-y to accept)
 				-- See :h blink-cmp-config-keymap for configuring keymaps
@@ -83,9 +90,7 @@ require("lze").load({
 				signature = { enabled = true },
 				sources = {
 					-- Need to find a better solution to the issue where `enabled` doesn't work as I'd hope
-					default = nixCats("copilot") and { "snippets", "copilot", "lsp", "path", "buffer" }
-						or nixCats("local-llm") and { "snippets", "minuet", "lsp", "path", "buffer" }
-						or { "snippets", "lsp", "path", "buffer" },
+					default = defaultSources,
 					providers = {
 						snippets = {
 							min_keyword_length = 2,
@@ -109,6 +114,7 @@ require("lze").load({
 							enabled = nixCats("local-llm"),
 							module = "minuet.blink",
 							score_offset = 100, -- Forces LLM suggestions to the top of the menu
+							async = true,
 						},
 					},
 				},
