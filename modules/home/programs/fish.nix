@@ -27,12 +27,35 @@
       '';
 
       shellAbbrs = {
+        # Nix
+        # ---
+        nfc = "nix flake check";
+        nfu = "nix flake update";
+        # Nix shell "interactive"
+        nsi = {
+          expansion = "nix shell -p % --run fish";
+          setCursor = true;
+        };
+
+        # Jujutsu
+        # ---
         jjrm = "jj rebase -s @ -d master@origin";
         jjnm = {
           expansion = "jj new master@origin -m \"%\"";
           setCursor = true;
         };
-        unzip = "ouch";
+
+        # Archives
+        # ---
+        zip = {
+          expansion = "ouch compress %<files> output.zip";
+          setCursor = true;
+        };
+        unzip = "ouch decompress";
+        unzipToDir = {
+          expansion = "ouch decompress -d %<dir> X.zip";
+          setCursor = true;
+        };
       };
 
       plugins = let
