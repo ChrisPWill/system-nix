@@ -18,7 +18,7 @@
     users.users.cwilliams = {
       isNormalUser = true;
       description = "Chris Williams";
-      extraGroups = ["networkmanager" "wheel"];
+      extraGroups = ["networkmanager" "wheel" "docker"];
     };
 
     # Set your time zone.
@@ -44,5 +44,7 @@
       layout = "au";
       variant = "";
     };
+
+    virtualisation.docker.enable = true;
   };
 }
