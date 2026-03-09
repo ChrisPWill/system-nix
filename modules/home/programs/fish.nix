@@ -29,6 +29,18 @@
       shellAbbrs = {
         unzip = "ouch";
       };
+
+      plugins = let
+        fishP = name: {
+          inherit name;
+          inherit (pkgs.fishPlugins.${name}) src;
+        };
+      in [
+        (fishP "fifc") # fzf for autocomplete e.g. params
+        # interactive selectors for git
+        # See https://github.com/wfxr/forgit for list
+        (fishP "forgit")
+      ];
     };
   };
 }
