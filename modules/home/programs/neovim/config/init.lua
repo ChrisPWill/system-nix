@@ -206,14 +206,14 @@ require("lze").load({
 		"arrow.nvim",
 		enabled = nixCats("general") or false,
 		keys = {
-			{ ";", desc = "Arrow - files" },
-			{ "m", desc = "Arrow - line numbers" },
+			{ "<leader>;", desc = "Arrow - files" },
+			{ ";", desc = "Arrow - line numbers" },
 		},
 		after = function()
 			require("arrow").setup({
 				show_icons = true,
-				leader_key = ";",
-				buffer_leader_key = "m",
+				leader_key = "<leader>;",
+				buffer_leader_key = ";",
 			})
 		end,
 	},
