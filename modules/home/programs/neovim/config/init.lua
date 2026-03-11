@@ -1230,3 +1230,14 @@ vim.api.nvim_create_autocmd("FileType", {
 		vim.schedule(run_koji_native)
 	end,
 })
+
+-- Search forward for visually selected text
+-- 'x' mode covers visual mode but not select mode
+vim.keymap.set("x", "*", [[y/\V<C-R>=substitute(escape(@@, "/\\"), "\n", "\\\\n", "ge")<CR><CR>]], {
+	desc = "Search forward for visually selected text",
+})
+
+-- Search backward for visually selected text
+vim.keymap.set("x", "#", [[y?\V<C-R>=substitute(escape(@@, "?\\"), "\n", "\\\\n", "ge")<CR><CR>]], {
+	desc = "Search backward for visually selected text",
+})
