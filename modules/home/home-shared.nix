@@ -223,6 +223,9 @@
       };
     };
 
+    # PDF viewer
+    programs.zathura.enable = true;
+
     # Nice fast autojump command
     # https://github.com/ajeetdsouza/zoxide
     programs.zoxide.enable = true;

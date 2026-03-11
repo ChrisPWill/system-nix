@@ -10,7 +10,9 @@
       "x-scheme-handler/https" = vivaldi;
       "x-scheme-handler/about" = vivaldi;
       "x-scheme-handler/unknown" = vivaldi;
-      "application/pdf" = vivaldi;
+
+      # PDFs etc.
+      "application/pdf" = "zathura.desktop";
 
       # File management
       "inode/directory" = "dolphin.desktop";
