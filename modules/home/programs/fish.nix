@@ -56,6 +56,18 @@
           expansion = "ouch decompress -d %<dir> X.zip";
           setCursor = true;
         };
+
+        # Image/Video conversions
+        # ---
+        iconvert = {
+          expansion = "magick % output.png"; # imagemagick
+          setCursor = true;
+        };
+
+        vconvert = {
+          expansion = "ffmpeg -i % output.mp4";
+          setCursor = true;
+        };
       };
 
       plugins = let

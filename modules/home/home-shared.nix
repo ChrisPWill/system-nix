@@ -95,6 +95,10 @@
 
           # Watch progress of cp/mv/dd/tar/etc. `tldr progress` for info
           progress
+
+          # Conversions etc.
+          imagemagick
+          ffmpeg
         ]
         # Can access the host configuration using osConfig e.g.
         # ++ (
