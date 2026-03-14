@@ -57,6 +57,10 @@ overview {
 
 layout {
     default-column-width { proportion 0.5; }
+
+    struts {
+        top 25
+    }
 }
 
 // Ensure portals start early for better integration
@@ -174,6 +178,7 @@ switch-events {
         spawn "dms" "ipc" "call" "lock" "lock"
     }
 }
+
 
 // Include dms files
 include "dms/alttab.kdl"

@@ -1,0 +1,81 @@
+:root {
+  /* 
+    OneDark theme
+    Source: https://github.com/tinted-theming/schemes/blob/spec-0.11/base16/onedark.yaml
+
+    TODO: Update code to inject theme dynamically from stylix or similar
+   */
+  --base00: #282c34;
+  --base01: #353b45;
+  --base02: #3e4451;
+  --base03: #545862;
+  --base04: #565c64;
+  --base05: #abb2bf;
+  --base06: #b6bdca;
+  --base07: #c8ccd4;
+  --base08: #e06c75;
+  --base09: #d19a66;
+  --base0A: #e5c07b;
+  --base0B: #98c379;
+  --base0C: #56b6c2;
+  --base0D: #61afef;
+  --base0E: #c678dd;
+  --base0F: #be5046;
+
+  --default-background-color: var(--base00);
+  --lighter-background-color: var(--base01);
+  --selection-background-color: var(--base02);
+  --default-foreground-color: var(--base05);
+  --darker-foreground-color: var(--base04);
+
+  color: var(--default-foreground-color);
+  background-color: var(--default-background-color);
+  font-size: 0.9rem;
+  font-family: 'FantasqueSansM Nerd Font';
+}
+
+window.bar {
+  min-height: 25px;
+  border: 1px solid var(--lighter-background-color);
+  border-radius: 10px;
+
+  box.widget {
+    margin-left: 0px;
+    margin-right: 0px;
+    background-color: var(--lighter-background-color);
+    border: 1px solid var(--lighter-background-color);
+    border-radius: 15px;
+  }
+}
+
+calendar {
+  background-color: var(--default-background-color);
+  font-family: 'FantasqueSansM Nerd Font';
+
+  header {
+    background-color: var(--lighter-background-color);
+
+    border: 1px solid var(--lighter-background-color);
+    border-radius: 5px;
+  }
+
+  .day-number {
+    color: var(--default-foreground-color);
+
+    &:selected {
+      background-color: var(--selection-background-color);
+    }
+    &:hover {
+      background-color: var(--lighter-background-color);
+    }
+  }
+
+  .day-name {
+    background-color: var(--lighter-background-color);
+  }
+
+  .other-month {
+    color: var(--darker-foreground-color);
+  }
+}
+
