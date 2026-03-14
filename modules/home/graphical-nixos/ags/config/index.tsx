@@ -1,6 +1,7 @@
 import app from "ags/gtk4/app"
 import { Astal } from "ags/gtk4"
 import { createPoll } from "ags/time"
+import { monitorFile } from "ags/file";
 
 app.start({
   main() {
@@ -8,9 +9,16 @@ app.start({
     const clock = createPoll("", 1000, "date")
 
     return (
-      <window visible anchor={TOP | LEFT | RIGHT}>
+      <window class="bar" visible anchor={TOP | LEFT | RIGHT}>
         <label label={clock} />
       </window>
     )
   },
+})
+
+app.apply_css("./styling/main.css")
+
+monitorFile("./styling", () => {
+  app.reset_css();
+  app.apply_css("./styling/main.css")
 })
