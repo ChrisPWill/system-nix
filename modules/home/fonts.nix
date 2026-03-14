@@ -5,20 +5,18 @@
 
     noto-fonts-cjk-sans
 
-    roboto
-
-    roboto-serif
+    dejavu_fonts
   ];
 
   fonts.fontconfig.enable = true;
 
   fonts.fontconfig.defaultFonts = {
     sansSerif = [
-      "Roboto"
+      "DejaVu Sans"
       "Noto Sans"
       "Noto Sans CJK KR"
     ];
-    serif = ["Roboto Serif" "Noto Serif" "Noto Serif CJK KR"];
+    serif = ["DejaVu Serif" "Noto Serif" "Noto Serif CJK KR"];
     monospace = ["FantasqueSansM Nerd Font Mono"];
   };
 }

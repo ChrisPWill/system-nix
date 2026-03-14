@@ -59,7 +59,7 @@ layout {
     default-column-width { proportion 0.5; }
 
     struts {
-        top 25
+        top 40
     }
 }
 
