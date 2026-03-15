@@ -58,9 +58,9 @@ overview {
 layout {
     default-column-width { proportion 0.5; }
 
-    struts {
-        top 40
-    }
+    // struts {
+    //     top 40
+    // }
 }
 
 // Ensure portals start early for better integration

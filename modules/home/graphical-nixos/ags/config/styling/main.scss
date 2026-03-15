@@ -23,6 +23,8 @@ $selectionBgColor: $base02;
 $defaultFgColor: $base05;
 $darkerFgColor: $base04;
 
+$blueColor: $base0D;
+
 :root {
   /* 
     OneDark theme
@@ -53,7 +55,7 @@ window.bar {
 
   box.widget {
     padding: 3px 8px;
-    margin: 5px;
+    margin: 3px 3px;
     background-color: $lighterBgColor;
     border: 1px solid $lighterBgColor;
     border-radius: 20px;
@@ -123,5 +125,23 @@ menubutton.clock {
     .other-month {
       color: $darkerFgColor;
     }
+  }
+}
+
+box.button-panel {
+  > * {
+    padding-top: 1px;
+    padding-bottom: 1px;
+    padding-right: 7px;
+    padding-left: 2px;
+  }
+}
+
+box.wifi {
+  &.wifi-inactive {
+    color: $darkerFgColor;
+  }
+  &.wifi-active {
+    color: $blueColor;
   }
 }
