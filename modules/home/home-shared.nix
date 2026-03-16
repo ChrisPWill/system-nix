@@ -283,6 +283,9 @@
     # Command history
     programs.atuin.enable = true;
 
+    # Matrix chat
+    programs.element-desktop.enable = true;
+
     # Aerospace window manager config
     xdg.configFile."aerospace/aerospace.toml" = lib.mkIf pkgs.stdenv.isDarwin {
       source = config.lib.file.mkOutOfStoreSymlink "${config.homeModuleDir}/out-of-store/aerospace.toml";
