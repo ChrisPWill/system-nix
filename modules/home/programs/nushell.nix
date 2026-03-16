@@ -48,23 +48,6 @@
           + ")");
       };
       extraConfig = ''
-        # fzf support
-        $env.config = ($env.config | upsert keybindings (
-          $env.config.keybindings
-          | append {
-              name: fzf_file_search
-              modifier: control
-              keycode: char_t
-              mode: [vi_normal, vi_insert]
-              event: [
-                {
-                  send: executehostcommand
-                  cmd: "commandline edit --insert (fzf --layout=reverse --height=40% | decode utf-8 | str trim)"
-                }
-              ]
-            }
-        ))
-
         # Shows system information on startup
         ${pkgs.fastfetch}/bin/fastfetch -s title:separator:os:cpu:memory:host:chassis:kernel:de:wm:wmtheme:swap:disk:battery:poweradapter:uptime:separator:shell:font:terminal:terminalfont:break:colors
       '';

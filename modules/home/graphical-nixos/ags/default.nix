@@ -15,7 +15,6 @@ in {
     # Add extra packages
     # extraPackages = with pkgs; [
     #   inputs.astal.packages.${pkgs.system}.battery
-    #   fzf
     # ];
   };
 }

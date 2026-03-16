@@ -134,17 +134,14 @@
 
     programs.envoluntary.enable = true;
 
-    # Command line fuzzy finder
-    # https://github.com/junegunn/fzf
-    # Hotkeys:
-    # CTRL-T find a file/dir and put it in command line
-    # CTRL-R search command history
-    # ALT-C to cd into a subdir
-    programs.fzf = {
+    # FZF replacement
+    # Use Ctrl-T for smart finding on lots of commands
+    programs.television = {
       enable = true;
-      defaultCommand = "fd --hidden";
-      changeDirWidgetCommand = "fd --type d";
-      fileWidgetCommand = "fd --type f";
+
+      settings = {
+        ui.theme = "onedark";
+      };
     };
 
     # Helix for when I feel like switching it up
