@@ -84,6 +84,8 @@ in {
       qimgv # quick image viewer
 
       wl-clipboard # wl-copy and wl-paste
+
+      gcr # Gnome Keyring system prompter
     ];
   };
 }
