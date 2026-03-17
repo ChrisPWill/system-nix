@@ -758,9 +758,12 @@ require("lze").load({
 			vim.cmd.packadd("friendly-snippets")
 		end,
 		after = function()
-			require("luasnip.loaders.from_vscode").lazy_load()
-			require("luasnip.loaders.from_vscode").lazy_load({ paths = (nixCats.configDir or "") .. "/snippets" })
-			require("luasnip.loaders.from_lua").lazy_load({ paths = (nixCats.configDir or "") .. "/snippets" })
+			local function loadSnippets()
+				require("luasnip.loaders.from_vscode").lazy_load()
+				require("luasnip.loaders.from_vscode").lazy_load({ paths = (nixCats.configDir or "") .. "/snippets" })
+				require("luasnip.loaders.from_lua").lazy_load({ paths = (nixCats.configDir or "") .. "/snippets" })
+			end
+			loadSnippets()
 			local ls = require("luasnip")
 			vim.keymap.set({ "i", "s" }, "<C-L>", function()
 				ls.jump(1)
@@ -768,6 +771,11 @@ require("lze").load({
 			vim.keymap.set({ "i", "s" }, "<C-J>", function()
 				ls.jump(-1)
 			end, { silent = true, desc = "Luasnip: Jump backward" })
+
+			vim.api.nvim_create_user_command("LuaSnipReload", function()
+				require("luasnip").cleanup()
+				loadSnippets()
+			end, {})
 		end,
 	},
 	{
