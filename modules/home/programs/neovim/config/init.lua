@@ -139,6 +139,7 @@ require("lze").load({
 			-- [[ Configure Treesitter ]]
 			-- See `:help nvim-treesitter`
 			require("nvim-treesitter.config").setup({
+				auto_install = false,
 				highlight = { enable = true },
 				indent = { enable = false },
 				incremental_selection = {
@@ -577,8 +578,9 @@ require("lze").load({
 		enabled = nixCats("general") or false,
 		event = "DeferredUIEnter",
 		load = function(name)
-			vim.cmd.packadd(name)
 			vim.cmd.packadd("neotest-python")
+			vim.cmd.packadd("plenary.nvim")
+			vim.cmd.packadd(name)
 		end,
 		after = function()
 			local adapters = {}

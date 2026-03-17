@@ -64,6 +64,7 @@ in {
             lazygit
             silicon # take code screenshots
             koji # conventional commit editor
+            tree-sitter
           ];
           lua = with pkgs; [
             lua-language-server
@@ -113,6 +114,7 @@ in {
             vim-sleuth
             plenary-nvim
             nvim-nio
+            nvim-treesitter.withAllGrammars
           ];
           rust = with pkgs.vimPlugins; [
             # Already lazy
@@ -138,7 +140,6 @@ in {
             nvim-lspconfig
             vim-startuptime
             blink-cmp
-            nvim-treesitter.withAllGrammars
             (pkgs.neovimUtils.grammarToPlugin (pkgs.tree-sitter-grammars.tree-sitter-nu.overrideAttrs (p: {installQueries = true;})))
             nvim-treesitter-parsers.jinja # Useful for nunjucks too
             nvim-treesitter-parsers.jinja_inline # Useful for nunjucks too
