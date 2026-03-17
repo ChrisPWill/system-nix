@@ -576,12 +576,33 @@ require("lze").load({
 		"neotest",
 		enabled = nixCats("general") or false,
 		event = "DeferredUIEnter",
+		load = function(name)
+			vim.cmd.packadd(name)
+			vim.cmd.packadd("neotest-python")
+		end,
 		after = function()
+			local adapters = {}
+			if nixCats("python") then
+				table.insert(
+					adapters,
+					require("neotest-python")({
+						runner = "unittest",
+					})
+				)
+			end
+			if nixCats("rust") then
+				table.insert(adapters, require("rustaceanvim.neotest"))
+			end
 			require("neotest").setup({
-				adapters = {
-					nixCats("rust") and require("rustaceanvim.neotest") or nil,
-				},
+				log_level = vim.log.levels.DEBUG,
+				adapters = adapters,
 			})
+
+			nmap("<leader>ct", require("neotest").run.run, "[C]ode [T]est Single")
+			nmap("<leader>cT", function()
+				require("neotest").run.run(vim.fn.expand("%"))
+			end, "[C]ode [T]est File")
+			nmap("<leader>cts", require("neotest").run.stop, "[C]ode [T]est [s]top")
 		end,
 	},
 	{

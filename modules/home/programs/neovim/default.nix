@@ -112,6 +112,7 @@ in {
             onedark-nvim
             vim-sleuth
             plenary-nvim
+            nvim-nio
           ];
           rust = with pkgs.vimPlugins; [
             # Already lazy
@@ -164,11 +165,16 @@ in {
           node = with pkgs.vimPlugins; [
             typescript-tools-nvim
             nvim-dap-vscode-js
+            neotest-jest
+            neotest-deno
           ];
           copilot = with pkgs.vimPlugins; [
             copilot-lua
             copilot-lualine
             blink-copilot
+          ];
+          python = with pkgs.vimPlugins; [
+            neotest-python
           ];
           local-llm = with pkgs.vimPlugins; [
             nui-nvim
@@ -235,6 +241,7 @@ in {
             nix = true;
             node = true;
             rust = true;
+            python = true;
             copilot = config.nixCats.custom.enableCopilot;
             local-llm = false;
 
@@ -270,6 +277,7 @@ in {
             nix = true;
             node = true;
             rust = true;
+            python = true;
             copilot = config.nixCats.custom.enableCopilot;
             local-llm = config.services.local-ollama.enable;
 
