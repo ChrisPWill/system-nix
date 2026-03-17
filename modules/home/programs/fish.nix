@@ -82,5 +82,9 @@
         (fishP "forgit")
       ];
     };
+
+    home.packages = with pkgs; [
+      fzf # required by fifc, not used universally
+    ];
   };
 }
