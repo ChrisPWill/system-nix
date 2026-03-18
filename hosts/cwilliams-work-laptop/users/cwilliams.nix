@@ -1,17 +1,8 @@
 {
   config,
   inputs,
-  lib,
   ...
 }: {
-  options = with lib; {
-    workLaptopHomeDir = mkOption {
-      type = types.str;
-      description = "The directory this file lives in (for out of store symlinks)";
-      default = "${config.nixConfigDir}/hosts/cwilliams-work-laptop/users";
-    };
-  };
-
   imports = [inputs.self.homeModules.home-shared];
 
   config = {
@@ -27,7 +18,7 @@
     ];
 
     # Envoluntary configuration
-    xdg.configFile."envoluntary/config.toml".source = config.lib.file.mkOutOfStoreSymlink "${config.workLaptopHomeDir}/out-of-store/envoluntary.toml";
+    xdg.configFile."envoluntary/config.toml".source = config.lib.file.mkOutOfStoreSymlink "${config.nixConfigDir}/hosts/cwilliams-work-laptop/users/envoluntary.toml";
 
     # Enable copilot
     nixCats.custom.enableCopilot = true;

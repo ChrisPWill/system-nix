@@ -52,6 +52,9 @@
     # git and jujutsu settings
     ./programs/version-control.nix
 
+    ./programs/wezterm
+    ./programs/aerospace
+
     ./programs/sketchybar
 
     ./services/ollama.nix
@@ -192,11 +195,6 @@
       status.disabled = false;
     };
 
-    programs.wezterm.enable = true;
-    # Copy the wezterm.lua file to the home module directory
-    xdg.configFile."wezterm/extraWezterm.lua".source = config.lib.file.mkOutOfStoreSymlink "${config.homeModuleDir}/out-of-store/wezterm.lua";
-    programs.wezterm.extraConfig = "local extraConfig = require('extraWezterm'); return extraConfig";
-
     programs.yazi = {
       enable = true;
 
@@ -282,11 +280,6 @@
 
     # Matrix chat
     programs.element-desktop.enable = true;
-
-    # Aerospace window manager config
-    xdg.configFile."aerospace/aerospace.toml" = lib.mkIf pkgs.stdenv.isDarwin {
-      source = config.lib.file.mkOutOfStoreSymlink "${config.homeModuleDir}/out-of-store/aerospace.toml";
-    };
 
     home.stateVersion = "25.05";
   };

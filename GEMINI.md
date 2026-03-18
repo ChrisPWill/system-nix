@@ -53,7 +53,8 @@ Common operations are aliased for ease of use across different shells (Zsh, Fish
 ## Directory Structure Highlights
 
 - `hosts/<hostname>/`: Entry points for each machine.
-- `modules/home/`: Home Manager modules, including `home-shared.nix` for universal user settings.
+- `modules/home/programs/<program>/`: Program-specific Nix modules and their corresponding (non-Nix) configuration files.
+- `modules/home/home-shared.nix`: Universal Home Manager user settings.
 - `modules/nixos/` & `modules/darwin/`: System-level modules for Linux and macOS respectively.
 - `modules/theming/`: Shared styling (likely utilizing Stylix).
 - `templates/`: Useful for starting new projects with `nix flake init -t .#<template>`.
