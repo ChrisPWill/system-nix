@@ -14,7 +14,23 @@
     inputs.self.nixosModules.nixos-shared
     inputs.self.nixosModules.graphical-environment
     inputs.self.nixosModules.personal-machine
+
+    inputs.home-manager.nixosModules.home-manager
   ];
+
+  home-manager = {
+    useGlobalPkgs = true;
+    useUserPackages = true;
+    extraSpecialArgs = { inherit inputs; };
+    users.cwilliams = {
+      imports = [
+        inputs.self.homeModules.home-shared
+        inputs.self.homeModules.graphical-nixos
+      ];
+      # Point to the flake source in the store so symlinks resolve
+      nixConfigDir = "${inputs.self}";
+    };
+  };
 
   # Use the same host platform as your main laptop
   nixpkgs.hostPlatform = "x86_64-linux";
