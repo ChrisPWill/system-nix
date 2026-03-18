@@ -600,7 +600,7 @@ require("lze").load({
 				adapters = adapters,
 			})
 
-			nmap("<leader>ct", require("neotest").run.run, "[C]ode [T]est Single")
+			nmap("<leader>ctt", require("neotest").run.run, "[C]ode [T]est Single")
 			nmap("<leader>cT", function()
 				require("neotest").run.run(vim.fn.expand("%"))
 			end, "[C]ode [T]est File")
