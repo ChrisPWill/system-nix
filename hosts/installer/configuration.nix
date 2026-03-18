@@ -39,6 +39,10 @@
     vim
   ];
 
+  # QEMU guest additions for better VM testing
+  services.qemuGuest.enable = true;
+  services.spice-vdagentd.enable = true;
+
   # Include the current flake in the ISO for easy installation
   # Once booted, you can install your config using:
   # sudo nixos-install --flake /etc/nix-config#cwilliams-laptop

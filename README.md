@@ -47,6 +47,18 @@ nix build .#nixosConfigurations.installer.config.system.build.isoImage
 
 The resulting ISO will be in `result/iso/`.
 
+## Testing with a VM
+
+You can test the entire installation process using QEMU:
+
+1.  Run the test script:
+    ```bash
+    ./modules/home/scripts/test-iso-vm
+    ```
+    This will build the ISO, create a `test-disk.img` (if it doesn't exist), and launch the VM with both.
+
+2.  Follow the [Installation Guide](#installation-guide) inside the VM.
+
 ## Installation Guide
 
 ### 1. Boot from the ISO

@@ -1,0 +1,46 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+ISO_LINK="result-iso"
+REBUILD="true"
+
+# Check if the ISO link exists and points to a valid file
+if [[ -L "$ISO_LINK" ]]; then
+    ISO_PATH=$(readlink -f "$ISO_LINK"/iso/*.iso 2>/dev/null || true)
+    if [[ -f "$ISO_PATH" ]]; then
+        echo "Found existing installer ISO: $ISO_PATH"
+        read -p "Would you like to rebuild the ISO? [y/N] " -n 1 -r
+        echo
+        if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+            REBUILD="false"
+        fi
+    fi
+fi
+
+if [[ "$REBUILD" == "true" ]]; then
+    echo "Building installer ISO..."
+    nix build .#nixosConfigurations.installer.config.system.build.isoImage --out-link "$ISO_LINK"
+fi
+
+ISO_PATH=$(readlink -f "$ISO_LINK"/iso/*.iso)
+DISK_IMG="test-disk.img"
+
+# Use nix shell to ensure qemu-utils is available
+if [[ ! -f "$DISK_IMG" ]]; then
+    echo "Creating virtual disk $DISK_IMG..."
+    nix shell nixpkgs#qemu-utils --command qemu-img create -f qcow2 "$DISK_IMG" 20G
+fi
+
+echo "Launching VM with ISO: $ISO_PATH"
+# Run QEMU with nix shell to ensure qemu-system-x86_64 is available
+nix shell nixpkgs#qemu --command qemu-system-x86_64 \
+    -enable-kvm \
+    -m 4G \
+    -smp 4 \
+    -vga qxl \
+    -device virtio-serial-pci \
+    -device virtio-rng-pci \
+    -spice port=5930,disable-ticketing=on \
+    -drive file="$DISK_IMG",format=qcow2,if=virtio \
+    -cdrom "$ISO_PATH" \
+    -boot d

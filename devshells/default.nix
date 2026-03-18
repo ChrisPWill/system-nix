@@ -14,5 +14,7 @@ pkgs.mkShell {
     typescript
     nodejs_latest
     watchexec
+    qemu
+    qemu-utils
   ];
 }
