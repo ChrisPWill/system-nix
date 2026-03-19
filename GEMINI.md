@@ -61,7 +61,9 @@ Common operations are aliased for ease of use across different shells (Zsh, Fish
 
 - **Knowledge Base Maintenance:**
     - When adding new complex plugins or modifying significant workflows in Neovim, **ALWAYS** update or create a corresponding reference guide in `modules/home/programs/neovim/docs/`.
-    - These guides should focus on practical use-cases, keybindings, and "how-to" scenarios to ensure the configuration remains self-documenting and accessible across different machines.
+    - **Cheatsheet Updates:** For high-frequency "common flows" and universal custom mappings, ensure `modules/home/programs/neovim/docs/cheatsheet.md` is kept up to date as the primary entry point for documentation.
+    - **Transient Hints:** For complex commands or sub-modes with unique local keybindings (e.g., Luasnip, Grug-far, DAP), use the `utils.createHelpFloat` utility to provide non-intrusive UI hints that automatically appear/disappear based on context.
+    - These guides and hints should focus on practical use-cases, keybindings, and "how-to" scenarios to ensure the configuration remains self-documenting and accessible across different machines.
 
 - **Jujutsu Workflow:** This repository uses `.jj/` for version control. Use `jj st` for status and `jj commit` (or automatic snapshots) for changes.
 

@@ -31,6 +31,7 @@ Highlight a block of code and use `<leader>rv` to find other occurrences or refa
 
 ## 󱞩 Buffer-local (Inside Grug-far)
 
+- `<leader>c`: **Close** Grug-far.
 - `<C-enter>`: **Open location and close** Grug-far immediately.
 - `\w` (localleader + w): **Toggle `--fixed-strings`** (Literal vs Regex).
 

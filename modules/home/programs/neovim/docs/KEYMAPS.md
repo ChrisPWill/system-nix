@@ -47,19 +47,19 @@ High-frequency actions (Pickers and LSP) are mapped to single keys under the `<l
 - `<leader>S`: Workspace symbols (LSP)
 - `<leader>W`: Workspace management (Add/Remove/List folders)
 - `<leader>a`: Code actions
-- `<leader>r`: Rename symbol
+- `<leader>r`: **Refactor / Replace group** (Rename: `rn`, Grug-far: `rr`, `ra`, `rf`)
 - `<leader>w`: Window management (mapped to `<C-w>`)
 
-## 5. Domain-Specific Groups
+## 6. Domain-Specific Groups
 To avoid clashes with the flat leader map, secondary tools are organized into mnemonic groups:
-- `<leader>/`: **Search / Pick Group** (Grep, Help, Symbols, Undo, etc.)
+- `<leader>/`: **Search / Pick Group** (Grep, Help, Symbols, Undo, Knowledge Base: `k`, etc.)
 - `<leader>g`: **Git Group** (Stage, Reset, Blame, Diff)
 - `<leader>c`: **Code Group** (Format: `cf`, Fix: `cxa`, Testing: `ct`, Breakpoints: `cb`)
 - `<leader>A`: **AI Group** (Avante Ask: `Aa`, Toggle: `At`)
 - `<leader>t`: **Toggles** (Diagnostics: `td`, Formatting: `tf`)
-- `<leader>x`: **Snippets** (Scissors Edit/Add)
+- `<leader>k`: **Knowledge & Snippets** (Browse: `kk`, Cheat-sheet: `kc`, Snippets: `ks`/`ka`)
 
-## 6. Plugin-Specific Navigation
+## 7. Plugin-Specific Navigation
 Navigation within plugins is aligned where possible:
 - `]g` / `[g`: Next/Previous Git hunk (replaces `]c`/`[c`)
 - `]f` / `[f`: Next/Previous Function start
@@ -72,8 +72,11 @@ Navigation within plugins is aligned where possible:
 - `]i` / `[i`: Next/Previous Conditional (If)
 - `}` / `{`: **Repeat** Next/Previous motion (Works for TS moves and `f`/`F`/`t`/`T`)
 
-## 7. Enhancement over Defaults
+## 8. Enhancement over Defaults
 Where Neovim defaults are "lazy," this config adds centering and improved behavior:
 - `n`/`N`: Next/Previous search results are always centered (`zz`).
 - `<C-d>`/`<C-u>`: Half-page scrolling is always centered.
 - `j`/`k`: Smart word-wrap navigation (moves by visual line if no count is provided).
+
+## 9. Documentation
+For a quick reference of all custom mappings and specialized plugin workflows, see **[cheatsheet.md](./cheatsheet.md)**.

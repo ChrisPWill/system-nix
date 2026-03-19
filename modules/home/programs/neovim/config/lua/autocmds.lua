@@ -136,7 +136,7 @@ vim.api.nvim_create_autocmd("FileType", {
 	pattern = { "grug-far" },
 	callback = function(args)
 		-- Help float for Grug-far
-		local help_win = utils.createHelpFloat("Ctrl-Ent: Save/Close | \\w: Regex/Fixed")
+		local help_win = utils.createHelpFloat("<leader>c: Close | Ctrl-Ent: Save/Close | \\w: Regex/Fixed")
 		vim.api.nvim_create_autocmd({ "BufLeave", "BufDelete" }, {
 			buffer = args.buf,
 			once = true,
