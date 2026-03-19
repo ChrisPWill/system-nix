@@ -170,6 +170,8 @@ in {
             leap-nvim
             treewalker-nvim
             grug-far-nvim
+            inc-rename-nvim
+            actions-preview-nvim
           ];
           node = with pkgs.vimPlugins; [
             typescript-tools-nvim

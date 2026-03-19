@@ -4,21 +4,27 @@ function M.on_attach(_, bufnr)
 	-- we create a function that lets us more easily define mappings specific
 	-- for LSP related items. It sets the mode, buffer and description for us each time.
 
-	local nmap = function(keys, func, desc)
+	local nmap = function(keys, func, desc, extras)
 		if desc then
 			desc = "LSP: " .. desc
 		end
-		vim.keymap.set("n", keys, func, { buffer = bufnr, desc = desc })
+		local config = extras or {}
+		config.buffer = bufnr
+		config.desc = desc
+		vim.keymap.set("n", keys, func, config)
 	end
 
-	nmap("<leader>rn", vim.lsp.buf.rename, "[R]ename")
+	nmap("<leader>rn", function()
+		return ":IncRename " .. vim.fn.expand("<cword>")
+	end, "[R]ename (Incremental)", { expr = true })
+
 	nmap("<leader>a", function()
 		if vim.bo.filetype == "rust" then
 			vim.cmd.RustLsp("codeAction")
 		else
-			vim.lsp.buf.code_action()
+			require("actions-preview").code_actions()
 		end
-	end, "Code [A]ction")
+	end, "Code [A]ction (Preview)")
 
 	nmap("gd", vim.lsp.buf.definition, "[G]oto [D]efinition")
 	nmap("gy", vim.lsp.buf.type_definition, "[G]oto T[y]pe Definition")
