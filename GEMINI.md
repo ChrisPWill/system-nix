@@ -47,7 +47,17 @@ Common operations are aliased for ease of use across different shells (Zsh, Fish
 - **Tooling Preferences:**
     - **Shells:** `fish` (primary interactive), `zsh`, and `nushell` are all supported and configured.
     - **CLI Tools:** Heavy use of modern Rust-based tools: `eza` (ls), `bat` (cat), `fd` (find), `ripgrep` (grep), `zoxide` (cd), `yazi` (file manager), and `television` (fuzzy finder).
-    - **Editor:** Neovim (configured via `nixCats`) and Helix.
+    - **Editor:** Helix and Neovim (meow).
+    - **Neovim Architecture (meow):**
+        - **Philosophy:** "Hybrid Philosophy" (Neovim Verb-Noun + Helix Navigation).
+        - **Core Rules:** Retains operator-pending mode while adopting Helix `g` (Goto), `m` (Match/Surround), and Space (`<leader>`) modes.
+        - **Framework:** Managed via `nixCats` with `lze` for high-performance lazy loading.
+        - **Structure:** `modules/home/programs/neovim/`
+            - `README.md`: Architectural overview and structural map.
+            - `KEYMAPS.md`: Detailed mapping philosophy and logic.
+            - `config/lua/plugins/`: Domain-specific plugin specifications (UI, LSP, Coding, etc.).
+            - `config/lua/keymaps.lua`: Global hybrid keybindings.
+
 - **Jujutsu Workflow:** This repository uses `.jj/` for version control. Use `jj st` for status and `jj commit` (or automatic snapshots) for changes.
 
 ## Directory Structure Highlights
