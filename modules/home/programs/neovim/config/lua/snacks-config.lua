@@ -57,7 +57,7 @@ vim.keymap.set("n", "<leader>f", function()
 	Snacks.picker.files()
 end, { desc = "Find Files" })
 
--- Find Git Files "<leader>fg"
+-- Find Git Files "<leader>gf"
 vim.keymap.set("n", "<leader>gf", function()
 	Snacks.picker.git_files()
 end, { desc = "Find Git Files" })

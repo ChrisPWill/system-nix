@@ -21,6 +21,7 @@ Unlike Helix, which uses "Selection-Action," this configuration retains Neovim's
 - `gm`: Recent files (Snacks Picker)
 - `gd`: Go to definition
 - `gy`: Go to type definition
+- `gD`: Go to declaration
 - `gr`: Go to references
 - `gI`: Go to implementation
 
@@ -30,6 +31,7 @@ Buffer navigation and matching logic are shifted to Helix-style mnemonics under 
 - `gp`: Previous buffer
 - `mm`: Match bracket (replaces `%`)
 - `ms` / `md` / `mr`: Match **Surround** (Add/Delete/Replace) — *`ms` in Visual mode surrounds selection; in Normal mode it expects a motion.*
+- `mf` / `mh` / `mn`: Match **Surround** (Find/Highlight/Update n lines)
 - `]d` / `[d`: Next/Previous diagnostic (Helix default)
 
 ## 4. Selection & Alignment
@@ -40,6 +42,8 @@ Additional tools that prioritize visual selection (Helix: Selection-Action):
 ## 5. Flat Leader Map ("Space" Mode)
 High-frequency actions (Pickers and LSP) are mapped to single keys under the `<leader>` (Space) prefix, mirroring Helix's efficient "Space" mode:
 - `<leader>f`: Find files (Snacks Picker)
+- `<leader>gf`: Find git files (Snacks Picker)
+- `<leader>sf`: Smart find files (Files, Recents, Buffers)
 - `<leader>b`: Search open buffers
 - `<leader>d`: Document diagnostics (current buffer)
 - `<leader>D`: Workspace diagnostics (all buffers)
@@ -47,17 +51,19 @@ High-frequency actions (Pickers and LSP) are mapped to single keys under the `<l
 - `<leader>S`: Workspace symbols (LSP)
 - `<leader>W`: Workspace management (Add/Remove/List folders)
 - `<leader>a`: Code actions
-- `<leader>r`: **Refactor / Replace group** (Rename: `rn`, Grug-far: `rr`, `ra`, `rf`)
+- `<leader>r`: **Refactor / Replace group** (Rename: `rn`, Grug-far: `rr`, `rw`, `ra`, `rf`, `rs`, `rv`)
 - `<leader>w`: Window management (mapped to `<C-w>`)
+- `<leader>_`: LazyGit (Floating)
+- `<leader>j`: LazyJJ (Terminal)
 
 ## 6. Domain-Specific Groups
 To avoid clashes with the flat leader map, secondary tools are organized into mnemonic groups:
 - `<leader>/`: **Search / Pick Group** (Grep, Help, Symbols, Undo, Knowledge Base: `k`, etc.)
-- `<leader>g`: **Git Group** (Stage, Reset, Blame, Diff)
+- `<leader>g`: **Git Group** (Stage: `s`, Reset: `r`, Blame: `b`/`tb`, Diff: `d`/`D`, Deleted: `td`)
 - `<leader>c`: **Code Group** (Format: `cf`, Fix: `cxa`, Testing: `ct`, Breakpoints: `cb`)
 - `<leader>A`: **AI Group** (Avante Ask: `Aa`, Toggle: `At`)
-- `<leader>t`: **Toggles** (Diagnostics: `td`, Formatting: `tf`)
-- `<leader>k`: **Knowledge & Snippets** (Browse: `kk`, Cheat-sheet: `kc`, Snippets: `ks`/`ka`)
+- `<leader>t`: **Toggles** (Diagnostics: `td`, Formatting: `tf`, Markview: `tm`)
+- `<leader>k`: **Knowledge & Snippets** (Cheat-sheet: `kc`, Keymaps: `km`, Snippets: `ks`/`ka`)
 
 ## 7. Plugin-Specific Navigation
 Navigation within plugins is aligned where possible:
