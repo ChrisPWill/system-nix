@@ -63,6 +63,8 @@ return {
 				{ "<leader>c_", hidden = true },
 				{ "<leader>g", group = "Git" },
 				{ "<leader>g_", hidden = true },
+				{ "<leader>r", group = "Replace (GrugFar)" },
+				{ "<leader>r_", hidden = true },
 				{ "<leader>t", group = "Toggles" },
 				{ "<leader>t_", hidden = true },
 				{ "<leader>w", group = "Window Management" },

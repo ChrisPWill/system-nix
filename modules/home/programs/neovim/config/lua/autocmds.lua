@@ -114,3 +114,29 @@ vim.api.nvim_create_autocmd("FileType", {
 		vim.schedule(run_koji_native)
 	end,
 })
+
+-- Grug-far buffer-local keybindings
+local grug_far_group = vim.api.nvim_create_augroup("GrugFarKeybindings", { clear = true })
+vim.api.nvim_create_autocmd("FileType", {
+	group = grug_far_group,
+	pattern = { "grug-far" },
+	callback = function(args)
+		-- Open location and close grug-far
+		vim.keymap.set("n", "<C-enter>", function()
+			local instance = require("grug-far").get_instance(0)
+			if instance then
+				instance:open_location()
+				instance:close()
+			end
+		end, { buffer = args.buf, desc = "Grug-far: Open location and close" })
+
+		-- Toggle --fixed-strings
+		vim.keymap.set("n", "<localleader>w", function()
+			local instance = require("grug-far").get_instance(0)
+			if instance then
+				local state = unpack(instance:toggle_flags({ "--fixed-strings" }))
+				vim.notify("grug-far: toggled --fixed-strings " .. (state and "ON" or "OFF"))
+			end
+		end, { buffer = args.buf, desc = "Grug-far: Toggle --fixed-strings" })
+	end,
+})

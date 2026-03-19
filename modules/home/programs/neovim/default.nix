@@ -65,6 +65,7 @@ in {
             silicon # take code screenshots
             koji # conventional commit editor
             tree-sitter
+            ast-grep
           ];
           lua = with pkgs; [
             lua-language-server
@@ -163,6 +164,7 @@ in {
             arrow-nvim
             leap-nvim
             treewalker-nvim
+            grug-far-nvim
           ];
           node = with pkgs.vimPlugins; [
             typescript-tools-nvim

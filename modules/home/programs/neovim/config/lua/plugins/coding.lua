@@ -130,4 +130,97 @@ return {
 			end, { desc = "Toggle: [D]iagnostics" })
 		end,
 	},
+	{
+		"grug-far.nvim",
+		enabled = nixCats("general") or false,
+		cmd = { "GrugFar" },
+		keys = {
+			{
+				"<leader>rr",
+				function()
+					require("grug-far").open({
+						transient = true,
+					})
+				end,
+				mode = "n",
+				desc = "[R]eplace (Standard)",
+			},
+			{
+				"<leader>rw",
+				function()
+					require("grug-far").open({
+						transient = true,
+						prefills = {
+							search = vim.fn.expand("<cword>"),
+						},
+					})
+				end,
+				mode = "n",
+				desc = "[R]eplace [W]ord",
+			},
+			{
+				"<leader>rf",
+				function()
+					require("grug-far").open({
+						transient = true,
+						prefills = {
+							paths = vim.fn.expand("%"),
+						},
+					})
+				end,
+				mode = "n",
+				desc = "[R]eplace in [F]ile",
+			},
+			{
+				"<leader>ra",
+				function()
+					require("grug-far").open({
+						transient = true,
+						engine = "astgrep",
+					})
+				end,
+				mode = "n",
+				desc = "[R]eplace [A]st-grep",
+			},
+			{
+				"<leader>rs",
+				function()
+					local search = vim.fn.getreg("/")
+					-- surround with \b if "word" search (such as when pressing `*`)
+					if search and vim.startswith(search, "\\<") and vim.endswith(search, "\\>") then
+						search = "\\b" .. search:sub(3, -3) .. "\\b"
+					elseif search and vim.startswith(search, "\\V") then
+						search = search:sub(3)
+					end
+					require("grug-far").open({
+						transient = true,
+						prefills = {
+							search = search,
+						},
+					})
+				end,
+				mode = "n",
+				desc = "[R]eplace from [/] Register",
+			},
+			{
+				"<leader>rv",
+				function()
+					require("grug-far").with_visual_selection({
+						transient = true,
+					})
+				end,
+				mode = "x",
+				desc = "[R]eplace [V]isual Selection",
+			},
+		},
+		after = function()
+			require("grug-far").setup({
+				headerMaxWidth = 80,
+				transient = true,
+				icons = {
+					enabled = true,
+				},
+			})
+		end,
+	},
 }
