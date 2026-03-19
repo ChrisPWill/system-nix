@@ -39,9 +39,25 @@ return {
 			-- Toggle to see last session result. Without this, you can't see session output in case of unhandled exception.
 			utils.nmap("<F7>", dapui.toggle, "Debug: See last session result.")
 
-			dap.listeners.after.event_initialized["dapui_config"] = dapui.open
-			dap.listeners.before.event_terminated["dapui_config"] = dapui.close
-			dap.listeners.before.event_exited["dapui_config"] = dapui.close
+			local help_win = nil
+			dap.listeners.after.event_initialized["dapui_config"] = function()
+				dapui.open()
+				help_win = utils.createHelpFloat("F1: In | F2: Over | F3: Out | F5: Cont")
+			end
+			dap.listeners.before.event_terminated["dapui_config"] = function()
+				if help_win then
+					help_win:close()
+					help_win = nil
+				end
+				dapui.close()
+			end
+			dap.listeners.before.event_exited["dapui_config"] = function()
+				if help_win then
+					help_win:close()
+					help_win = nil
+				end
+				dapui.close()
+			end
 
 			-- Dap UI setup
 			-- For more information, see |:help nvim-dap-ui|

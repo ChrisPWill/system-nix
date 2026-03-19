@@ -1,3 +1,5 @@
+local utils = require("utils")
+
 -- Improve diagnostics in insert mode and show them in a floating window by default
 local group = vim.api.nvim_create_augroup("OoO", {})
 
@@ -106,6 +108,18 @@ vim.api.nvim_create_autocmd("FileType", {
 			desc = "Run koji and insert output",
 		})
 
+		-- Help float for Koji
+		local help_win = utils.createHelpFloat("<leader>k: Run Koji")
+		vim.api.nvim_create_autocmd({ "BufLeave", "BufDelete" }, {
+			buffer = args.buf,
+			once = true,
+			callback = function()
+				if help_win then
+					help_win:close()
+				end
+			end,
+		})
+
 		if vim.b[args.buf].koji_auto_ran then
 			return
 		end
@@ -121,6 +135,18 @@ vim.api.nvim_create_autocmd("FileType", {
 	group = grug_far_group,
 	pattern = { "grug-far" },
 	callback = function(args)
+		-- Help float for Grug-far
+		local help_win = utils.createHelpFloat("Ctrl-Ent: Save/Close | \\w: Regex/Fixed")
+		vim.api.nvim_create_autocmd({ "BufLeave", "BufDelete" }, {
+			buffer = args.buf,
+			once = true,
+			callback = function()
+				if help_win then
+					help_win:close()
+				end
+			end,
+		})
+
 		-- Open location and close grug-far
 		vim.keymap.set("n", "<C-enter>", function()
 			local instance = require("grug-far").get_instance(0)
