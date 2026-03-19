@@ -4,7 +4,7 @@ return {
 	{
 		"nvim-lint",
 		enabled = nixCats("general") or false,
-		event = "FileType",
+		event = { "BufWritePost", "BufReadPost", "InsertLeave" },
 		after = function()
 			local jslint = { "eslint_d" }
 			if utils.isDeno() then
@@ -32,7 +32,35 @@ return {
 	{
 		"conform.nvim",
 		enabled = nixCats("general") or false,
-		event = "DeferredUIEnter",
+		event = { "BufReadPost", "BufWritePre" },
+		cmd = { "ConformInfo", "FormatDisable", "FormatEnable" },
+		keys = {
+			{
+				"<leader>cf",
+				function()
+					require("conform").format({
+						lsp_fallback = true,
+						async = false,
+						timeout_ms = 5000,
+					})
+				end,
+				mode = { "n", "v" },
+				desc = "[C]ode [F]ormat",
+			},
+			{
+				"<leader>tf",
+				function()
+					if vim.g.disable_autoformat or vim.b.disable_autoformat then
+						vim.cmd("FormatEnable")
+						vim.notify("Autoformat enabled")
+					else
+						vim.cmd("FormatDisable")
+						vim.notify("Autoformat disabled")
+					end
+				end,
+				desc = "Toggle: [F]ormatting",
+			},
+		},
 		after = function()
 			local conform = require("conform")
 
@@ -42,7 +70,12 @@ return {
 			end
 			conform.setup({
 				formatters_by_ft = {
-					["*"] = { "treefmt" },
+					["*"] = function()
+						if utils.isTreefmt() then
+							return { "treefmt" }
+						end
+						return {}
+					end,
 					-- NOTE: download some formatters in lspsAndRuntimeDeps
 					-- and configure them here
 					lua = nixCats("lua") and { "treefmt", "stylua", stop_after_first = true } or nil,
@@ -90,43 +123,6 @@ return {
 					})
 				end,
 			})
-
-			vim.keymap.set({ "n", "v" }, "<leader>cf", function()
-				conform.format({
-					lsp_fallback = true,
-					async = false,
-					timeout_ms = 5000,
-				})
-			end, { desc = "[C]ode [F]ormat" })
-
-			vim.api.nvim_create_user_command("FormatDisable", function(args)
-				if args.bang then
-					-- FormatDisable! will disable formatting just for this buffer
-					vim.b.disable_autoformat = true
-				else
-					vim.g.disable_autoformat = true
-				end
-			end, {
-				desc = "Disable autoformat-on-save",
-				bang = true,
-			})
-			vim.api.nvim_create_user_command("FormatEnable", function()
-				vim.b.disable_autoformat = false
-				vim.g.disable_autoformat = false
-			end, {
-				desc = "Re-enable autoformat-on-save",
-			})
-
-			-- Toggle formatting and diagnostics
-			vim.keymap.set("n", "<leader>tf", function()
-				if vim.g.disable_autoformat or vim.b.disable_autoformat then
-					vim.cmd("FormatEnable")
-					vim.notify("Autoformat enabled")
-				else
-					vim.cmd("FormatDisable")
-					vim.notify("Autoformat disabled")
-				end
-			end, { desc = "Toggle: [F]ormatting" })
 
 			vim.keymap.set("n", "<leader>td", function()
 				vim.diagnostic.enable(not vim.diagnostic.is_enabled())
