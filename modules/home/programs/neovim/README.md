@@ -1,0 +1,57 @@
+#  Neovim Configuration (meow)
+
+This is a modular Neovim configuration managed via [nixCats](https://github.com/BirdeeHub/nixCats-nvim), providing a robust development environment with a focus on speed, reliability, and editor-agnostic navigation.
+
+## 󰙅 Structure
+
+The configuration is split into logical modules under `lua/` to keep `init.lua` concise and maintainable.
+
+```text
+.
+├── default.nix            # Nix derivation and plugin management
+├── KEYMAPS.md             # Documentation of the keybinding philosophy
+├── config/
+│   ├── init.lua           # Entry point: sets up global state and loads modules
+│   └── lua/
+│       ├── utils.lua      # Shared helper functions (nmap, project checks)
+│       ├── autocmds.lua   # Autocommands (Diagnostics, Koji terminal, etc.)
+│       ├── keymaps.lua    # Global keybindings (see KEYMAPS.md)
+│       ├── global-options.lua # Vim options (shiftwidth, relativenumber, etc.)
+│       ├── snacks-config.lua  # Configuration for snacks.nvim (picker, etc.)
+│       └── plugins/       # Plugin specifications (loaded via lze)
+│           ├── init.lua   # Plugin entry point: consolidated specification loader
+│           ├── ai.lua     # Copilot, Minuet, Avante
+│           ├── coding.lua # Linting (nvim-lint) and Formatting (conform)
+│           ├── completion.lua # blink.cmp and Luasnip
+│           ├── debug.lua  # nvim-dap and language adapters
+│           ├── navigation.lua # Arrow, Leap
+│           ├── test.lua   # neotest
+│           ├── treesitter.lua # nvim-treesitter, textobjects, and Treewalker
+│           ├── ui.lua     # lualine, which-key, mini.nvim, markview
+│           ├── vcs.lua    # gitsigns
+│           └── lsp/
+│               ├── init.lua    # lsp_on_attach logic
+│               └── servers.lua # Individual LSP server configurations
+```
+
+## 󰌌 Keybindings
+
+This configuration follows a **Hybrid Philosophy** inspired by Helix while maintaining Neovim's Operator-Pending power.
+
+- **Leader Key:** `Space`
+- **Goto Navigation:** `g` prefix (e.g., `gh` for line start, `gl` for line end).
+- **LSP & Search:** Flat leader map (e.g., `<leader>f` to find files, `<leader>r` to rename).
+- **Domain Groups:** Mnemonic groups for advanced tools (e.g., `<leader>g` for Git, `<leader>c` for Code).
+
+For a deep dive into the mapping logic, see [󰌌 KEYMAPS.md](./KEYMAPS.md).
+
+## 󱄅 Nix Integration
+
+The configuration is integrated into the NixOS/Darwin system via `nixCats`. This allows for:
+- **Category-based plugin loading:** Plugins and LSPs are enabled/disabled based on categories defined in `default.nix`.
+- **Runtime Dependencies:** LSPs and tools like `ripgrep`, `fd`, and `stylua` are automatically provided by Nix.
+- **OutOfStoreSymlinks:** The configuration is symlinked to allow for rapid iteration without full Nix rebuilds.
+
+## 󰲎 Loading Logic
+
+We use [lze](https://github.com/BirdeeHub/lze) for high-performance lazy loading. Each file in `lua/plugins/` returns a list of specifications that are merged and loaded by `lua/plugins/init.lua`. This ensures that Neovim starts instantly while still providing a rich feature set on demand.
