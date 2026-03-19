@@ -94,6 +94,29 @@ return {
 				ls.jump(-1)
 			end, { silent = true, desc = "Luasnip: Jump backward" })
 
+			-- Help float for snippet navigation
+			local help_win = nil
+			local function update_snippet_help()
+				local in_snippet = ls.in_snippet()
+				local mode = vim.api.nvim_get_mode().mode
+				-- Mode 'i' is insert, 's' is select
+				local in_edit_mode = (mode == "i" or mode == "s")
+
+				if in_snippet and in_edit_mode and not help_win then
+					help_win = utils.createHelpFloat("Snippet: Ctrl-L -> | Ctrl-J <-")
+				elseif (not in_snippet or not in_edit_mode) and help_win then
+					help_win:close()
+					help_win = nil
+				end
+			end
+
+			vim.api.nvim_create_autocmd({ "User", "InsertEnter", "InsertLeave" }, {
+				pattern = { "LuasnipInsertNodeEnter", "LuasnipInsertNodeLeave", "*" },
+				callback = function()
+					vim.schedule(update_snippet_help)
+				end,
+			})
+
 			vim.api.nvim_create_user_command("LuaSnipReload", function()
 				require("luasnip").cleanup()
 				loadSnippets()

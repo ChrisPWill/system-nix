@@ -45,4 +45,26 @@ function M.viewDocFile(file_path)
 	})
 end
 
+-- Create a small transient help float at the bottom right
+function M.createHelpFloat(text)
+	local snacks = require("snacks")
+	local win = snacks.win({
+		text = text,
+		width = #text + 2,
+		height = 1,
+		position = "float",
+		backdrop = false, -- Disable background fade
+		row = -2, -- Bottom
+		col = -2, -- Right
+		border = "rounded",
+		zindex = 100,
+		focusable = false,
+		wo = {
+			winhighlight = "Normal:DiagnosticInfo,FloatBorder:DiagnosticInfo",
+			cursorline = false,
+		},
+	})
+	return win
+end
+
 return M
