@@ -69,6 +69,15 @@ return {
 				{ "<leader>w_", hidden = true },
 				{ "<leader>W", group = "Workspace" },
 				{ "<leader>W_", hidden = true },
+				{ "g", group = "Goto" },
+				{ "m", group = "Match / Surround" },
+				{ "ms", desc = "Add surround (Visual: selection, Normal: motion)" },
+				{ "md", desc = "Delete surround" },
+				{ "mr", desc = "Replace surround" },
+				{ "mf", desc = "Find surround" },
+				{ "mh", desc = "Highlight surround" },
+				{ "mn", desc = "Update n lines for surround" },
+				{ "mm", desc = "Match bracket" },
 			})
 		end,
 	},
@@ -80,6 +89,22 @@ return {
 			require("mini.pairs").setup()
 			require("mini.icons").setup()
 			require("mini.ai").setup()
+			require("mini.surround").setup({
+				mappings = {
+					add = "ms", -- Match surround
+					delete = "md", -- Match delete
+					find = "mf", -- Match find
+					highlight = "mh", -- Match highlight
+					replace = "mr", -- Match replace
+					update_n_lines = "mn", -- Match n lines
+				},
+			})
+			require("mini.align").setup({
+				mappings = {
+					start = "&",
+					start_with_preview = "g&",
+				},
+			})
 		end,
 	},
 	{

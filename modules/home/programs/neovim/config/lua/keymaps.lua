@@ -56,8 +56,14 @@ vim.keymap.set({ "n", "x", "o" }, "ge", "G", { desc = "Go to last line" })
 vim.keymap.set({ "n", "x", "o" }, "gt", "H", { desc = "Go to top of window" })
 vim.keymap.set({ "n", "x", "o" }, "gb", "L", { desc = "Go to bottom of window" })
 vim.keymap.set({ "n", "x", "o" }, "gc", "M", { desc = "Go to center of window" })
+vim.keymap.set({ "n", "x", "o" }, "ga", "<C-^>", { desc = "Go to last accessed file" })
+vim.keymap.set({ "n", "x", "o" }, "gf", "gf", { desc = "Go to file under cursor" })
+vim.keymap.set({ "n", "x", "o" }, "gm", function()
+	require("snacks").picker.recent()
+end, { desc = "Go to recent files (modified)" })
 
 -- Match mode (Helix: m)
+-- Note: ms, md, mr, mf, mh, mn are handled by mini.surround in ui.lua
 vim.keymap.set({ "n", "x", "o" }, "mm", "%", { desc = "Match bracket" })
 
 -- Buffer navigation (Helix: gn/gp)

@@ -16,19 +16,28 @@ Unlike Helix, which uses "Selection-Action," this configuration retains Neovim's
 - `gt`: Top of window (`H`)
 - `gb`: Bottom of window (`L`)
 - `gc`: Center of window (`M`)
+- `ga`: Last accessed file (`<C-^>`)
+- `gf`: File under cursor (`gf`)
+- `gm`: Recent files (Snacks Picker)
 - `gd`: Go to definition
 - `gy`: Go to type definition
 - `gr`: Go to references
 - `gI`: Go to implementation
 
 ## 3. Buffer & Match Management
-Buffer navigation and matching logic are shifted to Helix-style mnemonics:
+Buffer navigation and matching logic are shifted to Helix-style mnemonics under the `m` (Match) prefix:
 - `gn`: Next buffer
 - `gp`: Previous buffer
 - `mm`: Match bracket (replaces `%`)
+- `ms` / `md` / `mr`: Match **Surround** (Add/Delete/Replace) — *`ms` in Visual mode surrounds selection; in Normal mode it expects a motion.*
 - `]d` / `[d`: Next/Previous diagnostic (Helix default)
 
-## 4. Flat Leader Map ("Space" Mode)
+## 4. Selection & Alignment
+Additional tools that prioritize visual selection (Helix: Selection-Action):
+- `&`: Align selections (via `mini.align`)
+- `g&`: Align selections with interactive preview
+
+## 5. Flat Leader Map ("Space" Mode)
 High-frequency actions (Pickers and LSP) are mapped to single keys under the `<leader>` (Space) prefix, mirroring Helix's efficient "Space" mode:
 - `<leader>f`: Find files (Snacks Picker)
 - `<leader>b`: Search open buffers
