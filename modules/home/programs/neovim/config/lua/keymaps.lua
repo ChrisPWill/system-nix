@@ -11,19 +11,9 @@ vim.keymap.set("n", "<C-u>", "<C-u>zz", { desc = "Scroll Up" })
 vim.keymap.set("n", "n", "nzzzv", { desc = "Next Search Result" })
 vim.keymap.set("n", "N", "Nzzzv", { desc = "Previous Search Result" })
 
--- Buffers
-vim.keymap.set("n", "<leader><leader>[", "<cmd>bprev<CR>", { desc = "Previous buffer" })
-vim.keymap.set("n", "<leader><leader>]", "<cmd>bnext<CR>", { desc = "Next buffer" })
-vim.keymap.set("n", "<leader><leader>l", "<cmd>b#<CR>", { desc = "Last buffer" })
-vim.keymap.set("n", "<leader><leader>d", "<cmd>bdelete<CR>", { desc = "delete buffer" })
-
 -- Remap for dealing with word wrap
 vim.keymap.set("n", "k", "v:count == 0 ? 'gk' : 'k'", { expr = true, silent = true })
 vim.keymap.set("n", "j", "v:count == 0 ? 'gj' : 'j'", { expr = true, silent = true })
-
--- Diagnostic keymaps
-vim.keymap.set("n", "<leader>e", vim.diagnostic.open_float, { desc = "Open floating diagnostic message" })
-vim.keymap.set("n", "<leader>q", vim.diagnostic.setloclist, { desc = "Open diagnostics list" })
 
 -- Screenshot code (experimental, buggy)
 -- Currently seems to result in an empty screenshot for non-typescript code
@@ -55,3 +45,32 @@ vim.keymap.set(
 	'"_dP',
 	{ noremap = true, silent = true, desc = "Paste over selection without erasing unnamed register" }
 )
+
+-- ── Helix Alignment ──────────────────────────────────────────────────────────
+
+-- Goto mode mappings (Helix: g)
+vim.keymap.set({ "n", "x", "o" }, "gh", "0", { desc = "Go to line start" })
+vim.keymap.set({ "n", "x", "o" }, "gl", "$", { desc = "Go to line end" })
+vim.keymap.set({ "n", "x", "o" }, "gs", "^", { desc = "Go to first non-blank character" })
+vim.keymap.set({ "n", "x", "o" }, "ge", "G", { desc = "Go to last line" })
+vim.keymap.set({ "n", "x", "o" }, "gt", "H", { desc = "Go to top of window" })
+vim.keymap.set({ "n", "x", "o" }, "gb", "L", { desc = "Go to bottom of window" })
+vim.keymap.set({ "n", "x", "o" }, "gc", "M", { desc = "Go to center of window" })
+
+-- Match mode (Helix: m)
+vim.keymap.set({ "n", "x", "o" }, "mm", "%", { desc = "Match bracket" })
+
+-- Buffer navigation (Helix: gn/gp)
+vim.keymap.set("n", "gn", "<cmd>bnext<CR>", { desc = "Next buffer" })
+vim.keymap.set("n", "gp", "<cmd>bprev<CR>", { desc = "Previous buffer" })
+
+-- Diagnostic navigation (Helix: ]d / [d)
+vim.keymap.set("n", "]d", function()
+	vim.diagnostic.goto_next({ float = true })
+end, { desc = "Next diagnostic" })
+vim.keymap.set("n", "[d", function()
+	vim.diagnostic.goto_prev({ float = true })
+end, { desc = "Previous diagnostic" })
+
+-- Window management (Helix: <leader>w)
+vim.keymap.set("n", "<leader>w", "<C-w>", { desc = "Window management" })

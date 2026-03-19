@@ -26,6 +26,12 @@ local function isTreefmt()
 	return rootHasFiles({ "treefmt.toml", ".treefmt.toml" })
 end
 
+local function insertIfTrue(t, exp, value)
+	if exp then
+		table.insert(t, value)
+	end
+end
+
 local base_model = "qwen2.5-coder:3b-base"
 
 require("onedark").setup({})
@@ -138,64 +144,125 @@ require("lze").load({
 		after = function()
 			-- [[ Configure Treesitter ]]
 			-- See `:help nvim-treesitter`
-			require("nvim-treesitter.config").setup({
-				auto_install = false,
-				highlight = { enable = true },
-				indent = { enable = false },
-				incremental_selection = {
-					enable = true,
-					keymaps = {
-						init_selection = "<c-space>",
-						node_incremental = "<c-space>",
-						scope_incremental = "<c-s>",
-						node_decremental = "<M-space>",
-					},
+			local languages = {}
+			insertIfTrue(languages, nixCats("python"), "python")
+			insertIfTrue(languages, nixCats("rust"), "rust")
+			insertIfTrue(languages, nixCats("lua"), "lua")
+			insertIfTrue(languages, nixCats("nix"), "nix")
+			insertIfTrue(languages, nixCats("node"), "typescript")
+			insertIfTrue(languages, nixCats("node"), "javascript")
+			insertIfTrue(languages, nixCats("general"), "just")
+			insertIfTrue(languages, nixCats("general"), "markdown")
+			insertIfTrue(languages, nixCats("general"), "markdown_inline")
+			insertIfTrue(languages, nixCats("general"), "sql")
+			require("nvim-treesitter").install(languages)
+			-- incremental_selection = {
+			-- 	enable = true,
+			-- 	keymaps = {
+			-- 		init_selection = "<c-space>",
+			-- 		node_incremental = "<c-space>",
+			-- 		scope_incremental = "<c-s>",
+			-- 		node_decremental = "<M-space>",
+			-- 	},
+			-- },
+			require("nvim-treesitter-textobjects").setup({
+				select = {
+					lookahead = true, -- Automatically jump forward to textobj, similar to targets.vim
 				},
-				textobjects = {
-					select = {
-						enable = true,
-						lookahead = true, -- Automatically jump forward to textobj, similar to targets.vim
-						keymaps = {
-							-- You can use the capture groups defined in textobjects.scm
-							["aa"] = "@parameter.outer",
-							["ia"] = "@parameter.inner",
-							["af"] = "@function.outer",
-							["if"] = "@function.inner",
-							["ac"] = "@class.outer",
-							["ic"] = "@class.inner",
-						},
-					},
-					move = {
-						enable = true,
-						set_jumps = true, -- whether to set jumps in the jumplist
-						goto_next_start = {
-							["]m"] = "@function.outer",
-							["]]"] = "@class.outer",
-						},
-						goto_next_end = {
-							["]M"] = "@function.outer",
-							["]["] = "@class.outer",
-						},
-						goto_previous_start = {
-							["[m"] = "@function.outer",
-							["[["] = "@class.outer",
-						},
-						goto_previous_end = {
-							["[M"] = "@function.outer",
-							["[]"] = "@class.outer",
-						},
-					},
-					swap = {
-						enable = true,
-						swap_next = {
-							["<leader>a"] = "@parameter.inner",
-						},
-						swap_previous = {
-							["<leader>A"] = "@parameter.inner",
-						},
-					},
+				move = {
+					set_jumps = true, -- whether to set jumps in the jumplist
 				},
 			})
+
+			local ts_repeat_move = require("nvim-treesitter-textobjects.repeatable_move")
+
+			-- Repeat movement with } and {
+			-- ensure } goes forward and { goes backward regardless of the last direction
+			vim.keymap.set({ "n", "x", "o" }, "}", ts_repeat_move.repeat_last_move_next, { desc = "Repeat next move" })
+			vim.keymap.set({ "n", "x", "o" }, "{", ts_repeat_move.repeat_last_move_previous, { desc = "Repeat previous move" })
+
+			-- Optionally, make builtin f, F, t, T also repeatable with } and {
+			vim.keymap.set({ "n", "x", "o" }, "f", ts_repeat_move.builtin_f_expr, { expr = true })
+			vim.keymap.set({ "n", "x", "o" }, "F", ts_repeat_move.builtin_F_expr, { expr = true })
+			vim.keymap.set({ "n", "x", "o" }, "t", ts_repeat_move.builtin_t_expr, { expr = true })
+			vim.keymap.set({ "n", "x", "o" }, "T", ts_repeat_move.builtin_T_expr, { expr = true })
+
+			-- select keymaps (Helix-like)
+			vim.keymap.set({ "x", "o" }, "af", function()
+				require("nvim-treesitter-textobjects.select").select_textobject("@function.outer", "textobjects")
+			end, { desc = "Select outer function" })
+			vim.keymap.set({ "x", "o" }, "if", function()
+				require("nvim-treesitter-textobjects.select").select_textobject("@function.inner", "textobjects")
+			end, { desc = "Select inner function" })
+			vim.keymap.set({ "x", "o" }, "ac", function()
+				require("nvim-treesitter-textobjects.select").select_textobject("@class.outer", "textobjects")
+			end, { desc = "Select outer class" })
+			vim.keymap.set({ "x", "o" }, "ic", function()
+				require("nvim-treesitter-textobjects.select").select_textobject("@class.inner", "textobjects")
+			end, { desc = "Select inner class" })
+			vim.keymap.set({ "x", "o" }, "aa", function()
+				require("nvim-treesitter-textobjects.select").select_textobject("@parameter.outer", "textobjects")
+			end, { desc = "Select outer argument" })
+			vim.keymap.set({ "x", "o" }, "ia", function()
+				require("nvim-treesitter-textobjects.select").select_textobject("@parameter.inner", "textobjects")
+			end, { desc = "Select inner argument" })
+
+			-- swap keymaps (Ergonomic: Shift version of navigation)
+			vim.keymap.set("n", "]A", function()
+				require("nvim-treesitter-textobjects.swap").swap_next("@parameter.inner")
+			end, { desc = "Swap next argument" })
+			vim.keymap.set("n", "[A", function()
+				require("nvim-treesitter-textobjects.swap").swap_previous("@parameter.inner")
+			end, { desc = "Swap previous argument" })
+
+			-- move keymaps (Helix-like)
+			vim.keymap.set({ "n", "x", "o" }, "]f", function()
+				require("nvim-treesitter-textobjects.move").goto_next_start("@function.outer", "textobjects")
+			end, { desc = "Next function start" })
+			vim.keymap.set({ "n", "x", "o" }, "[f", function()
+				require("nvim-treesitter-textobjects.move").goto_previous_start("@function.outer", "textobjects")
+			end, { desc = "Previous function start" })
+			vim.keymap.set({ "n", "x", "o" }, "]c", function()
+				require("nvim-treesitter-textobjects.move").goto_next_start("@class.outer", "textobjects")
+			end, { desc = "Next class start" })
+			vim.keymap.set({ "n", "x", "o" }, "[c", function()
+				require("nvim-treesitter-textobjects.move").goto_previous_start("@class.outer", "textobjects")
+			end, { desc = "Previous class start" })
+			vim.keymap.set({ "n", "x", "o" }, "]a", function()
+				require("nvim-treesitter-textobjects.move").goto_next_start("@parameter.inner", "textobjects")
+			end, { desc = "Next argument start" })
+			vim.keymap.set({ "n", "x", "o" }, "[a", function()
+				require("nvim-treesitter-textobjects.move").goto_previous_start("@parameter.inner", "textobjects")
+			end, { desc = "Previous argument start" })
+
+			-- Additional navigation
+			vim.keymap.set({ "n", "x", "o" }, "]l", function()
+				require("nvim-treesitter-textobjects.move").goto_next_start("@loop.outer", "textobjects")
+			end, { desc = "Next loop start" })
+			vim.keymap.set({ "n", "x", "o" }, "[l", function()
+				require("nvim-treesitter-textobjects.move").goto_previous_start("@loop.outer", "textobjects")
+			end, { desc = "Previous loop start" })
+			vim.keymap.set({ "n", "x", "o" }, "]i", function()
+				require("nvim-treesitter-textobjects.move").goto_next_start("@conditional.outer", "textobjects")
+			end, { desc = "Next conditional start" })
+			vim.keymap.set({ "n", "x", "o" }, "[i", function()
+				require("nvim-treesitter-textobjects.move").goto_previous_start("@conditional.outer", "textobjects")
+			end, { desc = "Previous conditional start" })
+
+			-- End of object moves
+			vim.keymap.set({ "n", "x", "o" }, "]F", function()
+				require("nvim-treesitter-textobjects.move").goto_next_end("@function.outer", "textobjects")
+			end, { desc = "Next function end" })
+			vim.keymap.set({ "n", "x", "o" }, "[F", function()
+				require("nvim-treesitter-textobjects.move").goto_previous_end("@function.outer", "textobjects")
+			end, { desc = "Previous function end" })
+			vim.keymap.set({ "n", "x", "o" }, "]C", function()
+				require("nvim-treesitter-textobjects.move").goto_next_end("@class.outer", "textobjects")
+			end, { desc = "Next class end" })
+			vim.keymap.set({ "n", "x", "o" }, "[C", function()
+				require("nvim-treesitter-textobjects.move").goto_previous_end("@class.outer", "textobjects")
+			end, { desc = "Previous class end" })
+
 			require("treesitter-context").setup({})
 			-- Folding
 			vim.o.foldmethod = "expr"
@@ -371,9 +438,9 @@ require("lze").load({
 					end
 
 					-- Navigation
-					map({ "n", "v" }, "]c", function()
+					map({ "n", "v" }, "]g", function()
 						if vim.wo.diff then
-							return "]c"
+							return "]g"
 						end
 						vim.schedule(function()
 							gs.next_hunk()
@@ -381,9 +448,9 @@ require("lze").load({
 						return "<Ignore>"
 					end, { expr = true, desc = "Jump to next hunk" })
 
-					map({ "n", "v" }, "[c", function()
+					map({ "n", "v" }, "[g", function()
 						if vim.wo.diff then
-							return "[c"
+							return "[g"
 						end
 						vim.schedule(function()
 							gs.prev_hunk()
@@ -393,33 +460,33 @@ require("lze").load({
 
 					-- Actions
 					-- visual mode
-					map("v", "<leader>hs", function()
+					map("v", "<leader>gs", function()
 						gs.stage_hunk({ vim.fn.line("."), vim.fn.line("v") })
-					end, { desc = "stage git hunk" })
-					map("v", "<leader>hr", function()
+					end, { desc = "Stage git hunk" })
+					map("v", "<leader>gr", function()
 						gs.reset_hunk({ vim.fn.line("."), vim.fn.line("v") })
-					end, { desc = "reset git hunk" })
+					end, { desc = "Reset git hunk" })
 					-- normal mode
-					map("n", "<leader>gs", gs.stage_hunk, { desc = "git stage hunk" })
-					map("n", "<leader>gr", gs.reset_hunk, { desc = "git reset hunk" })
-					map("n", "<leader>gS", gs.stage_buffer, { desc = "git Stage buffer" })
-					map("n", "<leader>gu", gs.undo_stage_hunk, { desc = "undo stage hunk" })
-					map("n", "<leader>gR", gs.reset_buffer, { desc = "git Reset buffer" })
-					map("n", "<leader>gp", gs.preview_hunk, { desc = "preview git hunk" })
+					map("n", "<leader>gs", gs.stage_hunk, { desc = "Git stage hunk" })
+					map("n", "<leader>gr", gs.reset_hunk, { desc = "Git reset hunk" })
+					map("n", "<leader>gS", gs.stage_buffer, { desc = "Git Stage buffer" })
+					map("n", "<leader>gu", gs.undo_stage_hunk, { desc = "Undo stage hunk" })
+					map("n", "<leader>gR", gs.reset_buffer, { desc = "Git Reset buffer" })
+					map("n", "<leader>gp", gs.preview_hunk, { desc = "Preview git hunk" })
 					map("n", "<leader>gb", function()
 						gs.blame_line({ full = false })
-					end, { desc = "git blame line" })
-					map("n", "<leader>gd", gs.diffthis, { desc = "git diff against index" })
+					end, { desc = "Git blame line" })
+					map("n", "<leader>gd", gs.diffthis, { desc = "Git diff against index" })
 					map("n", "<leader>gD", function()
 						gs.diffthis("~")
-					end, { desc = "git diff against last commit" })
+					end, { desc = "Git diff against last commit" })
 
 					-- Toggles
-					map("n", "<leader>gtb", gs.toggle_current_line_blame, { desc = "toggle git blame line" })
-					map("n", "<leader>gtd", gs.toggle_deleted, { desc = "toggle git show deleted" })
+					map("n", "<leader>gtb", gs.toggle_current_line_blame, { desc = "Toggle git blame line" })
+					map("n", "<leader>gtd", gs.toggle_deleted, { desc = "Toggle git show deleted" })
 
 					-- Text object
-					map({ "o", "x" }, "ih", ":<C-U>Gitsigns select_hunk<CR>", { desc = "select git hunk" })
+					map({ "o", "x" }, "ih", ":<C-U>Gitsigns select_hunk<CR>", { desc = "Select git hunk" })
 				end,
 			})
 			vim.cmd([[hi GitSignsAdd guifg=#04de21]])
@@ -434,24 +501,22 @@ require("lze").load({
 		after = function()
 			require("which-key").setup({})
 			require("which-key").add({
-				{ "<leader><leader>", group = "buffer commands" },
+				{ "<leader><leader>", group = "Buffer Commands" },
 				{ "<leader><leader>_", hidden = true },
-				{ "<leader>c", group = "[c]ode" },
+				{ "<leader>/", group = "Search / Pick" },
+				{ "<leader>/_", hidden = true },
+				{ "<leader>A", group = "AI (Avante)" },
+				{ "<leader>A_", hidden = true },
+				{ "<leader>c", group = "Code" },
 				{ "<leader>c_", hidden = true },
-				{ "<leader>d", group = "[d]ocument" },
-				{ "<leader>d_", hidden = true },
-				{ "<leader>g", group = "[g]it" },
+				{ "<leader>g", group = "Git" },
 				{ "<leader>g_", hidden = true },
-				{ "<leader>r", group = "[r]ename" },
-				{ "<leader>r_", hidden = true },
-				{ "<leader>f", group = "[f]ind" },
-				{ "<leader>f_", hidden = true },
-				{ "<leader>s", group = "[s]earch" },
-				{ "<leader>s_", hidden = true },
-				{ "<leader>t", group = "[t]oggles" },
+				{ "<leader>t", group = "Toggles" },
 				{ "<leader>t_", hidden = true },
-				{ "<leader>w", group = "[w]orkspace" },
+				{ "<leader>w", group = "Window Management" },
 				{ "<leader>w_", hidden = true },
+				{ "<leader>W", group = "Workspace" },
+				{ "<leader>W_", hidden = true },
 			})
 		end,
 	},
@@ -546,13 +611,13 @@ require("lze").load({
 				end,
 			})
 
-			vim.keymap.set({ "n", "v" }, "<leader>FF", function()
+			vim.keymap.set({ "n", "v" }, "<leader>cf", function()
 				conform.format({
 					lsp_fallback = true,
 					async = false,
 					timeout_ms = 5000,
 				})
-			end, { desc = "[F]ormat [F]ile" })
+			end, { desc = "[C]ode [F]ormat" })
 
 			vim.api.nvim_create_user_command("FormatDisable", function(args)
 				if args.bang then
@@ -571,6 +636,22 @@ require("lze").load({
 			end, {
 				desc = "Re-enable autoformat-on-save",
 			})
+
+			-- Toggle formatting and diagnostics
+			vim.keymap.set("n", "<leader>tf", function()
+				if vim.g.disable_autoformat or vim.b.disable_autoformat then
+					vim.cmd("FormatEnable")
+					vim.notify("Autoformat enabled")
+				else
+					vim.cmd("FormatDisable")
+					vim.notify("Autoformat disabled")
+				end
+			end, { desc = "Toggle: [F]ormatting" })
+
+			vim.keymap.set("n", "<leader>td", function()
+				vim.diagnostic.enable(not vim.diagnostic.is_enabled())
+				vim.notify("Diagnostics " .. (vim.diagnostic.is_enabled() and "enabled" or "disabled"))
+			end, { desc = "Toggle: [D]iagnostics" })
 		end,
 	},
 	{
@@ -618,14 +699,14 @@ require("lze").load({
 			{ "<F1>", desc = "Debug: Step Into" },
 			{ "<F2>", desc = "Debug: Step Over" },
 			{ "<F3>", desc = "Debug: Step Out" },
-			{ "<leader>b", desc = "Debug: Toggle Breakpoint" },
-			{ "<leader>B", desc = "Debug: Set Breakpoint" },
+			{ "<leader>cb", desc = "Code Breakpoint: Toggle" },
+			{ "<leader>cB", desc = "Code Breakpoint: Set" },
 			{ "<F7>", desc = "Debug: See last session result." },
 		},
 		-- colorscheme = "",
 		load = function(name)
 			vim.cmd.packadd(name)
-			vim.cmd.packadd("nvim-dap-ui")
+			vim.cmd.packadd("dapui")
 			vim.cmd.packadd("nvim-dap-virtual-text")
 		end,
 		after = function()
@@ -637,10 +718,10 @@ require("lze").load({
 			nmap("<F1>", dap.step_into, "Debug: Step Into")
 			nmap("<F2>", dap.step_over, "Debug: Step Over")
 			nmap("<F3>", dap.step_out, "Debug: Step Out")
-			nmap("<leader>b", dap.toggle_breakpoint, "Debug: Toggle Breakpoint")
-			nmap("<leader>B", function()
+			nmap("<leader>cb", dap.toggle_breakpoint, "Code Breakpoint: Toggle")
+			nmap("<leader>cB", function()
 				dap.set_breakpoint(vim.fn.input("Breakpoint condition: "))
-			end, "Debug: Set Breakpoint")
+			end, "Code Breakpoint: Set")
 
 			-- Toggle to see last session result. Without this, you can't see session output in case of unhandled exception.
 			nmap("<F7>", dapui.toggle, "Debug: See last session result.")
@@ -834,7 +915,7 @@ require("lze").load({
 		-- Or lazy load on keybinds
 		keys = {
 			{
-				"<leader>aa",
+				"<leader>Aa",
 				function()
 					require("avante.api").ask()
 				end,
@@ -842,7 +923,7 @@ require("lze").load({
 				desc = "Avante Ask",
 			},
 			{
-				"<leader>at",
+				"<leader>At",
 				function()
 					require("avante.api").toggle()
 				end,
@@ -890,16 +971,17 @@ local function lsp_on_attach(_, bufnr)
 		vim.keymap.set("n", keys, func, { buffer = bufnr, desc = desc })
 	end
 
-	nmap("<leader>rn", vim.lsp.buf.rename, "[R]e[n]ame")
-	nmap("<leader>ca", function()
+	nmap("<leader>r", vim.lsp.buf.rename, "[R]ename")
+	nmap("<leader>a", function()
 		if vim.bo.filetype == "rust" then
 			vim.cmd.RustLsp("codeAction")
 		else
 			vim.lsp.buf.code_action()
 		end
-	end, "[C]ode [A]ction")
+	end, "Code [A]ction")
 
 	nmap("gd", vim.lsp.buf.definition, "[G]oto [D]efinition")
+	nmap("gy", vim.lsp.buf.type_definition, "[G]oto T[y]pe Definition")
 
 	if nixCats("general") then
 		require("snacks")
@@ -909,15 +991,19 @@ local function lsp_on_attach(_, bufnr)
 		nmap("gI", function()
 			Snacks.picker.lsp_implementations()
 		end, "[G]oto [I]mplementation")
-		nmap("<leader>ds", function()
+		nmap("<leader>s", function()
 			Snacks.picker.lsp_symbols()
-		end, "[D]ocument [S]ymbols")
-		nmap("<leader>ws", function()
+		end, "Document [S]ymbols")
+		nmap("<leader>/s", function()
+			Snacks.picker.lsp_symbols()
+		end, "Search: Document [S]ymbols")
+		nmap("<leader>S", function()
 			Snacks.picker.lsp_workspace_symbols()
 		end, "[W]orkspace [S]ymbols")
+		nmap("<leader>/S", function()
+			Snacks.picker.lsp_workspace_symbols()
+		end, "Search: [W]orkspace [S]ymbols")
 	end
-
-	nmap("<leader>D", vim.lsp.buf.type_definition, "Type [D]efinition")
 
 	-- See `:help K` for why this keymap
 	nmap("K", function()
@@ -931,9 +1017,9 @@ local function lsp_on_attach(_, bufnr)
 
 	-- Lesser used LSP functionality
 	nmap("gD", vim.lsp.buf.declaration, "[G]oto [D]eclaration")
-	nmap("<leader>wa", vim.lsp.buf.add_workspace_folder, "[W]orkspace [A]dd Folder")
-	nmap("<leader>wr", vim.lsp.buf.remove_workspace_folder, "[W]orkspace [R]emove Folder")
-	nmap("<leader>wl", function()
+	nmap("<leader>Wa", vim.lsp.buf.add_workspace_folder, "[W]orkspace [A]dd Folder")
+	nmap("<leader>Wr", vim.lsp.buf.remove_workspace_folder, "[W]orkspace [R]emove Folder")
+	nmap("<leader>Wl", function()
 		print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
 	end, "[W]orkspace [L]ist Folders")
 
@@ -1058,7 +1144,7 @@ require("lze").load({
 					nmap("<leader>cio", "<cmd>TSToolsOrganizeImports<CR>", "[C]ode [I]mport [O]rganise")
 					nmap("<leader>cis", "<cmd>TSToolsSortImports<CR>", "[C]ode [I]mport [S]ort")
 					nmap("<leader>cim", "<cmd>TSToolsAddMissingImports<CR>", "[C]ode [I]mport [M]issing")
-					nmap("<leader>cfa", "<cmd>TSToolsFixAll<CR>", "[C]ode [F]ix [A]ll")
+					nmap("<leader>cxa", "<cmd>TSToolsFixAll<CR>", "[C]ode Fi[x] [A]ll")
 					nmap("<leader>cFe", "<cmd>TSToolsRenameFile<CR>", "[C]ode [F]ILE r[E]name")
 					nmap("<leader>cFr", "<cmd>TSToolsFileReferences<CR>", "[C]ode [F]ILE [R]eferences")
 				end,

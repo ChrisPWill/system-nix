@@ -42,109 +42,104 @@ vim.keymap.set("n", "<leader>sf", function()
 	Snacks.picker.smart()
 end, { desc = "Smart Find Files" })
 
--- Buffer Search "<leader>Space-s"
-vim.keymap.set("n", "<leader><leader>s", function()
+-- Buffer Search "<leader>b"
+vim.keymap.set("n", "<leader>b", function()
 	Snacks.picker.buffers()
 end, { desc = "Search Buffers" })
 
 -- ── Find ──────────────────────────────────────────────────────────────────────
 
--- Find Files "<leader>ff"
-vim.keymap.set("n", "<leader>ff", function()
+-- Find Files "<leader>f"
+vim.keymap.set("n", "<leader>f", function()
 	Snacks.picker.files()
 end, { desc = "Find Files" })
 
 -- Find Git Files "<leader>fg"
-vim.keymap.set("n", "<leader>fg", function()
+vim.keymap.set("n", "<leader>gf", function()
 	Snacks.picker.git_files()
 end, { desc = "Find Git Files" })
 
 -- ── Grep ──────────────────────────────────────────────────────────────────────
 
--- Buffer Lines "<leader>sb"
-vim.keymap.set("n", "<leader>sb", function()
+-- Buffer Lines "<leader>/b"
+vim.keymap.set("n", "<leader>/b", function()
 	Snacks.picker.lines()
 end, { desc = "Buffer Lines" })
 
--- Grep Open Buffers "<leader>sB"
-vim.keymap.set("n", "<leader>sB", function()
+-- Grep Open Buffers "<leader>/B"
+vim.keymap.set("n", "<leader>/B", function()
 	Snacks.picker.grep_buffers()
 end, { desc = "Grep Open Buffers" })
 
--- Grep All "<leader>sg"
-vim.keymap.set("n", "<leader>sg", function()
+-- Grep All "<leader>//"
+vim.keymap.set("n", "<leader>//", function()
 	Snacks.picker.grep()
-end, { desc = "Grep" })
+end, { desc = "Search All (Grep)" })
 
--- Grep All "<leader>sg"
-vim.keymap.set("n", "<leader>/", function()
-	Snacks.picker.grep()
-end, { desc = "Search All" })
-
--- Grep Visual / Word "<leader>sw"
-vim.keymap.set({ "n", "x" }, "<leader>sw", function()
+-- Grep Visual / Word "<leader>/w"
+vim.keymap.set({ "n", "x" }, "<leader>/w", function()
 	Snacks.picker.grep_word()
 end, { desc = "Visual Selection or Word" })
 
--- ── Search ────────────────────────────────────────────────────────────────────
+-- ── Search Group ─────────────────────────────────────────────────────────────
 
--- Buffer Lines "<leader>sb"
-vim.keymap.set("n", "<leader>sb", function()
+-- Buffer Lines "<leader>/b"
+vim.keymap.set("n", "<leader>/b", function()
 	Snacks.picker.lines()
 end, { desc = "Buffer Lines" })
 
--- Diagnostics "<leader>sd"
-vim.keymap.set("n", "<leader>sd", function()
+-- Diagnostics (All) "<leader>D"
+vim.keymap.set("n", "<leader>D", function()
 	Snacks.picker.diagnostics()
-end, { desc = "Diagnostics" })
+end, { desc = "Workspace Diagnostics" })
 
--- Buffer Diagnostics "<leader>sD"
-vim.keymap.set("n", "<leader>sD", function()
+-- Buffer Diagnostics "<leader>d"
+vim.keymap.set("n", "<leader>d", function()
 	Snacks.picker.diagnostics_buffer()
 end, { desc = "Buffer Diagnostics" })
 
--- Help Pages "<leader>sh"
-vim.keymap.set("n", "<leader>sh", function()
+-- Help Pages "<leader>/h"
+vim.keymap.set("n", "<leader>/h", function()
 	Snacks.picker.help()
 end, { desc = "Help Pages" })
 
--- Jumps "<leader>sj"
-vim.keymap.set("n", "<leader>sj", function()
+-- Jumps "<leader>/j"
+vim.keymap.set("n", "<leader>/j", function()
 	Snacks.picker.jumps()
 end, { desc = "Jumps" })
 
--- Keymaps "<leader>sk"
-vim.keymap.set("n", "<leader>sk", function()
+-- Keymaps "<leader>/k"
+vim.keymap.set("n", "<leader>/k", function()
 	Snacks.picker.keymaps()
 end, { desc = "Keymaps" })
 
--- Location List "<leader>sl"
-vim.keymap.set("n", "<leader>sl", function()
+-- Location List "<leader>/l"
+vim.keymap.set("n", "<leader>/l", function()
 	Snacks.picker.loclist()
 end, { desc = "Location List" })
 
--- Marks "<leader>sm"
-vim.keymap.set("n", "<leader>sm", function()
+-- Marks "<leader>/m"
+vim.keymap.set("n", "<leader>/m", function()
 	Snacks.picker.marks()
 end, { desc = "Marks" })
 
--- Man Pages "<leader>sM"
-vim.keymap.set("n", "<leader>sM", function()
+-- Man Pages "<leader>/M"
+vim.keymap.set("n", "<leader>/M", function()
 	Snacks.picker.man()
 end, { desc = "Man Pages" })
 
--- Quickfix List "<leader>sq"
-vim.keymap.set("n", "<leader>sq", function()
+-- Quickfix List "<leader>/q"
+vim.keymap.set("n", "<leader>/q", function()
 	Snacks.picker.qflist()
 end, { desc = "Quickfix List" })
 
--- Resume "<leader>sR"
-vim.keymap.set("n", "<leader>sR", function()
+-- Resume "<leader>/R"
+vim.keymap.set("n", "<leader>/R", function()
 	Snacks.picker.resume()
-end, { desc = "Resume" })
+end, { desc = "Resume Picker" })
 
--- Undo History "<leader>su"
-vim.keymap.set("n", "<leader>su", function()
+-- Undo History "<leader>/u"
+vim.keymap.set("n", "<leader>/u", function()
 	Snacks.picker.undo()
 end, { desc = "Undo History" })
 
