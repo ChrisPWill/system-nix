@@ -67,7 +67,7 @@ return {
 				{ "<leader>k_", hidden = true },
 				{ "<leader>ka", desc = "Snippet: Add" },
 				{ "<leader>kc", desc = "Knowledge: Cheat-sheet" },
-				{ "<leader>kk", desc = "Knowledge: Browse Guides" },
+				{ "<leader>km", desc = "Knowledge: Keymaps Guide" },
 				{ "<leader>ks", desc = "Snippet: Search / Edit" },
 				{ "<leader>r", group = "Replace (GrugFar)" },
 				{ "<leader>r_", hidden = true },

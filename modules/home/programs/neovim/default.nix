@@ -26,6 +26,9 @@ in {
       EDITOR = "meow";
       SUDO_EDITOR = "meow";
     };
+
+    home.file."${config.xdg.configHome}/nvim/docs".source = config.lib.file.mkOutOfStoreSymlink "${config.homeModuleDir}/programs/neovim/docs";
+
     nixCats = {
       enable = true;
 
@@ -256,6 +259,7 @@ in {
           # anything else to pass and grab in lua with `nixCats.extra`
           extra = {
             nixdExtras.nixpkgs = ''import ${pkgs.path} {}'';
+            docsPath = "${config.homeModuleDir}/programs/neovim/docs";
           };
         };
 
@@ -292,6 +296,7 @@ in {
           # anything else to pass and grab in lua with `nixCats.extra`
           extra = {
             nixdExtras.nixpkgs = ''import ${pkgs.path} {}'';
+            docsPath = "${config.homeModuleDir}/programs/neovim/docs";
           };
         };
 
@@ -312,6 +317,7 @@ in {
           # anything else to pass and grab in lua with `nixCats.extra`
           extra = {
             nixdExtras.nixpkgs = ''import ${pkgs.path} {}'';
+            docsPath = "${config.homeModuleDir}/programs/neovim/docs";
           };
         };
       };

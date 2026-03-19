@@ -1,3 +1,5 @@
+local utils = require("utils")
+
 require("snacks").setup({
 	explorer = {},
 	picker = {},
@@ -109,42 +111,54 @@ vim.keymap.set("n", "<leader>/j", function()
 	Snacks.picker.jumps()
 end, { desc = "Jumps" })
 
--- Knowledge Base "<leader>kk"
-vim.keymap.set("n", "<leader>kk", function()
-	Snacks.picker.files({ cwd = (nixCats.configDir or "") .. "/docs" })
-end, { desc = "Search Personal Knowledge Base" })
+-- Knowledge Base (Files) "<leader>/k"
+vim.keymap.set("n", "<leader>/k", function()
+	Snacks.picker.files({
+		cwd = nixCats.extra("docsPath"),
+		confirm = function(picker, item)
+			picker:close()
+			if item then
+				utils.viewDocFile(item.cwd .. "/" .. item.file)
+			end
+		end,
+	})
+end, { desc = "Knowledge Base (Files)" })
+
+-- Knowledge Base (Grep) "<leader>/K"
+vim.keymap.set("n", "<leader>/K", function()
+	Snacks.picker.grep({
+		cwd = nixCats.extra("docsPath"),
+		confirm = function(picker, item)
+			picker:close()
+			if item then
+				utils.viewDocFile(item.cwd .. "/" .. item.file)
+			end
+		end,
+	})
+end, { desc = "Knowledge Base (Grep)" })
 
 -- Cheat-sheet "<leader>kc"
 vim.keymap.set("n", "<leader>kc", function()
-	Snacks.win({
-		file = (nixCats.configDir or "") .. "/docs/cheatsheet.md",
-		width = 0.8,
-		height = 0.8,
-		position = "float",
-		backdrop = 60,
-		zindex = 50,
-		wo = {
-			spell = false,
-			wrap = true,
-			signcolumn = "no",
-			statuscolumn = "",
-			conceallevel = 2,
-		},
-	})
+	utils.viewDocFile((nixCats.extra("docsPath") or "") .. "/cheatsheet.md")
 end, { desc = "Open Neovim Cheat-sheet" })
 
--- Keymaps "<leader>/k"
-vim.keymap.set("n", "<leader>/k", function()
+-- Keymaps Guide "<leader>km"
+vim.keymap.set("n", "<leader>km", function()
+	utils.viewDocFile((nixCats.extra("docsPath") or "") .. "/KEYMAPS.md")
+end, { desc = "Open Keymaps Guide" })
+
+-- Keymaps Search "<leader>/m"
+vim.keymap.set("n", "<leader>/m", function()
 	Snacks.picker.keymaps()
-end, { desc = "Keymaps" })
+end, { desc = "Keymaps Search" })
 
 -- Location List "<leader>/l"
 vim.keymap.set("n", "<leader>/l", function()
 	Snacks.picker.loclist()
 end, { desc = "Location List" })
 
--- Marks "<leader>/m"
-vim.keymap.set("n", "<leader>/m", function()
+-- Marks "<leader>/;"
+vim.keymap.set("n", "<leader>/;", function()
 	Snacks.picker.marks()
 end, { desc = "Marks" })
 

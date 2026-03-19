@@ -57,10 +57,10 @@ Common operations are aliased for ease of use across different shells (Zsh, Fish
             - `KEYMAPS.md`: Detailed mapping philosophy and logic.
             - `config/lua/plugins/`: Domain-specific plugin specifications (UI, LSP, Coding, etc.).
             - `config/lua/keymaps.lua`: Global hybrid keybindings.
-            - `config/docs/`: Personal Knowledge Base (Markdown reference guides).
+            - `docs/`: Personal Knowledge Base (Markdown reference guides and KEYMAPS.md).
 
 - **Knowledge Base Maintenance:**
-    - When adding new complex plugins or modifying significant workflows in Neovim, **ALWAYS** update or create a corresponding reference guide in `modules/home/programs/neovim/config/docs/`.
+    - When adding new complex plugins or modifying significant workflows in Neovim, **ALWAYS** update or create a corresponding reference guide in `modules/home/programs/neovim/docs/`.
     - These guides should focus on practical use-cases, keybindings, and "how-to" scenarios to ensure the configuration remains self-documenting and accessible across different machines.
 
 - **Jujutsu Workflow:** This repository uses `.jj/` for version control. Use `jj st` for status and `jj commit` (or automatic snapshots) for changes.

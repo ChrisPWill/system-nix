@@ -7,8 +7,8 @@ This configuration uses a **Hybrid Philosophy** (Helix-inspired navigation + Neo
 | Key | Action | Plugin |
 | :--- | :--- | :--- |
 | `-` | **Explorer** (File Tree) | Snacks.explorer |
-| `Ctrl-` | **Terminal** (Floating) | Snacks.terminal |
-| `` | **Leap** (Jump to characters) | leap.nvim |
+| `Ctrl-\` | **Terminal** (Floating) | Snacks.terminal |
+| `\` | **Leap** (Jump to characters) | leap.nvim |
 | `;` | **Arrow** (Jump to marked line) | arrow.nvim |
 | `<leader>;` | **Arrow** (Jump to marked file) | arrow.nvim |
 | `ms/md/mr` | **Surround** (Add/Delete/Replace) | mini.surround |
@@ -21,27 +21,29 @@ Access via the `<leader>r` group:
 - `<leader>ra`: **AST-Grep** (Structural Search).
 - `<leader>rf`: Search/Replace in current **File**.
 
-## 󰘦 Knowledge & Snippets
+## 󰘦 Search / Pick Group (<leader>/)
 
-Access via the `<leader>k` group:
-- `<leader>kk`: Browse **Personal Knowledge Base** (`docs/`).
-- `<leader>kc`: Open this **Cheat-sheet**.
-- `<leader>ks`: Search / Edit **Snippets**.
-- `<leader>ka`: Add new **Snippet** (supports visual selection).
+| Key | Action |
+| :--- | :--- |
+| `<leader>/k` | **Knowledge Base** (Files) |
+| `<leader>/K` | **Knowledge Base** (Grep contents) |
+| `<leader>/;` | **Marks** (Aligns with arrow.nvim) |
+| `<leader>/m` | **Keymaps** Search |
+| `<leader>/f` | **Find Files** |
+| `<leader>//` | **Grep** (Search All) |
 
-## 󰘦 Code & LSP
+## 󰘦 Knowledge & Snippets Group (<leader>k)
 
-| Key | Action | Mode |
-| :--- | :--- | :--- |
-| `<leader>a` | **Code Action** | Normal |
-| `<leader>cf` | **Format** Buffer | Normal / Visual |
-| `<leader>ctt` | **Test** Single (Neotest) | Normal |
-| `gr` | **References** (Picker) | Normal |
-| `K` | **Hover** Documentation | Normal |
+| Key | Action |
+| :--- | :--- |
+| `<leader>kc` | Open this **Cheat-sheet** (Floating Window) |
+| `<leader>km` | Open **Keymaps Guide** (Floating Window) |
+| `<leader>ks` | Search / Edit **Snippets** |
+| `<leader>ka` | Add new **Snippet** (Visual selection supported) |
 
 ## 󱄅 Where to find more info?
 
-- **Keybindings Philosophy:** See `KEYMAPS.md` in the Neovim module root.
+- **Keybindings Philosophy:** See `docs/KEYMAPS.md`.
 - **Architectural Overview:** See `README.md` in the Neovim module root.
 - **Plugin Details:** Check `config/lua/plugins/` for individual plugin specs.
-- **Personal Docs:** More detailed guides are in `config/docs/`.
+- **Personal Docs:** More detailed guides are in `docs/`.

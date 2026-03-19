@@ -26,4 +26,23 @@ function M.insertIfTrue(t, exp, value)
 	end
 end
 
+-- Open a doc file in a floating window (optimized for documentation)
+function M.viewDocFile(file_path)
+	require("snacks").win({
+		file = file_path,
+		width = 0.8,
+		height = 0.8,
+		position = "float",
+		backdrop = 60,
+		zindex = 50,
+		wo = {
+			spell = false,
+			wrap = true,
+			signcolumn = "no",
+			statuscolumn = "",
+			conceallevel = 2,
+		},
+	})
+end
+
 return M

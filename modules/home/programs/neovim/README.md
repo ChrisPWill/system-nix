@@ -9,20 +9,19 @@ The configuration is split into logical modules under `lua/` to keep `init.lua` 
 ```text
 .
 ├── default.nix            # Nix derivation and plugin management
-├── KEYMAPS.md             # Documentation of the keybinding philosophy
-├── config/
+├── config/                # Neovim configuration (lua, init.lua, snippets)
 │   ├── init.lua           # Entry point: sets up global state and loads modules
 │   └── lua/
 │       ├── utils.lua      # Shared helper functions (nmap, project checks)
 │       ├── autocmds.lua   # Autocommands (Diagnostics, Koji terminal, etc.)
-│       ├── keymaps.lua    # Global keybindings (see KEYMAPS.md)
+│       ├── keymaps.lua    # Global keybindings (see docs/KEYMAPS.md)
 │       ├── global-options.lua # Vim options (shiftwidth, relativenumber, etc.)
 │       ├── snacks-config.lua  # Configuration for snacks.nvim (picker, etc.)
 │       └── plugins/       # Plugin specifications (loaded via lze)
 │           ├── init.lua   # Plugin entry point: consolidated specification loader
 │           ├── ai.lua     # Copilot, Minuet, Avante
-│           ├── coding.lua # Linting (nvim-lint) and Formatting (conform)
-│           ├── completion.lua # blink.cmp and Luasnip
+│           ├── coding.lua # Grug-far, Linting, Formatting
+│           ├── completion.lua # blink.cmp, Luasnip, Scissors
 │           ├── debug.lua  # nvim-dap and language adapters
 │           ├── navigation.lua # Arrow, Leap
 │           ├── test.lua   # neotest
@@ -41,14 +40,19 @@ This configuration follows a **Hybrid Philosophy** inspired by Helix while maint
 
 - **Leader Key:** `Space`
 - **Goto Navigation:** `g` prefix (e.g., `gh` for line start, `gl` for line end).
+- **Search & Pick:** `<leader>/` group.
+    - `<leader>/k`: Browse **Knowledge Base** files.
+    - `<leader>/K`: Search **Knowledge Base** contents (grep).
+    - `<leader>/;`: **Marks** (aligned with arrow.nvim).
+    - `<leader>/m`: **Keymaps** search.
 - **Knowledge & Snippets:** `<leader>k` group.
-    - `<leader>kk`: Search and open Personal Knowledge Base guides from `docs/`.
-    - `<leader>ks`: Search and edit snippets.
-    - `<leader>ka`: Add new snippets (can use visual selection).
-- **LSP & Search:** Flat leader map (e.g., `<leader>f` to find files, `<leader>r` group for GrugFar).
+    - `<leader>kc`: Open **Cheat-sheet** (floating window).
+    - `<leader>ks`: Search and edit **snippets**.
+    - `<leader>ka`: Add new **snippets** (can use visual selection).
+- **LSP & Search:** Flat leader map (e.g., `<leader>f` to find files, `<leader>r` group for Grug-far).
 - **Domain Groups:** Mnemonic groups for advanced tools (e.g., `<leader>g` for Git, `<leader>c` for Code).
 
-For a deep dive into the mapping logic, see [󰌌 KEYMAPS.md](./KEYMAPS.md).
+For a deep dive into the mapping logic, see [󰌌 KEYMAPS.md](./docs/KEYMAPS.md).
 
 ## 󱄅 Nix Integration
 
