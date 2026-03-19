@@ -147,6 +147,11 @@ vim.keymap.set("n", "<leader>km", function()
 	utils.viewDocFile((nixCats.extra("docsPath") or "") .. "/KEYMAPS.md")
 end, { desc = "Open Keymaps Guide" })
 
+-- Neovim Quickref "<leader>kr"
+vim.keymap.set("n", "<leader>kr", function()
+	utils.viewDocFile(vim.api.nvim_get_runtime_file("doc/quickref.txt", false)[1])
+end, { desc = "Open Neovim Quickref" })
+
 -- Keymaps Search "<leader>/m"
 vim.keymap.set("n", "<leader>/m", function()
 	Snacks.picker.keymaps()

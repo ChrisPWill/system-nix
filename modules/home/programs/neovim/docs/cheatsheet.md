@@ -38,6 +38,7 @@ Access via the `<leader>r` group:
 | :--- | :--- |
 | `<leader>kc` | Open this **Cheat-sheet** (Floating Window) |
 | `<leader>km` | Open **Keymaps Guide** (Floating Window) |
+| `<leader>kr` | Open **Neovim Quickref** (Floating Window) |
 | `<leader>ks` | Search / Edit **Snippets** |
 | `<leader>ka` | Add new **Snippet** (Visual selection supported) |
 

@@ -68,6 +68,7 @@ return {
 				{ "<leader>ka", desc = "Snippet: Add" },
 				{ "<leader>kc", desc = "Knowledge: Cheat-sheet" },
 				{ "<leader>km", desc = "Knowledge: Keymaps Guide" },
+				{ "<leader>kr", desc = "Knowledge: Neovim Quickref" },
 				{ "<leader>ks", desc = "Snippet: Search / Edit" },
 				{ "<leader>r", group = "Replace (GrugFar)" },
 				{ "<leader>r_", hidden = true },
