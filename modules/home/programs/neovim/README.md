@@ -32,6 +32,7 @@ The configuration is split into logical modules under `lua/` to keep `init.lua` 
 │           └── lsp/
 │               ├── init.lua    # lsp_on_attach logic
 │               └── servers.lua # Individual LSP server configurations
+└── docs/                  # Personal Knowledge Base (Markdown reference guides)
 ```
 
 ## 󰌌 Keybindings
@@ -40,7 +41,11 @@ This configuration follows a **Hybrid Philosophy** inspired by Helix while maint
 
 - **Leader Key:** `Space`
 - **Goto Navigation:** `g` prefix (e.g., `gh` for line start, `gl` for line end).
-- **LSP & Search:** Flat leader map (e.g., `<leader>f` to find files, `<leader>r` to rename).
+- **Knowledge & Snippets:** `<leader>k` group.
+    - `<leader>kk`: Search and open Personal Knowledge Base guides from `docs/`.
+    - `<leader>ks`: Search and edit snippets.
+    - `<leader>ka`: Add new snippets (can use visual selection).
+- **LSP & Search:** Flat leader map (e.g., `<leader>f` to find files, `<leader>r` group for GrugFar).
 - **Domain Groups:** Mnemonic groups for advanced tools (e.g., `<leader>g` for Git, `<leader>c` for Code).
 
 For a deep dive into the mapping logic, see [󰌌 KEYMAPS.md](./KEYMAPS.md).

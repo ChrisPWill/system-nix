@@ -66,6 +66,8 @@ in {
             koji # conventional commit editor
             tree-sitter
             ast-grep
+            fd
+            ripgrep
           ];
           lua = with pkgs; [
             lua-language-server

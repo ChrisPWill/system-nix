@@ -109,12 +109,12 @@ return {
 				snippetDir = (nixCats.configDir or "") .. "/snippets",
 			})
 
-			vim.keymap.set("n", "<leader>xe", function()
+			vim.keymap.set("n", "<leader>ks", function()
 				require("scissors").editSnippet()
-			end, { desc = "Snippet: Edit" })
+			end, { desc = "Snippet: Search / Edit" })
 
 			-- when used in visual mode, prefills the selection as snippet body
-			vim.keymap.set({ "n", "x" }, "<leader>xa", function()
+			vim.keymap.set({ "n", "x" }, "<leader>ka", function()
 				require("scissors").addNewSnippet()
 			end, { desc = "Snippet: Add" })
 		end,

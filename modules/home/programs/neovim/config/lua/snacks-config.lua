@@ -5,6 +5,7 @@ require("snacks").setup({
 	image = {},
 	lazygit = {},
 	terminal = {},
+	win = {},
 	rename = {},
 	notifier = {},
 	indent = {},
@@ -107,6 +108,30 @@ end, { desc = "Help Pages" })
 vim.keymap.set("n", "<leader>/j", function()
 	Snacks.picker.jumps()
 end, { desc = "Jumps" })
+
+-- Knowledge Base "<leader>kk"
+vim.keymap.set("n", "<leader>kk", function()
+	Snacks.picker.files({ cwd = (nixCats.configDir or "") .. "/docs" })
+end, { desc = "Search Personal Knowledge Base" })
+
+-- Cheat-sheet "<leader>kc"
+vim.keymap.set("n", "<leader>kc", function()
+	Snacks.win({
+		file = (nixCats.configDir or "") .. "/docs/cheatsheet.md",
+		width = 0.8,
+		height = 0.8,
+		position = "float",
+		backdrop = 60,
+		zindex = 50,
+		wo = {
+			spell = false,
+			wrap = true,
+			signcolumn = "no",
+			statuscolumn = "",
+			conceallevel = 2,
+		},
+	})
+end, { desc = "Open Neovim Cheat-sheet" })
 
 -- Keymaps "<leader>/k"
 vim.keymap.set("n", "<leader>/k", function()
