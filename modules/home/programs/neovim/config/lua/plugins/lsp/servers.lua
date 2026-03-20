@@ -166,4 +166,53 @@ return {
 			},
 		},
 	},
+	{
+		"html",
+		enabled = nixCats("web") or false,
+		lsp = {
+			filetypes = { "html", "templ" },
+		},
+	},
+	{
+		"cssls",
+		enabled = nixCats("web") or false,
+		lsp = {
+			filetypes = { "css", "scss", "less" },
+		},
+	},
+	{
+		"graphql",
+		enabled = nixCats("node") or false,
+		lsp = {
+			filetypes = { "graphql", "typescriptreact", "javascriptreact" },
+		},
+	},
+	{
+		"marksman",
+		enabled = nixCats("general") or false,
+		lsp = {
+			filetypes = { "markdown", "markdown.mdx" },
+		},
+	},
+	{
+		"kotlin_language_server",
+		enabled = nixCats("kotlin") or false,
+		lsp = {
+			filetypes = { "kotlin" },
+		},
+	},
+	{
+		"jsonls",
+		enabled = nixCats("general") or false,
+		lsp = {
+			filetypes = { "json", "jsonc" },
+		},
+	},
+	{
+		"yamlls",
+		enabled = nixCats("general") or false,
+		lsp = {
+			filetypes = { "yaml", "yaml.dockerfile", "yaml.gitlab" },
+		},
+	},
 }

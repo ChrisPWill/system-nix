@@ -71,6 +71,8 @@ in {
             ast-grep
             fd
             ripgrep
+            prettierd
+            marksman
           ];
           lua = with pkgs; [
             lua-language-server
@@ -82,7 +84,6 @@ in {
           ];
           node = with pkgs; [
             nodePackages.typescript-language-server
-            prettierd
             eslint_d
             nodePackages.graphql-language-service-cli
             vscode-js-debug
@@ -97,15 +98,26 @@ in {
             basedpyright
             ruff
           ];
-          # go = with pkgs; [
-          #   gopls
-          #   delve
-          #   golint
-          #   golangci-lint
-          #   gotools
-          #   go-tools
-          #   go
-          # ];
+          go = with pkgs; [
+            gopls
+            delve
+            golangci-lint
+            gotools
+            go-tools
+            go
+          ];
+          java = with pkgs; [
+            jdt-language-server
+            google-java-format
+          ];
+          kotlin = with pkgs; [
+            kotlin-language-server
+            ktlint
+          ];
+          web = with pkgs; [
+            nodePackages.vscode-langservers-extracted
+            nodePackages.yaml-language-server
+          ];
         };
 
         # This is for plugins that will load at startup without using packadd:
@@ -127,6 +139,9 @@ in {
           rust = with pkgs.vimPlugins; [
             # Already lazy
             rustaceanvim
+          ];
+          java = with pkgs.vimPlugins; [
+            nvim-jdtls
           ];
           leet = with pkgs.vimPlugins; [
             nui-nvim
@@ -257,10 +272,12 @@ in {
             node = true;
             rust = true;
             python = true;
+            go = true;
+            web = true;
+            java = true;
+            kotlin = true;
             copilot = config.nixCats.custom.enableCopilot;
             local-llm = false;
-
-            # go = false;
           };
           # anything else to pass and grab in lua with `nixCats.extra`
           extra = {
@@ -294,10 +311,12 @@ in {
             node = true;
             rust = true;
             python = true;
+            go = true;
+            web = true;
+            java = true;
+            kotlin = true;
             copilot = config.nixCats.custom.enableCopilot;
             local-llm = config.services.local-ollama.enable;
-
-            # go = false;
           };
           # anything else to pass and grab in lua with `nixCats.extra`
           extra = {
