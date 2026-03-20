@@ -120,6 +120,8 @@ in {
             vim-sleuth
             plenary-nvim
             nvim-nio
+            nui-nvim
+            nvim-notify
             nvim-treesitter.withAllGrammars
           ];
           rust = with pkgs.vimPlugins; [
@@ -172,6 +174,8 @@ in {
             grug-far-nvim
             inc-rename-nvim
             actions-preview-nvim
+            noice-nvim
+            trouble-nvim
           ];
           node = with pkgs.vimPlugins; [
             typescript-tools-nvim

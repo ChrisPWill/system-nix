@@ -62,7 +62,8 @@ To avoid clashes with the flat leader map, secondary tools are organized into mn
 - `<leader>g`: **Git Group** (Stage: `s`, Reset: `r`, Blame: `b`/`tb`, Diff: `d`/`D`, Deleted: `td`)
 - `<leader>c`: **Code Group** (Format: `cf`, Fix: `cxa`, Testing: `ct`, Breakpoints: `cb`)
 - `<leader>A`: **AI Group** (Avante Ask: `Aa`, Toggle: `At`)
-- `<leader>t`: **Toggles** (Diagnostics: `td`, Formatting: `tf`, Markview: `tm`)
+- `<leader>t`: **Toggles** (Diagnostics: `td`, Formatting: `tf`, Markview: `tm`, Trouble: `tx`/`ts`/`tl`/`tq`/`tL`)
+- `<leader>un`: Dismiss notifications (Noice)
 - `<leader>k`: **Knowledge & Snippets** (Cheat-sheet: `kc`, Keymaps: `km`, Snippets: `ks`/`ka`)
 
 ## 7. Plugin-Specific Navigation

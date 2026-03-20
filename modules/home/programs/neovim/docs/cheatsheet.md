@@ -19,6 +19,19 @@ This configuration uses a **Hybrid Philosophy** (Helix-inspired navigation + Neo
 | `&` | **Align** (Regex alignment) | mini.align |
 | `g&` | **Align** (Interactive preview) | mini.align |
 
+## 󰘦 Toggles & UI (<leader>t / <leader>u)
+
+| Key | Action | Plugin |
+| :--- | :--- | :--- |
+| `<leader>td` | **In-buffer Diagnostics** | LSP |
+| `<leader>tf` | **Autoformat** | Conform |
+| `<leader>tm` | **Markview** | Markview |
+| `<leader>tx` | **Trouble Diagnostics** | Trouble |
+| `<leader>ts` | **Trouble Symbols** | Trouble |
+| `<leader>tl` | **Trouble LSP** | Trouble |
+| `<leader>tq / tL` | **Quickfix / Loclist** | Trouble |
+| `<leader>un` | **Dismiss Notifications** | Noice |
+
 ## 󰘦 Global Search & Pickers
 
 High-frequency actions mapped to single keys under the Space leader:

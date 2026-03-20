@@ -36,6 +36,12 @@ Consolidates all tools for changing code across symbols and files.
 - `]d` / `[d`: Next/Prev diagnostic.
 - `<leader>td`: **Toggle** diagnostics in the buffer.
 
+## 󰙅 Diagnostics & Symbols (Trouble)
+- `<leader>tx`: **Trouble Diagnostics** (List-view).
+- `<leader>ts`: **Trouble Symbols** (LSP list).
+- `<leader>tl`: **Trouble LSP** (References/Definitions/etc).
+- `<leader>tq / tL`: **Quickfix / Loclist** with Trouble.
+
 ## 󱄅 See Also
 - **[navigation.md](./navigation.md):** Structural and plugin-based movement.
 - **[KEYMAPS.md](./KEYMAPS.md):** Core mapping philosophy.

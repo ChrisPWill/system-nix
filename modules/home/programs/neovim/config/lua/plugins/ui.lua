@@ -92,6 +92,53 @@ return {
 		end,
 	},
 	{
+		"noice.nvim",
+		enabled = nixCats("general") or false,
+		event = "DeferredUIEnter",
+		keys = {
+			{ "<leader>un", function() require("noice").cmd("dismiss") end, desc = "Dismiss all Notifications" },
+		},
+		after = function()
+			require("notify").setup({
+				background_colour = "#000000",
+			})
+			require("noice").setup({
+				lsp = {
+					-- override markdown rendering so that **cmp** and other plugins use **Treesitter**
+					override = {
+						["vim.lsp.util.convert_input_to_markdown_lines"] = true,
+						["vim.lsp.util.set_dot_indent"] = true,
+						["nvim.lsp.util.stylize_markdown"] = true,
+					},
+				},
+				-- you can enable a preset for easier configuration
+				presets = {
+					bottom_search = true, -- use a classic bottom cmdline for search
+					command_palette = true, -- position the cmdline and popupmenu together
+					long_message_to_split = true, -- long messages will be sent to a split
+					inc_rename = true, -- enables an input dialog for inc-rename.nvim
+					lsp_doc_border = false, -- add a border to hover docs and signature help
+				},
+			})
+		end,
+	},
+	{
+		"trouble.nvim",
+		enabled = nixCats("general") or false,
+		cmd = "Trouble",
+		keys = {
+			{ "<leader>tx", "<cmd>Trouble diagnostics toggle<cr>", desc = "Toggle: Trouble [X] (Diagnostics)" },
+			{ "<leader>tX", "<cmd>Trouble diagnostics toggle filter.buf=0<cr>", desc = "Toggle: Trouble [X] (Buffer)" },
+			{ "<leader>ts", "<cmd>Trouble symbols toggle focus=false<cr>", desc = "Toggle: Trouble [S]ymbols" },
+			{ "<leader>tl", "<cmd>Trouble lsp toggle focus=false win.position=right<cr>", desc = "Toggle: Trouble [L]SP" },
+			{ "<leader>tq", "<cmd>Trouble qflist toggle<cr>", desc = "Toggle: Trouble [Q]uickfix" },
+			{ "<leader>tL", "<cmd>Trouble loclist toggle<cr>", desc = "Toggle: Trouble [L]oclist" },
+		},
+		after = function()
+			require("trouble").setup({})
+		end,
+	},
+	{
 		"mini.nvim",
 		enabled = nixCats("general") or false,
 		event = "DeferredUIEnter",
@@ -136,4 +183,3 @@ return {
 		end,
 	},
 }
-
