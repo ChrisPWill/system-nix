@@ -57,7 +57,7 @@ return {
 				{ "<leader><leader>_", hidden = true },
 				{ "<leader>/", group = "Search / Pick" },
 				{ "<leader>/_", hidden = true },
-				{ "<leader>A", group = "AI (Avante)" },
+				{ "<leader>A", group = "AI" },
 				{ "<leader>A_", hidden = true },
 				{ "<leader>c", group = "Code" },
 				{ "<leader>c_", hidden = true },

@@ -15,30 +15,47 @@ require("snacks").setup({
 	scope = {},
 })
 
--- Explorer "-"
+-- Snacks Explorer "-"
 vim.keymap.set("n", "-", function()
 	Snacks.explorer.open()
-end, { desc = "Snacks Explorer" })
+end, { desc = "Snacks: Explorer" })
 
--- Terminal "Ctrl-\\"
+-- Snacks Terminal "Ctrl-\\"
 vim.keymap.set("n", "<c-\\>", function()
 	Snacks.terminal.open()
-end, { desc = "Snacks Terminal" })
+end, { desc = "Snacks: Terminal" })
 
--- LazyGit "<leader>_"
-vim.keymap.set("n", "<leader>_", function()
+-- ── Git Group (<leader>g) ───────────────────────────────────────────────────
+
+-- LazyGit "<leader>gg"
+vim.keymap.set("n", "<leader>gg", function()
 	Snacks.lazygit.open()
-end, { desc = "Snacks LazyGit" })
+end, { desc = "Git: LazyGit" })
 
--- Git blame in tig
-vim.keymap.set("n", "<leader>ggb", function()
-	Snacks.terminal.open("tig blame " .. vim.fn.expand("%"))
-end, { desc = "Tig Git Blame" })
-
--- Terminal LazyJJ "<leader>j"
-vim.keymap.set("n", "<leader>j", function()
+-- LazyJJ "<leader>gj"
+vim.keymap.set("n", "<leader>gj", function()
 	Snacks.terminal.open("lazyjj")
-end, { desc = "Snacks Terminal LazyJJ" })
+end, { desc = "Git: LazyJJ (Terminal)" })
+
+-- Git blame in tig "<leader>gb"
+vim.keymap.set("n", "<leader>gb", function()
+	Snacks.terminal.open("tig blame " .. vim.fn.expand("%"))
+end, { desc = "Git: Tig Blame" })
+
+-- Open in Browser (permalink current branch) "<leader>go"
+vim.keymap.set("n", "<leader>go", function()
+	Snacks.gitbrowse.open({
+		what = "permalink",
+	})
+end, { desc = "Git: Open in Browser (Permalink)" })
+
+-- Open in Browser (permalink master) "<leader>gO"
+vim.keymap.set("n", "<leader>gO", function()
+	Snacks.gitbrowse.open({
+		what = "file",
+		branch = "master",
+	})
+end, { desc = "Git: Open in Browser (Master)" })
 
 -- Smart File Finder "<leader>sf"
 vim.keymap.set("n", "<leader>sf", function()
@@ -85,11 +102,6 @@ vim.keymap.set({ "n", "x" }, "<leader>/w", function()
 end, { desc = "Visual Selection or Word" })
 
 -- ── Search Group ─────────────────────────────────────────────────────────────
-
--- Buffer Lines "<leader>/b"
-vim.keymap.set("n", "<leader>/b", function()
-	Snacks.picker.lines()
-end, { desc = "Buffer Lines" })
 
 -- Diagnostics (All) "<leader>D"
 vim.keymap.set("n", "<leader>D", function()
@@ -186,16 +198,3 @@ end, { desc = "Resume Picker" })
 vim.keymap.set("n", "<leader>/u", function()
 	Snacks.picker.undo()
 end, { desc = "Undo History" })
-
-vim.keymap.set("n", "<leader>ggg", function()
-	Snacks.gitbrowse.open({
-		what = "permalink",
-	})
-end, { desc = "Open in Browser (permalink current branch)" })
-
-vim.keymap.set("n", "<leader>ggm", function()
-	Snacks.gitbrowse.open({
-		what = "file",
-		branch = "master",
-	})
-end, { desc = "Open in Browser (permalink master)" })

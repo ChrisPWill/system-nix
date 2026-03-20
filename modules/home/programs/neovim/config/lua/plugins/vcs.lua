@@ -58,17 +58,17 @@ return {
 					map("n", "<leader>gu", gs.undo_stage_hunk, { desc = "Undo stage hunk" })
 					map("n", "<leader>gR", gs.reset_buffer, { desc = "Git Reset buffer" })
 					map("n", "<leader>gp", gs.preview_hunk, { desc = "Preview git hunk" })
-					map("n", "<leader>gb", function()
+					map("n", "<leader>gl", function()
 						gs.blame_line({ full = false })
-					end, { desc = "Git blame line" })
-					map("n", "<leader>gd", gs.diffthis, { desc = "Git diff against index" })
+					end, { desc = "Git: Blame Line (Inline)" })
+					map("n", "<leader>gd", gs.diffthis, { desc = "Git: Diff against index" })
 					map("n", "<leader>gD", function()
 						gs.diffthis("~")
-					end, { desc = "Git diff against last commit" })
+					end, { desc = "Git: Diff against last commit" })
 
 					-- Toggles
-					map("n", "<leader>gtb", gs.toggle_current_line_blame, { desc = "Toggle git blame line" })
-					map("n", "<leader>gtd", gs.toggle_deleted, { desc = "Toggle git show deleted" })
+					map("n", "<leader>gtb", gs.toggle_current_line_blame, { desc = "Toggle: Git blame line" })
+					map("n", "<leader>gtd", gs.toggle_deleted, { desc = "Toggle: Git show deleted" })
 
 					-- Text object
 					map({ "o", "x" }, "ih", ":<C-U>Gitsigns select_hunk<CR>", { desc = "Select git hunk" })
