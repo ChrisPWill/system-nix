@@ -79,7 +79,7 @@ return {
 				{ "<leader>W", group = "Workspace" },
 				{ "<leader>W_", hidden = true },
 				{ "g", group = "Goto" },
-				{ "m", group = "Match / Surround" },
+				{ "m", group = "Match / Surround / Align" },
 				{ "ms", desc = "Add Surround" },
 				{ "md", desc = "Delete Surround" },
 				{ "mr", desc = "Replace Surround" },
@@ -87,6 +87,12 @@ return {
 				{ "mh", desc = "Highlight Surround" },
 				{ "mn", desc = "Surround (Update n lines)" },
 				{ "mm", desc = "Match bracket" },
+				{ "ma", desc = "Align (Regex)" },
+				{ "mA", desc = "Align (Interactive)" },
+				{ "<leader>[", group = "Prev" },
+				{ "<leader>[t", desc = "Prev Tab" },
+				{ "<leader>]", group = "Next" },
+				{ "<leader>]t", desc = "Next Tab" },
 			})
 		end,
 	},
@@ -95,7 +101,13 @@ return {
 		enabled = nixCats("general") or false,
 		event = "DeferredUIEnter",
 		keys = {
-			{ "<leader>un", function() require("noice").cmd("dismiss") end, desc = "Dismiss Notifications" },
+			{
+				"<leader>un",
+				function()
+					require("noice").cmd("dismiss")
+				end,
+				desc = "Dismiss Notifications",
+			},
 		},
 		after = function()
 			require("notify").setup({
@@ -127,7 +139,11 @@ return {
 			{ "<leader>tx", "<cmd>Trouble diagnostics toggle<cr>", desc = "Diagnostics (Workspace)" },
 			{ "<leader>tX", "<cmd>Trouble diagnostics toggle filter.buf=0<cr>", desc = "Diagnostics (Buffer)" },
 			{ "<leader>ts", "<cmd>Trouble symbols toggle focus=false<cr>", desc = "Symbols" },
-			{ "<leader>tl", "<cmd>Trouble lsp toggle focus=false win.position=right<cr>", desc = "LSP Definitions/References" },
+			{
+				"<leader>tl",
+				"<cmd>Trouble lsp toggle focus=false win.position=right<cr>",
+				desc = "LSP Definitions/References",
+			},
 			{ "<leader>tq", "<cmd>Trouble qflist toggle<cr>", desc = "Quickfix" },
 			{ "<leader>tL", "<cmd>Trouble loclist toggle<cr>", desc = "Location List" },
 		},
@@ -161,8 +177,8 @@ return {
 			})
 			require("mini.align").setup({
 				mappings = {
-					start = "&",
-					start_with_preview = "g&",
+					start = "ma",
+					start_with_preview = "mA",
 				},
 			})
 		end,

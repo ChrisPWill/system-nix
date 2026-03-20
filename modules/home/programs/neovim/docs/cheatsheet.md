@@ -7,16 +7,24 @@ This configuration uses a **Hybrid Philosophy** (Helix-inspired navigation + Neo
 | Key | Action |
 | :--- | :--- |
 | `Ctrl-C` | **Comment Line / Selection** |
+| `Ctrl-Alt-J/K` | **Move Selection Down / Up** |
+| `Alt-n / Alt-N` | **Search & Select Next / Prev** |
+| `gn / gp` | **Next / Prev Buffer** |
+| `[t / ]t` | **Next / Prev Tab** |
 | `-` | **Explorer** |
 | `Ctrl-\` | **Terminal** |
+| `Ctrl-C` | **Comment Line / Selection** |
+| `Ctrl-Alt-J/K` | **Move Selection Down / Up** |
+| `Alt-n / Alt-N` | **Search & Select Next / Prev** |
 | `gn / gp` | **Next / Prev Buffer** |
+| `[t / ]t` | **Next / Prev Tab** |
 | `\` | **Jump to characters** |
 | `;` | **Jump to marked line** |
 | `<leader>;` | **Jump to marked file** |
 | `ms / md / mr` | **Add / Delete / Replace Surround** |
 | `mf / mh / mn` | **Find / Highlight / Update Surround** |
-| `&` | **Align (Regex)** |
-| `g&` | **Align (Interactive)** |
+| `ma` | **Align (Regex)** |
+| `mA` | **Align (Interactive)** |
 
 ## 󰘦 Git Group (<leader>g)
 

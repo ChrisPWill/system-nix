@@ -33,15 +33,27 @@ Unlike Helix, which uses "Selection-Action," this configuration retains Neovim's
 - `mf / mh / mn`: Find / Highlight / Update **Surround**
 - `]d / [d`: Next / Previous diagnostic
 
-## 4. Selection & Alignment
-- `&`: Align selections (Regex)
-- `g&`: Align selections (Interactive)
+## 4. Selection, Alignment & Editing
+To preserve standard Neovim behaviors like `&` (Repeat substitute) and `gn` (Search and Select), custom tools are mapped as follows:
+- `&`: **Standard Neovim** (Repeat last substitution)
+- `ma`: Align selections (Regex)
+- `mA`: Align selections (Interactive)
+- `M-n`: Search forward and select (Native `gn`)
+- `M-N`: Search backward and select (Native `gN`)
+- `Ctrl-Alt-j`: Move selection down (Restores `J` for joining lines)
+- `Ctrl-Alt-k`: Move selection up (Restores `K` for keyword lookup)
 
 ## 5. Commenting
 Because `gc` is aligned with Helix for "Center of window," commenting is mapped to `Ctrl-C`:
 - `Ctrl-C`: Toggle comment (Line in Normal mode, Selection in Visual mode)
 
-## 6. Flat Leader Map ("Space" Mode)
+## 6. Buffer & Tab Management
+- `gn`: Next buffer
+- `gp`: Previous buffer
+- `<leader>]t`: Next tab
+- `<leader>[t`: Previous tab
+
+## 7. Flat Leader Map ("Space" Mode)
 High-frequency actions mapped to single keys under the `<leader>` (Space) prefix:
 - `<leader>f`: Find files
 - `<leader>gf`: Find git files
@@ -56,7 +68,7 @@ High-frequency actions mapped to single keys under the `<leader>` (Space) prefix
 - `<leader>r`: **Refactor / Replace group** (`rn`: Rename, `rr`, `rw`, `ra`, `rf`, `rs`, `rv`)
 - `<leader>w`: Window management (mapped to `<C-w>`)
 
-## 7. Domain-Specific Groups
+## 8. Domain-Specific Groups
 Secondary tools are organized into mnemonic groups:
 - `<leader>/`: **Search / Pick** (Grep, Help, Symbols, Undo, Knowledge Base, etc.)
 - `<leader>g`: **Git Group** (LazyGit: `gg`, LazyJJ: `gj`, Tig Blame: `gb`, Inline Blame: `gl`, Stage: `gs`, Reset: `gr`, etc.)
@@ -66,7 +78,7 @@ Secondary tools are organized into mnemonic groups:
 - `<leader>un`: Dismiss notifications
 - `<leader>k`: **Knowledge & Snippets** (Cheat-sheet: `kc`, Keymaps: `km`, Snippets: `ks`/`ka`)
 
-## 8. Plugin-Specific Navigation
+## 9. Plugin-Specific Navigation
 - `]g / [g`: Next/Previous Git hunk
 - `]f / [f`: Next/Previous Function start
 - `]F / [F`: Next/Previous Function end
@@ -78,10 +90,10 @@ Secondary tools are organized into mnemonic groups:
 - `]i / [i`: Next/Previous Conditional (If)
 - `} / {`: **Repeat** Next/Previous motion
 
-## 9. Enhancement over Defaults
+## 10. Enhancement over Defaults
 - `n / N`: Search results are always centered.
 - `<C-d> / <C-u>`: Half-page scrolling is always centered.
 - `j / k`: Smart word-wrap navigation (visual line movement).
 
-## 10. Documentation
+## 11. Documentation
 See **[cheatsheet.md](./cheatsheet.md)** for a quick reference.

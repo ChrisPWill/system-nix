@@ -1,5 +1,9 @@
-vim.keymap.set("v", "J", ":m '>+1<CR>gv=gv", { desc = "Move Down" })
-vim.keymap.set("v", "K", ":m '<-2<CR>gv=gv", { desc = "Move Up" })
+vim.keymap.set("v", "<C-M-j>", ":m '>+1<CR>gv=gv", { desc = "Move Down" })
+vim.keymap.set("v", "<C-M-k>", ":m '<-2<CR>gv=gv", { desc = "Move Up" })
+
+-- Search & Select (Restoring native gn/gN functionality on Alt-n/N)
+vim.keymap.set({ "n", "x" }, "<M-n>", "gn", { desc = "Search forward and select" })
+vim.keymap.set({ "n", "x" }, "<M-N>", "gN", { desc = "Search backward and select" })
 
 -- Scrolling
 vim.keymap.set("n", "<C-d>", "<C-d>zz", { desc = "Scroll Down" })
@@ -63,6 +67,10 @@ vim.keymap.set({ "n", "x", "o" }, "mm", "%", { desc = "Match bracket" })
 -- Buffer navigation
 vim.keymap.set("n", "gn", "<cmd>bnext<CR>", { desc = "Next buffer" })
 vim.keymap.set("n", "gp", "<cmd>bprev<CR>", { desc = "Previous buffer" })
+
+-- Tab navigation
+vim.keymap.set("n", "<leader>]t", "<cmd>tabnext<CR>", { desc = "Next tab" })
+vim.keymap.set("n", "<leader>[t", "<cmd>tabprev<CR>", { desc = "Previous tab" })
 
 -- Diagnostic navigation
 vim.keymap.set("n", "]d", function()
