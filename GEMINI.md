@@ -58,6 +58,11 @@ Common operations are aliased for ease of use across different shells (Zsh, Fish
             - `config/lua/plugins/`: Domain-specific plugin specifications (UI, LSP, Coding, etc.).
             - `config/lua/keymaps.lua`: Global hybrid keybindings.
             - `docs/`: Personal Knowledge Base (Markdown reference guides and KEYMAPS.md).
+        - **Keybinding & Documentation Conventions:**
+            - **Functionality-Focused Descriptions:** All keybinding descriptions (`desc`) and documentation entries MUST describe *what* the action does, not *which plugin* provides it (e.g., use "Explorer" instead of "Snacks Explorer").
+            - **Domain-Specific Grouping:** Organise keybindings into functional domains (e.g., `<leader>g` for Git, `<leader>t` for Toggles, `<leader>r` for Refactoring) rather than grouping by plugin.
+            - **Minimalist Documentation:** Keep cheatsheets and guides high-signal. Remove technical implementation details (like "Floating Window") and use standard mode abbreviations (e.g., `(n/x/o)`) where applicable.
+            - **Clean Code:** Avoid redundant comments that merely repeat what the code or description already states.
 
 - **Knowledge Base Maintenance:**
     - When adding new complex plugins or modifying significant workflows in Neovim, **ALWAYS** update or create a corresponding reference guide in `modules/home/programs/neovim/docs/`.
