@@ -37,7 +37,7 @@ This configuration uses a **Hybrid Philosophy** (Helix-inspired navigation + Neo
 High-frequency actions mapped to single keys under the Space leader:
 - `<leader>f`: **Find Files** (Snacks Picker)
 - `<leader>gf`: **Find Git Files**
-- `<leader>sf`: **Smart Find Files** (Combined Files/Recent/Buffers)
+- `<leader>F`: **Smart Find Files** (Combined Files/Recent/Buffers)
 - `<leader>b`: **Search Buffers**
 - `<leader>d`: **Buffer Diagnostics**
 - `<leader>D`: **Workspace Diagnostics**

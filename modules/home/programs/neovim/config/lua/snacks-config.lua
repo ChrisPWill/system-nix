@@ -50,7 +50,7 @@ vim.keymap.set("n", "<leader>gO", function()
 	})
 end, { desc = "Open in Browser (Master)" })
 
-vim.keymap.set("n", "<leader>sf", function()
+vim.keymap.set("n", "<leader>F", function()
 	Snacks.picker.smart()
 end, { desc = "Smart Find" })
 

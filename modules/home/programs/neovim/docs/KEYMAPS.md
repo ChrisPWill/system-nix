@@ -43,7 +43,7 @@ Additional tools that prioritize visual selection (Helix: Selection-Action):
 High-frequency actions (Pickers and LSP) are mapped to single keys under the `<leader>` (Space) prefix, mirroring Helix's efficient "Space" mode:
 - `<leader>f`: Find files (Snacks Picker)
 - `<leader>gf`: Find git files (Snacks Picker)
-- `<leader>sf`: Smart find files (Files, Recents, Buffers)
+- `<leader>F`: Smart find files (Files, Recents, Buffers)
 - `<leader>b`: Search open buffers
 - `<leader>d`: Document diagnostics (current buffer)
 - `<leader>D`: Workspace diagnostics (all buffers)
