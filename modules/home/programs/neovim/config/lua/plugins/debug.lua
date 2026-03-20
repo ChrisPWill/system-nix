@@ -4,19 +4,15 @@ return {
 	{
 		"nvim-dap",
 		enabled = nixCats("general") or false,
-		-- cmd = { "" },
-		-- event = "",
-		-- ft = "",
 		keys = {
-			{ "<F5>", desc = "Debug: Start/Continue" },
-			{ "<F1>", desc = "Debug: Step Into" },
-			{ "<F2>", desc = "Debug: Step Over" },
-			{ "<F3>", desc = "Debug: Step Out" },
-			{ "<leader>cb", desc = "Code Breakpoint: Toggle" },
-			{ "<leader>cB", desc = "Code Breakpoint: Set" },
-			{ "<F7>", desc = "Debug: See last session result." },
+			{ "<F5>", desc = "Debug (Start/Continue)" },
+			{ "<F1>", desc = "Debug (Step Into)" },
+			{ "<F2>", desc = "Debug (Step Over)" },
+			{ "<F3>", desc = "Debug (Step Out)" },
+			{ "<leader>cb", desc = "Breakpoint (Toggle)" },
+			{ "<leader>cB", desc = "Breakpoint (Condition)" },
+			{ "<F7>", desc = "Debug (Last Result)" },
 		},
-		-- colorscheme = "",
 		load = function(name)
 			vim.cmd.packadd(name)
 			vim.cmd.packadd("dapui")
@@ -26,18 +22,16 @@ return {
 			local dap = require("dap")
 			local dapui = require("dapui")
 
-			-- Basic debugging keymaps, feel free to change to your liking!
-			utils.nmap("<F5>", dap.continue, "Debug: Start/Continue")
-			utils.nmap("<F1>", dap.step_into, "Debug: Step Into")
-			utils.nmap("<F2>", dap.step_over, "Debug: Step Over")
-			utils.nmap("<F3>", dap.step_out, "Debug: Step Out")
-			utils.nmap("<leader>cb", dap.toggle_breakpoint, "Code Breakpoint: Toggle")
+			utils.nmap("<F5>", dap.continue, "Debug (Start/Continue)")
+			utils.nmap("<F1>", dap.step_into, "Debug (Step Into)")
+			utils.nmap("<F2>", dap.step_over, "Debug (Step Over)")
+			utils.nmap("<F3>", dap.step_out, "Debug (Step Out)")
+			utils.nmap("<leader>cb", dap.toggle_breakpoint, "Breakpoint (Toggle)")
 			utils.nmap("<leader>cB", function()
 				dap.set_breakpoint(vim.fn.input("Breakpoint condition: "))
-			end, "Code Breakpoint: Set")
+			end, "Breakpoint (Condition)")
 
-			-- Toggle to see last session result. Without this, you can't see session output in case of unhandled exception.
-			utils.nmap("<F7>", dapui.toggle, "Debug: See last session result.")
+			utils.nmap("<F7>", dapui.toggle, "Debug (Last Result)")
 
 			local help_win = nil
 			dap.listeners.after.event_initialized["dapui_config"] = function()
@@ -59,12 +53,7 @@ return {
 				dapui.close()
 			end
 
-			-- Dap UI setup
-			-- For more information, see |:help nvim-dap-ui|
 			dapui.setup({
-				-- Set icons to characters that are more likely to work in every terminal.
-				--    Feel free to remove or use ones that you like more! :)
-				--    Don't feel like these are good choices.
 				icons = { expanded = "▾", collapsed = "▸", current_frame = "*" },
 				controls = {
 					icons = {
@@ -82,22 +71,15 @@ return {
 			})
 
 			require("nvim-dap-virtual-text").setup({
-				enabled = true, -- enable this plugin (the default)
-				enabled_commands = true, -- create commands DapVirtualTextEnable, DapVirtualTextDisable, DapVirtualTextToggle, (DapVirtualTextForceRefresh for refreshing when debug adapter did not notify its terminal)
-				highlight_changed_variables = true, -- highlight changed values with NvimDapVirtualTextChanged, else always NvimDapVirtualText
-				highlight_new_as_changed = false, -- highlight new variables in the same way as changed variables (if highlight_changed_variables)
-				show_stop_reason = true, -- show stop reason when stopped for exceptions
-				commented = false, -- prefix virtual text with comment string
-				only_first_definition = true, -- only show virtual text at first definition (if there are multiple)
-				all_references = false, -- show virtual text on all all references of the variable (not only definitions)
-				clear_on_continue = false, -- clear virtual text on "continue" (might cause flickering when stepping)
-				--- A callback that determines how a variable is displayed or whether it should be omitted
-				--- variable Variable https://microsoft.github.io/debug-adapter-protocol/specification#Types_Variable
-				--- buf number
-				--- stackframe dap.StackFrame https://microsoft.github.io/debug-adapter-protocol/specification#Types_StackFrame
-				--- node userdata tree-sitter node identified as variable definition of reference (see `:h tsnode`)
-				--- options nvim_dap_virtual_text_options Current options for nvim-dap-virtual-text
-				--- string|nil A text how the virtual text should be displayed or nil, if this variable shouldn't be displayed
+				enabled = true,
+				enabled_commands = true,
+				highlight_changed_variables = true,
+				highlight_new_as_changed = false,
+				show_stop_reason = true,
+				commented = false,
+				only_first_definition = true,
+				all_references = false,
+				clear_on_continue = false,
 				display_callback = function(variable, _, _, _, options)
 					if options.virt_text_pos == "inline" then
 						return " = " .. variable.value
@@ -105,21 +87,11 @@ return {
 						return variable.name .. " = " .. variable.value
 					end
 				end,
-				-- position of virtual text, see `:h nvim_buf_set_extmark()`, default tries to inline the virtual text. Use 'eol' to set to end of line
 				virt_text_pos = vim.fn.has("nvim-0.10") == 1 and "inline" or "eol",
-
-				-- experimental features:
-				all_frames = false, -- show virtual text for all stack frames not only current. Only works for debugpy on my machine.
-				virt_lines = false, -- show virtual lines instead of virtual text (will flicker!)
-				virt_text_win_col = nil, -- position the virtual text at a fixed window column (starting from the first text column) ,
-				-- e.g. 80 to position at column 80, see `:h nvim_buf_set_extmark()`
+				all_frames = false,
+				virt_lines = false,
+				virt_text_win_col = nil,
 			})
-
-			-- NOTE: Install lang specific config
-			-- either in here, or in a separate plugin spec as demonstrated for go below.
-			-- for _, language in ipairs({ "typescript", "javascript" }) do
-			-- 	dap.configurations[language] = {}
-			-- end
 		end,
 	},
 	{
@@ -136,7 +108,7 @@ return {
 		on_plugin = { "nvim-dap" },
 		after = function()
 			require("dap-vscode-js").setup({
-				adapters = { "pwa-node", "pwa-chrome", "pwa-msedge", "node-terminal", "pwa-extensionHost" }, -- which adapters to register in nvim-dap
+				adapters = { "pwa-node", "pwa-chrome", "pwa-msedge", "node-terminal", "pwa-extensionHost" },
 			})
 		end,
 	},

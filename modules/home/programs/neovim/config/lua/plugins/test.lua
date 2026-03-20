@@ -28,11 +28,11 @@ return {
 				adapters = adapters,
 			})
 
-			utils.nmap("<leader>ctt", require("neotest").run.run, "[C]ode [T]est Single")
+			utils.nmap("<leader>ctt", require("neotest").run.run, "Test (Nearest)")
 			utils.nmap("<leader>cT", function()
 				require("neotest").run.run(vim.fn.expand("%"))
-			end, "[C]ode [T]est File")
-			utils.nmap("<leader>cts", require("neotest").run.stop, "[C]ode [T]est [s]top")
+			end, "Test (File)")
+			utils.nmap("<leader>cts", require("neotest").run.stop, "Test (Stop)")
 		end,
 	},
 }

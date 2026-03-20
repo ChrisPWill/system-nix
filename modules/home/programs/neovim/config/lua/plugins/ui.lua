@@ -2,7 +2,6 @@ local utils = require("utils")
 
 return {
 	-- https://github.com/nvim-lualine/lualine.nvim
-	-- Fast statusline
 	{
 		"lualine.nvim",
 		enabled = nixCats("general") or false,
@@ -65,14 +64,14 @@ return {
 				{ "<leader>g_", hidden = true },
 				{ "<leader>k", group = "Knowledge / Snippets" },
 				{ "<leader>k_", hidden = true },
-				{ "<leader>ka", desc = "Snippet: Add" },
-				{ "<leader>kc", desc = "Knowledge: Cheat-sheet" },
-				{ "<leader>km", desc = "Knowledge: Keymaps Guide" },
-				{ "<leader>kr", desc = "Knowledge: Neovim Quickref" },
-				{ "<leader>ks", desc = "Snippet: Search / Edit" },
+				{ "<leader>ka", desc = "Snippet (Add)" },
+				{ "<leader>kc", desc = "Cheat-sheet" },
+				{ "<leader>km", desc = "Keymaps Guide" },
+				{ "<leader>kr", desc = "Neovim Quickref" },
+				{ "<leader>ks", desc = "Snippet (Search/Edit)" },
 				{ "<leader>r", group = "Refactor / Replace" },
 				{ "<leader>r_", hidden = true },
-				{ "<leader>rn", desc = "Refactor: Rename Symbol" },
+				{ "<leader>rn", desc = "Rename" },
 				{ "<leader>t", group = "Toggles" },
 				{ "<leader>t_", hidden = true },
 				{ "<leader>w", group = "Window Management" },
@@ -81,12 +80,12 @@ return {
 				{ "<leader>W_", hidden = true },
 				{ "g", group = "Goto" },
 				{ "m", group = "Match / Surround" },
-				{ "ms", desc = "Add surround (Visual: selection, Normal: motion)" },
-				{ "md", desc = "Delete surround" },
-				{ "mr", desc = "Replace surround" },
-				{ "mf", desc = "Find surround" },
-				{ "mh", desc = "Highlight surround" },
-				{ "mn", desc = "Update n lines for surround" },
+				{ "ms", desc = "Add Surround" },
+				{ "md", desc = "Delete Surround" },
+				{ "mr", desc = "Replace Surround" },
+				{ "mf", desc = "Find Surround" },
+				{ "mh", desc = "Highlight Surround" },
+				{ "mn", desc = "Surround (Update n lines)" },
 				{ "mm", desc = "Match bracket" },
 			})
 		end,
@@ -96,7 +95,7 @@ return {
 		enabled = nixCats("general") or false,
 		event = "DeferredUIEnter",
 		keys = {
-			{ "<leader>un", function() require("noice").cmd("dismiss") end, desc = "Dismiss all Notifications" },
+			{ "<leader>un", function() require("noice").cmd("dismiss") end, desc = "Dismiss Notifications" },
 		},
 		after = function()
 			require("notify").setup({
@@ -104,20 +103,18 @@ return {
 			})
 			require("noice").setup({
 				lsp = {
-					-- override markdown rendering so that **cmp** and other plugins use **Treesitter**
 					override = {
 						["vim.lsp.util.convert_input_to_markdown_lines"] = true,
 						["vim.lsp.util.set_dot_indent"] = true,
 						["nvim.lsp.util.stylize_markdown"] = true,
 					},
 				},
-				-- you can enable a preset for easier configuration
 				presets = {
-					bottom_search = true, -- use a classic bottom cmdline for search
-					command_palette = true, -- position the cmdline and popupmenu together
-					long_message_to_split = true, -- long messages will be sent to a split
-					inc_rename = true, -- enables an input dialog for inc-rename.nvim
-					lsp_doc_border = false, -- add a border to hover docs and signature help
+					bottom_search = true,
+					command_palette = true,
+					long_message_to_split = true,
+					inc_rename = true,
+					lsp_doc_border = false,
 				},
 			})
 		end,
@@ -127,12 +124,12 @@ return {
 		enabled = nixCats("general") or false,
 		cmd = "Trouble",
 		keys = {
-			{ "<leader>tx", "<cmd>Trouble diagnostics toggle<cr>", desc = "Toggle: Trouble [X] (Diagnostics)" },
-			{ "<leader>tX", "<cmd>Trouble diagnostics toggle filter.buf=0<cr>", desc = "Toggle: Trouble [X] (Buffer)" },
-			{ "<leader>ts", "<cmd>Trouble symbols toggle focus=false<cr>", desc = "Toggle: Trouble [S]ymbols" },
-			{ "<leader>tl", "<cmd>Trouble lsp toggle focus=false win.position=right<cr>", desc = "Toggle: Trouble [L]SP" },
-			{ "<leader>tq", "<cmd>Trouble qflist toggle<cr>", desc = "Toggle: Trouble [Q]uickfix" },
-			{ "<leader>tL", "<cmd>Trouble loclist toggle<cr>", desc = "Toggle: Trouble [L]oclist" },
+			{ "<leader>tx", "<cmd>Trouble diagnostics toggle<cr>", desc = "Diagnostics (Workspace)" },
+			{ "<leader>tX", "<cmd>Trouble diagnostics toggle filter.buf=0<cr>", desc = "Diagnostics (Buffer)" },
+			{ "<leader>ts", "<cmd>Trouble symbols toggle focus=false<cr>", desc = "Symbols" },
+			{ "<leader>tl", "<cmd>Trouble lsp toggle focus=false win.position=right<cr>", desc = "LSP Definitions/References" },
+			{ "<leader>tq", "<cmd>Trouble qflist toggle<cr>", desc = "Quickfix" },
+			{ "<leader>tL", "<cmd>Trouble loclist toggle<cr>", desc = "Location List" },
 		},
 		after = function()
 			require("trouble").setup({})
@@ -148,12 +145,12 @@ return {
 			require("mini.ai").setup()
 			require("mini.surround").setup({
 				mappings = {
-					add = "ms", -- Match surround
-					delete = "md", -- Match delete
-					find = "mf", -- Match find
-					highlight = "mh", -- Match highlight
-					replace = "mr", -- Match replace
-					update_n_lines = "mn", -- Match n lines
+					add = "ms",
+					delete = "md",
+					find = "mf",
+					highlight = "mh",
+					replace = "mr",
+					update_n_lines = "mn",
 				},
 			})
 			require("mini.align").setup({
@@ -169,7 +166,7 @@ return {
 		enabled = nixCats("general") or false,
 		ft = "markdown",
 		after = function()
-			utils.nmap("<leader>tm", "<cmd>Markview toggle<cr>", "Toggle: [M]arkview")
+			utils.nmap("<leader>tm", "<cmd>Markview toggle<cr>", "Markview")
 		end,
 	},
 	{

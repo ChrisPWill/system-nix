@@ -12,9 +12,6 @@ return {
 			end
 			require("lint").linters.clippy.ignore_exitcode = true
 			require("lint").linters_by_ft = {
-				-- NOTE: download some linters in lspsAndRuntimeDeps
-				-- and configure them here
-				-- markdown = {'vale',},
 				javascript = nixCats("node") and jslint or nil,
 				typescript = nixCats("node") and jslint or nil,
 				go = nixCats("go") and { "golangcilint" } or nil,
@@ -45,7 +42,7 @@ return {
 					})
 				end,
 				mode = { "n", "v" },
-				desc = "[C]ode [F]ormat",
+				desc = "Format",
 			},
 			{
 				"<leader>tf",
@@ -58,7 +55,7 @@ return {
 						vim.notify("Autoformat disabled")
 					end
 				end,
-				desc = "Toggle: [F]ormatting",
+				desc = "Autoformat",
 			},
 		},
 		after = function()
@@ -76,11 +73,8 @@ return {
 						end
 						return {}
 					end,
-					-- NOTE: download some formatters in lspsAndRuntimeDeps
-					-- and configure them here
 					lua = nixCats("lua") and { "treefmt", "stylua", stop_after_first = true } or nil,
 					go = nixCats("go") and { "treefmt", "gofmt", "golint", stop_after_first = true } or nil,
-					-- Use a sub-list to run only the first available formatter
 					javascript = nixCats("node") and jslint or nil,
 					typescript = nixCats("node") and jslint or nil,
 					nix = nixCats("nix") and { "treefmt", "alejandra", stop_after_first = true } or nil,
@@ -111,7 +105,6 @@ return {
 			vim.api.nvim_create_autocmd("BufWritePre", {
 				pattern = "*",
 				callback = function(args)
-					-- Disable with a global or buffer-local variable
 					if vim.g.disable_autoformat or vim.b[args.buf].disable_autoformat then
 						return
 					end
@@ -127,7 +120,7 @@ return {
 			vim.keymap.set("n", "<leader>td", function()
 				vim.diagnostic.enable(not vim.diagnostic.is_enabled())
 				vim.notify("Diagnostics " .. (vim.diagnostic.is_enabled() and "enabled" or "disabled"))
-			end, { desc = "Toggle: [D]iagnostics" })
+			end, { desc = "Diagnostics" })
 		end,
 	},
 	{
@@ -143,7 +136,7 @@ return {
 					})
 				end,
 				mode = "n",
-				desc = "[R]eplace (Standard)",
+				desc = "Search & Replace",
 			},
 			{
 				"<leader>rw",
@@ -156,7 +149,7 @@ return {
 					})
 				end,
 				mode = "n",
-				desc = "[R]eplace [W]ord",
+				desc = "Replace Word",
 			},
 			{
 				"<leader>rf",
@@ -169,7 +162,7 @@ return {
 					})
 				end,
 				mode = "n",
-				desc = "[R]eplace in [F]ile",
+				desc = "Replace in File",
 			},
 			{
 				"<leader>ra",
@@ -180,13 +173,12 @@ return {
 					})
 				end,
 				mode = "n",
-				desc = "[R]eplace [A]st-grep",
+				desc = "Replace (AST-grep)",
 			},
 			{
 				"<leader>rs",
 				function()
 					local search = vim.fn.getreg("/")
-					-- surround with \b if "word" search (such as when pressing `*`)
 					if search and vim.startswith(search, "\\<") and vim.endswith(search, "\\>") then
 						search = "\\b" .. search:sub(3, -3) .. "\\b"
 					elseif search and vim.startswith(search, "\\V") then
@@ -200,7 +192,7 @@ return {
 					})
 				end,
 				mode = "n",
-				desc = "[R]eplace from [/] Register",
+				desc = "Replace (Search Register)",
 			},
 			{
 				"<leader>rv",
@@ -210,7 +202,7 @@ return {
 					})
 				end,
 				mode = "x",
-				desc = "[R]eplace [V]isual Selection",
+				desc = "Replace Selection",
 			},
 		},
 		after = function()
@@ -238,29 +230,12 @@ return {
 		event = "DeferredUIEnter",
 		after = function()
 			require("actions-preview").setup({
-				-- options for vim.diff(): https://neovim.io/doc/user/lua.html#vim.diff()
 				diff = {
 					ctxlen = 3,
 				},
-
-				-- priority list of external command to highlight diff
-				-- disabled by defalt, must be set by yourself
-				highlight_command = {
-					-- require("actions-preview.highlight").delta(),
-					-- require("actions-preview.highlight").diff_so_fancy(),
-					-- require("actions-preview.highlight").diff_highlight(),
-				},
-
-				-- priority list of preferred backend
 				backend = { "snacks", "nui", "minipick" },
-
-				-- options for nui.nvim components
 				nui = {
-					-- component direction. "col" or "row"
 					dir = "col",
-					-- keymap for selection component: https://github.com/MunifTanjim/nui.nvim/tree/main/lua/nui/menu#keymap
-					keymap = nil,
-					-- options for nui Layout component: https://github.com/MunifTanjim/nui.nvim/tree/main/lua/nui/layout
 					layout = {
 						position = "50%",
 						size = {
@@ -271,7 +246,6 @@ return {
 						min_height = 10,
 						relative = "editor",
 					},
-					-- options for preview area: https://github.com/MunifTanjim/nui.nvim/tree/main/lua/nui/popup
 					preview = {
 						size = "60%",
 						border = {
@@ -279,7 +253,6 @@ return {
 							padding = { 0, 1 },
 						},
 					},
-					-- options for selection area: https://github.com/MunifTanjim/nui.nvim/tree/main/lua/nui/menu
 					select = {
 						size = "40%",
 						border = {
@@ -288,9 +261,6 @@ return {
 						},
 					},
 				},
-
-				--- options for snacks picker
-				---@type snacks.picker.Config
 				snacks = {
 					layout = { preset = "default" },
 				},

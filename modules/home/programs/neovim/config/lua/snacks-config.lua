@@ -15,115 +15,95 @@ require("snacks").setup({
 	scope = {},
 })
 
--- Snacks Explorer "-"
 vim.keymap.set("n", "-", function()
 	Snacks.explorer.open()
-end, { desc = "Snacks: Explorer" })
+end, { desc = "Explorer" })
 
--- Snacks Terminal "Ctrl-\\"
 vim.keymap.set("n", "<c-\\>", function()
 	Snacks.terminal.open()
-end, { desc = "Snacks: Terminal" })
+end, { desc = "Terminal" })
 
 -- ── Git Group (<leader>g) ───────────────────────────────────────────────────
 
--- LazyGit "<leader>gg"
 vim.keymap.set("n", "<leader>gg", function()
 	Snacks.lazygit.open()
-end, { desc = "Git: LazyGit" })
+end, { desc = "LazyGit" })
 
--- LazyJJ "<leader>gj"
 vim.keymap.set("n", "<leader>gj", function()
 	Snacks.terminal.open("lazyjj")
-end, { desc = "Git: LazyJJ (Terminal)" })
+end, { desc = "Jujutsu (LazyJJ)" })
 
--- Git blame in tig "<leader>gb"
 vim.keymap.set("n", "<leader>gb", function()
 	Snacks.terminal.open("tig blame " .. vim.fn.expand("%"))
-end, { desc = "Git: Tig Blame" })
+end, { desc = "Blame (Tig)" })
 
--- Open in Browser (permalink current branch) "<leader>go"
 vim.keymap.set("n", "<leader>go", function()
 	Snacks.gitbrowse.open({
 		what = "permalink",
 	})
-end, { desc = "Git: Open in Browser (Permalink)" })
+end, { desc = "Open in Browser (Permalink)" })
 
--- Open in Browser (permalink master) "<leader>gO"
 vim.keymap.set("n", "<leader>gO", function()
 	Snacks.gitbrowse.open({
 		what = "file",
 		branch = "master",
 	})
-end, { desc = "Git: Open in Browser (Master)" })
+end, { desc = "Open in Browser (Master)" })
 
--- Smart File Finder "<leader>sf"
 vim.keymap.set("n", "<leader>sf", function()
 	Snacks.picker.smart()
-end, { desc = "Smart Find Files" })
+end, { desc = "Smart Find" })
 
--- Buffer Search "<leader>b"
 vim.keymap.set("n", "<leader>b", function()
 	Snacks.picker.buffers()
 end, { desc = "Search Buffers" })
 
 -- ── Find ──────────────────────────────────────────────────────────────────────
 
--- Find Files "<leader>f"
 vim.keymap.set("n", "<leader>f", function()
 	Snacks.picker.files()
-end, { desc = "Find Files" })
+end, { desc = "Files" })
 
--- Find Git Files "<leader>gf"
 vim.keymap.set("n", "<leader>gf", function()
 	Snacks.picker.git_files()
-end, { desc = "Find Git Files" })
+end, { desc = "Git Files" })
 
 -- ── Grep ──────────────────────────────────────────────────────────────────────
 
--- Buffer Lines "<leader>/b"
 vim.keymap.set("n", "<leader>/b", function()
 	Snacks.picker.lines()
 end, { desc = "Buffer Lines" })
 
--- Grep Open Buffers "<leader>/B"
 vim.keymap.set("n", "<leader>/B", function()
 	Snacks.picker.grep_buffers()
-end, { desc = "Grep Open Buffers" })
+end, { desc = "Grep (Buffers)" })
 
--- Grep All "<leader>//"
 vim.keymap.set("n", "<leader>//", function()
 	Snacks.picker.grep()
-end, { desc = "Search All (Grep)" })
+end, { desc = "Grep (All)" })
 
--- Grep Visual / Word "<leader>/w"
 vim.keymap.set({ "n", "x" }, "<leader>/w", function()
 	Snacks.picker.grep_word()
-end, { desc = "Visual Selection or Word" })
+end, { desc = "Grep (Word/Selection)" })
 
 -- ── Search Group ─────────────────────────────────────────────────────────────
 
--- Diagnostics (All) "<leader>D"
 vim.keymap.set("n", "<leader>D", function()
 	Snacks.picker.diagnostics()
 end, { desc = "Workspace Diagnostics" })
 
--- Buffer Diagnostics "<leader>d"
 vim.keymap.set("n", "<leader>d", function()
 	Snacks.picker.diagnostics_buffer()
 end, { desc = "Buffer Diagnostics" })
 
--- Help Pages "<leader>/h"
 vim.keymap.set("n", "<leader>/h", function()
 	Snacks.picker.help()
-end, { desc = "Help Pages" })
+end, { desc = "Help" })
 
--- Jumps "<leader>/j"
 vim.keymap.set("n", "<leader>/j", function()
 	Snacks.picker.jumps()
 end, { desc = "Jumps" })
 
--- Knowledge Base (Files) "<leader>/k"
 vim.keymap.set("n", "<leader>/k", function()
 	Snacks.picker.files({
 		cwd = nixCats.extra("docsPath"),
@@ -134,9 +114,8 @@ vim.keymap.set("n", "<leader>/k", function()
 			end
 		end,
 	})
-end, { desc = "Knowledge Base (Files)" })
+end, { desc = "Knowledge Base" })
 
--- Knowledge Base (Grep) "<leader>/K"
 vim.keymap.set("n", "<leader>/K", function()
 	Snacks.picker.grep({
 		cwd = nixCats.extra("docsPath"),
@@ -149,52 +128,42 @@ vim.keymap.set("n", "<leader>/K", function()
 	})
 end, { desc = "Knowledge Base (Grep)" })
 
--- Cheat-sheet "<leader>kc"
 vim.keymap.set("n", "<leader>kc", function()
 	utils.viewDocFile((nixCats.extra("docsPath") or "") .. "/cheatsheet.md")
-end, { desc = "Open Neovim Cheat-sheet" })
+end, { desc = "Cheat-sheet" })
 
--- Keymaps Guide "<leader>km"
 vim.keymap.set("n", "<leader>km", function()
 	utils.viewDocFile((nixCats.extra("docsPath") or "") .. "/KEYMAPS.md")
-end, { desc = "Open Keymaps Guide" })
+end, { desc = "Keymaps Guide" })
 
--- Neovim Quickref "<leader>kr"
 vim.keymap.set("n", "<leader>kr", function()
 	utils.viewDocFile(vim.api.nvim_get_runtime_file("doc/quickref.txt", false)[1])
-end, { desc = "Open Neovim Quickref" })
+end, { desc = "Neovim Quickref" })
 
--- Keymaps Search "<leader>/m"
 vim.keymap.set("n", "<leader>/m", function()
 	Snacks.picker.keymaps()
-end, { desc = "Keymaps Search" })
+end, { desc = "Keymaps" })
 
--- Location List "<leader>/l"
 vim.keymap.set("n", "<leader>/l", function()
 	Snacks.picker.loclist()
 end, { desc = "Location List" })
 
--- Marks "<leader>/;"
 vim.keymap.set("n", "<leader>/;", function()
 	Snacks.picker.marks()
 end, { desc = "Marks" })
 
--- Man Pages "<leader>/M"
 vim.keymap.set("n", "<leader>/M", function()
 	Snacks.picker.man()
 end, { desc = "Man Pages" })
 
--- Quickfix List "<leader>/q"
 vim.keymap.set("n", "<leader>/q", function()
 	Snacks.picker.qflist()
 end, { desc = "Quickfix List" })
 
--- Resume "<leader>/R"
 vim.keymap.set("n", "<leader>/R", function()
 	Snacks.picker.resume()
-end, { desc = "Resume Picker" })
+end, { desc = "Resume" })
 
--- Undo History "<leader>/u"
 vim.keymap.set("n", "<leader>/u", function()
 	Snacks.picker.undo()
-end, { desc = "Undo History" })
+end, { desc = "Undo" })

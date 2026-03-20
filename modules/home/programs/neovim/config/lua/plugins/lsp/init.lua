@@ -1,9 +1,6 @@
 local M = {}
 
 function M.on_attach(_, bufnr)
-	-- we create a function that lets us more easily define mappings specific
-	-- for LSP related items. It sets the mode, buffer and description for us each time.
-
 	local nmap = function(keys, func, desc, extras)
 		if desc then
 			desc = "LSP: " .. desc
@@ -16,7 +13,7 @@ function M.on_attach(_, bufnr)
 
 	nmap("<leader>rn", function()
 		return ":IncRename " .. vim.fn.expand("<cword>")
-	end, "[R]ename (Incremental)", { expr = true })
+	end, "Rename", { expr = true })
 
 	nmap("<leader>a", function()
 		if vim.bo.filetype == "rust" then
@@ -24,55 +21,52 @@ function M.on_attach(_, bufnr)
 		else
 			require("actions-preview").code_actions()
 		end
-	end, "Code [A]ction (Preview)")
+	end, "Code Actions")
 
-	nmap("gd", vim.lsp.buf.definition, "[G]oto [D]efinition")
-	nmap("gy", vim.lsp.buf.type_definition, "[G]oto T[y]pe Definition")
+	nmap("gd", vim.lsp.buf.definition, "Definition")
+	nmap("gy", vim.lsp.buf.type_definition, "Type Definition")
 
 	if nixCats("general") then
 		require("snacks")
 		nmap("gr", function()
 			Snacks.picker.lsp_references()
-		end, "[G]oto [R]eferences")
+		end, "References")
 		nmap("gI", function()
 			Snacks.picker.lsp_implementations()
-		end, "[G]oto [I]mplementation")
+		end, "Implementation")
 		nmap("<leader>s", function()
 			Snacks.picker.lsp_symbols()
-		end, "Document [S]ymbols")
+		end, "Symbols (Document)")
 		nmap("<leader>/s", function()
 			Snacks.picker.lsp_symbols()
-		end, "Search: Document [S]ymbols")
+		end, "Symbols (Document)")
 		nmap("<leader>S", function()
 			Snacks.picker.lsp_workspace_symbols()
-		end, "[W]orkspace [S]ymbols")
+		end, "Symbols (Workspace)")
 		nmap("<leader>/S", function()
 			Snacks.picker.lsp_workspace_symbols()
-		end, "Search: [W]orkspace [S]ymbols")
+		end, "Symbols (Workspace)")
 	end
 
-	-- See `:help K` for why this keymap
 	nmap("K", function()
 		if vim.bo.filetype == "rust" then
 			vim.cmd.RustLsp({ "hover", "actions" })
 		else
 			vim.lsp.buf.hover()
 		end
-	end, "Hover Documentation")
-	nmap("<C-k>", vim.lsp.buf.signature_help, "Signature Documentation")
+	end, "Hover")
+	nmap("<C-k>", vim.lsp.buf.signature_help, "Signature")
 
-	-- Lesser used LSP functionality
-	nmap("gD", vim.lsp.buf.declaration, "[G]oto [D]eclaration")
-	nmap("<leader>Wa", vim.lsp.buf.add_workspace_folder, "[W]orkspace [A]dd Folder")
-	nmap("<leader>Wr", vim.lsp.buf.remove_workspace_folder, "[W]orkspace [R]emove Folder")
+	nmap("gD", vim.lsp.buf.declaration, "Declaration")
+	nmap("<leader>Wa", vim.lsp.buf.add_workspace_folder, "Workspace (Add Folder)")
+	nmap("<leader>Wr", vim.lsp.buf.remove_workspace_folder, "Workspace (Remove Folder)")
 	nmap("<leader>Wl", function()
 		print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
-	end, "[W]orkspace [L]ist Folders")
+	end, "Workspace (List Folders)")
 
-	-- Create a command `:Format` local to the LSP buffer
 	vim.api.nvim_buf_create_user_command(bufnr, "Format", function(_)
 		vim.lsp.buf.format()
-	end, { desc = "Format current buffer with LSP" })
+	end, { desc = "Format (LSP)" })
 end
 
 return M
