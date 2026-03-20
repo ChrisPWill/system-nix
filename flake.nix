@@ -51,6 +51,8 @@
 
     devshell.url = "github:numtide/devshell";
     devshell.inputs.nixpkgs.follows = "nixpkgs";
+
+    nix-cachyos-kernel.url = "github:xddxdd/nix-cachyos-kernel";
   };
 
   # Load config via blueprint https://github.com/numtide/blueprint
@@ -59,5 +61,9 @@
       inherit inputs;
 
       nixpkgs.config.allowUnfree = true;
+
+      nixpkgs.overlays = [
+        inputs.nix-cachyos-kernel.overlays.default
+      ];
     };
 }

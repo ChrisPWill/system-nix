@@ -8,6 +8,10 @@
   ];
 
   config = {
+    nixpkgs.overlays = [
+      inputs.nix-cachyos-kernel.overlays.default
+    ];
+
     boot.kernelModules = ["ntsync"];
 
     nix.gc.dates = "weekly";
