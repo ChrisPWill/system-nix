@@ -96,4 +96,4 @@ Secondary tools are organized into mnemonic groups:
 - `j / k`: Smart word-wrap navigation (visual line movement).
 
 ## 11. Documentation
-See **[cheatsheet.md](./cheatsheet.md)** for a quick reference.
+See **[cheatsheet.md](./cheatsheet.md)** for a quick reference, and **[clobbered-keybinds.md](./clobbered-keybinds.md)** for a full list of overridden standard Neovim mappings.
