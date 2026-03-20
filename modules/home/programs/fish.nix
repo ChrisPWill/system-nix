@@ -23,6 +23,11 @@
         # Enables vi(m)-like key bindings (insert mode by default)
         fish_vi_key_bindings
 
+        # TV picker for nvim
+        for mode in default insert
+            bind --mode $mode \eo 'tv-nvim; commandline -f repaint'
+        end
+
         ${pkgs.fastfetch}/bin/fastfetch -s title:separator:os:cpu:memory:host:chassis:kernel:de:wm:wmtheme:swap:disk:battery:poweradapter:uptime:separator:shell:font:terminal:terminalfont:break:colors
       '';
 

@@ -50,6 +50,26 @@
       extraConfig = ''
         # Shows system information on startup
         ${pkgs.fastfetch}/bin/fastfetch -s title:separator:os:cpu:memory:host:chassis:kernel:de:wm:wmtheme:swap:disk:battery:poweradapter:uptime:separator:shell:font:terminal:terminalfont:break:colors
+
+        # Bind custom keybinding for television file picker
+        $env.config = (
+          $env.config
+          | upsert keybindings (
+              $env.config.keybindings
+              | append [
+                  {
+                      name: tv_nvim,
+                      modifier: Alt,
+                      keycode: char_o,
+                      mode: [vi_normal, vi_insert, emacs],
+                      event: {
+                          send: executehostcommand,
+                          cmd: "tv-nvim"
+                      }
+                  }
+              ]
+          )
+        )
       '';
 
       shellAliases.fg = "job unfreeze";

@@ -242,6 +242,30 @@
         fi
       '';
 
+      initContent = ''
+        tv-nvim-widget() {
+          # Notify ZLE that we are going to use the terminal
+          zle -I
+
+          # Run the command with stdin redirected to the terminal
+          # Also, use 'command' if it's a binary, or ensure the function is defined
+          tv-nvim < /dev/tty
+
+          # Redraw the prompt so your line doesn't look broken
+          zle reset-prompt
+        }
+
+        zle -N tv-nvim-widget
+
+        # Define extra bindings for zsh-vi-mode
+        function zvm_after_init() {
+          zvm_bindkey viins '^[o' tv-nvim-widget
+          # Re-bind Atuin and Television which are often clobbered by vi-mode
+          zvm_bindkey viins '^R' atuin-search-viins
+          zvm_bindkey viins '^T' tv-smart-autocomplete
+        }
+      '';
+
       plugins = [
         {
           name = "vi-mode";

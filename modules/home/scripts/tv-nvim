@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+# Use television to pick files and open them in nvim
+files=$(tv files --inline --no-status-bar)
+if [[ -n "$files" ]]; then
+    nvim $files
+fi
