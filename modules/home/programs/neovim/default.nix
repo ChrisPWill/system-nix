@@ -73,6 +73,11 @@ in {
             ripgrep
             prettierd
             marksman
+            fish-lsp
+            nodePackages.bash-language-server
+            shellcheck
+            shfmt
+            tombi
           ];
           lua = with pkgs; [
             lua-language-server
@@ -92,7 +97,6 @@ in {
             rust-analyzer
             rustfmt
             clippy
-            tombi
           ];
           python = with pkgs; [
             basedpyright
@@ -117,6 +121,7 @@ in {
           web = with pkgs; [
             nodePackages.vscode-langservers-extracted
             nodePackages.yaml-language-server
+            nodePackages.tailwindcss
           ];
         };
 
@@ -191,6 +196,7 @@ in {
             actions-preview-nvim
             noice-nvim
             trouble-nvim
+            nvim-highlight-colors
           ];
           node = with pkgs.vimPlugins; [
             typescript-tools-nvim

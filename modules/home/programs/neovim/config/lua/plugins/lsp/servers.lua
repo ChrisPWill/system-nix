@@ -23,7 +23,7 @@ return {
 	},
 	{
 		"tombi",
-		enabled = nixCats("rust") or false,
+		enabled = nixCats("general") or false,
 		lsp = {
 			cmd = { "tombi", "lsp" },
 			fileTypes = { "toml" },
@@ -213,6 +213,39 @@ return {
 		enabled = nixCats("general") or false,
 		lsp = {
 			filetypes = { "yaml", "yaml.dockerfile", "yaml.gitlab" },
+			settings = {
+				yaml = {
+					schemaStore = {
+						enable = true,
+						url = "https://www.schemastore.org/api/json/catalog.json",
+					},
+					schemas = {
+						["https://json.schemastore.org/github-workflow.json"] = "/.github/workflows/*",
+						["https://json.schemastore.org/github-action.json"] = "/.github/actions/*",
+					},
+				},
+			},
+		},
+	},
+	{
+		"tailwindcss",
+		enabled = nixCats("web") or false,
+		lsp = {
+			filetypes = { "html", "javascript", "typescript", "javascriptreact", "typescriptreact", "css", "scss", "less" },
+		},
+	},
+	{
+		"bashls",
+		enabled = nixCats("general") or false,
+		lsp = {
+			filetypes = { "sh", "bash", "zsh" },
+		},
+	},
+	{
+		"fish_lsp",
+		enabled = nixCats("general") or false,
+		lsp = {
+			filetypes = { "fish" },
 		},
 	},
 }

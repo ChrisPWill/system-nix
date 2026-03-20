@@ -46,6 +46,7 @@ This configuration uses a **Hybrid Philosophy** (Helix-inspired navigation + Neo
 | `<leader>td` | **In-buffer Diagnostics** |
 | `<leader>tf` | **Autoformat** |
 | `<leader>tm` | **Markview** |
+| `<leader>th` | **Highlight Colors** |
 | `<leader>tx` | **Diagnostics (Trouble)** |
 | `<leader>ts` | **Symbols (Trouble)** |
 | `<leader>tl` | **LSP (Trouble)** |
@@ -115,5 +116,6 @@ Find more info in these dedicated reference guides (Browse with `<leader>/k`):
 - **[vcs.md](./vcs.md):** Git workflow and Jujutsu integration.
 - **[snippets.md](./snippets.md):** Managing and using Snippets.
 - **[testing.md](./testing.md):** Integrated test runner.
+- **[languages.md](./languages.md):** Comprehensive language support.
 - **[rust.md](./rust.md) / [typescript.md](./typescript.md) / [nix.md](./nix.md):** Language-specific tools.
 - **[README.md](../README.md):** Architectural overview.

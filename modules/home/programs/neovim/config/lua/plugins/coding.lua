@@ -17,6 +17,9 @@ return {
 				go = nixCats("go") and { "golangcilint" } or nil,
 				rust = nixCats("rust") and { "clippy" } or nil,
 				toml = nixCats("rust") and { "tombi" } or nil,
+				sh = nixCats("general") and { "shellcheck" } or nil,
+				bash = nixCats("general") and { "shellcheck" } or nil,
+				zsh = nixCats("general") and { "shellcheck" } or nil,
 			}
 
 			vim.api.nvim_create_autocmd({ "CursorHold", "BufWritePost", "InsertLeave" }, {
@@ -79,7 +82,7 @@ return {
 					typescript = nixCats("node") and jslint or nil,
 					nix = nixCats("nix") and { "treefmt", "alejandra", stop_after_first = true } or nil,
 					rust = nixCats("rust") and { "treefmt", "rustfmt", stop_after_first = true } or nil,
-					toml = nixCats("rust") and { "treefmt", "tombi", stop_after_first = true } or nil,
+					toml = nixCats("general") and { "treefmt", "tombi", stop_after_first = true } or nil,
 					python = nixCats("python") and { "ruff_organize_imports", lsp_format = "last" } or nil,
 					java = nixCats("java") and { "google-java-format" } or nil,
 					kotlin = nixCats("kotlin") and { "ktlint" } or nil,
@@ -89,6 +92,10 @@ return {
 					markdown = nixCats("general") and { "treefmt", "prettierd", stop_after_first = true } or nil,
 					json = nixCats("general") and { "treefmt", "prettierd", stop_after_first = true } or nil,
 					yaml = nixCats("general") and { "treefmt", "prettierd", stop_after_first = true } or nil,
+					sh = nixCats("general") and { "shfmt" } or nil,
+					bash = nixCats("general") and { "shfmt" } or nil,
+					zsh = nixCats("general") and { "shfmt" } or nil,
+					fish = nixCats("general") and { "fish_indent" } or nil,
 					nu = { lsp_format = "last" },
 				},
 				formatters = {

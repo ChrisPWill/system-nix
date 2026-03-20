@@ -201,4 +201,15 @@ return {
 			vim.g.startuptime_exe_path = nixCats.packageBinPath
 		end,
 	},
+	{
+		"nvim-highlight-colors",
+		enabled = nixCats("general") or false,
+		event = "DeferredUIEnter",
+		after = function()
+			require("nvim-highlight-colors").setup({
+				enable_tailwind = true,
+			})
+			utils.nmap("<leader>th", "<cmd>HighlightColors toggle<cr>", "Highlight Colors")
+		end,
+	},
 }

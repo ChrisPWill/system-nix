@@ -1,4 +1,4 @@
-# 󰛦 TypeScript & Deno
+# 󰛦 TypeScript, React & Deno
 
 This configuration dynamically switches between Node.js and Deno based on the project root.
 
@@ -6,6 +6,12 @@ This configuration dynamically switches between Node.js and Deno based on the pr
 
 - **Node.js:** Active when no `deno.json` is present. Uses `typescript-tools.nvim`.
 - **Deno:** Active when `deno.json` is found. Uses `denols`.
+- **React:** Support for `.tsx` and `.jsx` with Treesitter and standard LSP features.
+- **Tailwind CSS:** Deep integration via `tailwindcss-language-server` and real-time color highlighting.
+
+## 󰘦 Toggles & Styling
+
+- **Highlight Colors:** Toggle at `<leader>th`. Displays CSS and Tailwind colors directly in the code.
 
 ## 󰌌 Keybindings (Node.js Only)
 
