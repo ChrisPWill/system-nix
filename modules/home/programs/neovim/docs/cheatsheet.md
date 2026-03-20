@@ -6,6 +6,7 @@ This configuration uses a **Hybrid Philosophy** (Helix-inspired navigation + Neo
 
 | Key | Action |
 | :--- | :--- |
+| `Ctrl-C` | **Comment Line / Selection** |
 | `-` | **Explorer** |
 | `Ctrl-\` | **Terminal** |
 | `gn / gp` | **Next / Prev Buffer** |

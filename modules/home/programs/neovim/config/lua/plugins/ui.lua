@@ -140,6 +140,12 @@ return {
 		enabled = nixCats("general") or false,
 		event = "DeferredUIEnter",
 		after = function()
+			require("mini.comment").setup({
+				mappings = {
+					comment_line = "<C-c>",
+					comment_visual = "<C-c>",
+				},
+			})
 			require("mini.pairs").setup()
 			require("mini.icons").setup()
 			require("mini.ai").setup()

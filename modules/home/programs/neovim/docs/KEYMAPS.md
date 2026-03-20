@@ -37,7 +37,11 @@ Unlike Helix, which uses "Selection-Action," this configuration retains Neovim's
 - `&`: Align selections (Regex)
 - `g&`: Align selections (Interactive)
 
-## 5. Flat Leader Map ("Space" Mode)
+## 5. Commenting
+Because `gc` is aligned with Helix for "Center of window," commenting is mapped to `Ctrl-C`:
+- `Ctrl-C`: Toggle comment (Line in Normal mode, Selection in Visual mode)
+
+## 6. Flat Leader Map ("Space" Mode)
 High-frequency actions mapped to single keys under the `<leader>` (Space) prefix:
 - `<leader>f`: Find files
 - `<leader>gf`: Find git files
@@ -52,7 +56,7 @@ High-frequency actions mapped to single keys under the `<leader>` (Space) prefix
 - `<leader>r`: **Refactor / Replace group** (`rn`: Rename, `rr`, `rw`, `ra`, `rf`, `rs`, `rv`)
 - `<leader>w`: Window management (mapped to `<C-w>`)
 
-## 6. Domain-Specific Groups
+## 7. Domain-Specific Groups
 Secondary tools are organized into mnemonic groups:
 - `<leader>/`: **Search / Pick** (Grep, Help, Symbols, Undo, Knowledge Base, etc.)
 - `<leader>g`: **Git Group** (LazyGit: `gg`, LazyJJ: `gj`, Tig Blame: `gb`, Inline Blame: `gl`, Stage: `gs`, Reset: `gr`, etc.)
@@ -62,7 +66,7 @@ Secondary tools are organized into mnemonic groups:
 - `<leader>un`: Dismiss notifications
 - `<leader>k`: **Knowledge & Snippets** (Cheat-sheet: `kc`, Keymaps: `km`, Snippets: `ks`/`ka`)
 
-## 7. Plugin-Specific Navigation
+## 8. Plugin-Specific Navigation
 - `]g / [g`: Next/Previous Git hunk
 - `]f / [f`: Next/Previous Function start
 - `]F / [F`: Next/Previous Function end
@@ -74,10 +78,10 @@ Secondary tools are organized into mnemonic groups:
 - `]i / [i`: Next/Previous Conditional (If)
 - `} / {`: **Repeat** Next/Previous motion
 
-## 8. Enhancement over Defaults
+## 9. Enhancement over Defaults
 - `n / N`: Search results are always centered.
 - `<C-d> / <C-u>`: Half-page scrolling is always centered.
 - `j / k`: Smart word-wrap navigation (visual line movement).
 
-## 9. Documentation
+## 10. Documentation
 See **[cheatsheet.md](./cheatsheet.md)** for a quick reference.
