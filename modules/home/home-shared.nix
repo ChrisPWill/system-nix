@@ -58,6 +58,8 @@
     ./programs/sketchybar
 
     ./services/ollama.nix
+
+    ./programs/gemini.nix
   ];
 
   config = {
