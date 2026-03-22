@@ -1,9 +1,18 @@
-{inputs, ...}: {
+{
+  inputs,
+  pkgs,
+  ...
+}: {
   imports = [
     inputs.dankMaterialShell.nixosModules.greeter
   ];
 
   config = {
+    environment.systemPackages = with pkgs; [
+      accountsservice # profile pics, etc.
+      power-profiles-daemon # performance mode, etc.
+    ];
+
     programs.dank-material-shell.greeter = {
       enable = true;
       compositor.name = "niri";
