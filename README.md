@@ -1,39 +1,31 @@
-# Useful zsh aliases (after first time)
+# .system-nix
 
-* Run home-manager switch with `hms`
-* Run nixos-rebuild switch with `nrs`
-* Run darwin-rebuild switch with `drs`
-* Switch into one of the `/devshells` with `nd <devshell name>` e.g. `nd node22`
+A comprehensive Nix-based system configuration managed using [numtide/blueprint](https://github.com/numtide/blueprint). It provides a structured approach for NixOS, nix-darwin, and Home Manager across multiple machines.
 
-# Installation
+## Project Overview
 
-## Initial steps
+- **Core Technologies:** Nix, NixOS, nix-darwin, Home Manager.
+- **Framework:** `blueprint` (automatically handles flake outputs based on directory structure).
+- **Version Control:** [Jujutsu (`jj`)](https://github.com/martinvonz/jj) is preferred.
 
-Clone into `$HOME/.system-nix` using jujutsu (git works too)
+### Building and Running
 
-If cloning to a different directory, update config.nixConfigDir in the home manager config for the host to ensure home manager config can find the out-of-store config files.
+Common operations are aliased for ease of use across different shells (Zsh, Fish, Nushell).
 
-## NixOS
+| Command | Action | Description |
+| :--- | :--- | :--- |
+| `hms` | `home-manager switch --flake .` | Rebuild and activate Home Manager configuration. |
+| `nrs` | `sudo nixos-rebuild switch --flake .` | Rebuild and activate NixOS configuration (Linux only). |
+| `drs` | `sudo darwin-rebuild switch --flake .` | Rebuild and activate nix-darwin configuration (macOS only). |
+| `nd <name>` | `nix develop .#<name>` | Enter a specific development shell (e.g., `nd node22`). |
 
-TODO
+## Installation
 
-## MacOS (Darwin)
-
-TODO
-
-## WSL2
-
-Easiest way to activate on home-manager:
-
-```zsh
-nix-shell -p home-manager --run "home-manager switch --extra-experimental-features nix-command --extra-experimental-features flakes --flake .#cwilliams@cwilliams-personal-wsl2"
-```
-
-After that, it should be possible to run the alias from anywhere
-
-```zsh
-hms
-```
+1. Clone to `$HOME/.system-nix`.
+2. For WSL2/Home Manager standalone:
+   ```zsh
+   nix-shell -p home-manager --run "home-manager switch --extra-experimental-features nix-command --extra-experimental-features flakes --flake .#cwilliams@<hostname>"
+   ```
 
 # Custom Installer ISO
 
@@ -55,58 +47,11 @@ You can test the entire installation process using QEMU:
     ```bash
     ./modules/home/scripts/test-iso-vm
     ```
-    This will build the ISO, create a `test-disk.img` (if it doesn't exist), and launch the VM with both.
 
-2.  Follow the [Installation Guide](#installation-guide) inside the VM.
+# Directory Structure
 
-## Installation Guide
-
-### 1. Boot from the ISO
-Flash the ISO to a USB drive and boot from it. The live environment will automatically have your user account `cwilliams` (initial password: `nixos`) and your graphical environment configured.
-
-### 2. Partition Disks
-You will need to partition your disks manually before running the installation. Below is a standard GPT/EFI partitioning scheme:
-
-```bash
-# Identify your disk (e.g., /dev/nvme0n1 or /dev/sda)
-lsblk
-
-# Create a new GPT partition table
-sudo parted /dev/nvme0n1 -- mklabel gpt
-
-# Create the EFI Boot partition (512MB)
-sudo parted /dev/nvme0n1 -- mkpart ESP fat32 1MiB 513MiB
-sudo parted /dev/nvme0n1 -- set 1 esp on
-
-# Create the Swap partition (e.g., 8GB)
-sudo parted /dev/nvme0n1 -- mkpart swap linux-swap 513MiB 8.5GiB
-
-# Create the Root partition (Remaining space)
-sudo parted /dev/nvme0n1 -- mkpart root ext4 8.5GiB 100%
-```
-
-### 3. Format and Mount
-```bash
-# Format partitions
-sudo mkfs.fat -F 32 -n boot /dev/nvme0n1p1
-sudo mkswap -L swap /dev/nvme0n1p2
-sudo mkfs.ext4 -L nixos /dev/nvme0n1p3
-
-# Mount partitions
-sudo mount /dev/disk/by-label/nixos /mnt
-sudo mkdir -p /mnt/boot
-sudo mount /dev/disk/by-label/boot /mnt/boot
-sudo swapon /dev/nvme0n1p2
-```
-
-### 4. Install NixOS
-The installer ISO includes this flake at `/etc/nix-config`. You can use it to install your laptop's configuration:
-
-```bash
-sudo nixos-install --flake /etc/nix-config#cwilliams-laptop
-```
-
-Once finished, reboot into your new system:
-```bash
-sudo reboot
-```
+- `hosts/<hostname>/`: Entry points for each machine.
+- `modules/home/programs/<program>/`: Program-specific Nix modules and configs.
+- `modules/home/home-shared.nix`: Universal Home Manager user settings.
+- `modules/nixos/` & `modules/darwin/`: System-level modules.
+- `modules/theming/`: Shared styling.

@@ -36,23 +36,18 @@ The configuration is split into logical modules under `lua/` to keep `init.lua` 
 
 ## 󰌌 Keybindings
 
-This configuration follows a **Hybrid Philosophy** inspired by Helix while maintaining Neovim's Operator-Pending power.
+This configuration follows a **Hybrid Philosophy** designed to reduce friction when switching between Neovim and Helix while preserving the strength of both.
 
-- **Leader Key:** `Space`
-- **Goto Navigation:** `g` prefix (e.g., `gh` for line start, `gl` for line end).
-- **Search & Pick:** `<leader>/` group.
-    - `<leader>/k`: Browse **Knowledge Base** files.
-    - `<leader>/K`: Search **Knowledge Base** contents (grep).
-    - `<leader>/;`: **Marks** (aligned with arrow.nvim).
-    - `<leader>/m`: **Keymaps** search.
-- **Knowledge & Snippets:** `<leader>k` group.
-    - `<leader>kc`: Open **Cheat-sheet** (floating window).
-    - `<leader>ks`: Search and edit **snippets**.
-    - `<leader>ka`: Add new **snippets** (can use visual selection).
-- **LSP & Search:** Flat leader map (e.g., `<leader>f` to find files, `<leader>r` group for Grug-far).
-- **Domain Groups:** Mnemonic groups for advanced tools (e.g., `<leader>g` for Git, `<leader>c` for Code).
+### Core Rules
+- **Hybrid Navigation:** Retains Neovim's native **Operator-Pending** model while adopting Helix `g` (Goto), `m` (Match/Surround), and Space (`<leader>`) modes.
+- **Helix Alignment:** `g` prefix for movement (e.g., `gh` for line start, `gl` for line end, `ge` for end of file).
+- **Functionality-Focused Descriptions:** All keybinding descriptions (`desc`) MUST describe *what* the action does, not *which plugin* provides it (e.g., "Explorer" instead of "Snacks Explorer").
+- **Domain-Specific Grouping:** Organise keybindings into functional domains (e.g., `<leader>g` for Git, `<leader>t` for Toggles, `<leader>r` for Refactoring).
 
-For a deep dive into the mapping logic, see [󰌌 KEYMAPS.md](./docs/KEYMAPS.md).
+### Knowledge Base & Documentation
+- **Maintenance:** When adding complex plugins or modifying significant workflows, **ALWAYS** update or create a corresponding reference guide in `docs/`.
+- **Cheatsheet:** Keep `docs/cheatsheet.md` up to date as the primary entry point for common flows.
+- **Minimalist Documentation:** Guides should focus on practical use-cases and keybindings. Remove technical implementation details (like "Floating Window") and use standard mode abbreviations (e.g., `(n/x/o)`).
 
 ## 󱄅 Nix Integration
 
