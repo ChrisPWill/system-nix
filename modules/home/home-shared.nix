@@ -52,6 +52,8 @@
     # git and jujutsu settings
     ./programs/version-control.nix
 
+    ./programs/helix
+
     ./programs/wezterm
     ./programs/aerospace
 
@@ -148,9 +150,6 @@
         ui.theme = "onedark";
       };
     };
-
-    # Helix for when I feel like switching it up
-    programs.helix.enable = true;
 
     # Useful home-manager alias if enabled
     programs.zsh.shellAliases."hms" = lib.mkIf config.programs.home-manager.enable "home-manager switch --flake ${config.nixConfigDir}/.";
