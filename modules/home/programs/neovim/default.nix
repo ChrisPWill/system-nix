@@ -97,10 +97,12 @@ in {
             rust-analyzer
             rustfmt
             clippy
+            lldb
           ];
           python = with pkgs; [
             basedpyright
             ruff
+            python3Packages.debugpy
           ];
           go = with pkgs; [
             gopls
@@ -211,6 +213,7 @@ in {
           ];
           python = with pkgs.vimPlugins; [
             neotest-python
+            nvim-dap-python
           ];
           local-llm = with pkgs.vimPlugins; [
             nui-nvim

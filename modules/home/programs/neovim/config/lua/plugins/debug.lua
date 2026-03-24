@@ -87,7 +87,38 @@ return {
 				virt_lines = false,
 				virt_text_win_col = nil,
 			})
+
+			if nixCats("python") then
+				require("dap-python").setup("python")
+			end
+
+			if nixCats("rust") then
+				dap.adapters.lldb = {
+					type = "executable",
+					command = "lldb-dap",
+					name = "lldb",
+				}
+
+				dap.configurations.rust = {
+					{
+						name = "Launch",
+						type = "lldb",
+						request = "launch",
+						program = function()
+							return vim.fn.input("Path to executable: ", vim.fn.getcwd() .. "/target/debug/", "file")
+						end,
+						cwd = "${workspaceFolder}",
+						stopOnEntry = false,
+						args = {},
+					},
+				}
+			end
 		end,
+	},
+	{
+		"nvim-dap-python",
+		enabled = nixCats("python") or false,
+		on_require = { "dap-python" },
 	},
 	{
 		"nvim-dap-ui",
