@@ -7,17 +7,8 @@ return {
 		enabled = nixCats("general") or false,
 		event = "DeferredUIEnter",
 		on_require = "blink",
-		load = function(name)
-			vim.cmd.packadd(name)
-			if nixCats("copilot") then
-				vim.cmd.packadd("blink-copilot")
-			end
-			if nixCats("local-llm") then
-				vim.cmd.packadd("minuet-ai.nvim")
-			end
-			vim.cmd.packadd("luasnip")
-		end,
 		after = function()
+			vim.cmd.packadd("luasnip")
 			local defaultSources = { "snippets", "lsp", "path", "buffer" }
 			if nixCats("copilot") then
 				table.insert(defaultSources, 2, "copilot")
@@ -72,14 +63,21 @@ return {
 		end,
 	},
 	{
+		"blink-copilot",
+		enabled = nixCats("copilot") or false,
+		on_require = { "blink-copilot" },
+	},
+	{
+		"minuet-ai.nvim",
+		enabled = nixCats("local-llm") or false,
+		on_require = { "minuet" },
+	},
+	{
 		"luasnip",
 		enabled = nixCats("general") or false,
 		event = "DeferredUIEnter",
-		load = function(name)
-			vim.cmd.packadd(name)
-			vim.cmd.packadd("friendly-snippets")
-		end,
 		after = function()
+			vim.cmd.packadd("friendly-snippets")
 			local function loadSnippets()
 				require("luasnip.loaders.from_vscode").lazy_load()
 				require("luasnip.loaders.from_vscode").lazy_load({ paths = (nixCats.configDir or "") .. "/snippets" })

@@ -5,11 +5,6 @@ return {
 		"neotest",
 		enabled = nixCats("general") or false,
 		event = "DeferredUIEnter",
-		load = function(name)
-			vim.cmd.packadd("neotest-python")
-			vim.cmd.packadd("plenary.nvim")
-			vim.cmd.packadd(name)
-		end,
 		after = function()
 			local adapters = {}
 			if nixCats("python") then
@@ -34,5 +29,10 @@ return {
 			end, "Test (File)")
 			utils.nmap("<leader>cts", require("neotest").run.stop, "Test (Stop)")
 		end,
+	},
+	{
+		"neotest-python",
+		enabled = nixCats("python") or false,
+		on_require = { "neotest-python" },
 	},
 }

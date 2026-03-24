@@ -6,10 +6,6 @@ return {
 		"lualine.nvim",
 		enabled = nixCats("general") or false,
 		event = "DeferredUIEnter",
-		load = function(name)
-			vim.cmd.packadd(name)
-			vim.cmd.packadd("lualine-lsp-progress")
-		end,
 		after = function()
 			require("lualine").setup({
 				options = {
@@ -44,6 +40,11 @@ return {
 				},
 			})
 		end,
+	},
+	{
+		"lualine-lsp-progress",
+		enabled = nixCats("general") or false,
+		on_plugin = { "lualine.nvim" },
 	},
 	{
 		"which-key.nvim",

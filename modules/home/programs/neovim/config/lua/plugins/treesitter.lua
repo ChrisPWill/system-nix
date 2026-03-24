@@ -6,11 +6,6 @@ return {
 		enabled = nixCats("general") or false,
 		event = "DeferredUIEnter",
 		dep_of = { "neotest" },
-		load = function(name)
-			vim.cmd.packadd(name)
-			vim.cmd.packadd("nvim-treesitter-textobjects")
-			vim.cmd.packadd("nvim-treesitter-context")
-		end,
 		after = function()
 			-- [[ Configure Treesitter ]]
 			-- See `:help nvim-treesitter`
@@ -144,6 +139,16 @@ return {
 			vim.o.foldexpr = "v:lua.vim.treesitter.foldexpr()"
 			vim.opt.foldenable = false
 		end,
+	},
+	{
+		"nvim-treesitter-textobjects",
+		enabled = nixCats("general") or false,
+		on_require = { "nvim-treesitter-textobjects" },
+	},
+	{
+		"nvim-treesitter-context",
+		enabled = nixCats("general") or false,
+		on_require = { "treesitter-context" },
 	},
 	{
 		"treewalker.nvim",

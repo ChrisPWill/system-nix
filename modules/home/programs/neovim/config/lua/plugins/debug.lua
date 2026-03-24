@@ -13,9 +13,6 @@ return {
 			{ "<leader>cB", desc = "Breakpoint (Condition)" },
 			{ "<F7>", desc = "Debug (Last Result)" },
 		},
-		load = function(name)
-			vim.cmd.packadd(name)
-		end,
 		after = function()
 			local dap = require("dap")
 			local dapui = require("dapui")
@@ -96,17 +93,11 @@ return {
 		"nvim-dap-ui",
 		enabled = nixCats("general") or false,
 		on_require = { "dapui" },
-		load = function(name)
-			vim.cmd.packadd(name)
-		end,
 	},
 	{
 		"nvim-dap-virtual-text",
 		enabled = nixCats("general") or false,
 		on_require = { "nvim-dap-virtual-text" },
-		load = function(name)
-			vim.cmd.packadd(name)
-		end,
 	},
 	{
 		"nvim-dap-go",
