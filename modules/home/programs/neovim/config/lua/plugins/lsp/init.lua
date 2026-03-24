@@ -11,6 +11,13 @@ function M.on_attach(_, bufnr)
 		vim.keymap.set("n", keys, func, config)
 	end
 
+	-- speed up gr by removing inbuilts
+	pcall(vim.keymap.del, "n", "grn", { buffer = bufnr })
+	pcall(vim.keymap.del, "n", "grr", { buffer = bufnr })
+	pcall(vim.keymap.del, "n", "gra", { buffer = bufnr })
+	pcall(vim.keymap.del, "n", "gri", { buffer = bufnr })
+	pcall(vim.keymap.del, "n", "grt", { buffer = bufnr })
+
 	nmap("<leader>rn", function()
 		return ":IncRename " .. vim.fn.expand("<cword>")
 	end, "Rename", { expr = true })
