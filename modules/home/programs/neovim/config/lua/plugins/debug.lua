@@ -15,8 +15,6 @@ return {
 		},
 		load = function(name)
 			vim.cmd.packadd(name)
-			vim.cmd.packadd("dapui")
-			vim.cmd.packadd("nvim-dap-virtual-text")
 		end,
 		after = function()
 			local dap = require("dap")
@@ -92,6 +90,22 @@ return {
 				virt_lines = false,
 				virt_text_win_col = nil,
 			})
+		end,
+	},
+	{
+		"nvim-dap-ui",
+		enabled = nixCats("general") or false,
+		on_require = { "dapui" },
+		load = function(name)
+			vim.cmd.packadd(name)
+		end,
+	},
+	{
+		"nvim-dap-virtual-text",
+		enabled = nixCats("general") or false,
+		on_require = { "nvim-dap-virtual-text" },
+		load = function(name)
+			vim.cmd.packadd(name)
 		end,
 	},
 	{
