@@ -30,6 +30,7 @@
 
   imports = [
     ./fonts.nix
+    ./programs/shells/shared.nix
 
     # https://github.com/dfrankland/envoluntary
     # direnv-like matcher that avoids needing to create gitignored nix files in projects
@@ -43,11 +44,9 @@
     # My neovim setup
     ./programs/neovim
 
-    # Nushell, modern non-POSIX shell
-    ./programs/nushell.nix
-
-    # Fish, a modern shell
-    ./programs/fish.nix
+    ./programs/shells/zsh.nix
+    ./programs/shells/nushell.nix
+    ./programs/shells/fish.nix
 
     # git and jujutsu settings
     ./programs/version-control.nix
@@ -125,20 +124,6 @@
       $env.PATH = ($env.PATH | split row (char esep) | append "${config.homeModuleDir}/scripts")
     '';
 
-    # Nice colourful cat alternative
-    # https://github.com/sharkdp/bat
-    programs.bat.enable = true;
-
-    # Auto use flakes when in directory (and allowed)
-    # Remember to `direnv allow` in a project to get it going
-    programs.direnv.enable = true;
-
-    # ls alternative
-    # https://github.com/eza-community/eza
-    programs.eza.enable = true;
-    programs.eza.git = true;
-    programs.eza.icons = "auto";
-
     programs.envoluntary.enable = true;
 
     # FZF replacement
@@ -149,51 +134,6 @@
       settings = {
         ui.theme = "onedark";
       };
-    };
-
-    # Useful home-manager alias if enabled
-    programs.zsh.shellAliases."hms" = lib.mkIf config.programs.home-manager.enable "home-manager switch --flake ${config.nixConfigDir}/.";
-    programs.fish.shellAliases."hms" = lib.mkIf config.programs.home-manager.enable "home-manager switch --flake ${config.nixConfigDir}/.";
-    programs.nushell.shellAliases."hms" = lib.mkIf config.programs.home-manager.enable "home-manager switch --flake ${config.nixConfigDir}/.";
-    # darwin-rebuild alias added for MacOS systems
-    programs.zsh.shellAliases."drs" = lib.mkIf pkgs.stdenv.isDarwin "sudo /run/current-system/sw/bin/darwin-rebuild switch --flake ${config.nixConfigDir}/.";
-    programs.fish.shellAliases."drs" = lib.mkIf pkgs.stdenv.isDarwin "sudo /run/current-system/sw/bin/darwin-rebuild switch --flake ${config.nixConfigDir}/.";
-    programs.nushell.shellAliases."drs" = lib.mkIf pkgs.stdenv.isDarwin "sudo /run/current-system/sw/bin/darwin-rebuild switch --flake ${config.nixConfigDir}/.";
-    # nixos-rebuild alias added for NixOS systems
-    programs.zsh.shellAliases."nrs" = lib.mkIf (pkgs.stdenv.isLinux && !config.programs.home-manager.enable) "sudo nixos-rebuild switch --flake ${config.nixConfigDir}/.";
-    programs.fish.shellAliases."nrs" = lib.mkIf (pkgs.stdenv.isLinux && !config.programs.home-manager.enable) "sudo nixos-rebuild switch --flake ${config.nixConfigDir}/.";
-    programs.nushell.shellAliases."nrs" = lib.mkIf (pkgs.stdenv.isLinux && !config.programs.home-manager.enable) "sudo nixos-rebuild switch --flake ${config.nixConfigDir}/.";
-
-    # Quick alias to enable a devshell
-    programs.zsh.shellAliases."nd" = "f() { nix develop ${config.nixConfigDir}/.#$1 --command zsh };f";
-
-    # Modern alternative prompt
-    programs.starship.enable = true;
-    programs.starship.settings = {
-      right_format = "$os$shell$git_status$git_metrics$memory_usage";
-      command_timeout = 1000;
-
-      cmd_duration.min_time = 200;
-
-      # Show added/deleted git lines
-      git_metrics.disabled = false;
-
-      memory_usage.disabled = false;
-      memory_usage.threshold = 90; # percentage
-
-      os.disabled = false;
-
-      os.symbols = {
-        Macos = " ";
-        NixOS = " ";
-        Windows = " ";
-      };
-
-      # Shows current shell
-      shell.disabled = false;
-
-      # Shows exit code of last command if non-zero
-      status.disabled = false;
     };
 
     programs.yazi = {
@@ -221,87 +161,6 @@
 
     # PDF viewer
     programs.zathura.enable = true;
-
-    # Nice fast autojump command
-    # https://github.com/ajeetdsouza/zoxide
-    programs.zoxide.enable = true;
-
-    programs.zsh = {
-      enable = true;
-      completionInit = ''
-        autoload -Uz compinit
-        if [[ -n ''${ZDOTDIR:-$HOME}/.zcompdump(#qN.mh+24) ]]; then
-          compinit
-        else
-          compinit -C
-        fi
-        if [[ ! -f ''${ZDOTDIR:-$HOME}/.zcompdump.zwc || \
-              ''${ZDOTDIR:-$HOME}/.zcompdump -nt ''${ZDOTDIR:-$HOME}/.zcompdump.zwc ]]; then
-          zcompile ''${ZDOTDIR:-$HOME}/.zcompdump
-        fi
-      '';
-
-      initContent = ''
-        tv-nvim-widget() {
-          # Notify ZLE that we are going to use the terminal
-          zle -I
-
-          # Run the command with stdin redirected to the terminal
-          # Also, use 'command' if it's a binary, or ensure the function is defined
-          tv-nvim < /dev/tty
-
-          # Redraw the prompt so your line doesn't look broken
-          zle reset-prompt
-        }
-
-        zle -N tv-nvim-widget
-
-        # Define extra bindings for zsh-vi-mode
-        function zvm_after_init() {
-          zvm_bindkey viins '^[o' tv-nvim-widget
-          # Re-bind Atuin and Television which are often clobbered by vi-mode
-          zvm_bindkey viins '^R' atuin-search-viins
-          zvm_bindkey viins '^T' tv-smart-autocomplete
-        }
-      '';
-
-      plugins = [
-        {
-          name = "vi-mode";
-          src = pkgs.zsh-vi-mode;
-          file = "share/zsh-vi-mode/zsh-vi-mode.plugin.zsh";
-        }
-      ];
-
-      dotDir = "${config.home.homeDirectory}/.config/zsh";
-
-      history = {
-        size = 10000;
-        save = 10000;
-        path = "$HOME/.config/zsh/.zshinfo";
-        share = true;
-
-        ignoreSpace = true;
-        ignoreDups = true;
-        extended = true;
-        expireDuplicatesFirst = true;
-      };
-    };
-    # Useful directory navigation aliases
-    programs.zsh.shellAliases.".." = "cd ..";
-    programs.zsh.shellAliases."..." = "cd ../..";
-    programs.zsh.shellAliases."...." = "cd ../../..";
-    programs.zsh.shellAliases."-- -" = "cd -";
-    programs.zsh.shellAliases."-- --" = "cd -2";
-    programs.zsh.shellAliases."-- ---" = "cd -3";
-
-    programs.fish.enable = true;
-
-    # Autocompletion in shell
-    programs.carapace.enable = true;
-
-    # Command history
-    programs.atuin.enable = true;
 
     # Matrix chat
     programs.element-desktop.enable = true;
