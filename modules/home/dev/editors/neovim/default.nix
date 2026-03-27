@@ -20,7 +20,7 @@ in {
 
   config = {
     # Easy config editing alias
-    programs.zsh.shellAliases."nvimconfig" = "(cd ${config.homeModuleDir}/programs/neovim; ${mainNixCatsPackageName} ./config/init.lua)";
+    programs.zsh.shellAliases."nvimconfig" = "(cd ${config.homeModuleDir}/dev/editors/neovim; ${mainNixCatsPackageName} ./config/init.lua)";
 
     home.sessionVariables = {
       EDITOR = "meow";
@@ -291,7 +291,7 @@ in {
           # anything else to pass and grab in lua with `nixCats.extra`
           extra = {
             nixdExtras.nixpkgs = ''import ${pkgs.path} {}'';
-            docsPath = "${config.homeModuleDir}/programs/neovim/docs";
+            docsPath = "${config.homeModuleDir}/dev/editors/neovim/docs";
           };
         };
 
@@ -330,7 +330,7 @@ in {
           # anything else to pass and grab in lua with `nixCats.extra`
           extra = {
             nixdExtras.nixpkgs = ''import ${pkgs.path} {}'';
-            docsPath = "${config.homeModuleDir}/programs/neovim/docs";
+            docsPath = "${config.homeModuleDir}/dev/editors/neovim/docs";
           };
         };
 
@@ -351,7 +351,7 @@ in {
           # anything else to pass and grab in lua with `nixCats.extra`
           extra = {
             nixdExtras.nixpkgs = ''import ${pkgs.path} {}'';
-            docsPath = "${config.homeModuleDir}/programs/neovim/docs";
+            docsPath = "${config.homeModuleDir}/dev/editors/neovim/docs";
           };
         };
       };

@@ -82,7 +82,7 @@ You can test the entire installation process using QEMU:
 # Directory Structure
 
 - `hosts/<hostname>/`: Entry points for each machine.
-- `modules/home/programs/<program>/`: Program-specific Nix modules and configs.
+- `modules/home/<domain>/`: Functional domains (dev, ops, desktop, etc.) for user configuration. See `modules/home/README.md` for details.
 - `modules/home/home-shared.nix`: Universal Home Manager user settings.
 - `modules/nixos/` & `modules/darwin/`: System-level modules.
 - `modules/theming/`: Shared styling.

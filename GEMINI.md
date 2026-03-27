@@ -18,13 +18,13 @@ Modular Nix system configuration managed with [numtide/blueprint](https://github
     - **UI Alignment:** Visuals (Relative lines, cursor shapes, theme) are synchronized for zero-friction switching.
     - **Home Manager Architecture:** Configuration is organized using a domain-driven structure (Intent over Syntax). See `modules/home/README.md` for architecture details.
     - **Reference:** See `modules/home/dev/editors/neovim/README.md` and `modules/home/dev/editors/helix/README.md`.
-- **Knowledge Base:** Maintain reference guides in `modules/home/programs/neovim/docs/`. Keep `cheatsheet.md` as the primary entry point.
+- **Knowledge Base:** Maintain reference guides in `modules/home/dev/editors/neovim/docs/`. Keep `cheatsheet.md` as the primary entry point.
 - **Blueprint Structure:** Files in `hosts/` are entry points; `modules/` are shared components. High-iteration files (e.g., `wezterm.lua`) use `mkOutOfStoreSymlink` for immediate testing.
 - **Workflow:** Jujutsu (`jj`) is preferred for version control. Use `jj st` for status.
 
 ## Directory Highlights
 - `hosts/<hostname>/`: Machine entry points.
-- `modules/home/programs/<program>/`: Program-specific modules and non-Nix configs.
+- `modules/home/<domain>/`: Functional domains for user configuration (see `modules/home/README.md`).
 - `modules/home/home-shared.nix`: Universal Home Manager user settings.
 - `modules/theming/`: Shared styling and custom theme options.
 
