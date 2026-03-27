@@ -28,6 +28,7 @@
 
   imports = [
     ./core
+    ./cli
     ./dev
     ./ops
     ./media

@@ -49,17 +49,5 @@ in {
       shell.disabled = false;
       status.disabled = false;
     };
-
-    programs.zoxide.enable = true;
-    programs.atuin.enable = true;
-    programs.direnv.enable = true;
-    programs.carapace.enable = true;
-    programs.bat.enable = true;
-
-    programs.eza = {
-      enable = true;
-      git = true;
-      icons = "auto";
-    };
   };
 }
