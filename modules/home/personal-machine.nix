@@ -1,28 +1,5 @@
-{pkgs, ...}: {
-  home.packages = with pkgs; [
-    discord
-
-    # steam extras
-    steamcmd
-    steam-tui
-
-    anki-bin
-    mplayer # needed by anki
-    mpv # needed by anki
-
-    # messaging app
-    signal-desktop
-
-    # Note taking/docs
-    obsidian
-
-    bitwarden-cli
-
-    # Time tracking app for personal projects
-    hours
-
-    spotify
-  ];
-
+{...}: {
+  # This module now acts as a high-level toggle for personal tools distributed 
+  # throughout the domain-driven configuration (see modules/home/README.md).
   isPersonalMachine = true;
 }
