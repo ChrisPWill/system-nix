@@ -27,7 +27,7 @@ in {
       SUDO_EDITOR = "meow";
     };
 
-    home.file."${config.xdg.configHome}/nvim/docs".source = config.lib.file.mkOutOfStoreSymlink "${config.homeModuleDir}/programs/neovim/docs";
+    home.file."${config.xdg.configHome}/nvim/docs".source = config.lib.file.mkOutOfStoreSymlink "${config.homeModuleDir}/dev/editors/neovim/docs";
 
     nixCats = {
       enable = true;
@@ -39,7 +39,7 @@ in {
       # See packageDefinitions - says which one to install
       packageNames = [mainNixCatsPackageName] ++ pkgs.lib.optionals config.isPersonalMachine ["leet"];
 
-      luaPath = config.lib.file.mkOutOfStoreSymlink "${config.homeModuleDir}/programs/neovim/config";
+      luaPath = config.lib.file.mkOutOfStoreSymlink "${config.homeModuleDir}/dev/editors/neovim/config";
 
       # the .replace vs .merge options are for modules based on existing configurations,
       # they refer to how multiple categoryDefinitions get merged together by the module.

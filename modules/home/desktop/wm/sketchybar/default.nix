@@ -8,10 +8,10 @@
     programs.sketchybar.enable = true;
 
     xdg.configFile."sketchybar/sketchybarrc" = {
-      source = config.lib.file.mkOutOfStoreSymlink "${config.homeModuleDir}/programs/sketchybar/sketchybar.sh";
+      source = config.lib.file.mkOutOfStoreSymlink "${config.homeModuleDir}/desktop/wm/sketchybar/sketchybar.sh";
     };
     xdg.configFile."sketchybar/plugins" = {
-      source = config.lib.file.mkOutOfStoreSymlink "${config.homeModuleDir}/programs/sketchybar/plugins";
+      source = config.lib.file.mkOutOfStoreSymlink "${config.homeModuleDir}/desktop/wm/sketchybar/plugins";
     };
   };
 }
