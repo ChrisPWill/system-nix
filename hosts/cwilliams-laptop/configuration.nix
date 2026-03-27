@@ -3,6 +3,7 @@
     ./hardware-configuration.nix
     inputs.self.nixosModules.host-shared
     inputs.self.nixosModules.nixos-shared
+    inputs.self.nixosModules.cachyos
     inputs.self.nixosModules.graphical-environment
     inputs.self.nixosModules.personal-machine
     inputs.self.nixosModules.gamemode
