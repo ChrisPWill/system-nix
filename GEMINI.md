@@ -16,7 +16,8 @@ Modular Nix system configuration managed with [numtide/blueprint](https://github
     - **Philosophy:** Neovim (`meow`) uses Helix-inspired navigation (`g` prefix) and selection modes while retaining its native "Verb-Noun" model.
     - **LSP & Tooling Parity:** Both editors share a unified LSP/formatter ecosystem (e.g., `nixd`, `basedpyright`, `ruff`, `rust-analyzer`).
     - **UI Alignment:** Visuals (Relative lines, cursor shapes, theme) are synchronized for zero-friction switching.
-    - **Reference:** See `modules/home/programs/neovim/README.md` and `modules/home/programs/helix/README.md`.
+    - **Home Manager Architecture:** Configuration is organized using a domain-driven structure (Intent over Syntax). See `modules/home/README.md` for architecture details.
+    - **Reference:** See `modules/home/dev/editors/neovim/README.md` and `modules/home/dev/editors/helix/README.md`.
 - **Knowledge Base:** Maintain reference guides in `modules/home/programs/neovim/docs/`. Keep `cheatsheet.md` as the primary entry point.
 - **Blueprint Structure:** Files in `hosts/` are entry points; `modules/` are shared components. High-iteration files (e.g., `wezterm.lua`) use `mkOutOfStoreSymlink` for immediate testing.
 - **Workflow:** Jujutsu (`jj`) is preferred for version control. Use `jj st` for status.
