@@ -12,18 +12,22 @@
     drs = lib.mkIf pkgs.stdenv.isDarwin "sudo /run/current-system/sw/bin/darwin-rebuild switch --flake ${config.nixConfigDir}/.";
     nrs = lib.mkIf (pkgs.stdenv.isLinux && !config.programs.home-manager.enable) "sudo nixos-rebuild switch --flake ${config.nixConfigDir}/.";
 
-    # Directory navigation
+    # Common directory navigation
     ".." = "cd ..";
     "..." = "cd ../..";
     "...." = "cd ../../..";
+  };
+
+  # Aliases that only work or make sense in Zsh
+  zshSpecificAliases = {
     "-- -" = "cd -";
     "-- --" = "cd -2";
     "-- ---" = "cd -3";
   };
 in {
   config = {
-    # Apply aliases to all shells
-    programs.zsh.shellAliases = commonAliases;
+    # Apply aliases to shells
+    programs.zsh.shellAliases = commonAliases // zshSpecificAliases;
     programs.fish.shellAliases = commonAliases;
     programs.nushell.shellAliases = commonAliases;
 
