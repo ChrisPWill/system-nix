@@ -2,8 +2,7 @@
   imports = [
     ./editors/neovim
     ./editors/helix
-    ./terminal/zellij
-    ./terminal/wezterm
+    ./multiplexer
     ./vcs/version-control.nix
     ./utils.nix
   ];

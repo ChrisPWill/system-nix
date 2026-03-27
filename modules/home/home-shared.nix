@@ -31,6 +31,7 @@
     ./dev
     ./ops
     ./media
+    ./knowledge
     ./desktop
     ./ai
   ];
