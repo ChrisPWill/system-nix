@@ -3,5 +3,6 @@
     ./wm/aerospace
     ./wm/sketchybar
     ./apps.nix
+    ./foot.nix
   ];
 }
