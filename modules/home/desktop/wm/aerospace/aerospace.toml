@@ -110,6 +110,8 @@ D = ['built-in']
 
 # All possible commands: https://nikitabobko.github.io/AeroSpace/commands
 
+alt-enter = 'exec-and-forget open -a Ghostty'
+
 # You can uncomment this line to open up terminal with alt + enter shortcut
 # See: https://nikitabobko.github.io/AeroSpace/commands#exec-and-forget
 # alt-enter = 'exec-and-forget open -n /System/Applications/Utilities/Terminal.app'

@@ -5,12 +5,10 @@
 }: {
   imports = [
     inputs.stylix.nixosModules.stylix
+    inputs.self.modules.theming.theme
   ];
 
   config = {
-    stylix.enable = true;
-    stylix.base16Scheme = "${pkgs.base16-schemes}/share/themes/onedark.yaml";
-
     users.defaultUserShell = pkgs.zsh;
 
     # Define a user account. Don't forget to set a password with ‘passwd’.

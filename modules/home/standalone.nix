@@ -5,10 +5,9 @@
 }: {
   imports = [
     inputs.stylix.homeModules.stylix
+    inputs.self.modules.theming.theme
   ];
 
   config = {
-    stylix.enable = true;
-    stylix.base16Scheme = "${pkgs.base16-schemes}/share/themes/onedark.yaml";
   };
 }

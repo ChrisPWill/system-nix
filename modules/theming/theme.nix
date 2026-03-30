@@ -1,5 +1,7 @@
 {lib, ...}:
 with lib; {
+  imports = [./stylix.nix];
+
   options.theme = {
     utils = mkOption {
       type = types.attrsOf types.functionTo;

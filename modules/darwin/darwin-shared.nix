@@ -47,9 +47,6 @@
     ];
   };
 
-  stylix.enable = true;
-  stylix.base16Scheme = "${pkgs.base16-schemes}/share/themes/onedark.yaml";
-
   services.jankyborders = {
     enable = true;
     width = 7.0;
