@@ -71,7 +71,38 @@ return {
 				},
 				tabline = {
 					lualine_a = { "buffers" },
-					lualine_b = { "copilot", "lsp_progress" },
+					lualine_b = {
+						"copilot",
+						{
+							function()
+								local clients = vim.lsp.get_active_clients({ bufnr = 0 })
+								if next(clients) == nil then
+									return ""
+								end
+								local icon_map = {
+									lua_ls = "",
+									basedpyright = "",
+									rust_analyzer = "",
+									nixd = "",
+									vtsls = "",
+									tsserver = "",
+									gopls = "",
+									bashls = "󱆃",
+									jsonls = "",
+									yamlls = "",
+									taplo = "",
+									html = "",
+									cssls = "",
+								}
+								local client_labels = {}
+								for _, client in ipairs(clients) do
+									table.insert(client_labels, icon_map[client.name] or client.name)
+								end
+								return "LSP " .. table.concat(client_labels, " ")
+							end,
+						},
+						"lsp_progress",
+					},
 					lualine_z = { "tabs" },
 				},
 			})
