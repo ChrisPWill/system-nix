@@ -49,7 +49,12 @@ return {
 			-- Repeat movement with } and {
 			-- ensure } goes forward and { goes backward regardless of the last direction
 			vim.keymap.set({ "n", "x", "o" }, "}", ts_repeat_move.repeat_last_move_next, { desc = "Repeat next move" })
-			vim.keymap.set({ "n", "x", "o" }, "{", ts_repeat_move.repeat_last_move_previous, { desc = "Repeat previous move" })
+			vim.keymap.set(
+				{ "n", "x", "o" },
+				"{",
+				ts_repeat_move.repeat_last_move_previous,
+				{ desc = "Repeat previous move" }
+			)
 
 			-- Optionally, make builtin f, F, t, T also repeatable with } and {
 			vim.keymap.set({ "n", "x", "o" }, "f", ts_repeat_move.builtin_f_expr, { expr = true })
@@ -137,7 +142,10 @@ return {
 			-- Folding
 			vim.o.foldmethod = "expr"
 			vim.o.foldexpr = "v:lua.vim.treesitter.foldexpr()"
-			vim.opt.foldenable = false
+			-- Force re-evaluation so foldlevelstart is respected immediately
+			vim.schedule(function()
+				vim.cmd("normal! zx")
+			end)
 		end,
 	},
 	{

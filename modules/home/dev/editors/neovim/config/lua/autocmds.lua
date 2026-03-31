@@ -28,6 +28,11 @@ au("InsertLeave", nil, function()
 	vim.diagnostic.enable(true)
 end)
 
+-- Refresh lualine on fold level change
+au("OptionSet", "foldlevel", function()
+	pcall(require("lualine").refresh)
+end)
+
 -- Conventional commit editing
 local koji_group = vim.api.nvim_create_augroup("KojiAutoInsert", { clear = true })
 

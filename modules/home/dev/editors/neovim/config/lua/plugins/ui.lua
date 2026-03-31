@@ -22,6 +22,21 @@ return {
 							status = true,
 						},
 					},
+					lualine_x = {
+						{
+							function()
+								local line_level = vim.fn.foldlevel(vim.api.nvim_win_get_cursor(0)[1])
+								local global_level = vim.opt.foldlevel:get()
+								return string.format("󰙅 %d 󰅩 %d", line_level, global_level)
+							end,
+							cond = function()
+								return vim.opt.foldenable:get()
+							end,
+						},
+						"encoding",
+						"fileformat",
+						"filetype",
+					},
 				},
 				inactive_sections = {
 					lualine_b = {

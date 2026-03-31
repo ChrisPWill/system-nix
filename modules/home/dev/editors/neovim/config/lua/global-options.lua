@@ -85,3 +85,7 @@ vim.api.nvim_create_autocmd("TextYankPost", {
 
 vim.g.netrw_liststyle = 0
 vim.g.netrw_banner = 0
+
+-- [[ Folding ]]
+vim.opt.foldenable = true
+vim.opt.foldlevelstart = 2
