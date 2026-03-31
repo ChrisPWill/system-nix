@@ -11,7 +11,26 @@ return {
 			navic.setup({
 				highlight = true,
 				lsp = { auto_attach = false },
+				separator = "  ",
+				-- Filter out "noise" (only show structure)
+				click = true,
+				format_item = function(item)
+					return item
+				end,
+				-- We only want these types of symbols
+				depth_limit = 5,
+				depth_limit_indicator = "..",
+				safe_output = true,
 			})
+
+			-- Custom breadcrumbs component with muted colors
+			local function get_breadcrumbs()
+				local location = navic.get_location()
+				if location == "" then
+					return ""
+				end
+				return "󰙅 " .. location
+			end
 
 			local function get_file_accent()
 				-- Vaguely OneDark (orange is custom)
@@ -46,12 +65,9 @@ return {
 							file_status = true,
 						},
 						{
-							function()
-								return navic.get_location()
-							end,
-							cond = function()
-								return navic.is_available()
-							end,
+							get_breadcrumbs,
+							cond = navic.is_available,
+							color = { fg = "#abb2bf", bg = "#3e4452" }, -- Muted grey on dark grey background
 						},
 					},
 					lualine_x = {
@@ -96,9 +112,9 @@ return {
 						{
 							"filetype",
 							color = function()
-								local bg = get_file_accent()
-								if bg then
-									return { bg = bg, fg = "#282c34", gui = "bold" }
+								local fg = get_file_accent()
+								if fg then
+									return { fg = fg, gui = "bold" }
 								end
 								return nil
 							end,
