@@ -88,6 +88,17 @@ return {
 						},
 						"selectioncount",
 						"searchcount",
+						"encoding",
+						{
+							"filetype",
+							color = function()
+								local fg = get_file_accent()
+								if fg then
+									return { fg = fg, gui = "bold" }
+								end
+								return nil
+							end,
+						},
 						{
 							function()
 								local line_level = vim.fn.foldlevel(vim.api.nvim_win_get_cursor(0)[1])
@@ -102,25 +113,33 @@ return {
 							function()
 								local curr_line = vim.fn.line(".")
 								local total_lines = vim.fn.line("$")
-								local chunks = { " ", "▂", "▃", "▄", "▅", "▆", "▇", "█" }
-								local line_ratio = curr_line / total_lines
-								local index = math.ceil(line_ratio * #chunks)
-								return chunks[index] .. " " .. math.floor(line_ratio * 100) .. "%%"
-							end,
-						},
-						"encoding",
-						{
-							"filetype",
-							color = function()
-								local fg = get_file_accent()
-								if fg then
-									return { fg = fg, gui = "bold" }
+								-- Normalize: first line is 0%, last line is 100%
+								if total_lines <= 1 then
+									return "󱔆 " .. string.rep("█", 5)
 								end
-								return nil
+								local bar_width = 5
+								local fraction = (curr_line - 1) / (total_lines - 1)
+								local total_segments = bar_width * 8
+								local progress = math.floor(fraction * total_segments)
+
+								local num_full = math.floor(progress / 8)
+								local partial_idx = progress % 8
+								local partial_blocks = { "▏", "▎", "▍", "▌", "▋", "▊", "▉" }
+								local partial_char = partial_blocks[partial_idx] or ""
+
+								-- Cap at bar_width
+								if num_full >= bar_width then
+									return "󱔆 " .. string.rep("█", bar_width)
+								end
+
+								local bar = string.rep("█", num_full)
+									.. partial_char
+									.. string.rep(" ", bar_width - num_full - (partial_char ~= "" and 1 or 0))
+								return "󱔆 " .. bar
 							end,
+							color = { fg = "#abb2bf" }, -- Light grey on dark grey track
 						},
 					},
-					lualine_y = { "progress" },
 					lualine_z = { { "location", use_mode_colors = true } },
 				},
 				inactive_sections = {
