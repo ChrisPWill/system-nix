@@ -9,12 +9,14 @@ return {
 		after = function()
 			require("lualine").setup({
 				options = {
-					icons_enabled = false,
+					icons_enabled = true,
 					theme = "onedark",
 					component_separators = "|",
 					section_separators = "",
 				},
 				sections = {
+					lualine_a = { "mode" },
+					lualine_b = { "branch", "diff", "diagnostics" },
 					lualine_c = {
 						{
 							"filename",
@@ -23,6 +25,8 @@ return {
 						},
 					},
 					lualine_x = {
+						"selectioncount",
+						"searchcount",
 						{
 							function()
 								local line_level = vim.fn.foldlevel(vim.api.nvim_win_get_cursor(0)[1])
@@ -37,6 +41,8 @@ return {
 						"fileformat",
 						"filetype",
 					},
+					lualine_y = { "progress" },
+					lualine_z = { "location" },
 				},
 				inactive_sections = {
 					lualine_b = {
