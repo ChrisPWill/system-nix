@@ -7,6 +7,28 @@ return {
 		enabled = nixCats("general") or false,
 		event = "DeferredUIEnter",
 		after = function()
+			local navic = require("nvim-navic")
+			navic.setup({
+				highlight = true,
+				lsp = { auto_attach = false },
+			})
+
+			local function get_file_accent()
+				-- Vaguely OneDark (orange is custom)
+				local ft_colors = {
+					nix = "#61afef", -- blue
+					lua = "#c678dd", -- purple
+					python = "#61afef", -- blue
+					rust = "#d19a66", -- orange
+					javascript = "#e5c07b", -- yellow
+					typescript = "#61afef", -- blue
+					go = "#56b6c2", -- cyan
+					markdown = "#abb2bf", -- gray
+					java = "#e06c75", -- red
+				}
+				return ft_colors[vim.bo.filetype] or nil
+			end
+
 			require("lualine").setup({
 				options = {
 					icons_enabled = true,
@@ -20,8 +42,16 @@ return {
 					lualine_c = {
 						{
 							"filename",
-							path = 1,
-							status = true,
+							path = 0,
+							file_status = true,
+						},
+						{
+							function()
+								return navic.get_location()
+							end,
+							cond = function()
+								return navic.is_available()
+							end,
 						},
 					},
 					lualine_x = {
@@ -52,33 +82,74 @@ return {
 								return vim.opt.foldenable:get()
 							end,
 						},
+						{
+							function()
+								local curr_line = vim.fn.line(".")
+								local total_lines = vim.fn.line("$")
+								local chunks = { " ", "▂", "▃", "▄", "▅", "▆", "▇", "█" }
+								local line_ratio = curr_line / total_lines
+								local index = math.ceil(line_ratio * #chunks)
+								return chunks[index] .. " " .. math.floor(line_ratio * 100) .. "%%"
+							end,
+						},
 						"encoding",
-						"fileformat",
-						"filetype",
+						{
+							"filetype",
+							color = function()
+								local bg = get_file_accent()
+								if bg then
+									return { bg = bg, fg = "#282c34", gui = "bold" }
+								end
+								return nil
+							end,
+						},
 					},
 					lualine_y = { "progress" },
-					lualine_z = { "location" },
+					lualine_z = { { "location", use_mode_colors = true } },
 				},
 				inactive_sections = {
 					lualine_b = {
 						{
 							"filename",
-							path = 3,
-							status = true,
+							file_status = true,
+							path = 0,
 						},
 					},
 					lualine_x = { "filetype" },
 				},
 				tabline = {
-					lualine_a = { "buffers" },
+					lualine_a = { { "buffers", use_mode_colors = true } },
 					lualine_b = {
 						"copilot",
 						{
 							function()
-								local clients = vim.lsp.get_active_clients({ bufnr = 0 })
+								local clients = vim.lsp.get_clients({ bufnr = 0 })
 								if next(clients) == nil then
 									return ""
 								end
+
+								-- Heartbeat animation
+								local frame = math.floor(vim.loop.hrtime() / 120000000) % 10
+								local spinners =
+									{ "⠋", "⠙", "⠹", "⠸", "⠼", "⠴", "⠦", "⠧", "⠇", "⠏" }
+								local spinner = ""
+
+								-- Only spin if there's progress
+								local progress = false
+								for _, client in ipairs(clients) do
+									if
+										client.progress
+										and client.progress.tokens
+										and next(client.progress.tokens) ~= nil
+									then
+										progress = true
+										break
+									end
+								end
+								if progress then
+									spinner = spinners[frame + 1] .. " "
+								end
+
 								local icon_map = {
 									lua_ls = "",
 									basedpyright = "",
@@ -98,12 +169,12 @@ return {
 								for _, client in ipairs(clients) do
 									table.insert(client_labels, icon_map[client.name] or client.name)
 								end
-								return "LSP " .. table.concat(client_labels, " ")
+								return spinner .. "LSP " .. table.concat(client_labels, " ")
 							end,
 						},
 						"lsp_progress",
 					},
-					lualine_z = { "tabs" },
+					lualine_z = { { "tabs", use_mode_colors = true } },
 				},
 			})
 		end,

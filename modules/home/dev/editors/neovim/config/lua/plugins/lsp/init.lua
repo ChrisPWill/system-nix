@@ -1,6 +1,10 @@
 local M = {}
 
-function M.on_attach(_, bufnr)
+function M.on_attach(client, bufnr)
+	if client.server_capabilities.documentSymbolProvider then
+		require("nvim-navic").attach(client, bufnr)
+	end
+
 	local nmap = function(keys, func, desc, extras)
 		if desc then
 			desc = "LSP: " .. desc

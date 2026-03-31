@@ -142,6 +142,7 @@ in {
             nui-nvim
             nvim-notify
             nvim-treesitter.withAllGrammars
+            nvim-navic
           ];
           rust = with pkgs.vimPlugins; [
             # Already lazy
