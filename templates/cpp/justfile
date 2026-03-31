@@ -1,0 +1,29 @@
+set shell := ["bash", "-uc"]
+
+# List all available commands
+default:
+    @just --list
+
+# Configure the project with CMake
+configure:
+    cmake -B build -G Ninja
+
+# Build the project
+build: configure
+    cmake --build build
+
+# Build and run the project
+run: build
+    ./build/my_project
+
+# Clean build artifacts
+clean:
+    rm -rf build/
+
+# Run static analysis
+check:
+    cppcheck --enable=all src/
+
+# Format all source files
+format:
+    find src/ -iname "*.cpp" -o -iname "*.h" | xargs clang-format -i

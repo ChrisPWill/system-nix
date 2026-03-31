@@ -39,6 +39,11 @@
     shfmt
     fish-lsp
 
+    # C++
+    clang-tools
+    gdb
+    lldb
+
     # Markdown
     marksman
   ];
@@ -149,6 +154,16 @@
           language-servers = ["marksman"];
         }
         {
+          name = "cpp";
+          auto-format = true;
+          language-servers = ["clangd"];
+        }
+        {
+          name = "c";
+          auto-format = true;
+          language-servers = ["clangd"];
+        }
+        {
           name = "bash";
           auto-format = true;
           language-servers = ["bash-language-server"];
@@ -205,6 +220,9 @@
         "fish-lsp" = {
           command = "fish-lsp";
           args = ["start"];
+        };
+        clangd = {
+          command = "clangd";
         };
       };
     };

@@ -99,6 +99,11 @@ in {
             clippy
             lldb
           ];
+          cpp = with pkgs; [
+            clang-tools
+            gdb
+            lldb
+          ];
           python = with pkgs; [
             basedpyright
             ruff
@@ -281,6 +286,7 @@ in {
             nix = true;
             node = true;
             rust = true;
+            cpp = true;
             python = true;
             go = true;
             web = true;
@@ -320,6 +326,7 @@ in {
             nix = true;
             node = true;
             rust = true;
+            cpp = true;
             python = true;
             go = true;
             web = true;

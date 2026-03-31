@@ -1,0 +1,18 @@
+# Nix
+.direnv/
+result
+
+# Build
+build/
+bin/
+obj/
+*.o
+*.a
+*.so
+*.out
+
+# Editor
+.vscode/
+.clangd/
+.cache/
+compile_commands.json
