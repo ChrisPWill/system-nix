@@ -25,6 +25,21 @@ return {
 						},
 					},
 					lualine_x = {
+						{
+							function()
+								return string.format("󰈙 %d", vim.fn.wordcount().words)
+							end,
+							cond = function()
+								local ft = vim.bo.filetype
+								local count_ft = { "markdown", "text", "asciidoc", "vimwiki" }
+								for _, v in ipairs(count_ft) do
+									if ft == v then
+										return true
+									end
+								end
+								return false
+							end,
+						},
 						"selectioncount",
 						"searchcount",
 						{
