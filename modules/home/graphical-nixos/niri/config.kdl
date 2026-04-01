@@ -140,8 +140,17 @@ window-rule {
 window-rule {
     match app-id="foot"
     open-floating true
-    default-column-width { proportion 0.65; }
-    default-window-height { proportion 0.65; }
+    default-column-width { proportion 0.60; }
+    default-window-height { proportion 0.75; }
+    shadow {
+        on
+        spread 2
+        softness 30
+        draw-behind-window true
+
+        color "#61afef"
+        inactive-color "#00000070"
+    }
 }
 window-rule {
     match app-id=r#"^org\.wezfurlong\.wezterm$"#
