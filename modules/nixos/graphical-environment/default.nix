@@ -2,6 +2,7 @@
   imports = [
     ./dank.nix
     ./niri.nix
+    ./kanata.nix
     ../audio.nix
   ];
 
