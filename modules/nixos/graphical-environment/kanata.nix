@@ -6,7 +6,7 @@
         extraArgs = ["--nodelay"];
         config = ''
           (defsrc
-            caps t
+            caps t g
           )
 
           (defalias
@@ -14,11 +14,11 @@
           )
 
           (deflayer base
-            @cap t
+            @cap t g
           )
 
           (deflayer leader
-            _ M-A-S-t
+            _ M-A-S-t M-A-S-g
           )
         '';
       };

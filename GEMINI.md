@@ -17,6 +17,7 @@ The system implements a **Global Leader** capability using **Kanata** for keyboa
   - **Tap:** Sends `Esc`.
   - **Hold:** Activates a custom layer that maps to the **`Mod+Alt+Shift`** modifier combination.
 - This allows for consistent, mnemonic, system-wide hotkeys that can be configured in both Kanata (at the hardware level) and Niri (as window manager actions).
+- **Note:** New global leader hotkeys must be explicitly added to the `leader` layer in `modules/nixos/graphical-environment/kanata.nix` to be recognized at the keyboard level.
 
 ## Development Conventions
 

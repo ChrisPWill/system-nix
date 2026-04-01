@@ -4,7 +4,7 @@
 # Opens a floating terminal in the CWD of the focused window
 # ---
 
-def main [] {
+def main [...cmd: string] {
     let focused = (niri msg --json focused-window | from json)
     
     if ($focused | is-empty) {
@@ -33,5 +33,9 @@ def main [] {
         }
     }
 
-    niri msg action spawn -- foot --working-directory $cwd
+    if ($cmd | is-empty) {
+        niri msg action spawn -- foot --working-directory $cwd
+    } else {
+        niri msg action spawn -- foot --working-directory $cwd ...$cmd
+    }
 }

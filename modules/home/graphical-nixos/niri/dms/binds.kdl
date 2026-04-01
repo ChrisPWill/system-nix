@@ -17,6 +17,7 @@ binds {
 
     // === Global Leader Binds (Caps Lock) ===
     Mod+Alt+Shift+T hotkey-overlay-title="Open Terminal at CWD" { spawn "open-terminal-at-cwd"; }
+    Mod+Alt+Shift+G hotkey-overlay-title="Open VCS at CWD" { spawn "open-terminal-at-cwd" "open-vcs"; }
 
     // === Security ===
     Mod+Alt+L hotkey-overlay-title="Lock Screen" { spawn "dms" "ipc" "call" "lock" "lock"; }
