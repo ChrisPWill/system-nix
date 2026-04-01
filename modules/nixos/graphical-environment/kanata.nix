@@ -6,7 +6,7 @@
         extraArgs = ["--nodelay"];
         config = ''
           (defsrc
-            caps t g
+            caps t g m j
           )
 
           (defalias
@@ -14,11 +14,15 @@
           )
 
           (deflayer base
-            @cap t g
+            @cap t g m j
           )
 
           (deflayer leader
-            _ M-A-S-t M-A-S-g
+            _ M-A-S-t M-A-S-g (layer-toggle monitor) _
+          )
+
+          (deflayer monitor
+            _ M-A-S-b _ _ M-A-S-j
           )
         '';
       };

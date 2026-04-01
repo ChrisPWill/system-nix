@@ -18,6 +18,8 @@ binds {
     // === Global Leader Binds (Caps Lock) ===
     Mod+Alt+Shift+T hotkey-overlay-title="Open Terminal at CWD" { spawn "open-terminal-at-cwd"; }
     Mod+Alt+Shift+G hotkey-overlay-title="Open VCS at CWD" { spawn "open-terminal-at-cwd" "lazyjj"; }
+    Mod+Alt+Shift+B hotkey-overlay-title="Open Btop" { spawn "ghostty" "--title=ghostty-floating" "-e" "btop"; }
+    Mod+Alt+Shift+J hotkey-overlay-title="Open LazyJournal" { spawn "ghostty" "--title=ghostty-floating" "-e" "lazyjournal"; }
 
     // === Security ===
     Mod+Alt+L hotkey-overlay-title="Lock Screen" { spawn "dms" "ipc" "call" "lock" "lock"; }
