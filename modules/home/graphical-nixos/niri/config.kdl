@@ -12,6 +12,9 @@ gestures {
     }
 }
 
+// Named workspaces
+workspace "social"
+
 // Input device configuration.
 // Find the full list of options on the wiki:
 // https://github.com/YaLTeR/niri/wiki/Configuration:-Input
@@ -90,7 +93,7 @@ animations {
         spring damping-ratio=0.85 stiffness=423 epsilon=0.0001
     }
     window-movement {
-        spring damping-ratio=0.75 stiffness=323 epsilon=0.0001
+        off
     }
     window-resize {
         spring damping-ratio=0.85 stiffness=423 epsilon=0.0001
@@ -160,6 +163,11 @@ window-rule {
     match title="ghostty-floating"
     match app-id="kitty"
     draw-border-with-background false
+}
+window-rule {
+    match app-id=r#"^discord$"#
+    match app-id=r#"^signal$"#
+    open-floating true
 }
 window-rule {
     match is-active=false

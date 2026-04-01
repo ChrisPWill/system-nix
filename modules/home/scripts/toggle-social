@@ -1,0 +1,43 @@
+#!/usr/bin/env nu
+
+# ---
+# Toggles a social application between the 'social' workspace (tiled)
+# and the current workspace (floating).
+# ---
+
+def find_target [app_id: string] {
+    let windows = (niri msg --json windows | from json)
+    # Matching logic that handles "signal" vs "signal-desktop" and is case-insensitive.
+    # We use a single-line condition block to avoid Nushell parser issues with 'or'.
+    ($windows | where {|w| ( ($w.app_id? | default "" | str contains -i $app_id) ) } | first)
+}
+
+def main [app_id: string, invoke_command: string] {
+    mut target = find_target $app_id
+
+    if ($target | is-empty) {
+        # App not running, start it
+        ^niri msg action spawn -- $invoke_command
+    }
+
+    if $target.is_floating {
+        ^niri msg action move-window-to-workspace "social" --window-id $target.id --focus false
+        ^niri msg action move-window-to-tiling --id $target.id
+    } else {
+        # 1. Pull the window to the current workspace
+        let workspaces = (niri msg --json workspaces | from json)
+        let current_ws = ($workspaces | where is_focused | first)
+        
+        # 2. Move to floating layout
+        ^niri msg action move-window-to-floating --id $target.id
+        
+        # Pull without following focus to stay on the current workspace
+        ^niri msg action move-window-to-workspace ($current_ws.idx | into string) --window-id $target.id --focus false
+        
+        # 3. Focus it
+        ^niri msg action focus-window --id $target.id
+        
+        # 4. Center it
+        ^niri msg action center-column
+    }
+}
