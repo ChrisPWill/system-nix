@@ -10,7 +10,7 @@
           )
 
           (defalias
-            cap (tap-hold 200 200 esc (layer-toggle leader))
+            cap (tap-hold 100 100 esc (layer-toggle leader))
           )
 
           (deflayer base

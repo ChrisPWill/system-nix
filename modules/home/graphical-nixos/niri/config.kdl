@@ -135,6 +135,7 @@ window-rule {
     match app-id=r#"^galculator$"#
     match app-id=r#"^blueman-manager$"#
     match app-id=r#"^xdg-desktop-portal$"#
+    match app-id="foot"
     open-floating true
 }
 window-rule {
@@ -143,6 +144,7 @@ window-rule {
     match app-id="zen"
     match app-id="com.mitchellh.ghostty"
     match app-id="kitty"
+    match app-id="foot"
     draw-border-with-background false
 }
 window-rule {

@@ -15,6 +15,9 @@ binds {
     Mod+N hotkey-overlay-title="Notification Center" { spawn "dms" "ipc" "call" "notifications" "toggle"; }
     Mod+Shift+N hotkey-overlay-title="Notepad" { spawn "dms" "ipc" "call" "notepad" "toggle"; }
 
+    // === Global Leader Binds (Caps Lock) ===
+    Mod+Alt+Shift+T hotkey-overlay-title="Open Terminal at CWD" { spawn "open-terminal-at-cwd"; }
+
     // === Security ===
     Mod+Alt+L hotkey-overlay-title="Lock Screen" { spawn "dms" "ipc" "call" "lock" "lock"; }
     Mod+Shift+E { quit; }

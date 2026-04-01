@@ -1,0 +1,37 @@
+#!/usr/bin/env nu
+
+# ---
+# Opens a floating terminal in the CWD of the focused window
+# ---
+
+def main [] {
+    let focused = (niri msg --json focused-window | from json)
+    
+    if ($focused | is-empty) {
+        # niri msg action spawn --floating -- ghostty
+        return
+    }
+
+    let pid = $focused.pid
+    if ($pid | is-empty) {
+        # niri msg action spawn --floating -- ghostty
+        return
+    }
+
+    # Find the child process of the terminal (usually the shell)
+    # We use ps to find children of the PID
+    let children = (ps | where ppid == $pid)
+    let cwd = if ($children | is-empty) {
+        $env.HOME
+    } else {
+        let child_pid = $children.0.pid
+        let proc_cwd = $"/proc/($child_pid)/cwd"
+        if ($proc_cwd | path exists) {
+            $proc_cwd | path expand
+        } else {
+            $env.HOME
+        }
+    }
+
+    niri msg action spawn -- foot --working-directory $cwd
+}

@@ -10,6 +10,14 @@ Modular Nix system configuration managed with [numtide/blueprint](https://github
 | `drs` | `sudo darwin-rebuild switch --flake .` (macOS) |
 | `nd <name>` | `nix develop .#<name>` |
 
+## Global Leader (Kanata/Niri)
+The system implements a **Global Leader** capability using **Kanata** for keyboard layers and **Niri** for window management.
+
+- **Caps Lock** acts as the Global Leader:
+  - **Tap:** Sends `Esc`.
+  - **Hold:** Activates a custom layer that maps to the **`Mod+Alt+Shift`** modifier combination.
+- This allows for consistent, mnemonic, system-wide hotkeys that can be configured in both Kanata (at the hardware level) and Niri (as window manager actions).
+
 ## Development Conventions
 
 - **Hybrid Philosophy (Neovim & Helix):**
