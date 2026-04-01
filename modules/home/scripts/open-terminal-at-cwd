@@ -34,8 +34,8 @@ def main [...cmd: string] {
     }
 
     if ($cmd | is-empty) {
-        niri msg action spawn -- foot --working-directory $cwd
+        ^niri msg action spawn -- ghostty --title=ghostty-floating --working-directory=$"($cwd)"
     } else {
-        niri msg action spawn -- foot --working-directory $cwd ...$cmd
+        ^niri msg action spawn -- ghostty --title=ghostty-floating --working-directory=$"($cwd)" -e ...$cmd
     }
 }

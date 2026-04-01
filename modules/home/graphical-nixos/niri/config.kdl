@@ -138,7 +138,7 @@ window-rule {
     open-floating true
 }
 window-rule {
-    match app-id="foot"
+    match title="ghostty-floating"
     open-floating true
     default-column-width { proportion 0.60; }
     default-window-height { proportion 0.75; }
@@ -157,8 +157,8 @@ window-rule {
     match app-id="Alacritty"
     match app-id="zen"
     match app-id="com.mitchellh.ghostty"
+    match title="ghostty-floating"
     match app-id="kitty"
-    match app-id="foot"
     draw-border-with-background false
 }
 window-rule {
