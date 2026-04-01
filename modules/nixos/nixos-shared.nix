@@ -9,13 +9,21 @@
   ];
 
   config = {
+    # Required for kanata to simulate keyboard input
+    boot.kernelModules = ["uinput"];
     users.defaultUserShell = pkgs.zsh;
 
     # Define a user account. Don't forget to set a password with ‘passwd’.
     users.users.cwilliams = {
       isNormalUser = true;
       description = "Chris Williams";
-      extraGroups = ["networkmanager" "wheel" "docker"];
+      extraGroups = [
+        "networkmanager"
+        "wheel"
+        "docker"
+        "input" # Required for kanata to read keyboard events
+        "uinput" # Required for kanata to emit keyboard events
+      ];
     };
 
     # Set your time zone.
@@ -45,5 +53,12 @@
     virtualisation.docker.enable = true;
 
     services.flatpak.enable = true;
+
+    # Group for kanata to access /dev/uinput
+    users.groups.uinput = {};
+    # Udev rule to allow the uinput group to write to /dev/uinput
+    services.udev.extraRules = ''
+      KERNEL=="uinput", MODE="0660", GROUP="uinput", OPTIONS+="static_node=uinput"
+    '';
   };
 }
