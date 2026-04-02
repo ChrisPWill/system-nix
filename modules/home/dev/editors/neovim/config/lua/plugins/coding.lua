@@ -66,10 +66,18 @@ return {
 		after = function()
 			local conform = require("conform")
 
-			local jslint = { "treefmt", "eslint_d", "prettierd", stop_after_first = true }
-			if utils.isDeno() then
-				jslint = { "treefmt", "deno_fmt", stop_after_first = true }
+			local function get_formatters(list)
+				if utils.isTreefmt() then
+					return { "treefmt" }
+				end
+				return list
 			end
+
+			local jslint = { "eslint_d", "prettierd", stop_after_first = true }
+			if utils.isDeno() then
+				jslint = { "deno_fmt" }
+			end
+
 			conform.setup({
 				formatters_by_ft = {
 					["*"] = function()
@@ -78,28 +86,28 @@ return {
 						end
 						return {}
 					end,
-					lua = nixCats("lua") and { "treefmt", "stylua", stop_after_first = true } or nil,
-					go = nixCats("go") and { "treefmt", "gofmt", "golint", stop_after_first = true } or nil,
-					javascript = nixCats("node") and jslint or nil,
-					typescript = nixCats("node") and jslint or nil,
-					nix = nixCats("nix") and { "treefmt", "alejandra", stop_after_first = true } or nil,
-					rust = nixCats("rust") and { "treefmt", "rustfmt", stop_after_first = true } or nil,
-					toml = nixCats("general") and { "treefmt", "tombi", stop_after_first = true } or nil,
+					lua = nixCats("lua") and get_formatters({ "stylua" }) or nil,
+					go = nixCats("go") and get_formatters({ "gofmt", "golint", stop_after_first = true }) or nil,
+					javascript = nixCats("node") and get_formatters(jslint) or nil,
+					typescript = nixCats("node") and get_formatters(jslint) or nil,
+					nix = nixCats("nix") and get_formatters({ "alejandra" }) or nil,
+					rust = nixCats("rust") and get_formatters({ "rustfmt" }) or nil,
+					toml = nixCats("general") and get_formatters({ "tombi" }) or nil,
 					python = nixCats("python") and { "ruff_organize_imports", lsp_format = "last" } or nil,
 					java = nixCats("java") and { "google-java-format" } or nil,
 					kotlin = nixCats("kotlin") and { "ktlint" } or nil,
-					html = nixCats("web") and { "treefmt", "prettierd", stop_after_first = true } or nil,
-					css = nixCats("web") and { "treefmt", "prettierd", stop_after_first = true } or nil,
-					graphql = nixCats("node") and { "treefmt", "prettierd", stop_after_first = true } or nil,
-					markdown = nixCats("general") and { "treefmt", "prettierd", stop_after_first = true } or nil,
-					json = nixCats("general") and { "treefmt", "prettierd", stop_after_first = true } or nil,
-					yaml = nixCats("general") and { "treefmt", "prettierd", stop_after_first = true } or nil,
+					html = nixCats("web") and get_formatters({ "prettierd" }) or nil,
+					css = nixCats("web") and get_formatters({ "prettierd" }) or nil,
+					graphql = nixCats("node") and get_formatters({ "prettierd" }) or nil,
+					markdown = nixCats("general") and get_formatters({ "prettierd" }) or nil,
+					json = nixCats("general") and get_formatters({ "prettierd" }) or nil,
+					yaml = nixCats("general") and get_formatters({ "prettierd" }) or nil,
 					sh = nixCats("general") and { "shfmt" } or nil,
 					bash = nixCats("general") and { "shfmt" } or nil,
 					zsh = nixCats("general") and { "shfmt" } or nil,
 					fish = nixCats("general") and { "fish_indent" } or nil,
-					cpp = nixCats("cpp") and { "treefmt", "clang-format", stop_after_first = true } or nil,
-					c = nixCats("cpp") and { "treefmt", "clang-format", stop_after_first = true } or nil,
+					cpp = nixCats("cpp") and get_formatters({ "clang-format" }) or nil,
+					c = nixCats("cpp") and get_formatters({ "clang-format" }) or nil,
 					nu = { lsp_format = "last" },
 				},
 				formatters = {
