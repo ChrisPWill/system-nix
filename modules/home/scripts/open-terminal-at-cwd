@@ -18,24 +18,48 @@ def main [...cmd: string] {
         return
     }
 
-    # Find the child process of the terminal (usually the shell)
-    # We use ps to find children of the PID
+    # Find child processes of the terminal
     let children = (ps | where ppid == $pid)
-    let cwd = if ($children | is-empty) {
-        $env.HOME
+    let cwds = if ($children | is-empty) {
+        [$env.HOME]
     } else {
-        let child_pid = $children.0.pid
-        let proc_cwd = $"/proc/($child_pid)/cwd"
-        if ($proc_cwd | path exists) {
-            $proc_cwd | path expand
-        } else {
-            $env.HOME
-        }
+        $children | each { |it|
+            let proc_cwd = $"/proc/($it.pid)/cwd"
+            if ($proc_cwd | path exists) {
+                $proc_cwd | path expand
+            } else {
+                $env.HOME
+            }
+        } | uniq
     }
 
-    if ($cmd | is-empty) {
-        ^niri msg action spawn -- ghostty --title=ghostty-floating --working-directory=$"($cwd)"
+    if ($cwds | length) > 1 {
+        # Multiple unique CWDs found, use a nushell selector inside the new terminal
+        let cwds_json = ($cwds | to json -r)
+        let cmd_json = ($cmd | to json -r)
+        
+        # We spawn a terminal that runs nu to let the user pick the directory
+        # The selector script handles the selection and then execs the final shell or command
+        let nu_cmd = (
+            "let choice = ( " + ($cwds_json) + " | input list 'Select working directory' ); " +
+            "if $choice != null { " +
+            "    cd $choice; " +
+            "    let final_cmd = ( " + ($cmd_json) + " ); " +
+            "    if ($final_cmd | is-empty) { " +
+            "        exec nu " +
+            "    } else { " +
+            "        exec ...$final_cmd " +
+            "    } " +
+            "}"
+        )
+        
+        ^niri msg action spawn -- ghostty --title=ghostty-floating -e nu -c $nu_cmd
     } else {
-        ^niri msg action spawn -- ghostty --title=ghostty-floating --working-directory=$"($cwd)" -e ...$cmd
+        let cwd = ($cwds | first | default $env.HOME)
+        if ($cmd | is-empty) {
+            ^niri msg action spawn -- ghostty --title=ghostty-floating --working-directory=$"($cwd)"
+        } else {
+            ^niri msg action spawn -- ghostty --title=ghostty-floating --working-directory=$"($cwd)" -e ...$cmd
+        }
     }
 }
