@@ -64,8 +64,18 @@
   # VCS built on top of git
   # Experimenting with this for personal projects
   programs.jujutsu.enable = true;
-  programs.jujutsu.settings.user.name = "Chris Williams";
-  programs.jujutsu.settings.user.email = config.userEmail;
+  programs.jujutsu.settings = {
+    user.name = "Chris Williams";
+    user.email = config.userEmail;
+
+    fix.tools.treefmt = {
+      command = ["nix" "fmt" "--" "--stdin" "$path"];
+      patterns = ["glob:**/*"];
+    };
+
+    # Workaround for lack of native pre-push hooks
+    aliases.push = ["util" "exec" "--" "sh" "-c" "nix flake check && jj git push \"$@\"" "--"];
+  };
   # LazyJJ - easy TUI for jujutsu VCS
   programs.zsh.shellAliases.ljj = "lazyjj";
   programs.fish.shellAliases.ljj = "lazyjj";
