@@ -248,4 +248,11 @@ return {
 			filetypes = { "fish" },
 		},
 	},
+	{
+		"clangd",
+		enabled = nixCats("cpp") or false,
+		lsp = {
+			filetypes = { "c", "cpp", "objc", "objcpp", "cuda", "proto" },
+		},
+	},
 }
