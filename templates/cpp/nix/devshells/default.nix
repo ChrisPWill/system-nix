@@ -25,6 +25,7 @@ pkgs.mkShell.override {stdenv = pkgs.llvmPackages.libcxxStdenv;} {
     include-what-you-use
     treefmt
     alejandra
+    ncurses
 
     # Documentation
     doxygen
@@ -32,6 +33,7 @@ pkgs.mkShell.override {stdenv = pkgs.llvmPackages.libcxxStdenv;} {
 
   buildInputs = with pkgs; [
     # (Included in libcxxStdenv: libcxx)
+    # Add library dependencies here (e.g., fmt, boost, openssl)
   ];
 
   # Load custom bash code

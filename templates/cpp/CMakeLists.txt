@@ -5,8 +5,14 @@ set(CMAKE_CXX_STANDARD 26)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
+# Example: Adding a library (e.g., fmt)
+# find_package(fmt REQUIRED)
+
 # Source files
 add_executable(my_project src/main.cpp)
+
+# Example: Linking a library
+# target_link_libraries(my_project PRIVATE fmt::fmt)
 
 # Example: enable all warnings
 if(MSVC)
@@ -14,3 +20,5 @@ if(MSVC)
 else()
     target_compile_options(my_project PRIVATE -Wall -Wextra -Wpedantic)
 endif()
+
+install(TARGETS my_project DESTINATION bin)

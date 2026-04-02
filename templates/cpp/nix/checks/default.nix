@@ -9,6 +9,8 @@ pkgs.stdenv.mkDerivation {
     cmake
     ninja
     just
+    ccache
+    ncurses
     cppcheck
     clang-tools # for clang-tidy
     treefmt
@@ -20,6 +22,8 @@ pkgs.stdenv.mkDerivation {
   ];
 
   dontConfigure = true;
+
+  env.CCACHE_DISABLE = "1";
 
   buildPhase = ''
     just check

@@ -10,6 +10,10 @@ pkgs.stdenv.mkDerivation {
     ninja
   ];
 
+  buildInputs = with pkgs; [
+    # Add library dependencies here (e.g., fmt, boost, openssl)
+  ];
+
   cmakeFlags = [
     "-DCMAKE_EXPORT_COMPILE_COMMANDS=ON"
   ];
