@@ -45,5 +45,5 @@ check: configure build
 
 # Format all source files
 format:
-    @printf "{{cyan}}==> Formatting source files...{{reset}}\n"
-    @find src/ -iname "*.cpp" -o -iname "*.h" | xargs clang-format -i
+    @printf "{{cyan}}==> Formatting project with treefmt...{{reset}}\n"
+    @treefmt

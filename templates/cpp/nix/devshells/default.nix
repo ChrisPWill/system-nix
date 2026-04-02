@@ -23,6 +23,8 @@ pkgs.mkShell.override {stdenv = pkgs.llvmPackages.libcxxStdenv;} {
     # Quality & Analysis
     cppcheck
     include-what-you-use
+    treefmt
+    alejandra
 
     # Documentation
     doxygen

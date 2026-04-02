@@ -11,6 +11,8 @@ pkgs.stdenv.mkDerivation {
     just
     cppcheck
     clang-tools # for clang-tidy
+    treefmt
+    alejandra
   ];
 
   buildInputs = with pkgs; [

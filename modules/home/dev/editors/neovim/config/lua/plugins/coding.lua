@@ -20,6 +20,8 @@ return {
 				sh = nixCats("general") and { "shellcheck" } or nil,
 				bash = nixCats("general") and { "shellcheck" } or nil,
 				zsh = nixCats("general") and { "shellcheck" } or nil,
+				cpp = nixCats("cpp") and { "cppcheck" } or nil,
+				c = nixCats("cpp") and { "cppcheck" } or nil,
 			}
 
 			vim.api.nvim_create_autocmd({ "CursorHold", "BufWritePost", "InsertLeave" }, {
@@ -96,6 +98,8 @@ return {
 					bash = nixCats("general") and { "shfmt" } or nil,
 					zsh = nixCats("general") and { "shfmt" } or nil,
 					fish = nixCats("general") and { "fish_indent" } or nil,
+					cpp = nixCats("cpp") and { "treefmt", "clang-format", stop_after_first = true } or nil,
+					c = nixCats("cpp") and { "treefmt", "clang-format", stop_after_first = true } or nil,
 					nu = { lsp_format = "last" },
 				},
 				formatters = {
@@ -113,6 +117,7 @@ return {
 						command = "treefmt",
 						args = { "--stdin", "$FILENAME" },
 						stdin = true,
+						cwd = require("conform.util").root_file({ "treefmt.toml", ".treefmt.toml" }),
 					},
 				},
 			})

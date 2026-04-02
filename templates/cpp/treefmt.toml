@@ -1,0 +1,17 @@
+# Treefmt Configuration
+# One tool to format them all.
+
+[formatter.cpp]
+command = "clang-format"
+options = ["-i"]
+includes = ["*.cpp", "*.h", "src/**/*.cpp", "src/**/*.h", "include/**/*.h"]
+
+[formatter.nix]
+command = "alejandra"
+includes = ["*.nix", "**/*.nix"]
+
+[formatter.cmake]
+# Note: You can add cmake-format here if you add it to devshells
+# command = "cmake-format"
+# options = ["--in-place"]
+# includes = ["CMakeLists.txt"]
