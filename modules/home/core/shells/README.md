@@ -12,3 +12,5 @@ This directory contains the configuration for various shells and shared shell-re
 ## Philosophy
 
 We aim to keep shell configuration as modular as possible. Common aliases and tools are defined in `shared.nix`, while shell-specific features (like Zsh widgets or Fish abbreviations) remain in their respective files.
+
+See [CLI Tools & Hotkeys](../../cli/README.md) for a list of global interactive hotkeys (Alt-O, Alt-W, etc.) and modern Unix tools available across all shells.
