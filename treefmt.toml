@@ -1,0 +1,51 @@
+# Treefmt Configuration
+# https://github.com/numtide/treefmt-nix
+
+[formatter.nix]
+command = "alejandra"
+includes = ["*.nix", "**/*.nix"]
+
+[formatter.prettier]
+command = "prettier"
+options = ["--write"]
+includes = [
+  "*.ts",
+  "**/*.ts",
+  "*.tsx",
+  "**/*.tsx",
+  "*.json",
+  "**/*.json",
+  "*.md",
+  "**/*.md",
+  "*.scss",
+  "**/*.scss",
+  "*.css",
+  "**/*.css",
+  "*.html",
+  "**/*.html",
+  "*.glsl",
+  "**/*.glsl",
+]
+
+[formatter.lua]
+command = "stylua"
+includes = ["*.lua", "**/*.lua"]
+
+[formatter.shell]
+command = "shfmt"
+options = ["-i", "2", "-s", "-w"]
+includes = ["*.sh", "**/*.sh", "modules/home/scripts/*"]
+
+[formatter.toml]
+command = "taplo"
+options = ["fmt"]
+includes = ["*.toml", "**/*.toml"]
+
+[formatter.rust]
+command = "rustfmt"
+includes = ["*.rs", "**/*.rs"]
+
+[formatter.cpp]
+command = "clang-format"
+options = ["-i"]
+includes = ["*.cpp", "**/*.cpp", "*.h", "**/*.h"]
