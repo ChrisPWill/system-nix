@@ -66,6 +66,16 @@
                           send: executehostcommand,
                           cmd: "tv-nvim"
                       }
+                  },
+                  {
+                      name: viddy_command,
+                      modifier: Alt,
+                      keycode: char_w,
+                      mode: [vi_normal, vi_insert, emacs],
+                      event: {
+                          send: executehostcommand,
+                          cmd: "let cmd = (commandline); if ($cmd | str length) > 0 { viddy -n 1 -- $cmd }"
+                      }
                   }
               ]
           )

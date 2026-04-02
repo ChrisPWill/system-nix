@@ -12,6 +12,9 @@
 
     # Watch progress of cp/mv/dd/tar/etc. `tldr progress` for info
     progress
+
+    # Modern watch replacement
+    viddy
   ];
 
   # Nice colourful cat alternative

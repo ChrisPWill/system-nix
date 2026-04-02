@@ -28,6 +28,11 @@
             bind --mode $mode \eo 'tv-nvim; commandline -f repaint'
         end
 
+        # Viddy current command
+        for mode in default insert
+            bind --mode $mode \ew 'set -l cmd (commandline); if test -n "$cmd"; commandline -r "viddy -n 1 -- $cmd"; commandline -f execute; end'
+        end
+
         ${pkgs.fastfetch}/bin/fastfetch -s title:separator:os:cpu:memory:host:chassis:kernel:de:wm:wmtheme:swap:disk:battery:poweradapter:uptime:separator:shell:font:terminal:terminalfont:break:colors
       '';
 

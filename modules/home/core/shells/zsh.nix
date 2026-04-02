@@ -34,9 +34,20 @@
 
         zle -N tv-nvim-widget
 
+        viddy-widget() {
+          local cmd=$BUFFER
+          if [[ -n $cmd ]]; then
+            BUFFER="viddy -n 1 -- $cmd"
+            zle accept-line
+          fi
+        }
+
+        zle -N viddy-widget
+
         # Define extra bindings for zsh-vi-mode
         function zvm_after_init() {
           zvm_bindkey viins '^[o' tv-nvim-widget
+          zvm_bindkey viins '^[w' viddy-widget
           # Re-bind Atuin and Television which are often clobbered by vi-mode
           zvm_bindkey viins '^R' atuin-search-viins
           zvm_bindkey viins '^T' tv-smart-autocomplete
