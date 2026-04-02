@@ -3,12 +3,16 @@
 This configuration follows a **Hybrid Philosophy** designed to reduce friction when switching between Neovim and Helix while preserving the strength of both.
 
 ## 1. Core "Verb-Noun" Integrity
-Unlike Helix, which uses "Selection-Action," this configuration retains Neovim's native **Operator-Pending** model. 
+
+Unlike Helix, which uses "Selection-Action," this configuration retains Neovim's native **Operator-Pending** model.
+
 - `d` (delete), `c` (change), and `y` (yank) precede the motion or text object.
 - Example: `diw` (delete inside word) remains standard.
 
 ## 2. Helix-Aligned Navigation (`g` Prefix)
+
 "Goto" operations are aligned with Helix defaults for consistent spatial movement:
+
 - `gh`: Line start
 - `gl`: Line end
 - `gs`: First non-blank character
@@ -26,6 +30,7 @@ Unlike Helix, which uses "Selection-Action," this configuration retains Neovim's
 - `gI`: Implementation
 
 ## 3. Buffer & Match Management
+
 - `gn`: Next buffer
 - `gp`: Previous buffer
 - `mm`: Match bracket
@@ -34,7 +39,9 @@ Unlike Helix, which uses "Selection-Action," this configuration retains Neovim's
 - `]d / [d`: Next / Previous diagnostic
 
 ## 4. Selection, Alignment & Editing
+
 To preserve standard Neovim behaviors like `&` (Repeat substitute) and `gn` (Search and Select), custom tools are mapped as follows:
+
 - `&`: **Standard Neovim** (Repeat last substitution)
 - `ma`: Align selections (Regex)
 - `mA`: Align selections (Interactive)
@@ -44,17 +51,22 @@ To preserve standard Neovim behaviors like `&` (Repeat substitute) and `gn` (Sea
 - `Ctrl-Alt-k`: Move selection up (Restores `K` for keyword lookup)
 
 ## 5. Commenting
+
 Because `gc` is aligned with Helix for "Center of window," commenting is mapped to `Ctrl-C`:
+
 - `Ctrl-C`: Toggle comment (Line in Normal mode, Selection in Visual mode)
 
 ## 6. Buffer & Tab Management
+
 - `gn`: Next buffer
 - `gp`: Previous buffer
 - `<leader>]t`: Next tab
 - `<leader>[t`: Previous tab
 
 ## 7. Flat Leader Map ("Space" Mode)
+
 High-frequency actions mapped to single keys under the `<leader>` (Space) prefix:
+
 - `<leader>f`: Find files
 - `<leader>gf`: Find git files
 - `<leader>F`: Smart find files (Files, Recents, Buffers)
@@ -69,7 +81,9 @@ High-frequency actions mapped to single keys under the `<leader>` (Space) prefix
 - `<leader>w`: Window management (mapped to `<C-w>`)
 
 ## 8. Domain-Specific Groups
+
 Secondary tools are organized into mnemonic groups:
+
 - `<leader>/`: **Search / Pick** (Grep, Help, Symbols, Undo, Knowledge Base, etc.)
 - `<leader>g`: **Git Group** (LazyGit: `gg`, LazyJJ: `gj`, Tig Blame: `gb`, Inline Blame: `gl`, Stage: `gs`, Reset: `gr`, etc.)
 - `<leader>c`: **Code Group** (Format: `cf`, Testing: `ct`, Breakpoints: `cb`)
@@ -79,6 +93,7 @@ Secondary tools are organized into mnemonic groups:
 - `<leader>k`: **Knowledge & Snippets** (Cheat-sheet: `kc`, Keymaps: `km`, Snippets: `ks`/`ka`)
 
 ## 9. Plugin-Specific Navigation
+
 - `]g / [g`: Next/Previous Git hunk
 - `]f / [f`: Next/Previous Function start
 - `]F / [F`: Next/Previous Function end
@@ -91,9 +106,11 @@ Secondary tools are organized into mnemonic groups:
 - `} / {`: **Repeat** Next/Previous motion
 
 ## 10. Enhancement over Defaults
+
 - `n / N`: Search results are always centered.
 - `<C-d> / <C-u>`: Half-page scrolling is always centered.
 - `j / k`: Smart word-wrap navigation (visual line movement).
 
 ## 11. Documentation
+
 See **[cheatsheet.md](./cheatsheet.md)** for a quick reference, and **[clobbered-keybinds.md](./clobbered-keybinds.md)** for a full list of overridden standard Neovim mappings.

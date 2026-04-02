@@ -11,6 +11,7 @@ A Helix configuration aligned with the project's **Hybrid Philosophy** to provid
 ## 󱄅 Nix Implementation
 
 The configuration is managed in `modules/home/dev/editors/helix/default.nix`. It explicitly:
+
 1.  Declares all necessary LSP and formatter binaries in `home.packages`.
 2.  Configures `programs.helix.languages` to map these binaries to their respective languages.
 3.  Overrides default styling targets (like Stylix) where necessary to ensure precise manual alignment with the "Hybrid" UX.

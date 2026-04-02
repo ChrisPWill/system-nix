@@ -5,6 +5,7 @@ nix run github:crabdancing/nix-flamegraph -- -t ".#nixosConfigurations.cwilliams
 ```
 
 Or try evaluating just home-manager:
+
 ```zsh
 nix eval .#nixosConfigurations.cwilliams-laptop.config.home-manager.users.cwilliams.home.activationPackage.outPath --eval-profiler flamegraph
 ```
@@ -18,4 +19,3 @@ NIX_SHOW_STATS_PATH=stats.json nix eval .#nixosConfigurations.cwilliams-laptop.c
 ```
 
 Go to https://notashelf.github.io/nix-evaluator-stats/ and open the file to review
-

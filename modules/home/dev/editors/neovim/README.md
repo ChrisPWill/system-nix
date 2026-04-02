@@ -39,12 +39,14 @@ The configuration is split into logical modules under `lua/` to keep `init.lua` 
 This configuration follows a **Hybrid Philosophy** designed to reduce friction when switching between Neovim and Helix while preserving the strength of both.
 
 ### Core Rules
+
 - **Hybrid Navigation:** Retains Neovim's native **Operator-Pending** model while adopting Helix `g` (Goto), `m` (Match/Surround), and Space (`<leader>`) modes.
 - **Helix Alignment:** `g` prefix for movement (e.g., `gh` for line start, `gl` for line end, `ge` for end of file).
-- **Functionality-Focused Descriptions:** All keybinding descriptions (`desc`) MUST describe *what* the action does, not *which plugin* provides it (e.g., "Explorer" instead of "Snacks Explorer").
+- **Functionality-Focused Descriptions:** All keybinding descriptions (`desc`) MUST describe _what_ the action does, not _which plugin_ provides it (e.g., "Explorer" instead of "Snacks Explorer").
 - **Domain-Specific Grouping:** Organise keybindings into functional domains (e.g., `<leader>g` for Git, `<leader>t` for Toggles, `<leader>r` for Refactoring).
 
 ### Knowledge Base & Documentation
+
 - **Maintenance:** When adding complex plugins or modifying significant workflows, **ALWAYS** update or create a corresponding reference guide in `docs/`.
 - **Cheatsheet:** Keep `docs/cheatsheet.md` up to date as the primary entry point for common flows.
 - **Minimalist Documentation:** Guides should focus on practical use-cases and keybindings. Remove technical implementation details (like "Floating Window") and use standard mode abbreviations (e.g., `(n/x/o)`).
@@ -52,6 +54,7 @@ This configuration follows a **Hybrid Philosophy** designed to reduce friction w
 ## 󱄅 Nix Integration
 
 The configuration is integrated into the NixOS/Darwin system via `nixCats`. This allows for:
+
 - **Category-based plugin loading:** Plugins and LSPs are enabled/disabled based on categories defined in `default.nix`.
 - **Runtime Dependencies:** LSPs and tools like `ripgrep`, `fd`, and `stylua` are automatically provided by Nix.
 - **OutOfStoreSymlinks:** The configuration is symlinked to allow for rapid iteration without full Nix rebuilds.

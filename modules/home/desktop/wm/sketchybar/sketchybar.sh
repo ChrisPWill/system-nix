@@ -69,7 +69,7 @@ for monitor in $(aerospace list-monitors --format "%{monitor-appkit-nsscreen-scr
       background.border_width=0 \
       background.height=25 \
       icon="$symbol" \
-      label="$( [ "$focused" = "true" ] && echo "$window_title" )" \
+      label="$([ "$focused" = "true" ] && echo "$window_title")" \
       label.color=0xffffffff \
       label.font="FantasqueSansM Nerd Font Mono:Bold:14.0" \
       label.padding_left=10 \
@@ -81,4 +81,3 @@ for monitor in $(aerospace list-monitors --format "%{monitor-appkit-nsscreen-scr
 done
 
 sketchybar --update
-

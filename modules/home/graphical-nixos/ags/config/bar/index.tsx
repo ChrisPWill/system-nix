@@ -1,12 +1,13 @@
-import { Astal } from "ags/gtk4"
+import { Astal } from "ags/gtk4";
 
 import Clock from "./Clock";
-import Network from './Network';
+import Network from "./Network";
 
 export default function Bar() {
-    const { TOP, LEFT, RIGHT } = Astal.WindowAnchor
+  const { TOP, LEFT, RIGHT } = Astal.WindowAnchor;
 
-    return <window class="bar" visible anchor={TOP | LEFT | RIGHT}>
+  return (
+    <window class="bar" visible anchor={TOP | LEFT | RIGHT}>
       <centerbox>
         <box $type="center">
           <box class="widget button">
@@ -19,5 +20,6 @@ export default function Bar() {
           </box>
         </box>
       </centerbox>
-    </window>;
+    </window>
+  );
 }

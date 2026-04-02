@@ -231,7 +231,16 @@ return {
 		"tailwindcss",
 		enabled = nixCats("web") or false,
 		lsp = {
-			filetypes = { "html", "javascript", "typescript", "javascriptreact", "typescriptreact", "css", "scss", "less" },
+			filetypes = {
+				"html",
+				"javascript",
+				"typescript",
+				"javascriptreact",
+				"typescriptreact",
+				"css",
+				"scss",
+				"less",
+			},
 		},
 	},
 	{

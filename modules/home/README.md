@@ -5,12 +5,15 @@ This directory implements a **Domain-Driven Design (DDD)** approach to Home Mana
 ## Philosophy
 
 ### 1. Intent over Syntax
+
 Configuration is organized by the user's **intent**—what they are trying to achieve—rather than Nix-specific implementation details. Whether a tool is installed via a simple package list or a complex program module, it is grouped with other tools that serve the same functional purpose.
 
 ### 2. Compositional Orchestration
+
 Each domain directory contains an entry point (usually `default.nix`) that acts as an orchestrator, composing the various components within that domain. This keeps the top-level configuration clean and focused on high-level domain toggling.
 
 ### 3. Encapsulation
+
 Tool-specific settings, plugins, and init scripts are encapsulated within their respective domain modules. This ensures that configuration logic remains localized and that removing a tool or domain cleans up all associated logic automatically.
 
 ## Domain Definitions

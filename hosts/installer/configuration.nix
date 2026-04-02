@@ -21,7 +21,7 @@
   home-manager = {
     useGlobalPkgs = true;
     useUserPackages = true;
-    extraSpecialArgs = { inherit inputs; };
+    extraSpecialArgs = {inherit inputs;};
     users.cwilliams = {
       imports = [
         inputs.self.homeModules.home-shared

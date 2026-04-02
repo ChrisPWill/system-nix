@@ -1,1 +1,13 @@
-{"unittest_class":{"body":["import unittest","","class TestClass(unittest.TestCase):","    def test_name(self):","        # Use self.assertEqual for assertions","        self.assertEqual(${1:}, ${2:})"],"prefix":"unittest_class"}}
+{
+  "unittest_class": {
+    "body": [
+      "import unittest",
+      "",
+      "class TestClass(unittest.TestCase):",
+      "    def test_name(self):",
+      "        # Use self.assertEqual for assertions",
+      "        self.assertEqual(${1:}, ${2:})"
+    ],
+    "prefix": "unittest_class"
+  }
+}

@@ -16,6 +16,6 @@ host or a headless box.
 This includes the typical settings I'd want on a desktop. Not set in
 stone as of writing this, but should include things like:
 
-* Desktop environment
-* Audio settings not specific to a host
-* Globally installed software
+- Desktop environment
+- Audio settings not specific to a host
+- Globally installed software

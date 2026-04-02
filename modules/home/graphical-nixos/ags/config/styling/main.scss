@@ -36,7 +36,7 @@ $blueColor: $base0D;
   color: $defaultFgColor;
   background-color: $defaultBgColor;
   font-size: 0.9rem;
-  font-family: 'DejaVu Sans';
+  font-family: "DejaVu Sans";
   letter-spacing: -0.05em;
 }
 
@@ -45,7 +45,7 @@ $blueColor: $base0D;
   Uncomment this if it seems too jarring to use FantasqueSansM
   font-family: 'DejaVu Sans Mono';
   */
-  font-family: 'FantasqueSansM Nerd Font';
+  font-family: "FantasqueSansM Nerd Font";
 }
 
 window.bar {
@@ -86,7 +86,6 @@ window.bar {
       }
     }
   }
-
 }
 
 menubutton.flat {
@@ -98,7 +97,7 @@ menubutton.flat {
 menubutton.clock {
   calendar {
     background-color: $defaultBgColor;
-    font-family: 'FantasqueSansM Nerd Font';
+    font-family: "FantasqueSansM Nerd Font";
 
     header {
       background-color: $lighterBgColor;
