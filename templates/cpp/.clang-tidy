@@ -1,0 +1,22 @@
+# Clang-Tidy Configuration
+# Focused on safety, performance, and modern C++ best practices.
+
+Checks: >
+  -*,
+  bugprone-*,
+  cert-*,
+  clang-analyzer-*,           # HIGH IMPACT: Performs deep symbolic execution. Disable for faster checks.
+  concurrency-*,
+  cppcoreguidelines-*,        # MEDIUM IMPACT: Broad enforcement of C++ Core Guidelines.
+  misc-*,
+  performance-*,
+  portability-*,
+  readability-*,
+  -cppcoreguidelines-avoid-magic-numbers,
+  -readability-magic-numbers
+
+# All warnings are treated as errors to ensure a clean build.
+WarningsAsErrors: '*'
+
+# Note: If analysis becomes too slow, start by disabling 'clang-analyzer-*' 
+# or specific expensive 'cppcoreguidelines-*' checks.

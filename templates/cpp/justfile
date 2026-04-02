@@ -1,29 +1,49 @@
 set shell := ["bash", "-uc"]
 
+# Colors for output
+cyan := `tput setaf 6`
+green := `tput setaf 2`
+yellow := `tput setaf 3`
+reset := `tput sgr0`
+
 # List all available commands
 default:
     @just --list
 
 # Configure the project with CMake
 configure:
-    cmake -B build -G Ninja
+    @printf "{{cyan}}==> Configuring with CMake (using ccache)...{{reset}}\n"
+    @cmake -B build -G Ninja \
+        -DCMAKE_EXPORT_COMPILE_COMMANDS=ON \
+        -DCMAKE_CXX_COMPILER_LAUNCHER=ccache \
+        --log-level=NOTICE
+    @ln -sf build/compile_commands.json .
 
 # Build the project
 build: configure
-    cmake --build build
+    @printf "{{cyan}}==> Building project...{{reset}}\n"
+    @cmake --build build
 
 # Build and run the project
 run: build
-    ./build/my_project
+    @printf "{{green}}==> Running executable...{{reset}}\n"
+    @./build/my_project
 
 # Clean build artifacts
 clean:
-    rm -rf build/
+    @printf "{{yellow}}==> Cleaning build and cache artifacts...{{reset}}\n"
+    @rm -rf build/
 
 # Run static analysis
-check:
-    cppcheck --enable=all src/
+check: configure build
+    @printf "{{cyan}}==> Running Cppcheck (cached)...{{reset}}\n"
+    @mkdir -p build/cppcheck
+    @cppcheck --enable=all --std=c++26 --suppress=missingIncludeSystem --quiet --cppcheck-build-dir=build/cppcheck src/
+    @printf "{{cyan}}==> Running Clang-Tidy (parallel)...{{reset}}\n"
+    @find src/ -name "*.cpp" | xargs -P $(nproc) -I {} clang-tidy {} -p build --quiet -- ${NIX_CFLAGS_COMPILE:-}
+    @printf "{{green}}==> All checks passed!{{reset}}\n"
 
 # Format all source files
 format:
-    find src/ -iname "*.cpp" -o -iname "*.h" | xargs clang-format -i
+    @printf "{{cyan}}==> Formatting source files...{{reset}}\n"
+    @find src/ -iname "*.cpp" -o -iname "*.h" | xargs clang-format -i
