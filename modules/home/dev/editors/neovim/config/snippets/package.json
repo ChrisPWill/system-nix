@@ -4,11 +4,15 @@
   "contributes": {
     "snippets": [
       {
-        "language": ["python"],
+        "language": [
+          "python"
+        ],
         "path": "./python.json.json"
       },
       {
-        "language": ["markdown"],
+        "language": [
+          "markdown"
+        ],
         "path": "./markdown.json.json"
       }
     ]
