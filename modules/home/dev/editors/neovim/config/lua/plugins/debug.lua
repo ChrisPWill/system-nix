@@ -28,23 +28,13 @@ return {
 
 			utils.nmap("<F7>", dapui.toggle, "Debug (Last Result)")
 
-			local help_win = nil
 			dap.listeners.after.event_initialized["dapui_config"] = function()
 				dapui.open()
-				help_win = utils.createHelpFloat("F1: In | F2: Over | F3: Out | F5: Cont")
 			end
 			dap.listeners.before.event_terminated["dapui_config"] = function()
-				if help_win then
-					help_win:close()
-					help_win = nil
-				end
 				dapui.close()
 			end
 			dap.listeners.before.event_exited["dapui_config"] = function()
-				if help_win then
-					help_win:close()
-					help_win = nil
-				end
 				dapui.close()
 			end
 
@@ -92,13 +82,15 @@ return {
 				require("dap-python").setup("python")
 			end
 
-			if nixCats("rust") then
+			if nixCats("rust") or nixCats("cpp") then
 				dap.adapters.lldb = {
 					type = "executable",
 					command = "lldb-dap",
 					name = "lldb",
 				}
+			end
 
+			if nixCats("rust") then
 				dap.configurations.rust = {
 					{
 						name = "Launch",
@@ -112,6 +104,23 @@ return {
 						args = {},
 					},
 				}
+			end
+
+			if nixCats("cpp") then
+				dap.configurations.cpp = {
+					{
+						name = "Launch",
+						type = "lldb",
+						request = "launch",
+						program = function()
+							return vim.fn.input("Path to executable: ", vim.fn.getcwd() .. "/build/", "file")
+						end,
+						cwd = "${workspaceFolder}",
+						stopOnEntry = false,
+						args = {},
+					},
+				}
+				dap.configurations.c = dap.configurations.cpp
 			end
 		end,
 	},

@@ -1,3 +1,7 @@
+if(NOT CMAKE_BUILD_TYPE)
+  set(CMAKE_BUILD_TYPE RelWithDebInfo CACHE STRING "Choose the type of build" FORCE)
+endif()
+
 cmake_minimum_required(VERSION 3.10)
 project(my_project VERSION 1.0 LANGUAGES CXX)
 

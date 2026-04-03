@@ -11,16 +11,30 @@ default:
     @just --list
 
 # Configure the project with CMake
-configure:
+configure-debug:
     @printf "{{cyan}}==> Configuring with CMake (using ccache)...{{reset}}\n"
     @cmake -B build -G Ninja \
         -DCMAKE_EXPORT_COMPILE_COMMANDS=ON \
         -DCMAKE_CXX_COMPILER_LAUNCHER=ccache \
+        -DCMAKE_BUILD_TYPE=Debug \
+        --log-level=NOTICE
+    @ln -sf build/compile_commands.json .
+
+configure-release:
+    @printf "{{cyan}}==> Configuring with CMake (using ccache)...{{reset}}\n"
+    @cmake -B build -G Ninja \
+        -DCMAKE_EXPORT_COMPILE_COMMANDS=ON \
+        -DCMAKE_CXX_COMPILER_LAUNCHER=ccache \
+        -DCMAKE_BUILD_TYPE=Release \
         --log-level=NOTICE
     @ln -sf build/compile_commands.json .
 
 # Build the project
-build: configure
+build: configure-debug
+    @printf "{{cyan}}==> Building project ({{yellow}}debug{{cyan}})...{{reset}}\n"
+    @cmake --build build
+
+build-release: configure-release
     @printf "{{cyan}}==> Building project...{{reset}}\n"
     @cmake --build build
 
@@ -35,7 +49,7 @@ clean:
     @rm -rf build/
 
 # Run static analysis
-check: configure build
+check: configure-debug build
     @printf "{{cyan}}==> Running Cppcheck (cached)...{{reset}}\n"
     @mkdir -p build/cppcheck
     @cppcheck --enable=all --std=c++26 --suppress=missingIncludeSystem --quiet --cppcheck-build-dir=build/cppcheck src/
