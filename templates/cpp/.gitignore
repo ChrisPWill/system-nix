@@ -12,7 +12,6 @@ obj/
 *.out
 
 # Editor
-.vscode/
 .clangd/
 .cache/
 compile_commands.json

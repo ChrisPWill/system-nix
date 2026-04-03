@@ -54,6 +54,13 @@ To add a new library dependency (e.g., `fmt`):
     nix flake update
     ```
 
+## Debugging
+
+The template includes standard configurations for debugging:
+
+- **Neovim (nvim-dap):** Automatically recognizes the executable path and configurations.
+- **VSCode:** Includes a `launch.json` and `tasks.json` for F5 debugging via `lldb` (and `just build`).
+
 ## Project Structure
 
 - `src/`: Source files.

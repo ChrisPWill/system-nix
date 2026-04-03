@@ -17,6 +17,41 @@ return {
 			local dap = require("dap")
 			local dapui = require("dapui")
 
+			local function get_program_path(default_path)
+				local root = vim.fn.getcwd()
+				-- Try .debug.json first (custom simple format)
+				local debug_json = root .. "/.debug.json"
+				if vim.fn.filereadable(debug_json) == 1 then
+					local ok, data = pcall(function()
+						return vim.json.decode(table.concat(vim.fn.readfile(debug_json), "\n"))
+					end)
+					if ok and data and data.program then
+						return data.program:gsub("${workspaceFolder}", root)
+					end
+				end
+
+				-- Try .vscode/launch.json (best effort parsing for just the program path)
+				local launch_json = root .. "/.vscode/launch.json"
+				if vim.fn.filereadable(launch_json) == 1 then
+					local ok, data = pcall(function()
+						-- Note: vim.json.decode doesn't support comments, which launch.json often has.
+						-- But some projects use clean JSON.
+						return vim.json.decode(table.concat(vim.fn.readfile(launch_json), "\n"))
+					end)
+					if ok and data and data.configurations then
+						for _, cfg in ipairs(data.configurations) do
+							if
+								cfg.program and (cfg.type == "lldb" or cfg.type == "cppdbg" or cfg.type == "lldb-dap")
+							then
+								return cfg.program:gsub("${workspaceFolder}", root)
+							end
+						end
+					end
+				end
+
+				return vim.fn.input("Path to executable: ", default_path or (root .. "/"), "file")
+			end
+
 			utils.nmap("<F5>", dap.continue, "Debug (Start/Continue)")
 			utils.nmap("<F1>", dap.step_into, "Debug (Step Into)")
 			utils.nmap("<F2>", dap.step_over, "Debug (Step Over)")
@@ -28,13 +63,23 @@ return {
 
 			utils.nmap("<F7>", dapui.toggle, "Debug (Last Result)")
 
+			local help_win = nil
 			dap.listeners.after.event_initialized["dapui_config"] = function()
 				dapui.open()
+				help_win = utils.createHelpFloat("F1: In | F2: Over | F3: Out | F5: Cont")
 			end
 			dap.listeners.before.event_terminated["dapui_config"] = function()
+				if help_win then
+					help_win:close()
+					help_win = nil
+				end
 				dapui.close()
 			end
 			dap.listeners.before.event_exited["dapui_config"] = function()
+				if help_win then
+					help_win:close()
+					help_win = nil
+				end
 				dapui.close()
 			end
 
@@ -97,7 +142,7 @@ return {
 						type = "lldb",
 						request = "launch",
 						program = function()
-							return vim.fn.input("Path to executable: ", vim.fn.getcwd() .. "/target/debug/", "file")
+							return get_program_path(vim.fn.getcwd() .. "/target/debug/")
 						end,
 						cwd = "${workspaceFolder}",
 						stopOnEntry = false,
@@ -113,7 +158,7 @@ return {
 						type = "lldb",
 						request = "launch",
 						program = function()
-							return vim.fn.input("Path to executable: ", vim.fn.getcwd() .. "/build/", "file")
+							return get_program_path(vim.fn.getcwd() .. "/build/")
 						end,
 						cwd = "${workspaceFolder}",
 						stopOnEntry = false,
@@ -122,6 +167,9 @@ return {
 				}
 				dap.configurations.c = dap.configurations.cpp
 			end
+
+			-- Support .vscode/launch.json properly
+			require("dap.ext.vscode").load_launchjs(nil, { lldb = { "rust", "cpp", "c" } })
 		end,
 	},
 	{
