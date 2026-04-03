@@ -32,6 +32,7 @@ pkgs.mkShell.override {stdenv = pkgs.llvmPackages.libcxxStdenv;} {
   ];
 
   buildInputs = with pkgs; [
+    doctest
     # (Included in libcxxStdenv: libcxx)
     # Add library dependencies here (e.g., fmt, boost, openssl)
   ];

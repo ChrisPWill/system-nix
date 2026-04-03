@@ -1,3 +1,4 @@
+
 set shell := ["bash", "-uc"]
 
 # Colors for output
@@ -43,6 +44,11 @@ run: build
     @printf "{{green}}==> Running executable...{{reset}}\n"
     @./build/my_project
 
+# Run tests
+test: build
+    @printf "{{cyan}}==> Running tests...{{reset}}\n"
+    @cd build && ctest --output-on-failure
+
 # Clean build artifacts
 clean:
     @printf "{{yellow}}==> Cleaning build and cache artifacts...{{reset}}\n"
@@ -52,9 +58,10 @@ clean:
 check: configure-debug build
     @printf "{{cyan}}==> Running Cppcheck (cached)...{{reset}}\n"
     @mkdir -p build/cppcheck
-    @cppcheck --enable=all --std=c++26 --suppress=missingIncludeSystem --quiet --cppcheck-build-dir=build/cppcheck src/
+    @cppcheck --inline-suppr --enable=all --std=c++26 --suppress=missingIncludeSystem --quiet --cppcheck-build-dir=build/cppcheck src/
+    @cppcheck --enable=warning,performance,portability --std=c++26 --suppress=missingIncludeSystem --quiet --cppcheck-build-dir=build/cppcheck tests/
     @printf "{{cyan}}==> Running Clang-Tidy (parallel)...{{reset}}\n"
-    @find src/ -name "*.cpp" | xargs -P $(nproc) -I {} clang-tidy {} -p build --quiet -- ${NIX_CFLAGS_COMPILE:-}
+    @find src/ tests/ -name "*.cpp" | xargs -P $(nproc) -I {} clang-tidy {} -p build --quiet -- ${NIX_CFLAGS_COMPILE:-}
     @printf "{{green}}==> All checks passed!{{reset}}\n"
 
 # Format all source files

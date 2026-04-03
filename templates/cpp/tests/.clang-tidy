@@ -1,0 +1,16 @@
+---
+# Inherit everything from the root config, then modify:
+Checks: >
+  -cppcoreguidelines-pro-type-vararg,      # Allow varargs (common in some mock frameworks)
+  -cppcoreguidelines-special-member-functions, # Tests don't usually need full Rule of 5
+  -cppcoreguidelines-owning-memory,         # Raw pointers are often fine in test locals
+  -readability-function-size,              # Tests (especially integration) can get long
+  -readability-identifier-length,          # Allow short names like 'db' or 's' in tests
+  -knownConditionTrueFalse
+  bugprone-assert-side-effect,
+  bugprone-unused-raii,
+  google-readability-avoid-underscore-in-googletest-name
+  
+# It's often helpful to keep WarningsAsErrors for tests, 
+# but you might want to disable it during a heavy refactor.
+WarningsAsErrors: '*'

@@ -5,7 +5,10 @@ pkgs.stdenv.mkDerivation {
 
   src = pkgs.lib.cleanSourceWith {
     src = ../../.;
-    filter = name: type: let baseName = baseNameOf (toString name); in !(type == "directory" && (baseName == "build" || baseName == ".direnv"));
+    filter = name: type: let
+      baseName = baseNameOf (toString name);
+    in
+      !(type == "directory" && (baseName == "build" || baseName == ".direnv"));
   };
 
   nativeBuildInputs = with pkgs; [
@@ -14,6 +17,7 @@ pkgs.stdenv.mkDerivation {
   ];
 
   buildInputs = with pkgs; [
+    doctest
     # Add library dependencies here (e.g., fmt, boost, openssl)
   ];
 
