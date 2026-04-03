@@ -1,6 +1,6 @@
 # 󰙨 Testing Lifecycle
 
-This configuration uses `neotest` for Python and Rust, providing an integrated test runner and summary view.
+This configuration uses `neotest` for Python, Rust, and C++, providing an integrated test runner and summary view.
 
 ## 󰌌 Keybindings
 
@@ -16,4 +16,5 @@ This configuration uses `neotest` for Python and Rust, providing an integrated t
 - **Adapters:**
   - **Python:** Using the standard `unittest` runner.
   - **Rust:** Integrated with `rustaceanvim` for cargo-aware testing.
+  - **C++:** Using `neotest-ctest` for CMake-driven projects (assumes `build/` directory).
 - **Log Level:** Currently set to **DEBUG** for troubleshooting test runner issues.

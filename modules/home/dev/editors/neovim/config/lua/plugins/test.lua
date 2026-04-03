@@ -18,6 +18,14 @@ return {
 			if nixCats("rust") then
 				table.insert(adapters, require("rustaceanvim.neotest"))
 			end
+			if nixCats("cpp") then
+				table.insert(
+					adapters,
+					require("neotest-ctest").setup({
+						-- Any options here
+					})
+				)
+			end
 			require("neotest").setup({
 				log_level = vim.log.levels.DEBUG,
 				adapters = adapters,
@@ -34,5 +42,10 @@ return {
 		"neotest-python",
 		enabled = nixCats("python") or false,
 		on_require = { "neotest-python" },
+	},
+	{
+		"neotest-ctest",
+		enabled = nixCats("cpp") or false,
+		on_require = { "neotest-ctest" },
 	},
 }

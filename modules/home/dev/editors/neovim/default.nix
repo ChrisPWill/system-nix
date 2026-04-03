@@ -212,6 +212,9 @@ in {
             neotest-jest
             neotest-deno
           ];
+          cpp = with pkgs.vimPlugins; [
+            neotest-ctest
+          ];
           copilot = with pkgs.vimPlugins; [
             copilot-lua
             copilot-lualine
