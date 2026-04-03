@@ -8,6 +8,14 @@
 vim.opt.list = true
 vim.opt.listchars = { tab = "» ", trail = "·", nbsp = "␣" }
 
+-- Auto reload changed file if not modified
+vim.opt.autoread = true
+vim.api.nvim_create_autocmd({ "FocusGained", "BufEnter", "CursorHold" }, {
+	pattern = "*",
+	-- checktime: checks if any buffers have been changed on disk
+	command = "if mode() != 'c' | checktime | endif",
+})
+
 -- Set highlight on search
 vim.opt.hlsearch = true
 vim.keymap.set("n", "<Esc>", "<cmd>nohlsearch<CR>")
