@@ -74,7 +74,7 @@ in {
             prettierd
             marksman
             fish-lsp
-            nodePackages.bash-language-server
+            bash-language-server
             shellcheck
             shfmt
             tombi
@@ -88,9 +88,9 @@ in {
             alejandra
           ];
           node = with pkgs; [
-            nodePackages.typescript-language-server
+            typescript-language-server
             eslint_d
-            nodePackages.graphql-language-service-cli
+            graphql-language-service-cli
             vscode-js-debug
           ];
           rust = with pkgs; [
@@ -126,9 +126,9 @@ in {
             ktlint
           ];
           web = with pkgs; [
-            nodePackages.vscode-langservers-extracted
-            nodePackages.yaml-language-server
-            nodePackages.tailwindcss
+            vscode-langservers-extracted
+            yaml-language-server
+            tailwindcss
           ];
         };
 

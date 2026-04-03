@@ -1,9 +1,4 @@
-{
-  pkgs,
-  lib,
-  config,
-  ...
-}: {
+{pkgs, ...}: {
   # Mirroring the LSP/Formatter setup from Neovim
   home.packages = with pkgs; [
     # Nix
@@ -28,13 +23,13 @@
     stylua
 
     # Web/JS/TS
-    nodePackages.typescript-language-server
+    typescript-language-server
     prettierd
-    nodePackages.vscode-langservers-extracted # HTML/CSS/JSON
-    nodePackages.yaml-language-server
+    vscode-langservers-extracted # HTML/CSS/JSON
+    yaml-language-server
 
     # Shell
-    nodePackages.bash-language-server
+    bash-language-server
     shellcheck
     shfmt
     fish-lsp
