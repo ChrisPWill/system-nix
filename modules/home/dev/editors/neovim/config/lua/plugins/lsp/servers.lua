@@ -1,6 +1,13 @@
 local utils = require("utils")
 local lsp_utils = require("plugins.lsp")
 
+vim.api.nvim_create_autocmd("LspAttach", {
+	callback = function(ev)
+		local client = vim.lsp.get_client_by_id(ev.data.client_id)
+		lsp_utils.on_attach(client, ev.buf)
+	end
+})
+
 return {
 	{
 		"nvim-lspconfig",
@@ -14,11 +21,6 @@ return {
 		lsp = function(plugin)
 			vim.lsp.config(plugin.name, plugin.lsp or {})
 			vim.lsp.enable(plugin.name)
-		end,
-		before = function(_)
-			vim.lsp.config("*", {
-				on_attach = lsp_utils.on_attach,
-			})
 		end,
 	},
 	{
