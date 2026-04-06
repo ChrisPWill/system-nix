@@ -1,4 +1,4 @@
-{...}: {
+{pkgs, ...}: {
   # Steam
   programs.steam = {
     enable = true;
@@ -16,4 +16,8 @@
     # Spotify discovery of Google Cast + Spotify Connect
     5353
   ];
+
+  # ProtonVPN
+  networking.firewall.checkReversePath = false;
+  environment.systemPackages = with pkgs; [wireguard-tools protonvpn-gui];
 }
