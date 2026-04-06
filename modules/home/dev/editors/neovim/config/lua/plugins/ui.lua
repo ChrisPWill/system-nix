@@ -36,15 +36,15 @@ return {
 			local function get_file_accent()
 				-- Vaguely OneDark (orange is custom)
 				local ft_colors = {
-					nix = "#61afef",   -- blue
-					lua = "#c678dd",   -- purple
+					nix = "#61afef", -- blue
+					lua = "#c678dd", -- purple
 					python = "#61afef", -- blue
-					rust = "#d19a66",  -- orange
+					rust = "#d19a66", -- orange
 					javascript = "#e5c07b", -- yellow
 					typescript = "#61afef", -- blue
-					go = "#56b6c2",    -- cyan
+					go = "#56b6c2", -- cyan
 					markdown = "#abb2bf", -- gray
-					java = "#e06c75",  -- red
+					java = "#e06c75", -- red
 				}
 				return ft_colors[vim.bo.filetype] or nil
 			end
@@ -134,8 +134,8 @@ return {
 								end
 
 								local bar = string.rep("█", num_full)
-										.. partial_char
-										.. string.rep(" ", bar_width - num_full - (partial_char ~= "" and 1 or 0))
+									.. partial_char
+									.. string.rep(" ", bar_width - num_full - (partial_char ~= "" and 1 or 0))
 								return "󱔆 " .. bar
 							end,
 							color = { fg = "#abb2bf" }, -- Light grey on dark grey track
@@ -167,16 +167,16 @@ return {
 								-- Heartbeat animation
 								local frame = math.floor(vim.loop.hrtime() / 120000000) % 10
 								local spinners =
-								{ "⠋", "⠙", "⠹", "⠸", "⠼", "⠴", "⠦", "⠧", "⠇", "⠏" }
+									{ "⠋", "⠙", "⠹", "⠸", "⠼", "⠴", "⠦", "⠧", "⠇", "⠏" }
 								local spinner = ""
 
 								-- Only spin if there's progress
 								local progress = false
 								for _, client in ipairs(clients) do
 									if
-											client.progress
-											and client.progress.tokens
-											and next(client.progress.tokens) ~= nil
+										client.progress
+										and client.progress.tokens
+										and next(client.progress.tokens) ~= nil
 									then
 										progress = true
 										break
@@ -227,47 +227,47 @@ return {
 		after = function()
 			require("which-key").setup({})
 			require("which-key").add({
-				{ "<leader><leader>",  group = "Buffer Commands" },
+				{ "<leader><leader>", group = "Buffer Commands" },
 				{ "<leader><leader>_", hidden = true },
-				{ "<leader>/",         group = "Search / Pick" },
-				{ "<leader>/_",        hidden = true },
-				{ "<leader>A",         group = "AI" },
-				{ "<leader>A_",        hidden = true },
-				{ "<leader>c",         group = "Code" },
-				{ "<leader>c_",        hidden = true },
-				{ "<leader>g",         group = "Git" },
-				{ "<leader>g_",        hidden = true },
-				{ "<leader>k",         group = "Knowledge / Snippets" },
-				{ "<leader>k_",        hidden = true },
-				{ "<leader>ka",        desc = "Snippet (Add)" },
-				{ "<leader>kc",        desc = "Cheat-sheet" },
-				{ "<leader>km",        desc = "Keymaps Guide" },
-				{ "<leader>kr",        desc = "Neovim Quickref" },
-				{ "<leader>ks",        desc = "Snippet (Search/Edit)" },
-				{ "<leader>r",         group = "Refactor / Replace" },
-				{ "<leader>r_",        hidden = true },
-				{ "<leader>rn",        desc = "Rename" },
-				{ "<leader>t",         group = "Toggles" },
-				{ "<leader>t_",        hidden = true },
-				{ "<leader>w",         group = "Window Management" },
-				{ "<leader>w_",        hidden = true },
-				{ "<leader>W",         group = "Workspace" },
-				{ "<leader>W_",        hidden = true },
-				{ "g",                 group = "Goto" },
-				{ "m",                 group = "Match / Surround / Align" },
-				{ "ms",                desc = "Add Surround" },
-				{ "md",                desc = "Delete Surround" },
-				{ "mr",                desc = "Replace Surround" },
-				{ "mf",                desc = "Find Surround" },
-				{ "mh",                desc = "Highlight Surround" },
-				{ "mn",                desc = "Surround (Update n lines)" },
-				{ "mm",                desc = "Match bracket" },
-				{ "ma",                desc = "Align (Regex)" },
-				{ "mA",                desc = "Align (Interactive)" },
-				{ "<leader>[",         group = "Prev" },
-				{ "<leader>[t",        desc = "Prev Tab" },
-				{ "<leader>]",         group = "Next" },
-				{ "<leader>]t",        desc = "Next Tab" },
+				{ "<leader>/", group = "Search / Pick" },
+				{ "<leader>/_", hidden = true },
+				{ "<leader>A", group = "AI" },
+				{ "<leader>A_", hidden = true },
+				{ "<leader>c", group = "Code" },
+				{ "<leader>c_", hidden = true },
+				{ "<leader>g", group = "Git" },
+				{ "<leader>g_", hidden = true },
+				{ "<leader>k", group = "Knowledge / Snippets" },
+				{ "<leader>k_", hidden = true },
+				{ "<leader>ka", desc = "Snippet (Add)" },
+				{ "<leader>kc", desc = "Cheat-sheet" },
+				{ "<leader>km", desc = "Keymaps Guide" },
+				{ "<leader>kr", desc = "Neovim Quickref" },
+				{ "<leader>ks", desc = "Snippet (Search/Edit)" },
+				{ "<leader>r", group = "Refactor / Replace" },
+				{ "<leader>r_", hidden = true },
+				{ "<leader>rn", desc = "Rename" },
+				{ "<leader>t", group = "Toggles" },
+				{ "<leader>t_", hidden = true },
+				{ "<leader>w", group = "Window Management" },
+				{ "<leader>w_", hidden = true },
+				{ "<leader>W", group = "Workspace" },
+				{ "<leader>W_", hidden = true },
+				{ "g", group = "Goto" },
+				{ "m", group = "Match / Surround / Align" },
+				{ "ms", desc = "Add Surround" },
+				{ "md", desc = "Delete Surround" },
+				{ "mr", desc = "Replace Surround" },
+				{ "mf", desc = "Find Surround" },
+				{ "mh", desc = "Highlight Surround" },
+				{ "mn", desc = "Surround (Update n lines)" },
+				{ "mm", desc = "Match bracket" },
+				{ "ma", desc = "Align (Regex)" },
+				{ "mA", desc = "Align (Interactive)" },
+				{ "<leader>[", group = "Prev" },
+				{ "<leader>[t", desc = "Prev Tab" },
+				{ "<leader>]", group = "Next" },
+				{ "<leader>]t", desc = "Next Tab" },
 			})
 		end,
 	},
@@ -311,15 +311,15 @@ return {
 		enabled = nixCats("general") or false,
 		cmd = "Trouble",
 		keys = {
-			{ "<leader>tx", "<cmd>Trouble diagnostics toggle<cr>",              desc = "Diagnostics (Workspace)" },
+			{ "<leader>tx", "<cmd>Trouble diagnostics toggle<cr>", desc = "Diagnostics (Workspace)" },
 			{ "<leader>tX", "<cmd>Trouble diagnostics toggle filter.buf=0<cr>", desc = "Diagnostics (Buffer)" },
-			{ "<leader>ts", "<cmd>Trouble symbols toggle focus=false<cr>",      desc = "Symbols" },
+			{ "<leader>ts", "<cmd>Trouble symbols toggle focus=false<cr>", desc = "Symbols" },
 			{
 				"<leader>tl",
 				"<cmd>Trouble lsp toggle focus=false win.position=right<cr>",
 				desc = "LSP Definitions/References",
 			},
-			{ "<leader>tq", "<cmd>Trouble qflist toggle<cr>",  desc = "Quickfix" },
+			{ "<leader>tq", "<cmd>Trouble qflist toggle<cr>", desc = "Quickfix" },
 			{ "<leader>tL", "<cmd>Trouble loclist toggle<cr>", desc = "Location List" },
 		},
 		after = function()
