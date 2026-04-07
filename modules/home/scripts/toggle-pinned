@@ -1,7 +1,7 @@
 #!/usr/bin/env nu
 
 # ---
-# Toggles a social application between the 'social' workspace (tiled)
+# Toggles a pinned application between the 'pinned' workspace (tiled)
 # and the current workspace (floating).
 # ---
 
@@ -10,7 +10,8 @@ def find_target [app_id: string] {
     ($windows | where {|w| ( ($w.app_id? | default "" | str contains -i $app_id) ) } | first)
 }
 
-def main [app_id: string, invoke_command: string] {
+def main [app_id: string, invoke_command: string, floating: bool = true] {
+    let pinnedWorkspace = niri msg --json workspaces | from json | where name == "pinned" | get 0
     mut target = find_target $app_id
 
     if ($target | is-empty) {
@@ -18,9 +19,9 @@ def main [app_id: string, invoke_command: string] {
         ^niri msg action spawn -- $invoke_command
     }
 
-    if $target.is_floating {
-        # Return to the "social" workspace
-        ^niri msg action move-window-to-workspace "social" --window-id $target.id --focus false
+    if $target.workspace_id != $pinnedWorkspace.id {
+        # Return to the "pinned" workspace
+        ^niri msg action move-window-to-workspace "pinned" --window-id $target.id --focus false
         ^niri msg action move-window-to-tiling --id $target.id
     } else {
         # Pull the window to the current workspace
@@ -32,7 +33,9 @@ def main [app_id: string, invoke_command: string] {
         let target_width = ($current_output.logical.width * 0.8 | into int)
         let target_height = ($current_output.logical.height * 0.8 | into int)
 
-        ^niri msg action move-window-to-floating --id $target.id
+        if ($floating) {
+            ^niri msg action move-window-to-floating --id $target.id
+        }
         ^niri msg action set-window-width $target_width --id $target.id
         ^niri msg action set-window-height $target_height --id $target.id
         sleep 0.05sec # Quick sleep to give time for resize animation
