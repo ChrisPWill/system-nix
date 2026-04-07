@@ -18,12 +18,15 @@ binds {
     Mod+S hotkey-overlay-title="Pinned Workspace" { focus-workspace "pinned"; }
 
     // === Global Leader Binds (Caps Lock) ===
+    // Note: need to configure in kanata.nix as well
     Mod+Alt+Shift+T hotkey-overlay-title="Open Terminal at CWD" { spawn "open-terminal-at-cwd"; }
     Mod+Alt+Shift+G hotkey-overlay-title="Open VCS at CWD" { spawn "open-terminal-at-cwd" "lazyjj"; }
     Mod+Alt+Shift+B hotkey-overlay-title="Open Btop" { spawn "ghostty" "--title=ghostty-floating" "-e" "btop"; }
     Mod+Alt+Shift+J hotkey-overlay-title="Open LazyJournal" { spawn "ghostty" "--title=ghostty-floating" "-e" "lazyjournal"; }
     Mod+Alt+Shift+D hotkey-overlay-title="Toggle Discord" { spawn "toggle-pinned" "discord" "Discord"; }
     Mod+Alt+Shift+S hotkey-overlay-title="Toggle Signal" { spawn "toggle-pinned" "signal" "signal-desktop"; }
+    // TODO: Update script to take into account that app_id is "electron". Need to scan title for "Obsidian" (case sensitive)
+    // Mod+Alt+Shift+O hotkey-overlay-title="Toggle Obsidian" { spawn "toggle-pinned" "electron" "obsidian"; }
 
     // === Security ===
     Mod+Alt+L hotkey-overlay-title="Lock Screen" { spawn "dms" "ipc" "call" "lock" "lock"; }

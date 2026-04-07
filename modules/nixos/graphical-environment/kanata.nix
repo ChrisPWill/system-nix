@@ -4,6 +4,8 @@
     keyboards = {
       default = {
         extraArgs = ["--nodelay"];
+
+        # TODO: This badly needs to be updated to be more readable
         config = ''
           (defsrc
             caps t g m j d s
