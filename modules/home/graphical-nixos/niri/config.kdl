@@ -197,11 +197,12 @@ recent-windows {
     }
 }
 
-switch-events {
-    lid-close {
-        spawn "dms" "ipc" "call" "lock" "lock"
-    }
-}
+// switch-events {
+//     lid-close {
+//         // Note: this was a hack, really it should lock on idle or when the last display is closed
+//         spawn "dms" "ipc" "call" "lock" "lock"
+//     }
+// }
 
 
 // Include dms files
