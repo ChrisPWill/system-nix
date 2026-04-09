@@ -64,20 +64,20 @@ in {
         # this includes LSPs
         lspsAndRuntimeDeps = {
           general = with pkgs; [
-            lazygit
-            silicon # take code screenshots
-            koji # conventional commit editor
-            tree-sitter
             ast-grep
-            fd
-            ripgrep
-            prettierd
-            marksman
-            fish-lsp
             bash-language-server
+            fd
+            fish-lsp
+            koji # conventional commit editor
+            lazygit
+            marksman
+            prettierd
+            ripgrep
             shellcheck
             shfmt
+            silicon # take code screenshots
             tombi
+            tree-sitter
             treefmt
           ];
           lua = with pkgs; [
@@ -85,20 +85,20 @@ in {
             stylua
           ];
           nix = with pkgs; [
-            nixd
             alejandra
+            nixd
           ];
           node = with pkgs; [
-            typescript-language-server
             eslint_d
             graphql-language-service-cli
+            typescript-language-server
             vscode-js-debug
           ];
           rust = with pkgs; [
-            rust-analyzer
-            rustfmt
             clippy
             lldb
+            rust-analyzer
+            rustfmt
           ];
           cpp = with pkgs; [
             clang-tools
@@ -107,59 +107,56 @@ in {
           ];
           python = with pkgs; [
             basedpyright
-            ruff
             python3Packages.debugpy
+            ruff
           ];
           go = with pkgs; [
-            gopls
             delve
-            golangci-lint
-            gotools
-            go-tools
             go
+            go-tools
+            golangci-lint
+            gopls
+            gotools
           ];
           java = with pkgs; [
-            jdt-language-server
             google-java-format
+            jdt-language-server
           ];
           kotlin = with pkgs; [
             kotlin-language-server
             ktlint
           ];
           web = with pkgs; [
+            tailwindcss
             vscode-langservers-extracted
             yaml-language-server
-            tailwindcss
           ];
         };
 
         # This is for plugins that will load at startup without using packadd:
         startupPlugins = {
           general = with pkgs.vimPlugins; [
-            # lazy loading isnt required with a config this small
-            # but as a demo, we do it anyway.
             lze
             lzextras
-            snacks-nvim
-            onedark-nvim
-            vim-sleuth
-            plenary-nvim
-            nvim-nio
             nui-nvim
+            nvim-navic
+            nvim-nio
             nvim-notify
             nvim-treesitter.withAllGrammars
-            nvim-navic
+            onedark-nvim
+            plenary-nvim
+            snacks-nvim
+            vim-sleuth
           ];
           rust = with pkgs.vimPlugins; [
-            # Already lazy
             rustaceanvim
           ];
           java = with pkgs.vimPlugins; [
             nvim-jdtls
           ];
           leet = with pkgs.vimPlugins; [
-            nui-nvim
             leetcode-nvim
+            nui-nvim
           ];
         };
 
@@ -173,64 +170,64 @@ in {
             lazydev-nvim
           ];
           general = with pkgs.vimPlugins; [
-            mini-nvim
-            nvim-lspconfig
-            vim-startuptime
-            blink-cmp
             (pkgs.neovimUtils.grammarToPlugin (pkgs.tree-sitter-grammars.tree-sitter-nu.overrideAttrs (p: {installQueries = true;})))
-            nvim-treesitter-parsers.jinja # Useful for nunjucks too
-            nvim-treesitter-parsers.jinja_inline # Useful for nunjucks too
-            nvim-treesitter-context
-            nvim-treesitter-textobjects
-            lualine-nvim
-            lualine-lsp-progress
-            gitsigns-nvim
-            which-key-nvim
-            nvim-lint
+            actions-preview-nvim
+            arrow-nvim
+            blink-cmp
+            cmp_luasnip
             conform-nvim
+            friendly-snippets
+            gitsigns-nvim
+            grug-far-nvim
+            inc-rename-nvim
+            leap-nvim
+            lualine-lsp-progress
+            lualine-nvim
+            luasnip
+            markview-nvim
+            mini-nvim
+            neotest
+            noice-nvim
             nvim-dap
             nvim-dap-ui
             nvim-dap-virtual-text
-            markview-nvim
-            neotest
-            luasnip
-            cmp_luasnip
-            friendly-snippets
-            nvim-scissors
-            arrow-nvim
-            leap-nvim
-            treewalker-nvim
-            grug-far-nvim
-            inc-rename-nvim
-            actions-preview-nvim
-            noice-nvim
-            trouble-nvim
             nvim-highlight-colors
+            nvim-lint
+            nvim-lspconfig
+            nvim-scissors
+            nvim-treesitter-context
+            nvim-treesitter-parsers.jinja # Useful for nunjucks too
+            nvim-treesitter-parsers.jinja_inline # Useful for nunjucks too
+            nvim-treesitter-textobjects
+            treewalker-nvim
+            trouble-nvim
+            vim-startuptime
+            which-key-nvim
           ];
           node = with pkgs.vimPlugins; [
-            typescript-tools-nvim
-            nvim-dap-vscode-js
-            neotest-jest
             neotest-deno
+            neotest-jest
+            nvim-dap-vscode-js
+            typescript-tools-nvim
           ];
           cpp = with pkgs.vimPlugins; [
             neotest-ctest
           ];
           copilot = with pkgs.vimPlugins; [
+            blink-copilot
             copilot-lua
             copilot-lualine
-            blink-copilot
           ];
           python = with pkgs.vimPlugins; [
             neotest-python
             nvim-dap-python
           ];
           local-llm = with pkgs.vimPlugins; [
+            avante-nvim
+            dressing-nvim
+            minuet-ai-nvim
             nui-nvim
             render-markdown-nvim
-            dressing-nvim
-            avante-nvim
-            minuet-ai-nvim
           ];
         };
 
@@ -325,19 +322,19 @@ in {
           # (and other information to pass to lua)
           # and a set of categories that you want
           categories = {
+            copilot = config.nixCats.custom.enableCopilot;
+            cpp = true;
             general = true;
+            go = true;
+            java = true;
+            kotlin = true;
+            local-llm = config.services.local-ollama.enable;
             lua = true;
             nix = true;
             node = true;
-            rust = true;
-            cpp = true;
             python = true;
-            go = true;
+            rust = true;
             web = true;
-            java = true;
-            kotlin = true;
-            copilot = config.nixCats.custom.enableCopilot;
-            local-llm = config.services.local-ollama.enable;
           };
           # anything else to pass and grab in lua with `nixCats.extra`
           extra = {
@@ -357,8 +354,8 @@ in {
           };
           categories = {
             general = true;
-            python = true;
             leet = true;
+            python = true;
           };
           # anything else to pass and grab in lua with `nixCats.extra`
           extra = {
