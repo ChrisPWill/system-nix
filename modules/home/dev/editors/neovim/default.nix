@@ -78,6 +78,7 @@ in {
             shellcheck
             shfmt
             tombi
+            treefmt
           ];
           lua = with pkgs; [
             lua-language-server
