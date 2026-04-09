@@ -212,6 +212,8 @@ include "dms/colors.kdl"
 include "dms/layout.kdl"
 include "dms/wpblur.kdl"
 include "dms/outputs.kdl"
+include "dms/windowrules.kdl"
 include "dms-overrides.kdl"
 include "niri-host.kdl"
+
 

@@ -1,6 +1,7 @@
 {
   inputs,
   pkgs,
+  lib,
   config,
   ...
 }: let
@@ -20,6 +21,7 @@ in {
   ];
 
   config = {
+    xdg.configFile."DankMaterialShell/settings.json".source = config.lib.file.mkOutOfStoreSymlink "${config.homeModuleDir}/graphical-nixos/dms/settings.json";
     # Complete desktop shell for Wayland compositors e.g. niri/hyprland
     programs.dank-material-shell = {
       enable = true;
@@ -29,18 +31,19 @@ in {
         restartIfChanged = true;
       };
 
-      settings = {
-        # Idle settings
-        acLockTimeout = 5 * 60;
-        acMonitorTimeout = 7 * 60;
-        acSuspendTimeout = 10 * 60;
-        batteryLockTimeout = 3 * 60;
-        batteryMonitorTimeout = 4 * 60;
-        batterySuspendTimeout = 5 * 60;
-
-        # Terminal stuff
-        muxType = "zellij";
-      };
+      settings = lib.mkForce {};
+      # settings = {
+      #   # Idle settings
+      #   acLockTimeout = 5 * 60;
+      #   acMonitorTimeout = 7 * 60;
+      #   acSuspendTimeout = 10 * 60;
+      #   batteryLockTimeout = 3 * 60;
+      #   batteryMonitorTimeout = 4 * 60;
+      #   batterySuspendTimeout = 5 * 60;
+      #
+      #   # Terminal stuff
+      #   muxType = "zellij";
+      # };
 
       plugins = {
         calculator = {
