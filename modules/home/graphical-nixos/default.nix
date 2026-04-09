@@ -1,6 +1,7 @@
 {
   inputs,
   pkgs,
+  config,
   ...
 }: let
   dmsPlugins = pkgs.fetchFromGitHub {
@@ -12,6 +13,7 @@
 in {
   imports = [
     inputs.dankMaterialShell.homeModules.dank-material-shell
+    inputs.nix-monitor.homeManagerModules.default
 
     ./niri
     ./default-apps.nix
@@ -72,15 +74,6 @@ in {
             sha256 = "sha256-KkB+xq4AObTqTDxtBVqfCsnxn0jnNk3iM4vpk9jlEBA=";
           };
         };
-        nixMonitor = {
-          enable = true;
-          src = pkgs.fetchFromGitHub {
-            owner = "antonjah";
-            repo = "nix-monitor";
-            rev = "v1.0.3";
-            sha256 = "sha256-biRc7ESKzPK5Ueus1xjVT8OXCHar3+Qi+Osv/++A+Ls=";
-          };
-        };
       };
     };
 
@@ -100,5 +93,14 @@ in {
 
       gcr # Gnome Keyring system prompter
     ];
+
+    programs.nix-monitor = {
+      enable = true;
+      rebuildCommand = [
+        "zsh"
+        "-c"
+        "sudo nixos-rebuild switch --flake ${config.nixConfigDir}/."
+      ];
+    };
   };
 }

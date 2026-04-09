@@ -48,6 +48,8 @@
     treefmt-nix.inputs.nixpkgs.follows = "nixpkgs";
 
     nix-cachyos-kernel.url = "github:xddxdd/nix-cachyos-kernel";
+
+    nix-monitor.url = "github:antonjah/nix-monitor";
   };
 
   # Load config via blueprint https://github.com/numtide/blueprint
