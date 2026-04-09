@@ -91,6 +91,7 @@ in {
           node = with pkgs; [
             eslint_d
             graphql-language-service-cli
+            prettier
             typescript-language-server
             vscode-js-debug
           ];

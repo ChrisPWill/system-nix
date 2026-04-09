@@ -10,7 +10,7 @@
   programs.prettier.enable = true; # ts, tsx, json, md, scss, css, html, glsl
   programs.stylua.enable = true; # lua
   programs.shfmt.enable = true; # shell
-  programs.taplo.enable = true; # toml
+  # programs.taplo.enable = true; # toml
   programs.rustfmt.enable = true; # rust
   programs.clang-format.enable = true; # cpp, h
 }).config.build.check

@@ -37,8 +37,8 @@ options = ["-i", "2", "-s", "-w"]
 includes = ["*.sh", "**/*.sh", "modules/home/scripts/*"]
 
 [formatter.toml]
-command = "taplo"
-options = ["fmt"]
+command = "tombi"
+options = ["format", "-"]
 includes = ["*.toml", "**/*.toml"]
 
 [formatter.rust]
