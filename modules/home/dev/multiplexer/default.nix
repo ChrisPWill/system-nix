@@ -10,7 +10,7 @@
   };
 
   xdg.configFile."zellij/layouts" = {
-    source = config.lib.file.mkOutOfStoreSymlink "${config.homeModuleDir}/dev/terminal/multiplexer/layouts";
+    source = config.lib.file.mkOutOfStoreSymlink "${config.homeModuleDir}/dev/multiplexer/layouts";
   };
 
   programs.fish.functions.zz = ''
