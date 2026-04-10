@@ -3,18 +3,28 @@ local utils = require("utils")
 return {
 	-- Autocompletions https://github.com/saghen/blink.cmp
 	{
+		"blink.compat",
+		on_require = { "blink.compat", "blink.compat.source" },
+	},
+	{
 		"blink.cmp",
 		enabled = nixCats("general") or false,
 		event = "DeferredUIEnter",
-		on_require = "blink",
+		on_require = { "blink", "blink.cmp" },
 		after = function()
 			vim.cmd.packadd("luasnip")
 			local defaultSources = { "snippets", "lsp", "path", "buffer" }
 			if nixCats("copilot") then
 				table.insert(defaultSources, 2, "copilot")
 			end
-			if nixCats("local-llm") then
+			if nixCats("local-llm") or nixCats("gemini") then
 				table.insert(defaultSources, 2, "minuet")
+			end
+			if nixCats("gemini") then
+				table.insert(defaultSources, 3, "avante_commands")
+				table.insert(defaultSources, 4, "avante_mentions")
+				table.insert(defaultSources, 5, "avante_shortcuts")
+				table.insert(defaultSources, 6, "avante_files")
 			end
 			require("blink.cmp").setup({
 				-- 'default' (recommended) for mappings similar to built-in completions (C-y to accept)
@@ -52,10 +62,34 @@ return {
 						} or nil,
 						minuet = {
 							name = "minuet",
-							enabled = nixCats("local-llm"),
+							enabled = nixCats("local-llm") or nixCats("gemini"),
 							module = "minuet.blink",
 							score_offset = 100, -- Forces LLM suggestions to the top of the menu
 							async = true,
+						},
+						avante_commands = {
+							name = "avante_commands",
+							module = "blink.compat.source",
+							score_offset = 90, -- show at a higher priority than lsp
+							opts = {},
+						},
+						avante_files = {
+							name = "avante_files",
+							module = "blink.compat.source",
+							score_offset = 100, -- show at a higher priority than lsp
+							opts = {},
+						},
+						avante_mentions = {
+							name = "avante_mentions",
+							module = "blink.compat.source",
+							score_offset = 1000, -- show at a higher priority than lsp
+							opts = {},
+						},
+						avante_shortcuts = {
+							name = "avante_shortcuts",
+							module = "blink.compat.source",
+							score_offset = 1000, -- show at a higher priority than lsp
+							opts = {},
 						},
 					},
 				},
@@ -66,11 +100,6 @@ return {
 		"blink-copilot",
 		enabled = nixCats("copilot") or false,
 		on_require = { "blink-copilot" },
-	},
-	{
-		"minuet-ai.nvim",
-		enabled = nixCats("local-llm") or false,
-		on_require = { "minuet" },
 	},
 	{
 		"luasnip",

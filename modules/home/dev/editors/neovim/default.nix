@@ -7,6 +7,34 @@
 }: let
   utils = inputs.nixCats.utils;
   mainNixCatsPackageName = "meow";
+
+  commonSettings = {
+    suffix-path = true;
+    suffix-LD = true;
+    wrapRc = true;
+    hosts.python3.enable = true;
+    hosts.node.enable = true;
+  };
+
+  commonCategories = {
+    general = true;
+    lua = true;
+    nix = true;
+    node = true;
+    rust = true;
+    cpp = true;
+    python = true;
+    go = true;
+    web = true;
+    java = true;
+    kotlin = true;
+    copilot = config.nixCats.custom.enableCopilot;
+  };
+
+  commonExtra = {
+    nixdExtras.nixpkgs = "import ${pkgs.path} {}";
+    docsPath = "${config.homeModuleDir}/dev/editors/neovim/docs";
+  };
 in {
   imports = [
     inputs.nixCats.homeModule
@@ -37,7 +65,7 @@ in {
       addOverlays = [(utils.standardPluginOverlay inputs)];
 
       # See packageDefinitions - says which one to install
-      packageNames = [mainNixCatsPackageName] ++ pkgs.lib.optionals config.isPersonalMachine ["leet"];
+      packageNames = [mainNixCatsPackageName] ++ pkgs.lib.optionals config.isPersonalMachine ["leet" "nvim-gemini"];
 
       luaPath = config.lib.file.mkOutOfStoreSymlink "${config.homeModuleDir}/dev/editors/neovim/config";
 
@@ -175,6 +203,7 @@ in {
             actions-preview-nvim
             arrow-nvim
             blink-cmp
+            blink-compat
             cmp_luasnip
             conform-nvim
             friendly-snippets
@@ -230,6 +259,13 @@ in {
             nui-nvim
             render-markdown-nvim
           ];
+          gemini = with pkgs.vimPlugins; [
+            avante-nvim
+            minuet-ai-nvim
+            dressing-nvim
+            nui-nvim
+            render-markdown-nvim
+          ];
         };
 
         # shared libraries to be added to LD_LIBRARY_PATH
@@ -265,104 +301,55 @@ in {
       # see :help nixCats.flake.outputs.packageDefinitions
       packageDefinitions.replace = {
         "${mainNixCatsPackageName}" = {pkgs, ...}: {
-          # they contain a settings set defined above
-          # see :help nixCats.flake.outputs.settings
-          settings = {
-            suffix-path = true;
-            suffix-LD = true;
-            wrapRc = true;
-            # unwrappedCfgPath = "/path/to/here";
-            # IMPORTANT:
-            # your alias may not conflict with your other packages.
-            aliases = ["nvim" "neovim" "nv"];
-            # neovim-unwrapped = inputs.neovim-nightly-overlay.packages.${pkgs.stdenv.hostPlatform.system}.neovim;
-            hosts.python3.enable = true;
-            hosts.node.enable = true;
-          };
-          # and a set of categories that you want
-          # (and other information to pass to lua)
-          # and a set of categories that you want
-          categories = {
-            general = true;
-            lua = true;
-            nix = true;
-            node = true;
-            rust = true;
-            cpp = true;
-            python = true;
-            go = true;
-            web = true;
-            java = true;
-            kotlin = true;
-            copilot = config.nixCats.custom.enableCopilot;
-            local-llm = false;
-          };
-          # anything else to pass and grab in lua with `nixCats.extra`
-          extra = {
-            nixdExtras.nixpkgs = ''import ${pkgs.path} {}'';
-            docsPath = "${config.homeModuleDir}/dev/editors/neovim/docs";
-          };
+          settings =
+            commonSettings
+            // {
+              aliases = ["nvim" "neovim" "nv"];
+            };
+          categories =
+            commonCategories
+            // {
+              local-llm = false;
+            };
+          extra = commonExtra;
         };
 
         "nvim-llm" = {pkgs, ...}: {
-          # they contain a settings set defined above
-          # see :help nixCats.flake.outputs.settings
-          settings = {
-            suffix-path = true;
-            suffix-LD = true;
-            wrapRc = true;
-            # unwrappedCfgPath = "/path/to/here";
-            # IMPORTANT:
-            # your alias may not conflict with your other packages.
-            aliases = ["nvim" "neovim" "nv"];
-            # neovim-unwrapped = inputs.neovim-nightly-overlay.packages.${pkgs.stdenv.hostPlatform.system}.neovim;
-            hosts.python3.enable = true;
-            hosts.node.enable = true;
-          };
-          # and a set of categories that you want
-          # (and other information to pass to lua)
-          # and a set of categories that you want
-          categories = {
-            copilot = config.nixCats.custom.enableCopilot;
-            cpp = true;
-            general = true;
-            go = true;
-            java = true;
-            kotlin = true;
-            local-llm = config.services.local-ollama.enable;
-            lua = true;
-            nix = true;
-            node = true;
-            python = true;
-            rust = true;
-            web = true;
-          };
-          # anything else to pass and grab in lua with `nixCats.extra`
-          extra = {
-            nixdExtras.nixpkgs = ''import ${pkgs.path} {}'';
-            docsPath = "${config.homeModuleDir}/dev/editors/neovim/docs";
-          };
+          settings =
+            commonSettings
+            // {
+              aliases = ["nvim" "neovim" "nv"];
+            };
+          categories =
+            commonCategories
+            // {
+              local-llm = config.services.local-ollama.enable;
+            };
+          extra = commonExtra;
+        };
+
+        "nvim-gemini" = {pkgs, ...}: {
+          settings =
+            commonSettings
+            // {
+              aliases = ["nvg"];
+            };
+          categories =
+            commonCategories
+            // {
+              gemini = true;
+            };
+          extra = commonExtra;
         };
 
         "leet" = {pkgs, ...}: {
-          settings = {
-            suffix-path = true;
-            suffix-LD = true;
-            wrapRc = true;
-            # aliases = ["nvim" "neovim" "nv"];
-            hosts.python3.enable = true;
-            hosts.node.enable = true;
-          };
+          settings = commonSettings;
           categories = {
             general = true;
             leet = true;
             python = true;
           };
-          # anything else to pass and grab in lua with `nixCats.extra`
-          extra = {
-            nixdExtras.nixpkgs = ''import ${pkgs.path} {}'';
-            docsPath = "${config.homeModuleDir}/dev/editors/neovim/docs";
-          };
+          extra = commonExtra;
         };
       };
     };
