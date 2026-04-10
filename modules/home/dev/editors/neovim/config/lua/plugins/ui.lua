@@ -49,6 +49,15 @@ return {
 				return ft_colors[vim.bo.filetype] or nil
 			end
 
+			local function isRecording()
+				local reg = vim.fn.reg_recording()
+				-- not recording
+				if reg == "" then
+					return ""
+				end
+				return " - " .. reg
+			end
+
 			require("lualine").setup({
 				options = {
 					icons_enabled = true,
@@ -72,6 +81,9 @@ return {
 						},
 					},
 					lualine_x = {
+						{
+							isRecording,
+						},
 						{
 							function()
 								return string.format("󰈙 %d", vim.fn.wordcount().words)
