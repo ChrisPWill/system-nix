@@ -1,0 +1,9 @@
+keys:
+  - &user_chris age1f9kawyswuy3d30qr3hccy63juh8mfsjz9l0wz8uhmgkkef9rpsqs7llc2l
+  - &host_laptop age184sfs9zsvhfrwn35t6gl0qpcuq459qq95rukthr7qe63ws4tqgwqc6n79u
+creation_rules:
+  - path_regex: secrets/.*\.yaml$
+    key_groups:
+      - age:
+          - *user_chris
+          - *host_laptop

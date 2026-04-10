@@ -4,5 +4,6 @@
     ./monitor.nix
     ./file-io.nix
     ./security.nix
+    ./sops.nix
   ];
 }

@@ -56,5 +56,6 @@ The system implements a **Global Leader** capability using **Kanata** for keyboa
 - `modules/home/<domain>/`: Functional domains for user configuration (see `modules/home/README.md`).
 - `modules/home/home-shared.nix`: Universal Home Manager user settings.
 - `modules/theming/`: Shared styling and custom theme options.
+- `SECRETS.md`: Guide for managing and using encrypted secrets with sops-nix.
 
 _For detailed installation instructions and framework details, see the root `README.md`._

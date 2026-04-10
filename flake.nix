@@ -50,6 +50,9 @@
     nix-cachyos-kernel.url = "github:xddxdd/nix-cachyos-kernel";
 
     nix-monitor.url = "github:antonjah/nix-monitor";
+
+    sops-nix.url = "github:Mic92/sops-nix";
+    sops-nix.inputs.nixpkgs.follows = "nixpkgs";
   };
 
   # Load config via blueprint https://github.com/numtide/blueprint

@@ -6,6 +6,7 @@
   imports = [
     inputs.stylix.nixosModules.stylix
     inputs.self.modules.theming.theme
+    ./ops
   ];
 
   config = {
@@ -53,6 +54,8 @@
     virtualisation.docker.enable = true;
 
     services.flatpak.enable = true;
+
+    services.openssh.enable = true;
 
     # Group for kanata to access /dev/uinput
     users.groups.uinput = {};
