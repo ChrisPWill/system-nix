@@ -106,7 +106,8 @@ return {
 				end,
 				settings = {
 					-- possible values: ("off"|"all"|"implementations_only"|"references_only")
-					code_lens = "implementations_only",
+					-- Disabled because it caused cursor to jump around
+					code_lens = "off",
 				},
 			})
 		end,
