@@ -73,9 +73,12 @@ return {
 				return list
 			end
 
-			local jslint = { "eslint_d", "prettierd", stop_after_first = true }
+			local jslint = { "prettierd" }
 			if utils.isDeno() then
 				jslint = { "deno_fmt" }
+			end
+			if utils.isEslint() then
+				jslint = { "eslint_d" }
 			end
 
 			conform.setup({

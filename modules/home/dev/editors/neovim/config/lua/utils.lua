@@ -16,6 +16,10 @@ function M.isDeno()
 	return M.rootHasFiles({ "deno.json" })
 end
 
+function M.isEslint()
+	return M.rootHasFiles({ "eslint.config.*", ".eslintrc*" })
+end
+
 function M.isTreefmt()
 	return M.rootHasFiles({ "treefmt.toml", ".treefmt.toml" })
 end
