@@ -24,6 +24,9 @@ return {
 				c = nixCats("cpp") and { "cppcheck" } or nil,
 			}
 
+			-- Note - general compiler warnings should cover the majority of these
+			table.insert(require("lint").linters.cppcheck.args, "--suppress=unusedStructMember")
+
 			vim.api.nvim_create_autocmd({ "CursorHold", "BufWritePost", "InsertLeave" }, {
 				callback = function()
 					require("lint").try_lint()

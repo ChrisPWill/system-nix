@@ -264,7 +264,7 @@ return {
 		"clangd",
 		enabled = nixCats("cpp") or false,
 		lsp = {
-			filetypes = { "c", "cpp", "objc", "objcpp", "cuda", "proto" },
+			filetypes = { "c", "cpp", "h", "hpp", "objc", "objcpp", "cuda", "proto" },
 		},
 	},
 }
