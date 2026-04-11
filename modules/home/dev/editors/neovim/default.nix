@@ -292,9 +292,10 @@ in {
         # If you dont, check this link out:
         # https://github.com/NixOS/nixpkgs/blob/master/pkgs/build-support/setup-hooks/make-wrapper.sh
         extraWrapperArgs = {
-          # test = [
-          #   '' --set CATTESTVAR2 "It worked again!"''
-          # ];
+          gemini = [
+            "--run"
+            " 'test -f ${config.sops.secrets.gemini_api_key.path} && export GEMINI_API_KEY=$(cat ${config.sops.secrets.gemini_api_key.path})' "
+          ];
         };
       };
 
