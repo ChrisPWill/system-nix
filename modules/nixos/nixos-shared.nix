@@ -53,6 +53,7 @@
 
     virtualisation.docker.enable = true;
 
+    services.accounts-daemon.enable = true;
     services.flatpak.enable = true;
 
     services.openssh.enable = true;
