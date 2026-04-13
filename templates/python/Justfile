@@ -1,0 +1,17 @@
+# Run from repo root (use `nix develop` if Python is only in the devshell).
+
+default:
+    @just --list
+
+# Run the unittest suite (verbose, discovery under tests/).
+test:
+    python -m unittest discover -s tests -p 'test_*.py' -v
+
+test-watch:
+    ptw
+
+# Remove common Python cache dirs and bytecode (GNU find -delete).
+clean:
+    find . -type f -name '*.py[co]' -delete
+    find . -type d -name __pycache__ -exec rm -rf {} +
+    rm -rf .pytest_cache .mypy_cache .ruff_cache htmlcov .coverage .coverage.*

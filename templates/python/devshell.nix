@@ -3,7 +3,10 @@
 in
   pkgs.mkShell {
     packages = with pkgs; [
+      just
       python314
+      python314Packages.pytest
+      python314Packages.pytest-watch
     ];
 
     shellHook = ''
