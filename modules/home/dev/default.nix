@@ -1,5 +1,6 @@
 {...}: {
   imports = [
+    ./editors/cursor.nix
     ./editors/neovim
     ./editors/helix
     ./multiplexer

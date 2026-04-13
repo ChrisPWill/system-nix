@@ -301,7 +301,7 @@ in {
 
       # see :help nixCats.flake.outputs.packageDefinitions
       packageDefinitions.replace = {
-        "${mainNixCatsPackageName}" = {pkgs, ...}: {
+        "${mainNixCatsPackageName}" = {...}: {
           settings =
             commonSettings
             // {
@@ -315,7 +315,7 @@ in {
           extra = commonExtra;
         };
 
-        "nvim-llm" = {pkgs, ...}: {
+        "nvim-llm" = {...}: {
           settings =
             commonSettings
             // {
@@ -329,7 +329,7 @@ in {
           extra = commonExtra;
         };
 
-        "nvim-gemini" = {pkgs, ...}: {
+        "nvim-gemini" = {...}: {
           settings =
             commonSettings
             // {
@@ -343,7 +343,7 @@ in {
           extra = commonExtra;
         };
 
-        "leet" = {pkgs, ...}: {
+        "leet" = {...}: {
           settings = commonSettings;
           categories = {
             general = true;
