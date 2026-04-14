@@ -1,0 +1,118 @@
+{
+  "rust_main": {
+    "body": [
+      "fn main() -> anyhow::Result<()> {",
+      "    ${0}",
+      "    Ok(())",
+      "}"
+    ],
+    "description": "Modern main function with anyhow::Result",
+    "prefix": "rust_main"
+  },
+  "rust_impl": {
+    "body": [
+      "impl ${1:Name} {",
+      "    pub fn new(${2:args}) -> Self {",
+      "        Self { ${3} }",
+      "    }",
+      "}"
+    ],
+    "description": "Standard implementation block",
+    "prefix": "rust_impl"
+  },
+  "rust_clap": {
+    "body": [
+      "use clap::Parser;",
+      "",
+      "#[derive(Parser, Debug)]",
+      "#[command(author, version, about, long_about = None)]",
+      "struct Args {",
+      "    #[arg(short, long)]",
+      "    ${1:name}: String,",
+      "}",
+      "",
+      "fn main() {",
+      "    let args = Args::parse();",
+      "    ${0}",
+      "}"
+    ],
+    "description": "Clap CLI boilerplate (derive style)",
+    "prefix": "rust_clap"
+  },
+  "rust_serde": {
+    "body": [
+      "#[derive(Debug, Serialize, Deserialize)]",
+      "#[serde(rename_all = \"camelCase\")]",
+      "struct ${1:Name} {",
+      "    ${0}",
+      "}"
+    ],
+    "description": "Serde Serialize/Deserialize boilerplate",
+    "prefix": "rust_serde"
+  },
+  "rust_thiserror": {
+    "body": [
+      "#[derive(thiserror::Error, Debug)]",
+      "pub enum ${1:Error} {",
+      "    #[error(\"${2:description}\")]",
+      "    ${3:Variant}(#[from] ${4:SourceError}),",
+      "}"
+    ],
+    "description": "Custom error type with thiserror",
+    "prefix": "rust_thiserror"
+  },
+  "rust_anyhow_bail": {
+    "body": [
+      "anyhow::bail!(\"${1:error message}\");"
+    ],
+    "description": "anyhow::bail! shortcut",
+    "prefix": "bail"
+  },
+  "rust_tokio_main": {
+    "body": [
+      "#[tokio::main]",
+      "async fn main() -> anyhow::Result<()> {",
+      "    ${0}",
+      "    Ok(())",
+      "}"
+    ],
+    "description": "Tokio async main with anyhow",
+    "prefix": "rust_tokio_main"
+  },
+  "rust_mutex_arc": {
+    "body": [
+      "let ${1:var} = std::sync::Arc::new(std::sync::Mutex::new(${2:value}));",
+      "let ${1:var}_clone = std::sync::Arc::clone(&${1:var});"
+    ],
+    "description": "Thread-safe Arc<Mutex<T>> pattern",
+    "prefix": "rust_mutex"
+  },
+  "p": {
+    "body": [
+      "println!(\"{${1}}\", ${2:var});"
+    ],
+    "description": "println! shortcut",
+    "prefix": "p"
+  },
+  "pd": {
+    "body": [
+      "println!(\"{${1:?}}\", ${2:var});"
+    ],
+    "description": "println! with debug formatting",
+    "prefix": "pd"
+  },
+  "dbg": {
+    "body": [
+      "dbg!(${1:var});"
+    ],
+    "description": "dbg! macro shortcut",
+    "prefix": "dbg"
+  },
+  "todo": {
+    "body": [
+      "todo!(\"${1:not yet implemented}\");"
+    ],
+    "description": "todo! macro shortcut",
+    "prefix": "todo"
+  }
+}

@@ -33,6 +33,12 @@
           "cpp"
         ],
         "path": "./cpp.json.json"
+      },
+      {
+        "language": [
+          "rust"
+        ],
+        "path": "./rust.json.json"
       }
     ]
   }
