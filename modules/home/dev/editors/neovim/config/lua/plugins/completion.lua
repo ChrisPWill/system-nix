@@ -45,7 +45,7 @@ return {
 					providers = {
 						snippets = {
 							min_keyword_length = 2,
-							score_offset = 10,
+							score_offset = 5,
 							opts = {
 								-- TODO: Fix this, unexpected path - deprecation?
 								-- search_paths = {
