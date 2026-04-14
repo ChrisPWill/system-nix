@@ -38,6 +38,9 @@ return {
 				appearance = {
 					nerd_font_variant = "mono",
 				},
+				completion = {
+					documentation = { auto_show = true, auto_show_delay_ms = 200 },
+				},
 				signature = { enabled = true },
 				sources = {
 					-- Need to find a better solution to the issue where `enabled` doesn't work as I'd hope
