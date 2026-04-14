@@ -67,6 +67,12 @@ function M.on_attach(client, bufnr)
 		end
 	end, "Hover")
 	nmap("<C-k>", vim.lsp.buf.signature_help, "Signature")
+	if client.server_capabilities.inlayHintProvider then
+		vim.lsp.inlay_hint.enable(true, { bufnr = bufnr })
+	end
+	nmap("<leader>ti", function()
+		vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled({ bufnr = bufnr }), { bufnr = bufnr })
+	end, "Inlay Hints")
 
 	nmap("gD", vim.lsp.buf.declaration, "Declaration")
 	nmap("<leader>Wa", vim.lsp.buf.add_workspace_folder, "Workspace (Add Folder)")
