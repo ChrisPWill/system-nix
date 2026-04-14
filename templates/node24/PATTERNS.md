@@ -9,8 +9,8 @@ Prevents logic errors by distinguishing between identical primitives (e.g., stop
 ```typescript
 export type Brand<K, T> = K & { __brand: T };
 
-export type UserId = Brand<string, 'UserId'>;
-export type Email = Brand<string, 'Email'>;
+export type UserId = Brand<string, "UserId">;
+export type Email = Brand<string, "Email">;
 
 // Usage:
 // const id = '123' as UserId;
@@ -56,7 +56,10 @@ export type Result<T, E = Error> =
   | { ok: false; error: E };
 
 export const success = <T>(value: T): Result<T, never> => ({ ok: true, value });
-export const failure = <E>(error: E): Result<never, E> => ({ ok: false, error });
+export const failure = <E>(error: E): Result<never, E> => ({
+  ok: false,
+  error,
+});
 
 // Usage:
 // const findUser = (id: string): Result<User, string> => {
@@ -91,7 +94,7 @@ export const sleep = (ms: number) =>
 
 export const withTimeout = <T>(promise: Promise<T>, ms: number): Promise<T> => {
   const timeout = new Promise<never>((_, reject) =>
-    setTimeout(() => reject(new Error('Timed out')), ms),
+    setTimeout(() => reject(new Error("Timed out")), ms),
   );
   return Promise.race([promise, timeout]);
 };

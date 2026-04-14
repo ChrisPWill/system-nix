@@ -75,16 +75,12 @@
     "prefix": "cpp_singleton"
   },
   "m_unique": {
-    "body": [
-      "auto ${1:var} = std::make_unique<${2:Type}>(${3:args});"
-    ],
+    "body": ["auto ${1:var} = std::make_unique<${2:Type}>(${3:args});"],
     "description": "std::make_unique shortcut",
     "prefix": "m_unique"
   },
   "m_shared": {
-    "body": [
-      "auto ${1:var} = std::make_shared<${2:Type}>(${3:args});"
-    ],
+    "body": ["auto ${1:var} = std::make_shared<${2:Type}>(${3:args});"],
     "description": "std::make_shared shortcut",
     "prefix": "m_shared"
   },
@@ -117,20 +113,12 @@
     "prefix": "measure_time"
   },
   "gtest_case": {
-    "body": [
-      "TEST(${1:SuiteName}, ${2:TestName}) {",
-      "    ${0}",
-      "}"
-    ],
+    "body": ["TEST(${1:SuiteName}, ${2:TestName}) {", "    ${0}", "}"],
     "description": "GTest case block",
     "prefix": "gtest_case"
   },
   "doctest_case": {
-    "body": [
-      "TEST_CASE(\"${1:description}\") {",
-      "    ${0}",
-      "}"
-    ],
+    "body": ["TEST_CASE(\"${1:description}\") {", "    ${0}", "}"],
     "description": "doctest case block",
     "prefix": "doctest_case"
   }

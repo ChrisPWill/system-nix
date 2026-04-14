@@ -30,32 +30,22 @@
     "prefix": "nix_option"
   },
   "nix_enable": {
-    "body": [
-      "enable = lib.mkEnableOption \"${1:description}\";"
-    ],
+    "body": ["enable = lib.mkEnableOption \"${1:description}\";"],
     "description": "Standard Nix boolean toggle option",
     "prefix": "nix_enable"
   },
   "nix_package": {
-    "body": [
-      "package = lib.mkPackageOption pkgs \"${1:name}\" { };"
-    ],
+    "body": ["package = lib.mkPackageOption pkgs \"${1:name}\" { };"],
     "description": "Standard Nix package option",
     "prefix": "nix_package"
   },
   "nix_if": {
-    "body": [
-      "lib.mkIf ${1:condition} {",
-      "  ${2:body}",
-      "}"
-    ],
+    "body": ["lib.mkIf ${1:condition} {", "  ${2:body}", "}"],
     "description": "Nix mkIf wrapper",
     "prefix": "nix_if"
   },
   "nix_inherit": {
-    "body": [
-      "inherit (lib) ${1:mkIf mkOption types};"
-    ],
+    "body": ["inherit (lib) ${1:mkIf mkOption types};"],
     "description": "Inherit from lib common functions",
     "prefix": "nix_inherit"
   },
@@ -88,11 +78,7 @@
     "prefix": "nix_sops"
   },
   "nix_optionals": {
-    "body": [
-      "lib.optionals ${1:condition} [",
-      "  ${2:pkgs.name}",
-      "]"
-    ],
+    "body": ["lib.optionals ${1:condition} [", "  ${2:pkgs.name}", "]"],
     "description": "Conditional list with lib.optionals",
     "prefix": "nix_optionals"
   },

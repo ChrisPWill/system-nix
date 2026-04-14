@@ -62,9 +62,7 @@
     "prefix": "rust_thiserror"
   },
   "rust_anyhow_bail": {
-    "body": [
-      "anyhow::bail!(\"${1:error message}\");"
-    ],
+    "body": ["anyhow::bail!(\"${1:error message}\");"],
     "description": "anyhow::bail! shortcut",
     "prefix": "bail"
   },
@@ -88,30 +86,22 @@
     "prefix": "rust_mutex"
   },
   "p": {
-    "body": [
-      "println!(\"{${1}}\", ${2:var});"
-    ],
+    "body": ["println!(\"{${1}}\", ${2:var});"],
     "description": "println! shortcut",
     "prefix": "p"
   },
   "pd": {
-    "body": [
-      "println!(\"{${1:?}}\", ${2:var});"
-    ],
+    "body": ["println!(\"{${1:?}}\", ${2:var});"],
     "description": "println! with debug formatting",
     "prefix": "pd"
   },
   "dbg": {
-    "body": [
-      "dbg!(${1:var});"
-    ],
+    "body": ["dbg!(${1:var});"],
     "description": "dbg! macro shortcut",
     "prefix": "dbg"
   },
   "todo": {
-    "body": [
-      "todo!(\"${1:not yet implemented}\");"
-    ],
+    "body": ["todo!(\"${1:not yet implemented}\");"],
     "description": "todo! macro shortcut",
     "prefix": "todo"
   }

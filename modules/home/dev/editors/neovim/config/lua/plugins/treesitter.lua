@@ -172,16 +172,56 @@ return {
 			require("treewalker").setup({})
 
 			-- Movement
-			vim.keymap.set({ "n", "v" }, "<A-h>", "<cmd>Treewalker Left<cr>", { desc = "Treewalker: Go Left", silent = true })
-			vim.keymap.set({ "n", "v" }, "<A-j>", "<cmd>Treewalker Down<cr>", { desc = "Treewalker: Go Down", silent = true })
-			vim.keymap.set({ "n", "v" }, "<A-k>", "<cmd>Treewalker Up<cr>", { desc = "Treewalker: Go Up", silent = true })
-			vim.keymap.set({ "n", "v" }, "<A-l>", "<cmd>Treewalker Right<cr>", { desc = "Treewalker: Go Right", silent = true })
+			vim.keymap.set(
+				{ "n", "v" },
+				"<A-h>",
+				"<cmd>Treewalker Left<cr>",
+				{ desc = "Treewalker: Go Left", silent = true }
+			)
+			vim.keymap.set(
+				{ "n", "v" },
+				"<A-j>",
+				"<cmd>Treewalker Down<cr>",
+				{ desc = "Treewalker: Go Down", silent = true }
+			)
+			vim.keymap.set(
+				{ "n", "v" },
+				"<A-k>",
+				"<cmd>Treewalker Up<cr>",
+				{ desc = "Treewalker: Go Up", silent = true }
+			)
+			vim.keymap.set(
+				{ "n", "v" },
+				"<A-l>",
+				"<cmd>Treewalker Right<cr>",
+				{ desc = "Treewalker: Go Right", silent = true }
+			)
 
 			-- Swapping
-			vim.keymap.set({ "n", "v" }, "<A-S-h>", "<cmd>Treewalker SwapLeft<cr>", { desc = "Treewalker: Swap Left", silent = true })
-			vim.keymap.set({ "n", "v" }, "<A-S-j>", "<cmd>Treewalker SwapDown<cr>", { desc = "Treewalker: Swap Down", silent = true })
-			vim.keymap.set({ "n", "v" }, "<A-S-k>", "<cmd>Treewalker SwapUp<cr>", { desc = "Treewalker: Swap Up", silent = true })
-			vim.keymap.set({ "n", "v" }, "<A-S-l>", "<cmd>Treewalker SwapRight<cr>", { desc = "Treewalker: Swap Right", silent = true })
+			vim.keymap.set(
+				{ "n", "v" },
+				"<A-S-h>",
+				"<cmd>Treewalker SwapLeft<cr>",
+				{ desc = "Treewalker: Swap Left", silent = true }
+			)
+			vim.keymap.set(
+				{ "n", "v" },
+				"<A-S-j>",
+				"<cmd>Treewalker SwapDown<cr>",
+				{ desc = "Treewalker: Swap Down", silent = true }
+			)
+			vim.keymap.set(
+				{ "n", "v" },
+				"<A-S-k>",
+				"<cmd>Treewalker SwapUp<cr>",
+				{ desc = "Treewalker: Swap Up", silent = true }
+			)
+			vim.keymap.set(
+				{ "n", "v" },
+				"<A-S-l>",
+				"<cmd>Treewalker SwapRight<cr>",
+				{ desc = "Treewalker: Swap Right", silent = true }
+			)
 		end,
 	},
 }
