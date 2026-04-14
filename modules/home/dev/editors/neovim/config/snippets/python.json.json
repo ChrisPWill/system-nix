@@ -9,5 +9,80 @@
       "        self.assertEqual(${1:}, ${2:})"
     ],
     "prefix": "unittest_class"
+  },
+  "pytest_test": {
+    "body": [
+      "def test_${1:feature}():",
+      "    # Arrange",
+      "    ${2:input} = ${3:value}",
+      "    # Act",
+      "    result = ${4:func}(${2:input})",
+      "    # Assert",
+      "    assert result == ${5:expected}"
+    ],
+    "description": "Pytest test function template",
+    "prefix": "pytest_test"
+  },
+  "dataclass_def": {
+    "body": [
+      "from dataclasses import dataclass",
+      "",
+      "# frozen=True: Makes the instance immutable (fields cannot be changed after __init__)",
+      "# slots=True: Optimizes memory and attribute access (no __dict__ per instance)",
+      "@dataclass(frozen=True, slots=True)",
+      "class ${1:ClassName}:",
+      "    ${2:field}: ${3:type}"
+    ],
+    "description": "Modern immutable dataclass with slots optimization",
+    "prefix": "dataclass_def"
+  },
+  "main_block": {
+    "body": [
+      "def main() -> None:",
+      "    ${1:pass}",
+      "",
+      "if __name__ == \"__main__\":",
+      "    main()"
+    ],
+    "description": "Standard script entry point block",
+    "prefix": "main_block"
+  },
+  "pydantic_model": {
+    "body": [
+      "from pydantic import BaseModel, Field",
+      "",
+      "class ${1:ModelName}(BaseModel):",
+      "    ${2:name}: ${3:str} = Field(..., description=\"${4:description}\")"
+    ],
+    "description": "Pydantic model for validation and settings",
+    "prefix": "pydantic_model"
+  },
+  "context_manager": {
+    "body": [
+      "from contextlib import contextmanager",
+      "from typing import Generator",
+      "",
+      "@contextmanager",
+      "def ${1:name}() -> Generator[None, None, None]:",
+      "    # Setup",
+      "    ${2:pass}",
+      "    try:",
+      "        yield",
+      "    finally:",
+      "        # Teardown",
+      "        ${3:pass}"
+    ],
+    "description": "Generator-based context manager with teardown safety",
+    "prefix": "context_manager"
+  },
+  "logger_def": {
+    "body": [
+      "import logging",
+      "",
+      "logger = logging.getLogger(__name__)",
+      "logging.basicConfig(level=logging.INFO)"
+    ],
+    "description": "Standard logging setup",
+    "prefix": "logger_def"
   }
 }
