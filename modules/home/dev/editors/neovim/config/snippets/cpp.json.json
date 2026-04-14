@@ -1,0 +1,137 @@
+{
+  "cpp_header_guard": {
+    "body": [
+      "#pragma once",
+      "",
+      "namespace ${1:ns} {",
+      "",
+      "${0}",
+      "",
+      "} // namespace ${1:ns}"
+    ],
+    "description": "Modern #pragma once header guard",
+    "prefix": "cpp_header_guard"
+  },
+  "cpp_concept": {
+    "body": [
+      "template <typename T>",
+      "concept ${1:Name} = requires(T t) {",
+      "    ${2:// requirements}",
+      "};"
+    ],
+    "description": "C++20 concept definition",
+    "prefix": "cpp_concept"
+  },
+  "cpp_pimpl": {
+    "body": [
+      "// In header:",
+      "class ${1:ClassName} {",
+      "public:",
+      "    ${1:ClassName}();",
+      "    ~${1:ClassName}();",
+      "private:",
+      "    struct Impl;",
+      "    std::unique_ptr<Impl> pimpl;",
+      "};",
+      "",
+      "// In implementation:",
+      "struct ${1:ClassName}::Impl {",
+      "    ${2:// actual implementation fields}",
+      "};",
+      "${1:ClassName}::${1:ClassName}() : pimpl(std::make_unique<Impl>()) {}",
+      "${1:ClassName}::~${1:ClassName}() = default;"
+    ],
+    "description": "Pimpl idiom (Pointer to Implementation)",
+    "prefix": "cpp_pimpl"
+  },
+  "cpp_visitor": {
+    "body": [
+      "template<class... Ts> struct overloaded : Ts... { using Ts::operator()...; };",
+      "template<class... Ts> overloaded(Ts...) -> overloaded<Ts...>;",
+      "",
+      "std::visit(overloaded {",
+      "    [](const ${1:TypeA}& a) { ${2:/* handle A */} },",
+      "    [](const ${3:TypeB}& b) { ${4:/* handle B */} },",
+      "}, ${5:variant_variable});"
+    ],
+    "description": "Visitor pattern helper for std::visit on variants",
+    "prefix": "cpp_visitor"
+  },
+  "cpp_singleton": {
+    "body": [
+      "class ${1:ClassName} {",
+      "public:",
+      "    static ${1:ClassName}& instance() {",
+      "        static ${1:ClassName} i;",
+      "        return i;",
+      "    }",
+      "    ${1:ClassName}(const ${1:ClassName}&) = delete;",
+      "    void operator=(const ${1:ClassName}&) = delete;",
+      "private:",
+      "    ${1:ClassName}() = default;",
+      "};"
+    ],
+    "description": "Thread-safe Meyers Singleton",
+    "prefix": "cpp_singleton"
+  },
+  "m_unique": {
+    "body": [
+      "auto ${1:var} = std::make_unique<${2:Type}>(${3:args});"
+    ],
+    "description": "std::make_unique shortcut",
+    "prefix": "m_unique"
+  },
+  "m_shared": {
+    "body": [
+      "auto ${1:var} = std::make_shared<${2:Type}>(${3:args});"
+    ],
+    "description": "std::make_shared shortcut",
+    "prefix": "m_shared"
+  },
+  "unique_ptr_custom": {
+    "body": [
+      "using ${1:Type}Ptr = std::unique_ptr<${2:RawType}, void(*)( ${2:RawType}*)>;",
+      "${1:Type}Ptr ${3:var}(${4:ptr}, [](${2:RawType}* p) {",
+      "    if (p) ${5:CustomDeleter}(p);",
+      "});"
+    ],
+    "description": "unique_ptr with custom deleter",
+    "prefix": "unique_ptr_custom"
+  },
+  "s_assert": {
+    "body": [
+      "static_assert(${1:condition}, \"${2:Compile-time error message}\");"
+    ],
+    "description": "Compile-time assertion",
+    "prefix": "s_assert"
+  },
+  "measure_time": {
+    "body": [
+      "auto start = std::chrono::high_resolution_clock::now();",
+      "${1:// code to measure}",
+      "auto end = std::chrono::high_resolution_clock::now();",
+      "std::chrono::duration<double, std::milli> duration = end - start;",
+      "std::cout << \"Execution time: \" << duration.count() << \" ms\" << std::endl;"
+    ],
+    "description": "Measure execution time using std::chrono",
+    "prefix": "measure_time"
+  },
+  "gtest_case": {
+    "body": [
+      "TEST(${1:SuiteName}, ${2:TestName}) {",
+      "    ${0}",
+      "}"
+    ],
+    "description": "GTest case block",
+    "prefix": "gtest_case"
+  },
+  "doctest_case": {
+    "body": [
+      "TEST_CASE(\"${1:description}\") {",
+      "    ${0}",
+      "}"
+    ],
+    "description": "doctest case block",
+    "prefix": "doctest_case"
+  }
+}

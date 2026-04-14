@@ -27,6 +27,12 @@
           "nix"
         ],
         "path": "./nix.json.json"
+      },
+      {
+        "language": [
+          "cpp"
+        ],
+        "path": "./cpp.json.json"
       }
     ]
   }
