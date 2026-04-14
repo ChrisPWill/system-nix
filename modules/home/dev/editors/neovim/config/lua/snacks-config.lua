@@ -19,8 +19,8 @@ vim.keymap.set("n", "-", function()
 	Snacks.explorer.open()
 end, { desc = "Explorer" })
 
-vim.keymap.set("n", "<c-\\>", function()
-	Snacks.terminal.open()
+vim.keymap.set({ "n", "t" }, "<c-\\>", function()
+	Snacks.terminal.toggle()
 end, { desc = "Terminal" })
 
 -- ── Git Group (<leader>g) ───────────────────────────────────────────────────
