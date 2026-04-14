@@ -138,6 +138,12 @@ return {
 				require("nvim-treesitter-textobjects.move").goto_previous_end("@class.outer", "textobjects")
 			end, { desc = "Previous class end" })
 
+			-- Native incremental selection (Neovim 0.12+)
+			-- Expand selection
+			vim.keymap.set("x", "<Enter>", "an", { remap = true, desc = "Incremental Selection (Expand)" })
+			-- Shrink selection
+			vim.keymap.set("x", "<BS>", "in", { remap = true, desc = "Incremental Selection (Shrink)" })
+
 			require("treesitter-context").setup({})
 			-- Folding
 			vim.o.foldmethod = "expr"

@@ -352,7 +352,13 @@ return {
 			})
 			require("mini.pairs").setup()
 			require("mini.icons").setup()
-			require("mini.ai").setup()
+			require("mini.ai").setup({
+				mappings = {
+					-- Note - needed to avoid overriding default 0.12 neovim incremental selection remap
+					around_next = "aN",
+					inside_next = "iN",
+				},
+			})
 			require("mini.surround").setup({
 				mappings = {
 					add = "ms",
