@@ -14,6 +14,13 @@
           "markdown"
         ],
         "path": "./markdown.json.json"
+      },
+      {
+        "language": [
+          "typescript",
+          "typescriptreact"
+        ],
+        "path": "./typescript.json.json"
       }
     ]
   }
