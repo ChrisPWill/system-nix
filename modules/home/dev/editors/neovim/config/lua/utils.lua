@@ -12,6 +12,14 @@ function M.rootHasFiles(files)
 	return #vim.fs.find(files, { upward = true, stop = vim.env.HOME }) > 0
 end
 
+function M.getProjectRoot(files)
+	local res = vim.fs.find(files, { upward = true, stop = vim.env.HOME })
+	if #res > 0 then
+		return vim.fs.dirname(res[1])
+	end
+	return nil
+end
+
 function M.isDeno()
 	return M.rootHasFiles({ "deno.json" })
 end
@@ -22,6 +30,10 @@ end
 
 function M.isTreefmt()
 	return M.rootHasFiles({ "treefmt.toml", ".treefmt.toml" })
+end
+
+function M.isJujutsu()
+	return M.rootHasFiles({ ".jj" })
 end
 
 function M.insertIfTrue(t, exp, value)

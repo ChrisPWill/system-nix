@@ -65,8 +65,22 @@ vim.keymap.set("n", "<leader>f", function()
 end, { desc = "Files" })
 
 vim.keymap.set("n", "<leader>gf", function()
-	Snacks.picker.git_files()
-end, { desc = "Git Files" })
+	if utils.isJujutsu() then
+		local root = utils.getProjectRoot({ ".jj" })
+		require("snacks").picker.pick({
+			finder = "proc",
+			cwd = root,
+			cmd = "jj",
+			args = { "file", "list" },
+			transform = function(item)
+				item.file = item.text
+			end,
+			title = "Jujutsu Files",
+		})
+	else
+		Snacks.picker.git_files()
+	end
+end, { desc = "Git / JJ Files" })
 
 -- ── Grep ──────────────────────────────────────────────────────────────────────
 
