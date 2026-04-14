@@ -21,6 +21,12 @@
           "typescriptreact"
         ],
         "path": "./typescript.json.json"
+      },
+      {
+        "language": [
+          "nix"
+        ],
+        "path": "./nix.json.json"
       }
     ]
   }

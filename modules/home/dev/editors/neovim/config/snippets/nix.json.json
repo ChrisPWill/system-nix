@@ -1,0 +1,120 @@
+{
+  "nix_module": {
+    "body": [
+      "{ config, lib, pkgs, ... }:",
+      "let",
+      "  inherit (lib) mkIf mkOption types;",
+      "  cfg = config.${1:path};",
+      "in {",
+      "  options.${1:path} = {",
+      "    enable = lib.mkEnableOption \"${2:description}\";",
+      "  };",
+      "",
+      "  config = mkIf cfg.enable {",
+      "    ${3:body}",
+      "  };",
+      "}"
+    ],
+    "description": "Standard Nix module structure",
+    "prefix": "nix_module"
+  },
+  "nix_option": {
+    "body": [
+      "${1:name} = mkOption {",
+      "  type = types.${2:str};",
+      "  default = ${3:default};",
+      "  description = \"${4:description}\";",
+      "};"
+    ],
+    "description": "Nix mkOption boilerplate",
+    "prefix": "nix_option"
+  },
+  "nix_enable": {
+    "body": [
+      "enable = lib.mkEnableOption \"${1:description}\";"
+    ],
+    "description": "Standard Nix boolean toggle option",
+    "prefix": "nix_enable"
+  },
+  "nix_package": {
+    "body": [
+      "package = lib.mkPackageOption pkgs \"${1:name}\" { };"
+    ],
+    "description": "Standard Nix package option",
+    "prefix": "nix_package"
+  },
+  "nix_if": {
+    "body": [
+      "lib.mkIf ${1:condition} {",
+      "  ${2:body}",
+      "}"
+    ],
+    "description": "Nix mkIf wrapper",
+    "prefix": "nix_if"
+  },
+  "nix_inherit": {
+    "body": [
+      "inherit (lib) ${1:mkIf mkOption types};"
+    ],
+    "description": "Inherit from lib common functions",
+    "prefix": "nix_inherit"
+  },
+  "nix_blueprint_devshell": {
+    "body": [
+      "{ pkgs, ... }:",
+      "{",
+      "  devShells.default = pkgs.mkShell {",
+      "    packages = with pkgs; [",
+      "      ${1:packages}",
+      "    ];",
+      "",
+      "    shellHook = ''",
+      "      ${2:echo \"Welcome to the ${3:project} devshell!\"}",
+      "    '';",
+      "  };",
+      "}"
+    ],
+    "description": "Nix blueprint devShell template",
+    "prefix": "nix_devshell"
+  },
+  "nix_sops": {
+    "body": [
+      "sops.secrets.\"${1:name}\" = {",
+      "  owner = config.users.users.${2:cwilliams}.name;",
+      "  ${3:# sopsFile = ../../secrets/secrets.yaml;}",
+      "};"
+    ],
+    "description": "Sops secret definition",
+    "prefix": "nix_sops"
+  },
+  "nix_optionals": {
+    "body": [
+      "lib.optionals ${1:condition} [",
+      "  ${2:pkgs.name}",
+      "]"
+    ],
+    "description": "Conditional list with lib.optionals",
+    "prefix": "nix_optionals"
+  },
+  "nix_hm_program": {
+    "body": [
+      "programs.${1:name} = {",
+      "  enable = true;",
+      "  ${2:package = pkgs.${1:name};}",
+      "};"
+    ],
+    "description": "Home Manager program configuration",
+    "prefix": "nix_hm_program"
+  },
+  "nix_overlay": {
+    "body": [
+      "final: prev: {",
+      "  ${1:name} = prev.${1:name}.overrideAttrs (old: {",
+      "    ${2:patches = (old.patches or []) ++ [ ./patch.patch ];}",
+      "  });",
+      "}"
+    ],
+    "description": "Nix overlay for patching packages",
+    "prefix": "nix_overlay"
+  }
+}
