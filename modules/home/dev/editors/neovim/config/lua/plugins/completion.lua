@@ -148,6 +148,49 @@ return {
 				require("luasnip").cleanup()
 				loadSnippets()
 			end, {})
+
+			-- Snippet Search (Global: includes friendly-snippets)
+			vim.keymap.set("n", "<leader>ks", function()
+				local ls = require("luasnip")
+				local ft = vim.bo.filetype
+				local items = {}
+
+				local function add_to_items(snip_list, group)
+					for _, snip in ipairs(snip_list) do
+						local description = snip.description and snip.description[1] or ""
+						table.insert(items, {
+							-- Searchable text includes trigger, description, and group
+							text = string.format("%s %s %s", snip.trigger, description, group),
+							trigger = snip.trigger,
+							desc = description,
+							group = group,
+							snippet = snip,
+						})
+					end
+				end
+
+				add_to_items(ls.get_snippets(ft), ft)
+				add_to_items(ls.get_snippets("all"), "global")
+
+				require("snacks").picker.pick({
+					items = items,
+					title = "Snippets (" .. ft .. ")",
+					format = function(item)
+						return {
+							{ item.trigger, "SnacksPickerLabel" },
+							{ " " },
+							{ item.desc, "SnacksPickerComment" },
+							{ " [" .. item.group .. "]", "SnacksPickerDir" },
+						}
+					end,
+					confirm = function(picker, item)
+						picker:close()
+						if item then
+							ls.snip_expand(item.snippet)
+						end
+					end,
+				})
+			end, { desc = "Snippet: Search / All" })
 		end,
 	},
 	{
@@ -159,9 +202,9 @@ return {
 				snippetDir = (nixCats.configDir or "") .. "/snippets",
 			})
 
-			vim.keymap.set("n", "<leader>ks", function()
+			vim.keymap.set("n", "<leader>ke", function()
 				require("scissors").editSnippet()
-			end, { desc = "Snippet: Search / Edit" })
+			end, { desc = "Snippet: Edit (Custom)" })
 
 			-- when used in visual mode, prefills the selection as snippet body
 			vim.keymap.set({ "n", "x" }, "<leader>ka", function()
