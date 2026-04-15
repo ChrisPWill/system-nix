@@ -1,6 +1,9 @@
-{...}: {
+{config, ...}: {
   programs.claude-code = {
     enable = true;
+
+    rulesDir = config.lib.file.mkOutOfStoreSymlink "${config.homeModuleDir}/ai/claude/rules";
+
     lspServers = {
       nix = {
         command = "nixd";
