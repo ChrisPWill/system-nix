@@ -133,6 +133,11 @@
             auto-format = true;
             language-servers = ["fish-lsp"];
           }
+          {
+            name = "html";
+            auto-format = true;
+            language-servers = ["vscode-html-language-server"];
+          }
         ];
 
         language-server = {
@@ -179,6 +184,10 @@
           };
           clangd = {
             command = "clangd";
+          };
+          "vscode-html-language-server" = {
+            command = "vscode-html-language-server";
+            args = ["--stdio"];
           };
         };
       };
