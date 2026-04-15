@@ -139,10 +139,13 @@ return {
 			end, { desc = "Previous class end" })
 
 			-- Native incremental selection (Neovim 0.12+)
+			-- Mimicing helix
 			-- Expand selection
-			vim.keymap.set("x", "<Enter>", "an", { remap = true, desc = "Incremental Selection (Expand)" })
+			vim.keymap.set("x", "<A-o>", "an", { remap = true, desc = "Incremental Selection (Expand)" })
+			vim.keymap.set("n", "<A-o>", "van", { remap = true, desc = "Incremental Selection (Expand)" })
 			-- Shrink selection
-			vim.keymap.set("x", "<BS>", "in", { remap = true, desc = "Incremental Selection (Shrink)" })
+			vim.keymap.set("x", "<A-i>", "in", { remap = true, desc = "Incremental Selection (Shrink)" })
+			vim.keymap.set("n", "<A-i>", "vin", { remap = true, desc = "Incremental Selection (Shrink)" })
 
 			require("treesitter-context").setup({})
 			-- Folding
