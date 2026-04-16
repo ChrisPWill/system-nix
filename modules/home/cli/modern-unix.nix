@@ -15,6 +15,15 @@
 
     # Modern watch replacement
     viddy
+
+    # Terminal-based websocket client
+    websocat
+
+    # Retrieve files from the web
+    wget
+
+    # Display Gtk+ dialog boxes from shell scripts
+    zenity
   ];
 
   # Nice colourful cat alternative

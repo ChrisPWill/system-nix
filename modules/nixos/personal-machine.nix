@@ -19,5 +19,9 @@
 
   # ProtonVPN
   networking.firewall.checkReversePath = false;
-  environment.systemPackages = with pkgs; [wireguard-tools proton-vpn];
+  environment.systemPackages = with pkgs; [
+    wireguard-tools
+    proton-vpn
+    protontricks
+  ];
 }

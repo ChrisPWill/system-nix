@@ -2,6 +2,9 @@
   home.packages = with pkgs; [
     # Easy zipper/unzipper
     ouch
+
+    # Command line archiver with high compression ratio
+    p7zip
   ];
 
   programs.yazi = {
