@@ -5,18 +5,25 @@
 # and the current workspace (floating).
 # ---
 
-def find_target [app_id: string] {
+def find_target [app_id: string, title: string] {
     let windows = (niri msg --json windows | from json)
-    ($windows | where {|w| ( ($w.app_id? | default "" | str contains -i $app_id) ) } | first)
+    mut filtered = ($windows | where {|w| ($w.app_id? | default "" | str contains -i $app_id)})
+    
+    if not ($title | is-empty) {
+        $filtered = ($filtered | where {|w| ($w.title? | default "" | str contains -i $title)})
+    }
+
+    $filtered | first
 }
 
-def main [app_id: string, invoke_command: string, floating: bool = true] {
+def main [app_id: string, invoke_command: string, title: string = "", floating: bool = true] {
     let pinnedWorkspace = niri msg --json workspaces | from json | where name == "pinned" | get 0
-    mut target = find_target $app_id
+    mut target = find_target $app_id $title
 
     if ($target | is-empty) {
         # App not running, start it
         ^niri msg action spawn -- $invoke_command
+        return
     }
 
     if $target.workspace_id != $pinnedWorkspace.id {

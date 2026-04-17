@@ -8,7 +8,7 @@
         # TODO: This badly needs to be updated to be more readable
         config = ''
           (defsrc
-            caps t g m j d s
+            caps t g m j d s o
           )
 
           (defalias
@@ -16,15 +16,15 @@
           )
 
           (deflayer base
-            @cap t g m j d s
+            @cap t g m j d s o
           )
 
           (deflayer leader
-            _ M-A-S-t M-A-S-g (layer-toggle monitor) _ M-A-S-d M-A-S-s
+            _ M-A-S-t M-A-S-g (layer-toggle monitor) _ M-A-S-d M-A-S-s M-A-S-o
           )
 
           (deflayer monitor
-            _ M-A-S-b _ _ M-A-S-j _ _
+            _ M-A-S-b _ _ M-A-S-j _ _ _
           )
         '';
       };
