@@ -38,5 +38,15 @@
 
     services.dbus.enable = true;
     services.upower.enable = true;
+
+    systemd.services.lock-before-suspend = {
+      description = "Lock screen before sleep";
+      before = ["sleep.target"];
+      wantedBy = ["sleep.target"];
+      serviceConfig = {
+        Type = "oneshot";
+        ExecStart = "${pkgs.systemd}/bin/loginctl lock-sessions";
+      };
+    };
   };
 }
