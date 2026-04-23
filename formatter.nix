@@ -17,4 +17,5 @@
   # programs.tombi.enable = true; # toml
   programs.rustfmt.enable = true; # rust
   programs.clang-format.enable = true; # cpp, h
+  programs.ktlint.enable = true; # kotlin
 }).config.build.wrapper

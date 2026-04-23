@@ -41,5 +41,9 @@
 
     # Markdown
     marksman
+
+    # Kotlin
+    kotlin-language-server
+    ktlint
   ];
 }

@@ -49,3 +49,8 @@ includes = ["*.rs", "**/*.rs"]
 command = "clang-format"
 options = ["-i"]
 includes = ["*.cpp", "**/*.cpp", "*.h", "**/*.h"]
+
+[formatter.kotlin]
+command = "ktlint"
+options = ["--format"]
+includes = ["*.kt", "**/*.kt", "*.kts", "**/*.kts"]

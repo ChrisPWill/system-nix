@@ -138,6 +138,15 @@
             auto-format = true;
             language-servers = ["vscode-html-language-server"];
           }
+          {
+            name = "kotlin";
+            auto-format = true;
+            language-servers = ["kotlin-language-server"];
+            formatter = {
+              command = "ktlint";
+              args = ["--format" "-"];
+            };
+          }
         ];
 
         language-server = {
@@ -188,6 +197,9 @@
           "vscode-html-language-server" = {
             command = "vscode-html-language-server";
             args = ["--stdio"];
+          };
+          "kotlin-language-server" = {
+            command = "kotlin-language-server";
           };
         };
       };
