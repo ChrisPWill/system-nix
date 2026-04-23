@@ -70,11 +70,18 @@ vim.keymap.set("n", "<leader>[t", "<cmd>tabprev<CR>", { desc = "Previous tab" })
 
 -- Diagnostic navigation
 vim.keymap.set("n", "]d", function()
-	vim.diagnostic.goto_next({ float = true })
-end, { desc = "Next diagnostic" })
+	require("utils.diag").jump_next()
+end, { desc = "Next diagnostic (prioritized)" })
 vim.keymap.set("n", "[d", function()
-	vim.diagnostic.goto_prev({ float = true })
-end, { desc = "Previous diagnostic" })
+	require("utils.diag").jump_prev()
+end, { desc = "Previous diagnostic (prioritized)" })
+
+vim.keymap.set("n", "]D", function()
+	require("utils.diag").jump_all_next()
+end, { desc = "Next diagnostic (any)" })
+vim.keymap.set("n", "[D", function()
+	require("utils.diag").jump_all_prev()
+end, { desc = "Previous diagnostic (any)" })
 
 -- Window management
 vim.keymap.set("n", "<leader>w", "<C-w>", { desc = "Window management" })
