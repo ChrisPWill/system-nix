@@ -148,6 +148,18 @@ return {
 			vim.keymap.set("n", "<A-i>", "vin", { remap = true, desc = "Incremental Selection (Shrink)" })
 
 			require("treesitter-context").setup({})
+			vim.api.nvim_create_autocmd("FileType", {
+				pattern = "*",
+				callback = function()
+					if vim.bo.buftype ~= "" then
+						return
+					end
+					local ok, _ = pcall(vim.treesitter.get_parser, 0)
+					if ok then
+						vim.bo.indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
+					end
+				end,
+			})
 			-- Folding
 			vim.o.foldmethod = "expr"
 			vim.o.foldexpr = "v:lua.vim.treesitter.foldexpr()"

@@ -36,12 +36,11 @@ vim.wo.number = true
 vim.o.mouse = "a"
 
 -- Indent
--- vim.o.smarttab = true
-vim.opt.cpoptions:append("I")
+-- NOTE: vim-sleuth is installed and handles dynamic detection per-project.
+-- These settings serve as the global fallback.
+vim.opt.cpoptions:append("I") -- Preserve indent on join
 vim.o.expandtab = true
-vim.o.smartindent = true
 vim.o.autoindent = true
--- TODO: Consider dynamically setting this based on project
 vim.o.tabstop = 2
 vim.o.shiftwidth = 2
 
