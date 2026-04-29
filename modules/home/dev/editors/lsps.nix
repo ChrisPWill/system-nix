@@ -15,7 +15,6 @@
 
     # Go
     gopls
-    gotools
     go-tools
 
     # Lua

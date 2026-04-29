@@ -145,7 +145,6 @@ in {
             go-tools
             golangci-lint
             gopls
-            gotools
           ];
           java = with pkgs; [
             google-java-format
