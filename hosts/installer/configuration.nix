@@ -34,7 +34,6 @@
 
   # Use the same host platform as your main laptop
   nixpkgs.hostPlatform = "x86_64-linux";
-  nixpkgs.config.allowUnfree = true;
 
   # Customise the ISO image
   # isoImage.isoName is renamed to image.fileName in newer NixOS versions
