@@ -46,5 +46,7 @@
     '';
 
     home.stateVersion = "25.05";
+
+    gtk.gtk4.theme = config.gtk.theme;
   };
 }
