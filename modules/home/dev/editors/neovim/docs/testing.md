@@ -8,7 +8,9 @@ This configuration uses `neotest` for Python, Rust, C++, Java, and Kotlin, provi
 | :------------ | :----------------------------- | :----- |
 | `<leader>ctt` | **Test** Single (under cursor) | Normal |
 | `<leader>cT`  | **Test** current **File**      | Normal |
+| `<leader>ctw` | **Test Watch** (Toggle)        | Normal |
 | `<leader>cts` | **Test Stop** (Hanging test)   | Normal |
+| `<leader>tt`  | **Test Summary** (Toggle)      | Normal |
 
 ## 󰘦 Advanced Usage
 

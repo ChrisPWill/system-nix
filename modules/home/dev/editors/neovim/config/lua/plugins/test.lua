@@ -39,7 +39,9 @@ return {
 			utils.nmap("<leader>cT", function()
 				require("neotest").run.run(vim.fn.expand("%"))
 			end, "Test (File)")
+			utils.nmap("<leader>ctw", require("neotest").watch.toggle, "Test (Watch)")
 			utils.nmap("<leader>cts", require("neotest").run.stop, "Test (Stop)")
+			utils.nmap("<leader>tt", require("neotest").summary.toggle, "Test Summary")
 		end,
 	},
 	{
