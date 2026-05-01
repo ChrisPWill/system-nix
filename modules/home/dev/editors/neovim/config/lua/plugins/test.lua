@@ -26,16 +26,24 @@ return {
 					})
 				)
 			end
-			if nixCats("java") or nixCats("kotlin") then
+			if nixCats("java") then
 				table.insert(adapters, require("neotest-java")({}))
-				table.insert(adapters, require("neotest-gradle"))
-				if nixCats("kotlin") then
-					table.insert(adapters, require("neotest-kotlin"))
-				end
+			end
+			if nixCats("kotlin") then
+				table.insert(adapters, require("neotest-kotlin"))
 			end
 			require("neotest").setup({
 				log_level = vim.log.levels.DEBUG,
 				adapters = adapters,
+				watch = {
+					symbol_queries = {
+						kotlin = [[
+							(import_header (identifier) @symbol)
+							(class_declaration (type_identifier) @symbol)
+							(function_declaration (simple_identifier) @symbol)
+						]],
+					},
+				},
 			})
 
 			utils.nmap("<leader>ctt", require("neotest").run.run, "Test (Nearest)")
@@ -59,13 +67,8 @@ return {
 	},
 	{
 		"neotest-java",
-		enabled = nixCats("java") or nixCats("kotlin") or false,
+		enabled = nixCats("java") or false,
 		on_require = { "neotest-java" },
-	},
-	{
-		"neotest-gradle",
-		enabled = nixCats("java") or nixCats("kotlin") or false,
-		on_require = { "neotest-gradle" },
 	},
 	{
 		"neotest-kotlin",
