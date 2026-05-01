@@ -52,5 +52,8 @@ includes = ["*.cpp", "**/*.cpp", "*.h", "**/*.h"]
 
 [formatter.kotlin]
 command = "ktlint"
-options = ["--format"]
+options = [
+  "--format",
+  "--editorconfig=/home/cwilliams/.system-nix/modules/home/dev/editors/neovim/ktlint.editorconfig",
+]
 includes = ["*.kt", "**/*.kt", "*.kts", "**/*.kts"]

@@ -71,9 +71,7 @@ return {
 			local conform = require("conform")
 
 			local function get_formatters(list)
-				if utils.isTreefmt() then
-					return { "treefmt" }
-				end
+				-- Previously was adding treefmt here. Keeping for now incase another general formatter needs to be added.
 				return list
 			end
 
@@ -87,12 +85,6 @@ return {
 
 			conform.setup({
 				formatters_by_ft = {
-					["*"] = function()
-						if utils.isTreefmt() then
-							return { "treefmt" }
-						end
-						return {}
-					end,
 					lua = nixCats("lua") and get_formatters({ "stylua" }) or nil,
 					go = nixCats("go") and get_formatters({ "gofmt", "golint", stop_after_first = true }) or nil,
 					javascript = nixCats("node") and get_formatters(jslint) or nil,
@@ -128,12 +120,6 @@ return {
 						args = { "fmt", "-" },
 						stdin = true,
 					},
-					treefmt = {
-						command = "treefmt",
-						args = { "--stdin", "$FILENAME" },
-						stdin = true,
-						cwd = require("conform.util").root_file({ "treefmt.toml", ".treefmt.toml" }),
-					},
 				},
 			})
 
@@ -146,8 +132,9 @@ return {
 					require("conform").format({
 						lsp_fallback = true,
 						bufnr = args.buf,
-						async = false,
-						timeout_ms = 5000,
+						async = true,
+						timeout_ms = 8000,
+						undojoin = true,
 					})
 				end,
 			})
