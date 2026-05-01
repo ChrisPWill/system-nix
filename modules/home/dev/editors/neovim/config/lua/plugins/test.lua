@@ -26,6 +26,10 @@ return {
 					})
 				)
 			end
+			if nixCats("java") or nixCats("kotlin") then
+				table.insert(adapters, require("neotest-java")({}))
+				table.insert(adapters, require("neotest-gradle"))
+			end
 			require("neotest").setup({
 				log_level = vim.log.levels.DEBUG,
 				adapters = adapters,
@@ -47,5 +51,15 @@ return {
 		"neotest-ctest",
 		enabled = nixCats("cpp") or false,
 		on_require = { "neotest-ctest" },
+	},
+	{
+		"neotest-java",
+		enabled = nixCats("java") or nixCats("kotlin") or false,
+		on_require = { "neotest-java" },
+	},
+	{
+		"neotest-gradle",
+		enabled = nixCats("java") or nixCats("kotlin") or false,
+		on_require = { "neotest-gradle" },
 	},
 }

@@ -1,6 +1,6 @@
 # 󰙨 Testing Lifecycle
 
-This configuration uses `neotest` for Python, Rust, and C++, providing an integrated test runner and summary view.
+This configuration uses `neotest` for Python, Rust, C++, Java, and Kotlin, providing an integrated test runner and summary view.
 
 ## 󰌌 Keybindings
 
@@ -17,4 +17,5 @@ This configuration uses `neotest` for Python, Rust, and C++, providing an integr
   - **Python:** Using the standard `unittest` runner.
   - **Rust:** Integrated with `rustaceanvim` for cargo-aware testing.
   - **C++:** Using `neotest-ctest` for CMake-driven projects (assumes `build/` directory).
+  - **Java/Kotlin:** Using `neotest-java` for JUnit and `neotest-gradle` for Gradle-based projects (supports Kotest via Gradle).
 - **Log Level:** Currently set to **DEBUG** for troubleshooting test runner issues.

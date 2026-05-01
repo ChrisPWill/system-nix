@@ -233,6 +233,14 @@ in {
             vim-startuptime
             which-key-nvim
           ];
+          java = with pkgs.vimPlugins; [
+            neotest-java
+            neotest-gradle
+          ];
+          kotlin = with pkgs.vimPlugins; [
+            neotest-java
+            neotest-gradle
+          ];
           node = with pkgs.vimPlugins; [
             neotest-deno
             neotest-jest
