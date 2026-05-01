@@ -53,6 +53,11 @@
 
     sops-nix.url = "github:Mic92/sops-nix";
     sops-nix.inputs.nixpkgs.follows = "nixpkgs";
+
+    plugins-neotest-kotlin = {
+      url = "github:codymikol/neotest-kotlin";
+      flake = false;
+    };
   };
 
   # Load config via blueprint https://github.com/numtide/blueprint

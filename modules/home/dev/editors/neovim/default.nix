@@ -240,6 +240,7 @@ in {
           kotlin = with pkgs.vimPlugins; [
             neotest-java
             neotest-gradle
+            pkgs.neovimPlugins.neotest-kotlin
           ];
           node = with pkgs.vimPlugins; [
             neotest-deno

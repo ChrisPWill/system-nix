@@ -708,6 +708,22 @@
         "type": "github"
       }
     },
+    "plugins-neotest-kotlin": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1752771384,
+        "narHash": "sha256-YKj2btZl2j/ysFoUi3FQ5LYKrrfmWNS6fjLfp9M6eac=",
+        "owner": "codymikol",
+        "repo": "neotest-kotlin",
+        "rev": "01808ea8ec7cf40952d57faceca00a154d5053a7",
+        "type": "github"
+      },
+      "original": {
+        "owner": "codymikol",
+        "repo": "neotest-kotlin",
+        "type": "github"
+      }
+    },
     "quickshell": {
       "inputs": {
         "nixpkgs": [
@@ -746,6 +762,7 @@
         "nix-monitor": "nix-monitor",
         "nixCats": "nixCats",
         "nixpkgs": "nixpkgs_3",
+        "plugins-neotest-kotlin": "plugins-neotest-kotlin",
         "sops-nix": "sops-nix",
         "stylix": "stylix",
         "treefmt-nix": "treefmt-nix"
