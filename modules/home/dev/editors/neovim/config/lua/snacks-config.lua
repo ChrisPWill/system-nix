@@ -15,6 +15,32 @@ require("snacks").setup({
 	scope = {},
 })
 
+-- HACK: Fix for snacks.nvim workspace symbols crash when range is missing
+-- Some LSP servers (like nixd or gopls) might return symbols without a range.
+local snacks_lsp = require("snacks.picker.source.lsp")
+local original_add_loc = snacks_lsp.add_loc
+snacks_lsp.add_loc = function(item, result, client)
+	local uri = result.uri or result.targetUri
+	local range = result.range or result.targetSelectionRange
+	if not range then
+		if uri then
+			item.loc = {
+				uri = uri,
+				range = {
+					start = { line = 0, character = 0 },
+					["end"] = { line = 0, character = 0 },
+				},
+				encoding = client.offset_encoding,
+			}
+			item.pos = { 1, 0 }
+			item.end_pos = { 1, 0 }
+			item.file = vim.uri_to_fname(uri)
+			return item
+		end
+	end
+	return original_add_loc(item, result, client)
+end
+
 vim.keymap.set("n", "-", function()
 	Snacks.explorer.open()
 end, { desc = "Explorer" })
