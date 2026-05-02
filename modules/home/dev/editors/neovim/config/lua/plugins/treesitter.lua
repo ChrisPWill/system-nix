@@ -151,7 +151,9 @@ return {
 			vim.api.nvim_create_autocmd("FileType", {
 				pattern = "*",
 				callback = function()
-					if vim.bo.buftype ~= "" then
+					-- Skip treesitter indentation for Kotlin as it is currently buggy
+					-- and often results in newlines starting at the left margin.
+					if vim.bo.buftype ~= "" or vim.bo.filetype == "kotlin" then
 						return
 					end
 					local ok, _ = pcall(vim.treesitter.get_parser, 0)
