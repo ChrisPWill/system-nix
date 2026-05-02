@@ -128,7 +128,7 @@ end, { desc = "Grep (Word/Selection)" })
 
 -- ── Search Group ─────────────────────────────────────────────────────────────
 
-vim.keymap.set("n", "<leader>/i", function()
+vim.keymap.set("n", "<leader>/t", function()
 	local allowed_kinds = {
 		Class = true,
 		Interface = true,

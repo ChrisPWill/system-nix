@@ -76,21 +76,24 @@ This configuration uses a **Hybrid Philosophy** (Helix-inspired navigation + Neo
 
 ## 󰘦 Search / Pick Group (<leader>/)
 
-| Key          | Action                     |
-| :----------- | :------------------------- |
-| `<leader>/i` | **Find Class / Type**      |
-| `<leader>/k` | **Knowledge Base (Files)** |
-| `<leader>/K` | **Knowledge Base (Grep)**  |
-| `<leader>/;` | **Marks**                  |
-| `<leader>/m` | **Keymaps**                |
-| `<leader>/h` | **Help Pages**             |
-| `<leader>/l` | **Location List**          |
-| `<leader>/M` | **Man Pages**              |
-| `<leader>/q` | **Quickfix List**          |
-| `<leader>/R` | **Resume last picker**     |
-| `<leader>/u` | **Undo History**           |
-| `<leader>//` | **Grep (All)**             |
-| `<leader>/w` | **Grep (Word/Selection)**  |
+| Key          | Action                    |
+| :----------- | :------------------------ |
+| `<leader>/t` | **Find Class / [t]ype**   |
+| `<leader>/k` | **[k]nowledge Base**      |
+| `<leader>/K` | **[K]nowledge (Grep)**    |
+| `<leader>/;` | **Marks (;)**             |
+| `<leader>/m` | **Key[m]aps**             |
+| `<leader>/h` | **[h]elp Pages**          |
+| `<leader>/l` | **[l]ocation List**       |
+| `<leader>/M` | **[M]an Pages**           |
+| `<leader>/q` | **[q]uickfix List**       |
+| `<leader>/R` | **[R]esume last picker**  |
+| `<leader>/u` | **[u]ndo History**        |
+| `<leader>//` | **Grep Search**           |
+| `<leader>/w` | **Grep [w]ord/selection** |
+| `<leader>/j` | **[j]umps**               |
+| `<leader>/s` | **[s]ymbols (Buffer)**    |
+| `<leader>/S` | **[S]ymbols (Workspace)** |
 
 ## 󰘦 Knowledge & Snippets Group (<leader>k)
 
