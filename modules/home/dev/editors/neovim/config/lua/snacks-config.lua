@@ -128,6 +128,37 @@ end, { desc = "Grep (Word/Selection)" })
 
 -- ── Search Group ─────────────────────────────────────────────────────────────
 
+vim.keymap.set("n", "<leader>/i", function()
+	local allowed_kinds = {
+		Class = true,
+		Interface = true,
+		Enum = true,
+		Struct = true,
+		TypeAlias = true,
+		Object = true, -- Kotlin
+		Trait = true, -- Rust
+		Module = true, -- Lua / Python
+	}
+	Snacks.picker.lsp_workspace_symbols({
+		transform = function(item)
+			if not allowed_kinds[item.kind] then
+				return false
+			end
+		end,
+		-- Still provide symbols to the LSP for server-side optimization if supported
+		symbols = {
+			"Class",
+			"Interface",
+			"Enum",
+			"Struct",
+			"TypeAlias",
+			"Object",
+			"Trait",
+			"Module",
+		},
+	})
+end, { desc = "Find Class / Type" })
+
 vim.keymap.set("n", "<leader>D", function()
 	Snacks.picker.diagnostics()
 end, { desc = "Workspace Diagnostics" })
