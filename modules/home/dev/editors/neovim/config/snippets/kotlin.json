@@ -1,0 +1,229 @@
+{
+  "kmain": {
+    "prefix": "kmain",
+    "body": [
+      "fun main() {",
+      "    $0",
+      "}"
+    ],
+    "description": "Modern main function"
+  },
+  "kmainargs": {
+    "prefix": "kmainargs",
+    "body": [
+      "fun main(args: Array<String>) {",
+      "    $0",
+      "}"
+    ],
+    "description": "Main function with arguments"
+  },
+  "comp": {
+    "prefix": "comp",
+    "body": [
+      "companion object {",
+      "    $0",
+      "}"
+    ],
+    "description": "Companion object"
+  },
+  "lazy": {
+    "prefix": "lazy",
+    "body": [
+      "val ${1:name} by lazy { $0 }"
+    ],
+    "description": "Lazy property"
+  },
+  "const": {
+    "prefix": "const",
+    "body": [
+      "const val ${1:NAME} = $0"
+    ],
+    "description": "Compile-time constant"
+  },
+  "sus": {
+    "prefix": "sus",
+    "body": [
+      "suspend fun ${1:name}(${2:args}) {",
+      "    $0",
+      "}"
+    ],
+    "description": "Suspend function"
+  },
+  "launch": {
+    "prefix": "launch",
+    "body": [
+      "launch {",
+      "    $0",
+      "}"
+    ],
+    "description": "Coroutine launch"
+  },
+  "async": {
+    "prefix": "async",
+    "body": [
+      "async {",
+      "    $0",
+      "}"
+    ],
+    "description": "Coroutine async"
+  },
+  "withContext": {
+    "prefix": "withContext",
+    "body": [
+      "withContext(Dispatchers.${1:IO}) {",
+      "    $0",
+      "}"
+    ],
+    "description": "Change coroutine context"
+  },
+  "sout": {
+    "prefix": "sout",
+    "body": [
+      "println($0)"
+    ],
+    "description": "Print to stdout"
+  },
+  "serr": {
+    "prefix": "serr",
+    "body": [
+      "System.err.println($0)"
+    ],
+    "description": "Print to stderr"
+  },
+  "dclass": {
+    "prefix": "dclass",
+    "body": [
+      "data class ${1:Name}(val ${2:field}: ${3:Type})"
+    ],
+    "description": "Data class"
+  },
+  "sclass": {
+    "prefix": "sclass",
+    "body": [
+      "sealed class ${1:Name}"
+    ],
+    "description": "Sealed class"
+  },
+  "eclass": {
+    "prefix": "eclass",
+    "body": [
+      "enum class ${1:Name} {",
+      "    $0",
+      "}"
+    ],
+    "description": "Enum class"
+  },
+  "obj": {
+    "prefix": "obj",
+    "body": [
+      "object ${1:Name} {",
+      "    $0",
+      "}"
+    ],
+    "description": "Singleton object"
+  },
+  "intf": {
+    "prefix": "intf",
+    "body": [
+      "interface ${1:Name} {",
+      "    $0",
+      "}"
+    ],
+    "description": "Interface"
+  },
+  "ext": {
+    "prefix": "ext",
+    "body": [
+      "fun ${1:Type}.${2:name}(${3:args}): ${4:ReturnType} {",
+      "    $0",
+      "}"
+    ],
+    "description": "Extension function"
+  },
+  "inline": {
+    "prefix": "inline",
+    "body": [
+      "inline fun <reified T> ${1:name}(${2:args}) {",
+      "    $0",
+      "}"
+    ],
+    "description": "Inline function with reified type"
+  },
+  "late": {
+    "prefix": "late",
+    "body": [
+      "lateinit var ${1:name}: ${2:Type}"
+    ],
+    "description": "Lateinit property"
+  },
+  "by": {
+    "prefix": "by",
+    "body": [
+      "val ${1:name} by ${2:Delegate}()"
+    ],
+    "description": "Property delegation"
+  },
+  "req": {
+    "prefix": "req",
+    "body": [
+      "require(${1:condition}) { \"${2:Message}\" }"
+    ],
+    "description": "Require validation"
+  },
+  "chk": {
+    "prefix": "chk",
+    "body": [
+      "check(${1:condition}) { \"${2:Message}\" }"
+    ],
+    "description": "Check validation"
+  },
+  "todo": {
+    "prefix": "todo",
+    "body": [
+      "TODO(\"${1:Reason}\")"
+    ],
+    "description": "TODO placeholder"
+  },
+  "test": {
+    "prefix": "test",
+    "body": [
+      "@Test",
+      "fun `${1:test name}`() {",
+      "    $0",
+      "}"
+    ],
+    "description": "JUnit Test"
+  },
+  "before": {
+    "prefix": "before",
+    "body": [
+      "@BeforeEach",
+      "fun setup() {",
+      "    $0",
+      "}"
+    ],
+    "description": "JUnit Setup"
+  },
+  "kotest_fun": {
+    "prefix": "kotest_fun",
+    "body": [
+      "class ${1:MyTests} : FunSpec({",
+      "    test(\"${2:should do something}\") {",
+      "        $0",
+      "    }",
+      "})"
+    ],
+    "description": "Kotest FunSpec"
+  },
+  "kotest_string": {
+    "prefix": "kotest_string",
+    "body": [
+      "class ${1:MyTests} : StringSpec({",
+      "    \"${2:should do something}\" {",
+      "        $0",
+      "    }",
+      "})"
+    ],
+    "description": "Kotest StringSpec"
+  }
+}

@@ -39,6 +39,12 @@
           "rust"
         ],
         "path": "./rust.json"
+      },
+      {
+        "language": [
+          "kotlin"
+        ],
+        "path": "./kotlin.json"
       }
     ]
   }
