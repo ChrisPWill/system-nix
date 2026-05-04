@@ -7,38 +7,38 @@
         "language": [
           "python"
         ],
-        "path": "./python.json.json"
+        "path": "./python.json"
       },
       {
         "language": [
           "markdown"
         ],
-        "path": "./markdown.json.json"
+        "path": "./markdown.json"
       },
       {
         "language": [
           "typescript",
           "typescriptreact"
         ],
-        "path": "./typescript.json.json"
+        "path": "./typescript.json"
       },
       {
         "language": [
           "nix"
         ],
-        "path": "./nix.json.json"
+        "path": "./nix.json"
       },
       {
         "language": [
           "cpp"
         ],
-        "path": "./cpp.json.json"
+        "path": "./cpp.json"
       },
       {
         "language": [
           "rust"
         ],
-        "path": "./rust.json.json"
+        "path": "./rust.json"
       }
     ]
   }
