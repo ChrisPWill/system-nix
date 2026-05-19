@@ -42,14 +42,14 @@ in {
             "/bin/sh"
             "-c"
             "set -a; [ -f ${config.sops.secrets.telegram_kb_capture_token.path} ] && . ${config.sops.secrets.telegram_kb_capture_token.path}; set +a; exec ${inputs.knowledge-base.packages.${pkgs.stdenv.hostPlatform.system}.default}/bin/telegram-capture"
-            ];
-            RunAtLoad = true;
-            KeepAlive = true;
-            WorkingDirectory = cfg.workingDirectory;
-            StandardOutPath = "${config.home.homeDirectory}/Library/Logs/telegram-capture.log";
-            StandardErrorPath = "${config.home.homeDirectory}/Library/Logs/telegram-capture.log";
-            };
-            })
-            ]);
-            }
+          ];
+          RunAtLoad = true;
+          KeepAlive = true;
+          WorkingDirectory = cfg.workingDirectory;
+          StandardOutPath = "${config.home.homeDirectory}/Library/Logs/telegram-capture.log";
+          StandardErrorPath = "${config.home.homeDirectory}/Library/Logs/telegram-capture.log";
+        };
+      };
+    })
+  ]);
 }
