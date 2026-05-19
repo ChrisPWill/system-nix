@@ -5,5 +5,6 @@
     ./file-io.nix
     ./security.nix
     ./sops.nix
+    ./syncthing.nix
   ];
 }
