@@ -448,11 +448,11 @@
         "utils": "utils"
       },
       "locked": {
-        "lastModified": 1779181515,
-        "narHash": "sha256-GnHZYaIS7IsOsPH0OUoOSMH2HpGo+3vYi3POVaf266w=",
+        "lastModified": 1779200266,
+        "narHash": "sha256-HU2xHitMiJFmKoG0IB9G9OAWcnXfQZ8NFC1CUwgH2cQ=",
         "ref": "refs/heads/master",
-        "rev": "dbc2865da4ebf1b3083aa760cab69599f1c9ec78",
-        "revCount": 7,
+        "rev": "0c950a62f387d768fc129fa55c8f8f05b4381f30",
+        "revCount": 23,
         "type": "git",
         "url": "ssh://git@github.com/ChrisPWill/knowledge-base.git"
       },

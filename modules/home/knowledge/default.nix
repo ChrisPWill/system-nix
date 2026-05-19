@@ -8,7 +8,7 @@
     ./telegram-capture.nix
   ];
 
-  services.telegram-capture.enable = false; # Enable this once I get the token set
+  services.telegram-capture.enable = true;
 
   home.packages = with pkgs;
     [
