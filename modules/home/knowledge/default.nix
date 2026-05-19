@@ -4,6 +4,12 @@
   lib,
   ...
 }: {
+  imports = [
+    ./telegram-capture.nix
+  ];
+
+  services.telegram-capture.enable = false; # Enable this once I get the token set
+
   home.packages = with pkgs;
     [
       # Note taking
