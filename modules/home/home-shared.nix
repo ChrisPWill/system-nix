@@ -24,6 +24,12 @@
 
     isPersonalMachine = mkEnableOption "personal machine packages/config";
     isAtlassianMachine = mkEnableOption "Atlassian work machine packages/config";
+
+    terminalFontSize = mkOption {
+      type = types.int;
+      default = 12;
+      description = "The font size for the terminal";
+    };
   };
 
   imports = [

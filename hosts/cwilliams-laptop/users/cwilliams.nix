@@ -7,4 +7,6 @@
   ];
 
   services.local-ollama.enable = true;
+
+  terminalFontSize = 13;
 }
