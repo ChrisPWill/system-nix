@@ -1,29 +1,50 @@
 # Task: Port Kanata (Global Leader) to macOS
 
-**Objective:** Get the Kanata Global Leader working on macOS to provide the consistent `Caps Lock -> Mod+Alt+Shift` layer.
+**Objective:** Get the Kanata Global Leader working on macOS to provide the consistent `Caps Lock -> Cmd+Alt` (Mod) and `Double-Tap Caps Lock -> Cmd+Alt+Shift` (Leader) layers.
 
 ## Steps
-1.  **Find the macOS Kanata service**:
-    - Research if `nix-darwin` has a built-in `services.kanata` or if a Homebrew formula is better suited.
+1.  **Configure macOS Kanata Service**:
+    - Implement a manual `launchd.daemons.kanata` in `hosts/cwilliams-work-laptop/darwin-configuration.nix`.
+    - Ensure it runs as `root` to access input devices.
 2.  **Abstract Kanata configuration**:
-    - If possible, move the `kanata.nix` logic from `modules/nixos/graphical-environment/kanata.nix` into a shared module or extract the configuration string.
+    - Move the `kanata.nix` logic from `modules/nixos/graphical-environment/kanata.nix` into a shared module.
 3.  **Apply configuration to Darwin**:
-    - Enable the service in `hosts/cwilliams-work-laptop/darwin-configuration.nix` or `modules/darwin/darwin-shared.nix`.
-    - **Conflict Resolution:** Set `system.keyboard.enableKeyMapping = false` and `system.keyboard.remapCapsLockToEscape = false` in `darwin-shared.nix`. This ensures `nix-darwin` doesn't fight Kanata for control of the Caps Lock key.
+    - Enable the service in the host configuration.
+    - **Conflict Resolution:** Set `system.keyboard.enableKeyMapping = false` and `system.keyboard.remapCapsLockToEscape = false` in `darwin-shared.nix`.
+    - **Manual Step:** Manually grant **Input Monitoring** permissions to the `kanata` binary in *System Settings > Privacy & Security*.
 4.  **Test**:
-    - Verify that holding Caps Lock and pressing a mapped key sends the intended `Mod+Alt+Shift` combination on macOS.
+    - Verify that holding Caps Lock and pressing `h` sends `Cmd+Alt+H`.
+    - Verify that double-tapping and holding Caps Lock and pressing `h` sends `Cmd+Alt+Shift+H`.
 
-## Planned Kanata Layers (Consistent with Linux)
-The goal is to mirror the Niri Global Leader setup:
-- **Base Layer:**
-  - `Caps Lock` -> `tap: Esc`, `hold: leader-layer`
-- **Leader Layer (Mod+Alt+Shift):**
-  - `t` -> `Mod+Alt+Shift+T` (Open Terminal at CWD)
-  - `l` -> `Mod+Alt+Shift+L` (Toggle LogSeq)
-  - `o` -> `Mod+Alt+Shift+O` (Toggle Obsidian)
-  - `m` -> `layer-toggle: monitor`
+## Planned Kanata Configuration
+```lisp
+(defalias
+  ;; Modifiers
+  m (multi lmet lalt)
+  ms (multi lmet lalt lsft)
+
+  ;; Tap: Esc, Hold: Cmd+Alt, Double-Tap Hold: Cmd+Alt+Shift
+  lead (tap-dance 200 (
+    (tap-hold 200 200 esc @m)
+    (tap-hold 200 200 esc @ms)
+  ))
+)
+
+(defsrc
+  caps
+)
+
+(deflayer base
+  @lead
+)
+```
+
+## Planned Top-Level Actions (via skhd)
+These are triggered by holding `Caps Lock` (`Cmd+Alt`):
+- `cmd + alt - t` -> Open Terminal at CWD
+- `cmd + alt - backslash` -> `toggle-pinned logseq`
+- `cmd + alt - o` -> `toggle-pinned obsidian`
+- `cmd + alt - m` -> Focus Monitor (internal logic)
 
 ## Improvement Opportunities
-- **Readability:** The current `kanata.nix` is noted as "badly needs to be updated to be more readable". We will refactor the macOS version to use clearer `defalias` and `deflayer` blocks.
-- **Cross-Platform Scripting:** The `toggle-pinned` script (`modules/home/scripts/toggle-pinned`) currently relies on `niri msg`. We will refactor it to detect the environment and use `omniwmctl query` on macOS. Since both tools output JSON, we can maintain a unified Nushell logic for window management across both OSs.
-- **Latency:** We will verify if `--nodelay` is sufficient on Darwin or if `interception-tools` style low-level access is required for optimal feel.
+- **Readability:** Refactor `kanata.nix` to use clearer `defalias` and `deflayer` blocks.

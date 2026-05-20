@@ -15,7 +15,6 @@
 
 ## Improvement Opportunities
 - **Consistency:** Align the "Main" monitor workspaces with how Niri handles multiple outputs on Linux.
-- **Automation:** Evaluate if OmniWM can automatically move specific workspaces when a monitor is plugged/unplugged.
 
 ## Success Criteria
 - Opening workspace `Q` always appears on the laptop screen.

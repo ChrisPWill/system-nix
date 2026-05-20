@@ -10,6 +10,9 @@
     - Set gaps, borders (if not using `jankyborders`), and app-specific tiling rules.
 3.  **Sync**:
     - Update `modules/home/desktop/default.nix` to include the new `omniwm` module.
+4.  **Autostart & Sequencing**:
+    - Create a `launchd` user agent for OmniWM in `hosts/cwilliams-work-laptop/darwin-configuration.nix`.
+    - **Sequencing:** Add a delay or a check to ensures it starts *after* the Kanata system daemon is active to avoid raw key events during the first few seconds of login.
 
 ## Improvement Opportunities
 - **Visual Parity:** Align gaps and border widths in OmniWM with Niri's `dank.nix` configuration.
