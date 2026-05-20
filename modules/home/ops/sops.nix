@@ -24,7 +24,7 @@
       };
 
       secrets.gemini_api_key = {};
-      secrets.telegram_kb_capture_token = {};
+      secrets.logseq_capture_tokens = {};
     };
   };
 }

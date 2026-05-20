@@ -5,10 +5,10 @@
   ...
 }: {
   imports = [
-    ./telegram-capture.nix
+    ./logseq-capture.nix
   ];
 
-  services.telegram-capture.enable = true;
+  services.logseq-capture.enable = true;
 
   home.packages = with pkgs;
     [
