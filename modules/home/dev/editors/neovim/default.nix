@@ -65,7 +65,7 @@ in {
       addOverlays = [(utils.standardPluginOverlay inputs)];
 
       # See packageDefinitions - says which one to install
-      packageNames = [mainNixCatsPackageName] ++ pkgs.lib.optionals config.isPersonalMachine ["leet" "nvim-gemini"];
+      packageNames = [mainNixCatsPackageName] ++ pkgs.lib.optionals config.isPersonalMachine ["leet" "nvim-gemini" "nvim-llm"];
 
       luaPath = config.lib.file.mkOutOfStoreSymlink "${config.homeModuleDir}/dev/editors/neovim/config";
 
@@ -324,7 +324,7 @@ in {
           settings =
             commonSettings
             // {
-              aliases = ["nvim" "neovim" "nv"];
+              aliases = ["nvl"];
             };
           categories =
             commonCategories
