@@ -5,6 +5,11 @@ return {
 	{
 		"blink.compat",
 		on_require = { "blink.compat", "blink.compat.source" },
+		after = function()
+			require("blink.compat").setup({
+				impersonate_nvim_cmp = true,
+			})
+		end,
 	},
 	{
 		"blink.cmp",
@@ -19,8 +24,6 @@ return {
 			end
 			if nixCats("local-llm") or nixCats("gemini") then
 				table.insert(defaultSources, 2, "minuet")
-			end
-			if nixCats("gemini") then
 				table.insert(defaultSources, 3, "avante_commands")
 				table.insert(defaultSources, 4, "avante_mentions")
 				table.insert(defaultSources, 5, "avante_shortcuts")
@@ -73,25 +76,25 @@ return {
 						avante_commands = {
 							name = "avante_commands",
 							module = "blink.compat.source",
-							score_offset = 90, -- show at a higher priority than lsp
+							score_offset = 90,
 							opts = {},
 						},
 						avante_files = {
 							name = "avante_files",
 							module = "blink.compat.source",
-							score_offset = 100, -- show at a higher priority than lsp
+							score_offset = 100,
 							opts = {},
 						},
 						avante_mentions = {
 							name = "avante_mentions",
 							module = "blink.compat.source",
-							score_offset = 1000, -- show at a higher priority than lsp
+							score_offset = 1000,
 							opts = {},
 						},
 						avante_shortcuts = {
 							name = "avante_shortcuts",
 							module = "blink.compat.source",
-							score_offset = 1000, -- show at a higher priority than lsp
+							score_offset = 1000,
 							opts = {},
 						},
 					},

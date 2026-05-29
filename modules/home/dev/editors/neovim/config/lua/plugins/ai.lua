@@ -121,11 +121,24 @@ return {
 			vim.cmd("packadd nui.nvim")
 			vim.cmd("packadd render-markdown.nvim")
 			vim.cmd("packadd dressing.nvim")
+			vim.cmd("packadd blink.compat")
+			local compat = require("blink.compat")
+			compat.setup({ impersonate_nvim_cmp = true })
+
+			-- Minimal fallback for ConfirmBehavior if blink.compat impersonation is incomplete
+			local has_cmp, cmp = pcall(require, "cmp")
+			if has_cmp and not cmp.ConfirmBehavior then
+				cmp.ConfirmBehavior = {
+					Insert = "insert",
+					Replace = "replace",
+				}
+			end
 
 			require("avante").setup({
 				provider = nixCats("gemini") and "gemini-cli" or "ollama",
 				-- Keep auto-suggestions disabled here if you are using llm.nvim for FIM
 				auto_suggestions_provider = nixCats("gemini") and "gemini-cli" or "ollama",
+				hints = { enabled = true },
 				providers = {
 					ollama = {
 						model = base_model,
