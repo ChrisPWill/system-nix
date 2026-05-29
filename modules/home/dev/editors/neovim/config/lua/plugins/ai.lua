@@ -166,6 +166,18 @@ return {
 					auto_set_highlight_group = true,
 					auto_set_keymaps = true,
 				},
+				input = {
+					provider = "snacks",
+					provider_opts = {
+						-- Additional snacks.input options
+						title = "Avante Input",
+						icon = " ",
+					},
+				},
+				selector = {
+					provider = "snacks",
+					provider_opts = {},
+				},
 			})
 		end,
 	},
