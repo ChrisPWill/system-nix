@@ -10,8 +10,13 @@
     - Move the `kanata.nix` logic from `modules/nixos/graphical-environment/kanata.nix` into a shared module.
 3.  **Apply configuration to Darwin**:
     - Enable the service in the host configuration.
+    - Fetch `Karabiner-DriverKit-VirtualHIDDevice-6.2.0.pkg` from pinned upstream commit `c7df2059a84162d3d2d6784bebc887e888059375` with a fixed Nix hash.
+    - Install the pinned package during nix-darwin activation when the package receipt is missing or not version `6.2.0`.
+    - Configure launchd daemons for `Karabiner-VirtualHIDDevice-Manager activate` and `Karabiner-VirtualHIDDevice-Daemon`.
     - **Conflict Resolution:** Set `system.keyboard.enableKeyMapping = false` and `system.keyboard.remapCapsLockToEscape = false` in `darwin-shared.nix`.
-    - **Manual Step:** Manually grant **Input Monitoring** permissions to the `kanata` binary in *System Settings > Privacy & Security*.
+    - **Manual Step:** Approve and activate the Karabiner VirtualHID system extension in *System Settings > Privacy & Security* after installing the package.
+    - **Manual Step:** Manually grant **Input Monitoring** and **Accessibility** permissions to the `kanata` binary in *System Settings > Privacy & Security*.
+    - **Manual Step:** Ensure Karabiner-Elements itself is not running; Kanata only needs the standalone VirtualHID driver and daemon.
 4.  **Test**:
     - Verify that holding Caps Lock and pressing `h` sends `Cmd+Alt+H`.
     - Verify that double-tapping and holding Caps Lock and pressing `h` sends `Cmd+Alt+Shift+H`.
