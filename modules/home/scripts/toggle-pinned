@@ -5,51 +5,342 @@
 # and the current workspace (floating).
 # ---
 
-def find_target [app_id: string, title: string] {
-    let windows = (niri msg --json windows | from json)
-    mut filtered = ($windows | where {|w| ($w.app_id? | default "" | str contains -i $app_id)})
-    
-    if not ($title | is-empty) {
-        $filtered = ($filtered | where {|w| ($w.title? | default "" | str contains -i $title)})
-    }
-
-    $filtered | first
+def env_default [name: string, fallback: string] {
+    let value = ($env | get -o $name | default "")
+    if ($value | is-empty) { $fallback } else { $value }
 }
 
-def main [app_id: string, invoke_command: string, title: string = "", floating: bool = true] {
-    let pinnedWorkspace = niri msg --json workspaces | from json | where name == "pinned" | get 0
-    mut target = find_target $app_id $title
+def get_wm_backend [] {
+    if (which niri | is-not-empty) {
+        "niri"
+    } else if (which omniwmctl | is-not-empty) {
+        "omniwm"
+    } else {
+        error make { msg: "No supported window manager detected" }
+    }
+}
 
-    if ($target | is-empty) {
-        # App not running, start it
+def pinned_workspace_name [backend: string] {
+    if $backend == "niri" {
+        env_default "TOGGLE_PINNED_NIRI_WORKSPACE" "pinned"
+    } else {
+        env_default "TOGGLE_PINNED_OMNI_WORKSPACE" "D"
+    }
+}
+
+def omni_payload [kind: string] {
+    let response = (^omniwmctl query $kind --format json | from json)
+
+    if not $response.ok {
+        error make { msg: $"omniwmctl query ($kind) failed" }
+    }
+
+    $response.result.payload
+}
+
+def normalize_niri_window [w: record] {
+    let app_id = ($w.app_id? | default "" | into string)
+    let title = ($w.title? | default "" | into string)
+
+    {
+        id: ($w.id | into string)
+        app_id: $app_id
+        app_name: $app_id
+        bundle_id: ""
+        title: $title
+        workspace_id: ($w.workspace_id? | default "" | into string)
+        workspace_name: ($w.workspace? | default "" | into string)
+        workspace_number: ""
+        mode: ""
+        is_focused: ($w.is_focused? | default false)
+        is_visible: ($w.is_visible? | default false)
+        search_text: ([$app_id $title] | str join " ")
+    }
+}
+
+def normalize_omni_window [w: record] {
+    let app = ($w | get -o app | default {})
+    let display = ($w | get -o display | default {})
+    let workspace = ($w | get -o workspace | default {})
+    let app_name = ($app | get -o name | default "" | into string)
+    let bundle_id = ($app | get -o bundleId | default "" | into string)
+    let title = ($w | get -o title | default "" | into string)
+    let workspace_name = ($workspace | get -o displayName | default ($workspace | get -o rawName | default "") | into string)
+    let workspace_number = ($workspace | get -o number | default "" | into string)
+
+    {
+        id: ($w.id | into string)
+        pid: ($w | get -o pid | default 0)
+        app_id: $bundle_id
+        app_name: $app_name
+        bundle_id: $bundle_id
+        title: $title
+        display_id: ($display | get -o id | default "" | into string)
+        workspace_id: ($workspace | get -o id | default "" | into string)
+        workspace_name: $workspace_name
+        workspace_number: $workspace_number
+        mode: ($w | get -o mode | default "" | into string)
+        is_focused: ($w | get -o isFocused | default false)
+        is_visible: ($w | get -o isVisible | default false)
+        search_text: ([$bundle_id $app_name $title] | str join " ")
+    }
+}
+
+def normalize_niri_workspace [w: record] {
+    let idx = ($w.idx? | default "" | into string)
+    let name = ($w.name? | default "" | into string)
+    let command_name = if ($name | is-empty) { $idx } else { $name }
+
+    {
+        id: ($w.id | into string)
+        name: $command_name
+        raw_name: $command_name
+        display_name: $command_name
+        number: $idx
+        command_name: $command_name
+        output: ($w.output? | default "" | into string)
+        display_id: ""
+        is_focused: ($w.is_focused? | default false)
+        is_current: ($w.is_focused? | default false)
+    }
+}
+
+def normalize_omni_workspace [w: record] {
+    let display = ($w | get -o display | default {})
+    let raw_name = ($w | get -o rawName | default "" | into string)
+    let display_name = ($w | get -o displayName | default $raw_name | into string)
+    let number = ($w | get -o number | default "" | into string)
+    let command_name = if ($raw_name | is-empty) { $number } else { $raw_name }
+
+    {
+        id: ($w.id | into string)
+        name: $display_name
+        raw_name: $raw_name
+        display_name: $display_name
+        number: $number
+        command_name: $command_name
+        output: ""
+        display_id: ($display | get -o id | default "" | into string)
+        is_focused: ($w | get -o isFocused | default false)
+        is_current: ($w | get -o isCurrent | default false)
+    }
+}
+
+def query_windows [backend: string] {
+    if $backend == "niri" {
+        ^niri msg --json windows | from json | each {|w| normalize_niri_window $w}
+    } else {
+        let payload = (omni_payload "windows")
+        $payload.windows | each {|w| normalize_omni_window $w}
+    }
+}
+
+def query_workspaces [backend: string] {
+    if $backend == "niri" {
+        ^niri msg --json workspaces | from json | each {|w| normalize_niri_workspace $w}
+    } else {
+        let payload = (omni_payload "workspaces")
+        $payload.workspaces | each {|w| normalize_omni_workspace $w}
+    }
+}
+
+def query_omni_displays [] {
+    let payload = (omni_payload "displays")
+    $payload.displays
+}
+
+def contains_ci [haystack: string, needle: string] {
+    if ($needle | is-empty) { true } else { $haystack | str contains -i $needle }
+}
+
+def equals_ci [left: string, right: string] {
+    ($left | str downcase) == ($right | str downcase)
+}
+
+def find_workspace [backend: string, workspace_name: string] {
+    let matches = (
+        query_workspaces $backend
+        | where {|w|
+            let name_match = (equals_ci $w.name $workspace_name)
+            let raw_name_match = (equals_ci $w.raw_name $workspace_name)
+            let display_name_match = (equals_ci $w.display_name $workspace_name)
+            let id_match = (equals_ci $w.id $workspace_name)
+
+            $name_match or $raw_name_match or $display_name_match or $id_match
+        }
+    )
+
+    if ($matches | is-empty) {
+        error make { msg: $"Workspace not found: ($workspace_name)" }
+    }
+
+    $matches | first
+}
+
+def current_workspace [backend: string] {
+    let matches = (
+        query_workspaces $backend
+        | where {|w| $w.is_current or $w.is_focused}
+    )
+
+    if ($matches | is-empty) {
+        error make { msg: "Current workspace not found" }
+    }
+
+    $matches | first
+}
+
+def find_target [backend: string, app_id: string, title: string] {
+    let matches = (
+        query_windows $backend
+        | where {|w|
+            let app_match = (contains_ci $w.search_text $app_id)
+            let title_match = (contains_ci $w.search_text $title)
+
+            if $backend == "omniwm" and not ($title | is-empty) {
+                $app_match or $title_match
+            } else {
+                $app_match and $title_match
+            }
+        }
+    )
+
+    $matches | first
+}
+
+def spawn_app [backend: string, invoke_command: string, title: string] {
+    if $backend == "niri" {
         ^niri msg action spawn -- $invoke_command
+    } else if (which $invoke_command | is-not-empty) {
+        ^$invoke_command
+    } else if not ($title | is-empty) {
+        ^open -a $title
+    } else {
+        ^open -a $invoke_command
+    }
+}
+
+def ensure_omni_window_mode [window_id: string, desired_mode: string] {
+    let current = (
+        query_windows "omniwm"
+        | where {|w| $w.id == $window_id}
+        | first
+    )
+
+    if ($current | is-empty) {
         return
     }
 
-    if $target.workspace_id != $pinnedWorkspace.id {
-        # Return to the "pinned" workspace
-        ^niri msg action move-window-to-workspace "pinned" --window-id $target.id --focus false
+    if $current.mode != $desired_mode {
+        ^omniwmctl window focus $window_id
+        ^omniwmctl command toggle-focused-window-floating
+    }
+}
+
+def center_omni_floating_window [window_id: string, display_id: string] {
+    let target = (
+        query_windows "omniwm"
+        | where {|w| $w.id == $window_id}
+        | first
+    )
+
+    if ($target | is-empty) or $target.pid == 0 {
+        return
+    }
+
+    let target_display_id = if ($display_id | is-empty) { $target.display_id } else { $display_id }
+    let displays = (query_omni_displays)
+    let display_matches = ($displays | where {|d| ($d.id? | default "") == $target_display_id})
+    let current_displays = ($displays | where {|d| $d.isCurrent? | default false})
+    let display = if not ($display_matches | is-empty) {
+        $display_matches | first
+    } else if not ($current_displays | is-empty) {
+        $current_displays | first
+    } else {
+        $displays | first
+    }
+
+    if ($display | is-empty) {
+        return
+    }
+
+    let frame = ($display | get -o visibleFrame | default ($display | get -o frame | default {}))
+    let width = ($frame.width * 0.8 | into int)
+    let height = ($frame.height * 0.8 | into int)
+    let x = ($frame.x + (($frame.width - $width) / 2) | into int)
+    let y = ($frame.y + (($frame.height - $height) / 2) | into int)
+    let script = $"
+tell application \"System Events\"
+    set targetProcess to first application process whose unix id is ($target.pid)
+    set frontmost of targetProcess to true
+    set position of front window of targetProcess to {($x), ($y)}
+    set size of front window of targetProcess to {($width), ($height)}
+end tell
+"
+
+    ^osascript -e $script
+}
+
+def push_to_pinned [backend: string, target: record, current_ws: record, pinned_ws: record] {
+    if $backend == "niri" {
+        ^niri msg action move-window-to-workspace $pinned_ws.command_name --window-id $target.id --focus false
         ^niri msg action move-window-to-tiling --id $target.id
     } else {
-        # Pull the window to the current workspace
-        let workspaces = (niri msg --json workspaces | from json)
-        let current_ws = ($workspaces | where is_focused | first)
-        let outputs = (niri msg --json outputs | from json)
+        ^omniwmctl window navigate $target.id
+        ensure_omni_window_mode $target.id "tiling"
+        ^omniwmctl command move-to-workspace $pinned_ws.command_name
+        ^omniwmctl workspace focus-name $current_ws.command_name
+    }
+}
+
+def pull_to_current [backend: string, target: record, current_ws: record, floating: bool] {
+    if $backend == "niri" {
+        let outputs = (^niri msg --json outputs | from json)
         let current_output = ($outputs | get $current_ws.output)
-        
         let target_width = ($current_output.logical.width * 0.8 | into int)
         let target_height = ($current_output.logical.height * 0.8 | into int)
 
-        if ($floating) {
+        if $floating {
             ^niri msg action move-window-to-floating --id $target.id
         }
+
         ^niri msg action set-window-width $target_width --id $target.id
         ^niri msg action set-window-height $target_height --id $target.id
-        sleep 0.05sec # Quick sleep to give time for resize animation
-        
-        # Pull without following focus to stay on the current workspace
-        ^niri msg action move-window-to-workspace ($current_ws.idx | into string) --window-id $target.id --focus false
+        sleep 0.05sec
+
+        ^niri msg action move-window-to-workspace $current_ws.command_name --window-id $target.id --focus false
         ^niri msg action focus-window --id $target.id
         ^niri msg action center-column
+    } else {
+        ^omniwmctl window navigate $target.id
+        ^omniwmctl command move-to-workspace $current_ws.command_name
+        ^omniwmctl workspace focus-name $current_ws.command_name
+        ^omniwmctl window focus $target.id
+
+        if $floating {
+            ensure_omni_window_mode $target.id "floating"
+            sleep 0.05sec
+            center_omni_floating_window $target.id $current_ws.display_id
+        } else {
+            ^omniwmctl command center-column
+        }
+    }
+}
+
+def main [app_id: string, invoke_command: string, title: string = "", floating: bool = true] {
+    let backend = (get_wm_backend)
+    let pinned_ws = (find_workspace $backend (pinned_workspace_name $backend))
+    let current_ws = (current_workspace $backend)
+    let target = (find_target $backend $app_id $title)
+
+    if ($target | is-empty) {
+        spawn_app $backend $invoke_command $title
+        return
+    }
+
+    if $target.workspace_id != $pinned_ws.id {
+        push_to_pinned $backend $target $current_ws $pinned_ws
+    } else {
+        pull_to_current $backend $target $current_ws $floating
     }
 }
