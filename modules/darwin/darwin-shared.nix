@@ -61,8 +61,8 @@
   };
 
   system = {
-    keyboard.enableKeyMapping = true;
-    keyboard.remapCapsLockToEscape = true;
+    keyboard.enableKeyMapping = false;
+    keyboard.remapCapsLockToEscape = false;
 
     defaults = {
       screencapture = {

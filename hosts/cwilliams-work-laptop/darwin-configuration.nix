@@ -1,9 +1,27 @@
-{inputs, ...}: {
+{
+  config,
+  inputs,
+  lib,
+  pkgs,
+  ...
+}: let
+  kanataConfig = pkgs.writeText "kanata-global-leader.kbd" config.kanata.globalLeader.config;
+  kanataCommand =
+    lib.escapeShellArgs
+    ([
+        "/run/current-system/sw/bin/kanata"
+        "--cfg"
+        kanataConfig
+      ]
+      ++ config.kanata.globalLeader.extraArgs);
+in {
   imports = [
     # Typical darwin configuration that isn't work or personal specific
     inputs.self.darwinModules.darwin-shared
     # Shared host settings across nixos and darwin
     inputs.self.nixosModules.host-shared
+    # Cross-platform Caps Lock global leader configuration
+    inputs.self.modules.kanata.global-leader
   ];
 
   homebrew = {
@@ -55,6 +73,26 @@
       # Atlassian's browser
       "thebrowsercompany-dia"
     ];
+  };
+
+  environment.systemPackages = [
+    pkgs.kanata
+  ];
+
+  launchd.daemons.kanata = {
+    serviceConfig = {
+      ProgramArguments = [
+        "/bin/sh"
+        "-c"
+        "/bin/wait4path /nix/store && exec ${kanataCommand}"
+      ];
+      RunAtLoad = true;
+      KeepAlive = true;
+      UserName = "root";
+      ProcessType = "Interactive";
+      StandardOutPath = "/var/log/kanata.log";
+      StandardErrorPath = "/var/log/kanata.log";
+    };
   };
 
   nixpkgs.hostPlatform = "aarch64-darwin";

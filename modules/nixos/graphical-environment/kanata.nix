@@ -1,32 +1,16 @@
-{...}: {
+{
+  config,
+  inputs,
+  ...
+}: {
+  imports = [inputs.self.modules.kanata.global-leader];
+
   services.kanata = {
     enable = true;
     keyboards = {
       default = {
-        extraArgs = ["--nodelay"];
-
-        # TODO: This badly needs to be updated to be more readable
-        config = ''
-          (defsrc
-            caps t g m j d s o
-          )
-
-          (defalias
-            cap (tap-hold 100 100 esc (layer-toggle leader))
-          )
-
-          (deflayer base
-            @cap t g m j d s o
-          )
-
-          (deflayer leader
-            _ M-A-S-t M-A-S-g (layer-toggle monitor) _ M-A-S-d M-A-S-s M-A-S-o
-          )
-
-          (deflayer monitor
-            _ M-A-S-b _ _ M-A-S-j _ _ _
-          )
-        '';
+        extraArgs = config.kanata.globalLeader.extraArgs;
+        config = config.kanata.globalLeader.config;
       };
     };
   };
