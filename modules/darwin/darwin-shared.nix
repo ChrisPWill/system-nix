@@ -27,11 +27,18 @@
     };
 
     taps = [
+      # Tap for OmniWM window manager
+      "BarutSRB/tap"
+
       # Tap for AeroSpace window manager
       "nikitabobko/tap"
     ];
 
     casks = [
+      # Modern macOS window manager
+      # github.com/BarutSRB/omni
+      "omniwm"
+
       # Window manager
       # github.com/nikitabobko/AeroSpace
       "aerospace"
@@ -69,6 +76,10 @@
         showhidden = true;
         show-recents = false;
         static-only = true;
+      };
+      spaces = {
+        # OmniWM expects one unified Space spanning all displays.
+        spans-displays = true;
       };
       finder = {
         AppleShowAllExtensions = true;
