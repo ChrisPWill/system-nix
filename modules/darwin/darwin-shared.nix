@@ -54,6 +54,9 @@
     ];
   };
 
+  # Sketchybar is disabled during the OmniWM migration.
+  services.sketchybar.enable = false;
+
   services.jankyborders = {
     enable = true;
     width = 7.0;
@@ -65,6 +68,16 @@
     keyboard.remapCapsLockToEscape = false;
 
     defaults = {
+      CustomUserPreferences = {
+        "com.apple.symbolichotkeys" = {
+          AppleSymbolicHotKeys = {
+            # Disable 'Hide Others' (Cmd+Alt+H) - Conflicts with focus-left
+            "30" = {enabled = false;};
+            # Disable 'Spotlight' (Cmd+Space) - Conflicts with leader key
+            "64" = {enabled = false;};
+          };
+        };
+      };
       screencapture = {
         location = "/tmp";
       };

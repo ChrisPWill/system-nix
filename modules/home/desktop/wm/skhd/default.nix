@@ -13,27 +13,27 @@
     ++ [
       {
         key = "q";
-        name = "Q";
+        name = "10";
       }
       {
         key = "w";
-        name = "W";
+        name = "11";
       }
       {
         key = "e";
-        name = "E";
+        name = "12";
       }
       {
         key = "a";
-        name = "A";
+        name = "13";
       }
       {
         key = "s";
-        name = "S";
+        name = "14";
       }
       {
         key = "d";
-        name = "D";
+        name = "15";
       }
     ];
 
@@ -67,6 +67,8 @@ in {
       config = ''
         # Top-level actions
         cmd + alt - t : ${run "${script "open-terminal-at-cwd"}"}
+        # 0x2A is the keycode for 'backslash' on most macOS layouts.
+        # It is used for toggle-pinned logseq.
         cmd + alt - 0x2A : ${run "${script "toggle-pinned"} logseq logseq Logseq"}
         cmd + alt - o : ${run "${script "toggle-pinned"} electron obsidian Obsidian"}
 

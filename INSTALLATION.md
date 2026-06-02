@@ -30,6 +30,21 @@ Ensure Nix is installed (recommended: [Determinate Systems Nix Installer](https:
 nix run nix-darwin -- switch --flake .#cwilliams-work-laptop
 ```
 
+#### Post-Installation Steps (macOS)
+
+After the initial activation, you MUST manually grant the following permissions in **System Settings > Privacy & Security**:
+
+1.  **Accessibility**:
+    - `kanata` (located in the Nix store)
+    - `OmniWM`
+    - `skhd`
+2.  **Input Monitoring**:
+    - `kanata`
+    - `OmniWM`
+3.  **Full Disk Access** (Recommended for `skhd` and `OmniWM` to manage application states).
+
+**Kanata specific:** You must approve and activate the **pqrs.org Karabiner VirtualHID** system extension when prompted (or in Privacy & Security).
+
 ### WSL2 / Standalone Home Manager
 
 Ensure Nix is installed, then activate on a fresh system:

@@ -6,13 +6,17 @@
       description = "Extra command-line arguments for the Kanata global leader service.";
     };
 
+    defcfg = lib.mkOption {
+      type = lib.types.lines;
+      default = ''
+        process-unmapped-keys yes
+      '';
+      description = "The content of the defcfg block for Kanata.";
+    };
+
     config = lib.mkOption {
       type = lib.types.lines;
       default = ''
-        (defcfg
-          process-unmapped-keys yes
-        )
-
         (defalias
           ;; Modifiers
           m (multi lmet lalt)
@@ -33,7 +37,7 @@
           @lead
         )
       '';
-      description = "Kanata configuration for the cross-platform global leader key.";
+      description = "Kanata configuration for the cross-platform global leader key (excluding defcfg).";
     };
   };
 }
