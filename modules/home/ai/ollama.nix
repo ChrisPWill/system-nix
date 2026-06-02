@@ -6,8 +6,11 @@
 }:
 with lib; let
   cfg = config.services.local-ollama;
-  
-  ollamaPkg = pkgs.ollama-cuda;
+
+  ollamaPkg =
+    if config.hasNvidiaGpu
+    then pkgs.ollama-cuda
+    else pkgs.ollama;
 in {
   options.services.local-ollama = {
     enable = mkEnableOption "Local Ollama server for LLM code completions";

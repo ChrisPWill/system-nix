@@ -8,5 +8,7 @@
 
   services.local-ollama.enable = true;
 
+  hasNvidiaGpu = true;
+
   terminalFontSize = 13;
 }
