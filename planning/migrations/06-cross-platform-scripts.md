@@ -35,6 +35,8 @@ def query_windows [backend: string] {
     - Map `move-window-to-floating` to OmniWM's equivalent.
 3.  **Test on macOS**:
     - Verify `toggle-pinned` can pull/push LogSeq and Obsidian using the new OmniWM backend.
+4.  **Move migration plan to completed**:
+    - After implementation and verification, move this file to `planning/migrations/completed/`.
 
 ## Success Criteria
 - The same `toggle-pinned` script works on both Linux and macOS.

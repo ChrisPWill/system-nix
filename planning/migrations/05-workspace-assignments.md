@@ -12,6 +12,8 @@
 2.  **Update `modules/home/desktop/wm/omniwm/default.nix`**:
     - Add the rules to the `settings.toml` generation.
     - Ensure names/IDs for monitors are dynamically detected or matched by common patterns (e.g., "built-in").
+3.  **Move migration plan to completed**:
+    - After implementation and verification, move this file to `planning/migrations/completed/`.
 
 ## Improvement Opportunities
 - **Consistency:** Align the "Main" monitor workspaces with how Niri handles multiple outputs on Linux.

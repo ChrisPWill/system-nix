@@ -10,6 +10,8 @@
     - Create `~/.config/skhd/skhdrc` using the standard `mod + mod - key : command` syntax.
 3.  **De-couple OmniWM bindings**:
     - Ensure OmniWM's own config does not define these hotkeys to avoid conflicts.
+4.  **Move migration plan to completed**:
+    - After implementation and verification, move this file to `planning/migrations/completed/`.
 
 ## Planned Bindings (via skhd)
 
