@@ -2,7 +2,7 @@
   options.kanata.globalLeader = {
     extraArgs = lib.mkOption {
       type = lib.types.listOf lib.types.str;
-      default = ["--nodelay"];
+      default = ["--nodelay" "--no-wait"];
       description = "Extra command-line arguments for the Kanata global leader service.";
     };
 

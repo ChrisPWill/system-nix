@@ -17,29 +17,13 @@
     daemonPath = "/Library/Application Support/org.pqrs/Karabiner-DriverKit-VirtualHIDDevice/Applications/Karabiner-VirtualHIDDevice-Daemon.app/Contents/MacOS/Karabiner-VirtualHIDDevice-Daemon";
     managerPath = "/Applications/.Karabiner-VirtualHIDDevice-Manager.app/Contents/MacOS/Karabiner-VirtualHIDDevice-Manager";
   };
-  kanataCommand =
-    lib.escapeShellArgs
-    ([
-        "/run/current-system/sw/bin/kanata"
-        "--cfg"
-        kanataConfig
-      ]
-      ++ config.kanata.globalLeader.extraArgs);
-  kanataLaunchScript = pkgs.writeShellScript "launch-kanata-after-karabiner-vhid" ''
-    /bin/wait4path /nix/store
-
-    attempts=0
-    while [ "$attempts" -lt 75 ]; do
-      if /bin/launchctl print system/org.nixos.karabiner-vhiddaemon 2>/dev/null | /usr/bin/grep -q "state = running"; then
-        break
-      fi
-
-      attempts=$((attempts + 1))
-      /bin/sleep 0.2
-    done
-
-    exec ${kanataCommand}
-  '';
+  kanataCommandArgs =
+    [
+      "${pkgs.kanata}/bin/kanata"
+      "--cfg"
+      "${kanataConfig}"
+    ]
+    ++ config.kanata.globalLeader.extraArgs;
   primaryUser = config.system.primaryUser;
   primaryUserHome = "/Users/${primaryUser}";
   omniwmLaunchScript = pkgs.writeShellScript "launch-omniwm-after-kanata" ''
@@ -168,9 +152,7 @@ in {
 
   launchd.daemons.kanata = {
     serviceConfig = {
-      ProgramArguments = [
-        "${kanataLaunchScript}"
-      ];
+      ProgramArguments = kanataCommandArgs;
       RunAtLoad = true;
       KeepAlive = true;
       UserName = "root";
