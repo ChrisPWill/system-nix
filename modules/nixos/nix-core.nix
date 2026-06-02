@@ -1,4 +1,8 @@
-{pkgs, ...}: {
+{
+  lib,
+  pkgs,
+  ...
+}: {
   nix.settings = {
     experimental-features = ["nix-command" "flakes"];
     fsync-metadata = false;
@@ -19,12 +23,12 @@
 
   nix.optimise.automatic = true;
 
-  nix.gc = {
-    automatic = true;
-    options = "--delete-older-than 30d";
-    # dates is NixOS specific, nix-darwin uses interval
-    # We can use lib.optionalAttrs or just define it and let the system handle it
-    # but since this is in modules/nixos/ we'll keep it standard.
-    dates = "weekly";
-  };
+  nix.gc =
+    {
+      automatic = true;
+      options = "--delete-older-than 30d";
+    }
+    // lib.optionalAttrs pkgs.stdenv.isLinux {
+      dates = "weekly";
+    };
 }

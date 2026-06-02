@@ -1,4 +1,5 @@
 {
+  pkgs,
   config,
   lib,
   ...
@@ -7,7 +8,7 @@
   xdg.configFile."ghostty/shaders".source = config.lib.file.mkOutOfStoreSymlink "${config.homeModuleDir}/desktop/terminals/ghostty/shaders";
 
   programs.ghostty = {
-    enable = true;
+    enable = pkgs.stdenv.isLinux;
     settings = lib.mkMerge [
       {
         # --- Visuals ---

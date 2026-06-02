@@ -1,6 +1,6 @@
-{...}: {
+{pkgs, ...}: {
   programs.foot = {
-    enable = true;
+    enable = pkgs.stdenv.isLinux;
     settings = {
       mouse = {
         hide-when-typing = "yes";

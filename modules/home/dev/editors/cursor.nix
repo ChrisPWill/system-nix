@@ -1,9 +1,9 @@
-{pkgs, ...}: {
+{pkgs, lib, ...}: {
   imports = [
     ./lsps.nix
   ];
 
-  config = {
+  config = lib.mkIf pkgs.stdenv.isLinux {
     home.packages = with pkgs; [
       code-cursor-fhs
     ];
