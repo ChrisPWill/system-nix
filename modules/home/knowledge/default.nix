@@ -28,5 +28,5 @@
     ];
 
   # PDF viewer
-  programs.zathura.enable = true;
+  programs.zathura.enable = !pkgs.stdenv.isDarwin; # Disabled on MacOS due to https://github.com/NixOS/nixpkgs/issues/514566
 }

@@ -1,4 +1,4 @@
-{pkgs, ...}: {
+{pkgs, lib, ...}: {
   home.packages = with pkgs; [
     # Fast alternative to find
     # https://github.com/sharkdp/fd
@@ -22,6 +22,7 @@
     # Retrieve files from the web
     wget
 
+  ] ++ lib.optionals pkgs.stdenv.isLinux [
     # Display Gtk+ dialog boxes from shell scripts
     zenity
   ];

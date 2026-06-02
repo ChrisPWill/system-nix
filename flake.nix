@@ -54,8 +54,9 @@
     sops-nix.url = "github:Mic92/sops-nix";
     sops-nix.inputs.nixpkgs.follows = "nixpkgs";
 
-    knowledge-base.url = "git+ssh://git@github.com/ChrisPWill/knowledge-base.git";
-    knowledge-base.inputs.nixpkgs.follows = "nixpkgs";
+    # Disabled until I figure out how to work with private repos - or make it public
+    # knowledge-base.url = "git+ssh://git@github.com/ChrisPWill/knowledge-base.git";
+    # knowledge-base.inputs.nixpkgs.follows = "nixpkgs";
 
     plugins-neotest-kotlin = {
       url = "github:codymikol/neotest-kotlin";
