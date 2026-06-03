@@ -9,6 +9,11 @@ export PATH="/opt/homebrew/bin:/opt/homebrew/sbin:$HOME/.nix-profile/bin:/etc/pr
 export CONFIG_DIR="${CONFIG_DIR:-$HOME/.config/sketchybar}"
 export PLUGIN_DIR="$CONFIG_DIR/plugins"
 export SKETCHYBAR_BIN="${SKETCHYBAR_BIN:-$(command -v sketchybar)}"
+export SKETCHYBAR_OMNIWM_STATE_DIR="${SKETCHYBAR_OMNIWM_STATE_DIR:-$HOME/Library/Caches/sketchybar-omniwm}"
+OMNIWM_STATE_DIR="$SKETCHYBAR_OMNIWM_STATE_DIR"
+OMNIWM_LOG="$OMNIWM_STATE_DIR/omniwm.log"
+
+mkdir -p "$OMNIWM_STATE_DIR"
 
 "$SKETCHYBAR_BIN" --bar display=all position=top height=40 blur_radius=30 color=0x40000000
 
@@ -27,9 +32,8 @@ default=(
 "$SKETCHYBAR_BIN" --default "${default[@]}"
 
 "$PLUGIN_DIR/omniwm.sh" stop
-"$SKETCHYBAR_BIN" --remove '/space\..*/' >/dev/null 2>&1 || true
-"$SKETCHYBAR_BIN" --remove '/window\..*/' >/dev/null 2>&1 || true
+"$PLUGIN_DIR/omniwm.sh" remove-items
+"$PLUGIN_DIR/omniwm.sh" reset-state
 "$PLUGIN_DIR/omniwm.sh" refresh
-"$PLUGIN_DIR/omniwm.sh" watch >/dev/null 2>&1 &
 
 "$SKETCHYBAR_BIN" --update
