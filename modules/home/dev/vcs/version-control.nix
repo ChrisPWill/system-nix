@@ -23,13 +23,13 @@
       UseKeychain yes
     '';
 
-    matchBlocks = {
+    settings = {
       "*" = {
-        addKeysToAgent = "yes";
-        compression = true;
-        forwardAgent = true;
-        serverAliveCountMax = 2;
-        serverAliveInterval = 300;
+        AddKeysToAgent = "yes";
+        Compression = true;
+        ForwardAgent = true;
+        ServerAliveCountMax = 2;
+        ServerAliveInterval = 300;
       };
     };
   };
