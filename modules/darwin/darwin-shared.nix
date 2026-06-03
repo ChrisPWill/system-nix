@@ -90,6 +90,8 @@ in {
             "30" = {enabled = false;};
             # Disable 'Spotlight' (Cmd+Space) - Conflicts with leader key
             "64" = {enabled = false;};
+            # Disable 'Finder Search' (Cmd+Alt+Space) - Conflicts with leader key
+            "65" = {enabled = false;};
           };
         };
       };

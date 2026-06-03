@@ -87,6 +87,9 @@ in {
         cmd + alt + shift - k : ${omni "move up"}
         cmd + alt + shift - l : ${omni "move right"}
 
+        # Sizing and layout
+        cmd + alt - space : ${omni "cycle-column-width forward"}
+
         # Move windows to workspaces
         ${moveWorkspaceBindings}
 
