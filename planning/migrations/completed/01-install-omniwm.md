@@ -3,6 +3,7 @@
 **Objective:** Install OmniWM via Homebrew and ensure Aerospace remains available as a fallback.
 
 ## Steps
+
 1.  **Modify `modules/darwin/darwin-shared.nix`**:
     - Add `"BarutSRB/tap"` to `homebrew.taps`.
     - Add `"omniwm"` to `homebrew.casks`.

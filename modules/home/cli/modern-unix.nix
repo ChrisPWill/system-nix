@@ -1,31 +1,36 @@
-{pkgs, lib, ...}: {
-  home.packages = with pkgs; [
-    # Fast alternative to find
-    # https://github.com/sharkdp/fd
-    fd
+{
+  pkgs,
+  lib,
+  ...
+}: {
+  home.packages = with pkgs;
+    [
+      # Fast alternative to find
+      # https://github.com/sharkdp/fd
+      fd
 
-    # Fast grep
-    ripgrep
+      # Fast grep
+      ripgrep
 
-    # Rust-based ps replacement
-    procs
+      # Rust-based ps replacement
+      procs
 
-    # Watch progress of cp/mv/dd/tar/etc. `tldr progress` for info
-    progress
+      # Watch progress of cp/mv/dd/tar/etc. `tldr progress` for info
+      progress
 
-    # Modern watch replacement
-    viddy
+      # Modern watch replacement
+      viddy
 
-    # Terminal-based websocket client
-    websocat
+      # Terminal-based websocket client
+      websocat
 
-    # Retrieve files from the web
-    wget
-
-  ] ++ lib.optionals pkgs.stdenv.isLinux [
-    # Display Gtk+ dialog boxes from shell scripts
-    zenity
-  ];
+      # Retrieve files from the web
+      wget
+    ]
+    ++ lib.optionals pkgs.stdenv.isLinux [
+      # Display Gtk+ dialog boxes from shell scripts
+      zenity
+    ];
 
   # Nice colourful cat alternative
   # https://github.com/sharkdp/bat

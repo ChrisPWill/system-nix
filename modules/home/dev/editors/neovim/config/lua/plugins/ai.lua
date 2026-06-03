@@ -136,9 +136,11 @@ return {
 			end
 
 			require("avante").setup({
-				provider = nixCats("antigravity") and "antigravity-cli" or (nixCats("gemini") and "gemini-cli" or "ollama"),
+				provider = nixCats("antigravity") and "antigravity-cli"
+					or (nixCats("gemini") and "gemini-cli" or "ollama"),
 				-- Keep auto-suggestions disabled here if you are using llm.nvim for FIM
-				auto_suggestions_provider = nixCats("antigravity") and "antigravity-cli" or (nixCats("gemini") and "gemini-cli" or "ollama"),
+				auto_suggestions_provider = nixCats("antigravity") and "antigravity-cli"
+					or (nixCats("gemini") and "gemini-cli" or "ollama"),
 				hints = { enabled = true },
 				providers = {
 					ollama = {

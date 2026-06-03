@@ -3,11 +3,13 @@
 **Objective:** Refactor the `toggle-pinned` script to work on both Niri (Linux) and OmniWM (macOS).
 
 ## Current State
+
 - Script: `modules/home/scripts/toggle-pinned`
 - Language: Nushell (`nu`)
 - Dependency: `niri msg` (JSON output)
 
 ## Proposed Architecture
+
 We will use Nushell's native environment detection to switch between WM backends.
 
 ```nu
@@ -28,6 +30,7 @@ def query_windows [backend: string] {
 ```
 
 ## Steps
+
 1.  **Abstract `query_windows` and `query_workspaces`**:
     - Ensure field names (e.g., `app_id` vs `app`) are mapped to a consistent internal record.
 2.  **Abstract Actions**:
@@ -39,5 +42,6 @@ def query_windows [backend: string] {
     - After implementation and verification, move this file to `planning/migrations/completed/`.
 
 ## Success Criteria
+
 - The same `toggle-pinned` script works on both Linux and macOS.
 - No breakage of existing Niri functionality.
