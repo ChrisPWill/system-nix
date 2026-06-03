@@ -1,4 +1,14 @@
-{pkgs, ...}: {
+{
+  inputs,
+  pkgs,
+  ...
+}: {
+  # Disable Stylix's kmscon module because it sets services.kmscon.extraConfig and services.kmscon.fonts,
+  # which have been removed/deprecated in newer nixpkgs.
+  disabledModules = [
+    "${inputs.stylix}/modules/kmscon/nixos.nix"
+  ];
+
   stylix.enable = true;
   stylix.base16Scheme = "${pkgs.base16-schemes}/share/themes/onedark.yaml";
 

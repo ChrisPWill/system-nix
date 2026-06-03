@@ -70,5 +70,9 @@
       inherit inputs;
 
       nixpkgs.config.allowUnfree = true;
+      # Allow EOL electron-39.8.10 which is required by various desktop applications (e.g. element-desktop, signal-desktop, discord)
+      nixpkgs.config.permittedInsecurePackages = [
+        "electron-39.8.10"
+      ];
     };
 }
