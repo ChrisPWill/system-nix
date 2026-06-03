@@ -53,7 +53,7 @@ Following a **Domain-Driven Design (DDD)** approach, configuration is organized 
 
 The system implements a **Global Leader** capability using **Kanata** for hardware-level keyboard layers and **Niri** for window management.
 
-- **Caps Lock** acts as the Leader: **Tap** for `Esc`, **Hold** for `Mod+Alt+Shift`.
+- **Caps Lock** acts as the Leader: **Tap** for `Esc`, **Hold** for `Win/Cmd+Alt`, **Double-tap hold** for `Win/Cmd+Alt+Shift`.
 - This enables consistent, mnemonic hotkeys across all environments.
 
 ### 🌓 Hybrid Development Philosophy

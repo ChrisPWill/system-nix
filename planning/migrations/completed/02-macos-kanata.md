@@ -50,7 +50,7 @@
 
 These are triggered by holding `Caps Lock` (`Cmd+Alt`):
 
-- `cmd + alt - t` -> Open Terminal at CWD
+- `cmd + alt - t` -> Open Terminal
 - `cmd + alt - backslash` -> `toggle-pinned logseq`
 - `cmd + alt - o` -> `toggle-pinned obsidian`
 - `cmd + alt - m` -> Focus Monitor (internal logic)

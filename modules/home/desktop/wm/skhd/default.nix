@@ -66,7 +66,7 @@ in {
 
       config = ''
         # Top-level actions
-        cmd + alt - t : ${run "${script "open-terminal-at-cwd"}"}
+        cmd + alt - t : ${run "wezterm start"}
         # 0x2A is the keycode for 'backslash' on most macOS layouts.
         # It is used for toggle-pinned logseq.
         cmd + alt - 0x2A : ${run "${script "toggle-pinned"} logseq logseq Logseq"}

@@ -18,7 +18,7 @@
 
 ### Top-Level Actions (Caps Lock hold)
 
-- `cmd + alt - t : open-terminal-at-cwd`
+- `cmd + alt - t : wezterm start`
 - `cmd + alt - backslash : toggle-pinned logseq`
 - `cmd + alt - o : toggle-pinned obsidian`
 
