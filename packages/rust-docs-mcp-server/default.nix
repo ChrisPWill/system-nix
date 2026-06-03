@@ -25,6 +25,11 @@ pkgs.rustPlatform.buildRustPackage rec {
     pkgs.openssl
   ];
 
+  postPatch = ''
+    substituteInPlace src/embeddings.rs \
+      --replace-fail "const TOKEN_LIMIT: usize = 8000;" "const TOKEN_LIMIT: usize = 800;"
+  '';
+
   meta = with pkgs.lib; {
     description = "MCP server for querying Rust crate documentation";
     homepage = "https://github.com/Govcraft/rust-docs-mcp-server";
