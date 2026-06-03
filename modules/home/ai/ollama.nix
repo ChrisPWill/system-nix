@@ -29,6 +29,8 @@ in {
         Restart = "on-failure";
         Environment = [
           "OLLAMA_HOST=127.0.0.1:11434"
+          "OLLAMA_FLASH_ATTENTION=1"
+          "OLLAMA_KV_CACHE_TYPE=q8_0"
         ];
       };
       Install = {

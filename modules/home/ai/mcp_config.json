@@ -1,0 +1,14 @@
+{
+  "mcpServers": {
+    "rustdocs": {
+      "command": "rustdocs_mcp_server",
+      "args": ["std"],
+      "env": {
+        "OPENAI_API_BASE": "http://localhost:11434/v1",
+        "OPENAI_API_KEY": "dummy",
+        "LLM_MODEL": "qwen2.5-coder:3b-16k",
+        "EMBEDDING_MODEL": "nomic-embed-text-8k"
+      }
+    }
+  }
+}

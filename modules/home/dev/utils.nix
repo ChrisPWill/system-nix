@@ -6,6 +6,7 @@
   home.packages = with pkgs; [
     # JSON formatting etc.
     jq
+    inputs.self.packages.${pkgs.stdenv.hostPlatform.system}.rust-docs-mcp-server
   ];
 
   imports = [

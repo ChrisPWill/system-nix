@@ -1,4 +1,4 @@
-{...}: {
+{config, ...}: {
   programs.antigravity = {
     enable = true;
     profiles.default = {
@@ -10,4 +10,6 @@
       };
     };
   };
+
+  home.file.".gemini/antigravity/mcp_config.json".source = config.lib.file.mkOutOfStoreSymlink "${config.homeModuleDir}/ai/mcp_config.json";
 }

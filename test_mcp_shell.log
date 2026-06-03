@@ -1,0 +1,19 @@
+Target Spec: rand_core, Parsed Name: rand_core, Version Req: *, Features: None
+Cache file path: "/home/cwilliams/.local/share/rustdocs-mcp-server/rand_core/_/no_features/embeddings.bin"
+Cache file not found. Will generate.
+Proceeding with documentation loading and embedding generation.
+Loading documents for crate: rand_core (Version Req: *, Features: None)
+Using documentation path: /tmp/nix-shell-79977-51833781/.tmpJhZmic/doc/rand_core
+[DEBUG] Found 23 total HTML files initially.
+[DEBUG] Filtered down to 18 files to process.
+Finished document loading. Found 18 final documents.
+Loaded 18 documents.
+Generating embeddings...
+Finished generating embeddings. Successfully processed 18 documents (11641 tokens).
+Embedding generation cost for 11641 tokens: $0.000233
+Saving generated documents and embeddings to: "/home/cwilliams/.local/share/rustdocs-mcp-server/rand_core/_/no_features/embeddings.bin"
+Cache saved successfully (18 items).
+Initializing server for crate: rand_core (Version Req: *, Features: None)
+Rust Docs MCP server starting via stdio...
+Failed to start server: Custom { kind: UnexpectedEof, error: "expect initialize request" }
+Error: McpRuntime("expect initialize request")

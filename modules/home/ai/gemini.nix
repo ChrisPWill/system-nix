@@ -1,4 +1,4 @@
-{...}: {
+{config, ...}: {
   # Backup configuration - migrating to antigravity
   programs = {
     gemini-cli = {
@@ -36,4 +36,6 @@
       # };
     };
   };
+
+  home.file.".gemini/gemini-cli/mcp_config.json".source = config.lib.file.mkOutOfStoreSymlink "${config.homeModuleDir}/ai/mcp_config.json";
 }
