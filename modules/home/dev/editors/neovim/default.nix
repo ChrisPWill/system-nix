@@ -29,6 +29,7 @@
     java = true;
     kotlin = true;
     copilot = config.nixCats.custom.enableCopilot;
+    antigravity = true;
   };
 
   commonExtra = {
@@ -271,6 +272,13 @@ in {
             nui-nvim
             render-markdown-nvim
           ];
+          antigravity = with pkgs.vimPlugins; [
+            avante-nvim
+            minuet-ai-nvim
+            dressing-nvim
+            nui-nvim
+            render-markdown-nvim
+          ];
         };
 
         # shared libraries to be added to LD_LIBRARY_PATH
@@ -298,6 +306,10 @@ in {
         # https://github.com/NixOS/nixpkgs/blob/master/pkgs/build-support/setup-hooks/make-wrapper.sh
         extraWrapperArgs = {
           gemini = [
+            "--run"
+            " 'test -f ${config.sops.secrets.gemini_api_key.path} && export GEMINI_API_KEY=$(cat ${config.sops.secrets.gemini_api_key.path})' "
+          ];
+          antigravity = [
             "--run"
             " 'test -f ${config.sops.secrets.gemini_api_key.path} && export GEMINI_API_KEY=$(cat ${config.sops.secrets.gemini_api_key.path})' "
           ];

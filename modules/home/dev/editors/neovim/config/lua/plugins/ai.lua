@@ -45,7 +45,7 @@ return {
 			vim.cmd("packadd plenary.nvim")
 
 			local provider = "openai_fim_compatible"
-			if nixCats("gemini") then
+			if nixCats("antigravity") or nixCats("gemini") then
 				provider = "gemini"
 			end
 
@@ -54,6 +54,7 @@ return {
 				-- Requesting 1 completion at a time keeps the RTX 2080 generating as fast as possible
 				n_completions = 1,
 				provider_options = {
+
 					gemini = {
 						model = "gemini-3.1-flash-lite-preview",
 						stream = true,
@@ -135,9 +136,9 @@ return {
 			end
 
 			require("avante").setup({
-				provider = nixCats("gemini") and "gemini-cli" or "ollama",
+				provider = nixCats("antigravity") and "antigravity-cli" or (nixCats("gemini") and "gemini-cli" or "ollama"),
 				-- Keep auto-suggestions disabled here if you are using llm.nvim for FIM
-				auto_suggestions_provider = nixCats("gemini") and "gemini-cli" or "ollama",
+				auto_suggestions_provider = nixCats("antigravity") and "antigravity-cli" or (nixCats("gemini") and "gemini-cli" or "ollama"),
 				hints = { enabled = true },
 				providers = {
 					ollama = {
@@ -149,6 +150,17 @@ return {
 					},
 				},
 				acp_providers = {
+					["antigravity-cli"] = {
+						command = "agy",
+						args = { "--experimental-acp" },
+						env = {
+							NODE_NO_WARNINGS = "1",
+							HOME = os.getenv("HOME"),
+							GEMINI_API_KEY = os.getenv("GEMINI_API_KEY"),
+							GEMINI_DEFAULT_AUTH_TYPE = "oauth-personal",
+						},
+						auth_method = "oauth-personal",
+					},
 					["gemini-cli"] = {
 						command = "gemini",
 						args = { "--experimental-acp" },

@@ -22,7 +22,7 @@ return {
 			if nixCats("copilot") then
 				table.insert(defaultSources, 2, "copilot")
 			end
-			if nixCats("local-llm") or nixCats("gemini") then
+			if nixCats("local-llm") or nixCats("gemini") or nixCats("antigravity") then
 				table.insert(defaultSources, 2, "minuet")
 				table.insert(defaultSources, 3, "avante_commands")
 				table.insert(defaultSources, 4, "avante_mentions")
@@ -68,7 +68,7 @@ return {
 						} or nil,
 						minuet = {
 							name = "minuet",
-							enabled = nixCats("local-llm") or nixCats("gemini"),
+							enabled = nixCats("local-llm") or nixCats("gemini") or nixCats("antigravity"),
 							module = "minuet.blink",
 							score_offset = 100, -- Forces LLM suggestions to the top of the menu
 							async = true,

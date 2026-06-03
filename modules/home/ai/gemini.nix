@@ -1,4 +1,5 @@
 {...}: {
+  # Backup configuration - migrating to antigravity
   programs = {
     gemini-cli = {
       enable = true;
