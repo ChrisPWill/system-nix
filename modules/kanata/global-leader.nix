@@ -23,9 +23,9 @@
           ms (multi lmet lalt lsft)
 
           ;; Tap: Esc, Hold: Cmd+Alt, Double-Tap Hold: Cmd+Alt+Shift
-          lead (tap-dance 200 (
-            (tap-hold 200 200 esc @m)
-            (tap-hold 200 200 esc @ms)
+          lead (tap-dance 80 (
+            (tap-hold 80 80 esc @m)
+            (tap-hold 80 80 esc @ms)
           ))
         )
 
