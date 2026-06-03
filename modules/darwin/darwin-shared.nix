@@ -1,4 +1,11 @@
-{inputs, ...}: {pkgs, ...}: {
+{inputs, ...}: {
+  config,
+  pkgs,
+  ...
+}: let
+  primaryUser = config.system.primaryUser;
+  primaryUserHome = "/Users/${primaryUser}";
+in {
   imports = [
     inputs.nix-homebrew.darwinModules.nix-homebrew
     inputs.stylix.darwinModules.stylix
@@ -54,8 +61,23 @@
     ];
   };
 
-  # Sketchybar is disabled during the OmniWM migration.
-  services.sketchybar.enable = false;
+  services.sketchybar = {
+    enable = true;
+    extraPackages = [pkgs.jq];
+    config = ''
+      #!/bin/zsh
+
+      export USER="${primaryUser}"
+      export HOME="${primaryUserHome}"
+      export PATH="/opt/homebrew/bin:/opt/homebrew/sbin:$HOME/.nix-profile/bin:/etc/profiles/per-user/$USER/bin:/run/current-system/sw/bin:/nix/var/nix/profiles/default/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:$PATH"
+      export CONFIG_DIR="$HOME/.config/sketchybar"
+      export SKETCHYBAR_BIN="${pkgs.sketchybar}/bin/sketchybar"
+
+      if [[ -r "$CONFIG_DIR/sketchybarrc" ]]; then
+        source "$CONFIG_DIR/sketchybarrc"
+      fi
+    '';
+  };
 
   services.jankyborders = {
     enable = true;

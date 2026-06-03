@@ -3,12 +3,13 @@
   lib,
   pkgs,
   ...
-}: let
-  enableSketchybarForDarwin = false;
-in {
-  # Disabled during the OmniWM migration; this config currently depends on Aerospace.
-  config = lib.mkIf (pkgs.stdenv.isDarwin && enableSketchybarForDarwin) {
-    programs.sketchybar.enable = true;
+}: {
+  config = lib.mkIf pkgs.stdenv.isDarwin {
+    programs.sketchybar = {
+      enable = true;
+      extraPackages = [pkgs.jq];
+      service.enable = false;
+    };
 
     xdg.configFile."sketchybar/sketchybarrc" = {
       source = config.lib.file.mkOutOfStoreSymlink "${config.homeModuleDir}/desktop/wm/sketchybar/sketchybar.sh";

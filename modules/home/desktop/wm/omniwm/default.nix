@@ -262,7 +262,7 @@
     workspaceBar = {
       backgroundOpacity = 0.1;
       deduplicateAppIcons = false;
-      enabled = true;
+      enabled = false;
       height = 24.0;
       hideEmptyWorkspaces = false;
       labelFontSize = 12.0;
