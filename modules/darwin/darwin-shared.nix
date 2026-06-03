@@ -36,19 +36,12 @@ in {
     taps = [
       # Tap for OmniWM window manager
       "BarutSRB/tap"
-
-      # Tap for AeroSpace window manager
-      "nikitabobko/tap"
     ];
 
     casks = [
       # Modern macOS window manager
       # github.com/BarutSRB/omni
       "omniwm"
-
-      # Window manager
-      # github.com/nikitabobko/AeroSpace
-      "aerospace"
 
       # A graph-based notes app
       "logseq"

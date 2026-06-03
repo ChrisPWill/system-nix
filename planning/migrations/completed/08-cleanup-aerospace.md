@@ -3,6 +3,7 @@
 **Objective:** Finalize the migration by removing the old window manager.
 
 ## Steps
+
 1.  **Remove Aerospace**:
     - Delete `"aerospace"` from `homebrew.casks` in `modules/darwin/darwin-shared.nix`.
     - Delete `"nikitabobko/tap"` from `homebrew.taps`.
@@ -15,4 +16,5 @@
     - After implementation and verification, move this file to `planning/migrations/completed/`.
 
 ## Success Criteria
+
 - Aerospace is completely removed from the system and Nix configuration.

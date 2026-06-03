@@ -145,8 +145,8 @@
     (workspace "7E95FE7A-D633-4D41-95E0-3D28A466E66E" "9" "main" {})
 
     # OmniWM raw workspace names are numeric and monitor assignments are
-    # semantic. Display names preserve the Aerospace-style laptop workspace
-    # labels used by the skhd bindings.
+    # semantic. Display names preserve the laptop workspace labels used by the
+    # skhd bindings.
     (workspace "E03D84B1-2E74-44FC-96C1-57C6DA132911" "10" "secondary" {
       displayName = "Q";
     })
