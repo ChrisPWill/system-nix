@@ -207,7 +207,7 @@ recent-windows {
 
 // Include dms files
 include "dms/alttab.kdl"
-include "dms/binds.kdl"
+include "generated-binds.kdl"
 include "dms/colors.kdl"
 include "dms/layout.kdl"
 include "dms/wpblur.kdl"
