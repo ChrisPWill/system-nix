@@ -29,7 +29,6 @@
     java = true;
     kotlin = true;
     copilot = config.nixCats.custom.enableCopilot;
-    antigravity = true;
   };
 
   commonExtra = {
@@ -356,6 +355,7 @@ in {
             commonCategories
             // {
               gemini = true;
+              antigravity = true;
             };
           extra = commonExtra;
         };
