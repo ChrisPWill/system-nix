@@ -28,6 +28,66 @@
     };
   };
 
+  skhdBaseMap = {
+    "comma" = "0x2B";
+    "slash" = "0x2C";
+    "backslash" = "0x2A";
+    "backspace" = "0x33";
+    "delete" = "0x33";
+    "bracketleft" = "0x21";
+    "bracketright" = "0x1E";
+    "period" = "0x2F";
+    "minus" = "0x1B";
+    "equal" = "0x18";
+  };
+
+  niriModMap = {
+    "cmd" = "Super";
+    "alt" = "Alt";
+    "ctrl" = "Ctrl";
+    "shift" = "Shift";
+  };
+
+  niriBaseMap = {
+    "comma" = "Comma";
+    "slash" = "Slash";
+    "backslash" = "BackSlash";
+    "backspace" = "BackSpace";
+    "bracketleft" = "BracketLeft";
+    "bracketright" = "BracketRight";
+    "period" = "Period";
+    "minus" = "Minus";
+    "equal" = "Equal";
+    "escape" = "Escape";
+    "delete" = "Delete";
+    "print" = "Print";
+    "home" = "Home";
+    "end" = "End";
+    "left" = "Left";
+    "right" = "Right";
+    "up" = "Up";
+    "down" = "Down";
+    "page_down" = "Page_Down";
+    "page_up" = "Page_Up";
+    "pagedown" = "Page_Down";
+    "pageup" = "Page_Up";
+    "wheelscrolldown" = "WheelScrollDown";
+    "wheelscrollup" = "WheelScrollUp";
+    "wheelscrollleft" = "WheelScrollLeft";
+    "wheelscrollright" = "WheelScrollRight";
+    "xf86audioraisevolume" = "XF86AudioRaiseVolume";
+    "xf86audiolowervolume" = "XF86AudioLowerVolume";
+    "xf86audiomute" = "XF86AudioMute";
+    "xf86audiomicmute" = "XF86AudioMicMute";
+    "xf86audioplay" = "XF86AudioPlay";
+    "xf86audiostop" = "XF86AudioStop";
+    "xf86audionext" = "XF86AudioNext";
+    "xf86audioprev" = "XF86AudioPrev";
+    "xf86monbrightnessup" = "XF86MonBrightnessUp";
+    "xf86monbrightnessdown" = "XF86MonBrightnessDown";
+    "xf86launch1" = "XF86Launch1";
+  };
+
   parseModifiers = keyStr: let
     parts = lib.splitString "-" keyStr;
   in
@@ -44,20 +104,9 @@
   toSkhdKey = keyStr: let
     mods = parseModifiers keyStr;
     base = parseBaseKey keyStr;
-    baseMap = {
-      "comma" = "0x2B";
-      "slash" = "0x2C";
-      "backslash" = "0x2A";
-      "backspace" = "0x33";
-      "bracketleft" = "0x21";
-      "bracketright" = "0x1E";
-      "period" = "0x2F";
-      "minus" = "0x1B";
-      "equal" = "0x18";
-    };
     mappedBase =
-      if builtins.hasAttr base baseMap
-      then baseMap.${base}
+      if builtins.hasAttr base skhdBaseMap
+      then skhdBaseMap.${base}
       else base;
     modStr =
       if builtins.length mods > 0
@@ -68,59 +117,14 @@
   toNiriKey = keyStr: let
     mods = parseModifiers keyStr;
     base = parseBaseKey keyStr;
-    modMap = {
-      "cmd" = "Super";
-      "alt" = "Alt";
-      "ctrl" = "Ctrl";
-      "shift" = "Shift";
-    };
-    baseMap = {
-      "comma" = "Comma";
-      "slash" = "Slash";
-      "backslash" = "BackSlash";
-      "backspace" = "BackSpace";
-      "bracketleft" = "BracketLeft";
-      "bracketright" = "BracketRight";
-      "period" = "Period";
-      "minus" = "Minus";
-      "equal" = "Equal";
-      "escape" = "Escape";
-      "delete" = "Delete";
-      "print" = "Print";
-      "home" = "Home";
-      "end" = "End";
-      "left" = "Left";
-      "right" = "Right";
-      "up" = "Up";
-      "down" = "Down";
-      "page_down" = "Page_Down";
-      "page_up" = "Page_Up";
-      "pagedown" = "Page_Down";
-      "pageup" = "Page_Up";
-      "wheelscrolldown" = "WheelScrollDown";
-      "wheelscrollup" = "WheelScrollUp";
-      "wheelscrollleft" = "WheelScrollLeft";
-      "wheelscrollright" = "WheelScrollRight";
-      "xf86audioraisevolume" = "XF86AudioRaiseVolume";
-      "xf86audiolowervolume" = "XF86AudioLowerVolume";
-      "xf86audiomute" = "XF86AudioMute";
-      "xf86audiomicmute" = "XF86AudioMicMute";
-      "xf86audioplay" = "XF86AudioPlay";
-      "xf86audiostop" = "XF86AudioStop";
-      "xf86audionext" = "XF86AudioNext";
-      "xf86audioprev" = "XF86AudioPrev";
-      "xf86monbrightnessup" = "XF86MonBrightnessUp";
-      "xf86monbrightnessdown" = "XF86MonBrightnessDown";
-      "xf86launch1" = "XF86Launch1";
-    };
     mappedMods = map (m:
-      if builtins.hasAttr m modMap
-      then modMap.${m}
+      if builtins.hasAttr m niriModMap
+      then niriModMap.${m}
       else m)
     mods;
     mappedBase =
-      if builtins.hasAttr (lib.toLower base) baseMap
-      then baseMap.${lib.toLower base}
+      if builtins.hasAttr (lib.toLower base) niriBaseMap
+      then niriBaseMap.${lib.toLower base}
       else if builtins.stringLength base == 1
       then lib.toUpper base
       else base;
@@ -289,11 +293,13 @@ in {
         {
           key = "cmd+alt-n";
           niri = ''spawn "dms" "ipc" "call" "notifications" "toggle";'';
+          omni = osascript ''tell application "System Events" to click menu bar item "Clock" of menu bar 1 of application process "ControlCenter"'';
           description = "Notification Center";
         }
         {
           key = "cmd+alt+shift-n";
           niri = ''spawn "dms" "ipc" "call" "notepad" "toggle";'';
+          omni = openUrl "raycast://extensions/raycast/raycast-notes/raycast-notes";
           description = "Notepad";
         }
         {
@@ -307,6 +313,7 @@ in {
         {
           key = "cmd+alt+ctrl-b";
           niri = ''spawn "ghostty" "--title=ghostty-floating" "-e" "btop";'';
+          omni = run "wezterm start -- btop";
           description = "Open Btop";
         }
         {
@@ -347,10 +354,6 @@ in {
           description = "Lock Screen";
         }
         {
-          key = "ctrl+alt-0x33";
-          omni = openApp "Activity Monitor";
-        }
-        {
           key = "cmd+alt+shift-p";
           niri = "power-off-monitors;";
           omni = run "pmset displaysleepnow";
@@ -358,11 +361,6 @@ in {
         {
           key = "cmd+alt+shift-escape";
           niri = "quit;";
-        }
-        {
-          key = "ctrl+alt-delete";
-          niri = ''spawn "dms" "ipc" "call" "processlist" "focusOrToggle";'';
-          description = "Task Manager";
         }
 
         # Window focus
@@ -557,7 +555,9 @@ in {
         }
         {
           key = "cmd+alt-period";
-          niri = "expel-window-from-column;";
+          niri = ''spawn "nautilus";'';
+          omni = openApp "Finder";
+          description = "File Manager";
         }
         {
           key = "cmd+alt-minus";
@@ -738,26 +738,32 @@ in {
         {
           key = "xf86launch1";
           niri = "screenshot;";
+          omni = run "screencapture -i";
         }
         {
           key = "ctrl-xf86launch1";
           niri = "screenshot-screen;";
+          omni = run "screencapture -c";
         }
         {
           key = "alt-xf86launch1";
           niri = "screenshot-window;";
+          omni = run "screencapture -cw";
         }
         {
           key = "print";
           niri = "screenshot;";
+          omni = run "screencapture -i";
         }
         {
           key = "ctrl-print";
           niri = "screenshot-screen;";
+          omni = run "screencapture -c";
         }
         {
           key = "alt-print";
           niri = "screenshot-window;";
+          omni = run "screencapture -cw";
         }
 
         # Audio and Media
