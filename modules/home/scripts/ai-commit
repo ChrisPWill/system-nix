@@ -31,6 +31,7 @@ def print-commit-options [options: list<any>] {
 }
 
 def main [
+  hint?: string # Optional guidance for the generated commit messages
   --print-prompt # Print the final prompt sent to the AI and exit
   --print-json # Print raw JSON responses from ai-ask while generating commit messages
   --include-deleted # Include deleted files in per-file AI summaries
@@ -190,7 +191,13 @@ Each object must have a 'summary' field (the conventional commit title) and a 'd
     }
   }
 
-  mut final_context = $"STATUS:\n($status_content)\n\nFILE SUMMARIES:\n"
+  mut final_context = $"STATUS:\n($status_content)\n"
+
+  if (($hint | default "" | str trim) | is-not-empty) {
+    $final_context = $"($final_context)\nUSER GUIDANCE:\n($hint | str trim)\n"
+  }
+
+  $final_context = $"($final_context)\nFILE SUMMARIES:\n"
 
   if ($file_summaries | is-empty) {
     $final_context = ($final_context + "(none)\n")
