@@ -18,13 +18,16 @@ def summarize-file-change [file: string, diff_content: string] {
 
 def print-commit-options [options: list<any>] {
   print "\n=== GENERATED COMMIT OPTIONS ==="
+  print "1. <Retry>"
+  print ""
 
   for option in ($options | enumerate) {
     let item = $option.item
     let summary = (try { $item.summary | str trim } catch { "" })
     let description = (try { $item.description | str trim } catch { "" })
+    let option_number = ($option.index + 2)
 
-    print $"($option.index + 1). ($summary)"
+    print $"($option_number). ($summary)"
     print $description
     print ""
   }
@@ -265,7 +268,7 @@ Each object must have a 'summary' field (the conventional commit title) and a 'd
       exit 1
     }
 
-    # Clean the summaries to ensure they don't contain newlines, which breaks gum choose
+    # Clean the summaries to keep the generated option display compact.
     let parsed = ($parsed | each { |it| 
       let clean_sum = (try { $it.summary | str replace -a "\n" " " | str trim } catch { "" })
       $it | update summary $clean_sum 
@@ -273,27 +276,26 @@ Each object must have a 'summary' field (the conventional commit title) and a 'd
 
     print-commit-options $parsed
 
-    let summaries = (["<Retry>"] | append ($parsed | get summary))
-    
-    # Join with newlines and pipe to gum choose
-    let chosen_summary = (try { $summaries | str join "\n" | ^gum choose | str trim } catch { "" })
+    let max_choice = (($parsed | length) + 1)
+    let choice_input = (try { ^gum input --placeholder $"Choose 1-($max_choice)" --prompt "Option #: " | str trim } catch { "" })
 
-    if ($chosen_summary | is-empty) {
+    if ($choice_input | is-empty) {
       print "Aborted."
       exit 0
     }
 
-    if $chosen_summary == "<Retry>" {
+    let choice = (try { $choice_input | into int } catch { 0 })
+
+    if ($choice < 1) or ($choice > $max_choice) {
+      print -e $"Error: Choose a number from 1 to ($max_choice)."
       continue
     }
 
-    let selected_matches = ($parsed | where summary == $chosen_summary)
-    if ($selected_matches | is-empty) {
-      print -e "Error: Selected summary not found in parsed options."
-      exit 1
+    if $choice == 1 {
+      continue
     }
-    
-    $selected_obj = ($selected_matches | first)
+
+    $selected_obj = ($parsed | get ($choice - 2))
   }
 
   let full_message = $"($selected_obj.summary)\n\n($selected_obj.description)"
