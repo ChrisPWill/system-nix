@@ -18,4 +18,8 @@
   programs.rustfmt.enable = true; # rust
   programs.clang-format.enable = true; # cpp, h
   programs.ktlint.enable = true; # kotlin
+
+  settings.global.excludes = [
+    "modules/home/dev/editors/neovim/tests/fixtures/**"
+  ];
 }).config.build.wrapper

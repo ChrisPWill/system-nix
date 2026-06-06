@@ -1,6 +1,12 @@
 # Treefmt Configuration
 # https://github.com/numtide/treefmt-nix
 
+[global]
+excludes = [
+  # Some of these fixtures intentionally have formatting issues
+  "modules/home/dev/editors/neovim/tests/fixtures/**"
+]
+
 [formatter.nix]
 command = "alejandra"
 includes = ["*.nix", "**/*.nix"]
