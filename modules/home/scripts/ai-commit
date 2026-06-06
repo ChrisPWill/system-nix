@@ -1,5 +1,21 @@
 #!/usr/bin/env nu
 
+def clean-ai-json [ai_stdout: string] {
+  $ai_stdout | ansi strip | str replace -a "```json\n" "" | str replace -a "```\n" "" | str replace -a "```" "" | str trim
+}
+
+def summarize-file-change [file: string, diff_content: string] {
+  let summary_prompt = "You are an expert software developer summarizing a single file change for commit message generation. Output concise plain text only, with no markdown block and no JSON. Summarize what changed in this file, why it likely changed when evident, and any behavior or integration impact. Do not write a commit message."
+  let file_context = $"FILE: ($file)\n\nDIFF:\n($diff_content)"
+
+  try {
+    ai-ask $file_context --system $summary_prompt
+  } catch {
+    print -e $"Error running AI while summarizing ($file)."
+    exit 1
+  }
+}
+
 def main [
   --print-prompt # Print the final prompt sent to the AI and exit
   --print-json # Print raw JSON responses from ai-ask while generating commit messages
@@ -24,13 +40,13 @@ def main [
     exit 1
   }
 
-  mut final_context = ""
+  mut status_content = ""
+  mut diff_args = []
+  mut excluded_files = []
 
   if $is_jj {
     let stat_out = (^jj diff --stat | complete).stdout
     let lines = ($stat_out | lines)
-    mut diff_args = []
-    mut excluded_files = []
 
     for line in $lines {
       if (($line | str contains "insertions") or ($line | str contains "deletions")) { continue }
@@ -47,19 +63,7 @@ def main [
       }
     }
 
-    let diff_content = if ($diff_args | is-empty) {
-      ""
-    } else {
-      (^jj diff --git ...$diff_args | complete).stdout
-    }
-
-    let status_content = (^jj st | complete).stdout
-    $final_context = $"STATUS:\n($status_content)\n\nDIFF:\n($diff_content)\n"
-
-    if ($excluded_files | is-not-empty) {
-      let excluded_str = ($excluded_files | str join ", ")
-      $final_context = $"($final_context)\n\n[NOTE]: The following files were modified but their diffs are excluded from the prompt because they are too large (>1000 lines): ($excluded_str)"
-    }
+    $status_content = (^jj st | complete).stdout
   } else {
     # git
     let staged = (^git diff --cached --name-only | complete)
@@ -75,8 +79,6 @@ def main [
 
     let numstat = (^git diff --cached --numstat | complete)
     let lines = ($numstat.stdout | lines)
-    mut diff_args = []
-    mut excluded_files = []
 
     for line in $lines {
       if ($line | is-empty) { continue }
@@ -92,22 +94,23 @@ def main [
       }
     }
 
-    let diff_content = if ($diff_args | is-empty) {
-      ""
+    $status_content = (^git status | complete).stdout
+  }
+
+  let summary_prompt = "You are an expert software developer summarizing a single file change for commit message generation. Output concise plain text only, with no markdown block and no JSON. Summarize what changed in this file, why it likely changed when evident, and any behavior or integration impact. Do not write a commit message."
+
+  if $print_prompt {
+    print "=== FILE SUMMARY SYSTEM PROMPT ==="
+    print $summary_prompt
+    print "\n=== FILES TO SUMMARIZE ==="
+    if ($diff_args | is-empty) {
+      print "(none)"
     } else {
-      (^git diff --cached -- ...$diff_args | complete).stdout
-    }
-
-    let status_content = (^git status | complete).stdout
-    $final_context = $"STATUS:\n($status_content)\n\nDIFF:\n($diff_content)\n"
-
-    if ($excluded_files | is-not-empty) {
-      let excluded_str = ($excluded_files | str join ", ")
-      $final_context = $"($final_context)\n\n[NOTE]: The following files were modified but their diffs are excluded from the prompt because they are too large (>1000 lines): ($excluded_str)"
+      print ($diff_args | str join "\n")
     }
   }
 
-  let system_prompt = "You are an expert software developer. Generate exactly 3 Git commit messages for the provided diff. Follow the Conventional Commits specification. Output ONLY a raw JSON array of objects, with no markdown blocks or other text.
+  let system_prompt = "You are an expert software developer. Generate exactly 3 Git commit messages for the provided repository status and per-file change summaries. Follow the Conventional Commits specification. Output ONLY a raw JSON array of objects, with no markdown blocks or other text.
 
 Example format:
 [
@@ -119,10 +122,44 @@ Example format:
 
 Each object must have a 'summary' field (the conventional commit title) and a 'description' field. The 'description' MUST be detailed and informative (typically 2-4 sentences or a short bulleted list), thoroughly explaining the 'why' and 'what' of the changes to give a reviewer full context. Do NOT include any ANSI escape codes, terminal control sequences, or backspace characters. IMPORTANT: You must escape all newlines inside JSON string values as \\n."
 
+  mut file_summaries = []
+
   if $print_prompt {
-    print "=== SYSTEM PROMPT ==="
+    for file in $diff_args {
+      $file_summaries = ($file_summaries | append $"FILE: ($file)\nSUMMARY:\n<ai-generated summary would be inserted here>")
+    }
+  } else {
+    for file in $diff_args {
+      print $"Summarizing ($file) with AI..."
+      let diff_content = if $is_jj {
+        (^jj diff --git $file | complete).stdout
+      } else {
+        (^git diff --cached -- $file | complete).stdout
+      }
+
+      let summary = (summarize-file-change $file $diff_content | ansi strip | str trim)
+      $file_summaries = ($file_summaries | append $"FILE: ($file)\nSUMMARY:\n($summary)")
+    }
+  }
+
+  mut final_context = $"STATUS:\n($status_content)\n\nFILE SUMMARIES:\n"
+
+  if ($file_summaries | is-empty) {
+    $final_context = ($final_context + "(none)\n")
+  } else {
+    let joined_summaries = ($file_summaries | str join "\n\n")
+    $final_context = $"($final_context)($joined_summaries)\n"
+  }
+
+  if ($excluded_files | is-not-empty) {
+    let excluded_str = ($excluded_files | str join ", ")
+    $final_context = $"($final_context)\n[NOTE]: The following files were modified but their diffs were not summarized because they are too large (>1000 lines): ($excluded_str)"
+  }
+
+  if $print_prompt {
+    print "\n=== FINAL JSON SYSTEM PROMPT ==="
     print $system_prompt
-    print "\n=== USER PROMPT (DIFF + STATUS) ==="
+    print "\n=== FINAL USER PROMPT (STATUS + FILE SUMMARIES) ==="
     print $final_context
     exit 0
   }
@@ -144,7 +181,7 @@ Each object must have a 'summary' field (the conventional commit title) and a 'd
       print $ai_stdout
     }
 
-    let clean_json = ($ai_stdout | ansi strip | str replace -a "```json\n" "" | str replace -a "```\n" "" | str replace -a "```" "" | str trim)
+    let clean_json = (clean-ai-json $ai_stdout)
     
     let try_parse = (try { $clean_json | from json } catch { null })
 
