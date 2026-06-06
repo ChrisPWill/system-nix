@@ -4,7 +4,7 @@ def main [
   prompt: string # The user prompt
   --system (-s): string # The system prompt
 ] {
-  let model = "qwen2.5-coder:3b"
+  let model = "qwen2.5-coder:3b-16k"
 
   if ($prompt | is-empty) {
     print -e "Error: No input provided"
