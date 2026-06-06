@@ -1,0 +1,125 @@
+name: Nix flake update
+
+on:
+  schedule:
+    - cron: "0 9 * * 1"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: nix-flake-update
+  cancel-in-progress: false
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    environment: master
+    env:
+      UPDATE_BRANCH: automation/nix-flake-update
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: cachix/install-nix-action@v31
+        with:
+          extra_nix_config: |
+            experimental-features = nix-command flakes
+
+      - uses: DeterminateSystems/magic-nix-cache-action@v13
+
+      - name: Create log directory
+        run: mkdir -p "$RUNNER_TEMP/nix-flake-update-logs"
+
+      - name: Update flake inputs
+        id: update
+        continue-on-error: true
+        run: |
+          set -o pipefail
+          nix flake update 2>&1 | tee "$RUNNER_TEMP/nix-flake-update-logs/nix-flake-update.log"
+
+      - name: Check updated flake
+        id: check
+        if: steps.update.outcome == 'success'
+        continue-on-error: true
+        run: |
+          set -o pipefail
+          nix flake check -L 2>&1 | tee "$RUNNER_TEMP/nix-flake-update-logs/nix-flake-check.log"
+
+      - name: Require OpenAI API key for Codex repair
+        if: steps.update.outcome == 'failure' || steps.check.outcome == 'failure'
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        run: |
+          if [ -z "$OPENAI_API_KEY" ]; then
+            echo "OPENAI_API_KEY secret is required when the flake update or check fails." >&2
+            exit 1
+          fi
+
+      - name: Repair failed update with Codex
+        if: steps.update.outcome == 'failure' || steps.check.outcome == 'failure'
+        uses: openai/codex-action@main
+        with:
+          openai_api_key: ${{ secrets.OPENAI_API_KEY }}
+          prompt: |
+            You are maintaining the Nix flake in ${{ github.repository }}.
+
+            A scheduled `nix flake update` automation failed, or the updated flake failed validation.
+            Read AGENTS.md first. Then inspect these logs when present:
+            - ${{ runner.temp }}/nix-flake-update-logs/nix-flake-update.log
+            - ${{ runner.temp }}/nix-flake-update-logs/nix-flake-check.log
+
+            Make the smallest appropriate changes so that:
+            - `nix flake update` succeeds
+            - `nix flake check -L` succeeds on the GitHub Actions x86_64-linux runner
+
+            Keep the update focused on flake input updates and compatibility fixes caused by those updates.
+            Do not refactor unrelated code or change user-facing configuration unless required by the update.
+            Leave a concise summary of what you changed.
+          codex_args: '["--sandbox","workspace-write","--ask-for-approval","never","--add-dir","${{ runner.temp }}/nix-flake-update-logs"]'
+
+      - name: Verify Codex repair
+        if: steps.update.outcome == 'failure' || steps.check.outcome == 'failure'
+        run: |
+          set -o pipefail
+          nix flake update 2>&1 | tee "$RUNNER_TEMP/nix-flake-update-logs/nix-flake-update-after-codex.log"
+          nix flake check -L 2>&1 | tee "$RUNNER_TEMP/nix-flake-update-logs/nix-flake-check-after-codex.log"
+
+      - name: Describe update path
+        id: path
+        if: always()
+        run: |
+          if [ "${{ steps.update.outcome }}" = "success" ] && [ "${{ steps.check.outcome }}" = "success" ]; then
+            echo "mode=lockfile-only" >> "$GITHUB_OUTPUT"
+            echo "summary=Automated nix flake update passed without Codex repair." >> "$GITHUB_OUTPUT"
+          else
+            echo "mode=codex-assisted" >> "$GITHUB_OUTPUT"
+            echo "summary=Codex repaired the failed nix flake update or validation failure." >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Create or update pull request
+        uses: peter-evans/create-pull-request@v7
+        with:
+          branch: ${{ env.UPDATE_BRANCH }}
+          base: master
+          delete-branch: true
+          commit-message: "chore(nix): update flake inputs"
+          title: "Update Nix flake inputs"
+          body: |
+            ## Summary
+            - ${{ steps.path.outputs.summary }}
+            - Validation: `nix flake check -L`
+
+            ## Run
+            - ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+
+      - name: Upload Nix logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: nix-flake-update-logs
+          path: ${{ runner.temp }}/nix-flake-update-logs/*.log
+          if-no-files-found: ignore
