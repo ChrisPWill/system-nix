@@ -1,39 +1,46 @@
-{...}: {
-  # Backup configuration - migrating to antigravity
-  programs = {
-    gemini-cli = {
-      enable = true;
-      settings = {
-        general = {
-          vimMode = true;
-          preferredEditor = "neovim";
+{
+  config,
+  lib,
+  ...
+}: let
+  cfg = config.home.ai;
+in {
+  config = lib.mkIf (cfg.agentProvider == "gemini" || cfg.neovimProvider == "gemini") {
+    programs = {
+      gemini-cli = {
+        enable = true;
+        settings = {
+          general = {
+            vimMode = true;
+            preferredEditor = "neovim";
+          };
+
+          security.auth.selectedType = "oauth-personal";
+
+          privacy.usageStatisticsEnabled = false;
         };
 
-        security.auth.selectedType = "oauth-personal";
+        # Example context for later if I choose to add it
+        # context = {
+        #   GEMINI = ''
+        #     # Global Context
 
-        privacy.usageStatisticsEnabled = false;
+        #     You are a helpful AI assistant for software development.
+
+        #     ## Coding Standards
+
+        #     - Follow consistent code style
+        #     - Write clear comments
+        #     - Test your changes
+        #   '';
+
+        #   AGENTS = ./path/to/agents.md;
+
+        #   CONTEXT = ''
+        #     Additional context instructions here.
+        #   '';
+        # };
       };
-
-      # Example context for later if I choose to add it
-      # context = {
-      #   GEMINI = ''
-      #     # Global Context
-
-      #     You are a helpful AI assistant for software development.
-
-      #     ## Coding Standards
-
-      #     - Follow consistent code style
-      #     - Write clear comments
-      #     - Test your changes
-      #   '';
-
-      #   AGENTS = ./path/to/agents.md;
-
-      #   CONTEXT = ''
-      #     Additional context instructions here.
-      #   '';
-      # };
     };
   };
 }

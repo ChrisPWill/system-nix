@@ -65,7 +65,7 @@ in {
       addOverlays = [(utils.standardPluginOverlay inputs)];
 
       # See packageDefinitions - says which one to install
-      packageNames = [mainNixCatsPackageName] ++ pkgs.lib.optionals config.isPersonalMachine ["leet" "nvim-gemini" "nvim-llm"];
+      packageNames = [mainNixCatsPackageName] ++ pkgs.lib.optionals config.isPersonalMachine ["leet" "nvim-ai" "nvim-llm"];
 
       luaPath = config.lib.file.mkOutOfStoreSymlink "${config.homeModuleDir}/dev/editors/neovim/config";
 
@@ -264,14 +264,7 @@ in {
             nui-nvim
             render-markdown-nvim
           ];
-          gemini = with pkgs.vimPlugins; [
-            avante-nvim
-            minuet-ai-nvim
-            dressing-nvim
-            nui-nvim
-            render-markdown-nvim
-          ];
-          antigravity = with pkgs.vimPlugins; [
+          ai = with pkgs.vimPlugins; [
             avante-nvim
             minuet-ai-nvim
             dressing-nvim
@@ -345,17 +338,19 @@ in {
           extra = commonExtra;
         };
 
-        "nvim-gemini" = {...}: {
+        "nvim-ai" = {...}: {
           settings =
             commonSettings
             // {
-              aliases = ["nvg"];
+              aliases = ["nva"];
             };
           categories =
             commonCategories
             // {
-              gemini = true;
-              antigravity = true;
+              ai = config.home.ai.neovimProvider == "gemini" || config.home.ai.neovimProvider == "antigravity";
+              local-llm = config.home.ai.neovimProvider == "ollama" && config.services.local-ollama.enable;
+              gemini = config.home.ai.neovimProvider == "gemini";
+              antigravity = config.home.ai.neovimProvider == "antigravity";
             };
           extra = commonExtra;
         };

@@ -6,7 +6,7 @@
 
 - **Global Leader:** Triggered via `leader + d` (Debug).
 - **Output Capture:** Capture the last 50 lines of the currently focused terminal.
-- **AI Analysis:** Send the captured text to an AI model (Gemini or local Ollama) with a specialized debugging prompt.
+- **AI Analysis:** Send the captured text to the configured AI backend (Codex by default, with local Ollama or legacy Gemini-compatible providers as fallbacks) with a specialized debugging prompt.
 - **Floating Presentation:** Display the analysis and suggested fix in a small, floating terminal window.
 - **Cross-Platform:** Works on both Linux (Niri) and macOS (OmniWM).
 
@@ -22,7 +22,7 @@
 3.  **The Debug Script (`ai-debug`):**
     - Takes the captured text.
     - Prompts: "I am a senior platform engineer. Analyze the following terminal output for errors, explain why it happened, and provide a concise command to fix it."
-    - Pipes to `gemini-cli` or `ollama`.
+    - Dispatches to `codex`, `ollama`, or the configured legacy provider.
 
 ## Implementation Steps
 
@@ -30,7 +30,7 @@
 
 - Create `modules/home/scripts/ai-debug`.
 - Implement logic to handle the AI request and format the output.
-- Add dependencies (`gemini-cli`, `gum` for display).
+- Add dependencies (`codex`, `ollama` when local analysis is enabled, and `gum` for display).
 
 ### Phase 2: WM/Shell Integration
 

@@ -13,7 +13,7 @@ A **Domain-Driven** Nix system configuration managed with [numtide/blueprint](ht
 | Guide                                    | Description                                                  |
 | :--------------------------------------- | :----------------------------------------------------------- |
 | **[INSTALLATION.md](./INSTALLATION.md)** | Cloning, bootstrapping, and ISO-based installation.          |
-| **[GEMINI.md](./GEMINI.md)**             | **Developer Guide:** Architectural mandates and conventions. |
+| **[AGENTS.md](./AGENTS.md)**             | **Developer Guide:** Architectural mandates and conventions. |
 | **[SECRETS.md](./SECRETS.md)**           | Guide for managing encrypted secrets with `sops-nix`.        |
 | **[PERFORMANCE.md](./PERFORMANCE.md)**   | Instructions for profiling evaluation and system speed.      |
 
@@ -95,4 +95,4 @@ nix flake init -t .#rust-simple
 
 This repository uses [numtide/blueprint](https://github.com/numtide/blueprint), which automatically exports NixOS configurations, Home Manager profiles, and devshells based on the folder structure.
 
-Please refer to **[GEMINI.md](./GEMINI.md)** for detailed contribution rules and architectural mandates before submitting changes.
+Please refer to **[AGENTS.md](./AGENTS.md)** for detailed contribution rules and architectural mandates before submitting changes.

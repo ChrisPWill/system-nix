@@ -39,7 +39,7 @@ return {
 				desc = "Trigger AI completion (minuet)",
 			},
 		},
-		enabled = nixCats("local-llm") or nixCats("gemini") or nixCats("antigravity") or false,
+		enabled = nixCats("local-llm") or nixCats("ai") or false,
 		after = function()
 			-- Load the required dependency if using lz.n optional loading
 			vim.cmd("packadd plenary.nvim")
@@ -90,7 +90,7 @@ return {
 	},
 	{
 		"avante.nvim",
-		enabled = nixCats("local-llm") or nixCats("gemini") or nixCats("antigravity") or false,
+		enabled = nixCats("local-llm") or nixCats("ai") or false,
 		on_require = { "avante" },
 		dep_of = { "blink.cmp" },
 		-- Lazy load when executing these commands
