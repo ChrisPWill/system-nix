@@ -103,35 +103,48 @@ def main [] {
     }
   }
 
-  print "Generating commit messages with AI..."
-
   let system_prompt = "You are an expert software developer. Generate exactly 3 Git commit messages for the provided diff. Follow the Conventional Commits specification. Output ONLY a raw JSON array of objects, with no markdown blocks or other text.
 
 Example format:
 [
   {
-    \"summary\": \"feat: add user authentication\",
-    \"description\": \"Implemented JWT-based login flow.\\nAdded middleware for route protection.\"
+    \"summary\": \"feat: <message>\",
+    \"description\": \"<line1>\\n<line2>\"
   }
 ]
 
-Each object must have a 'summary' field (the conventional commit title) and a 'description' field. The 'description' MUST be detailed and informative (typically 2-4 sentences or a short bulleted list), thoroughly explaining the 'why' and 'what' of the changes to give a reviewer full context. Do NOT include any ANSI escape codes, terminal control sequences, or backspace characters in your output."
+Each object must have a 'summary' field (the conventional commit title) and a 'description' field. The 'description' MUST be detailed and informative (typically 2-4 sentences or a short bulleted list), thoroughly explaining the 'why' and 'what' of the changes to give a reviewer full context. Do NOT include any ANSI escape codes, terminal control sequences, or backspace characters. IMPORTANT: You must escape all newlines inside JSON string values as \\n."
 
-  let ai_stdout = (try { ai-ask $final_context --system $system_prompt } catch {
-    print -e "Error running AI."
-    exit 1
-  })
+  mut parsed = []
+  mut attempts = 0
+  let max_attempts = 3
 
-  let clean_json = ($ai_stdout | ansi strip | str replace -a "```json\n" "" | str replace -a "```\n" "" | str replace -a "```" "" | str trim)
-  
-  let parsed = (try { $clean_json | from json } catch {
-    print -e "Error: Failed to parse AI output as JSON."
-    print -e $"Raw output:\n($ai_stdout)"
-    exit 1
-  })
+  while $attempts < $max_attempts {
+    print ("Generating commit messages with AI (attempt " + ($attempts + 1 | into string) + ")...")
+
+    let ai_stdout = (try { ai-ask $final_context --system $system_prompt } catch {
+      print -e "Error running AI."
+      exit 1
+    })
+
+    let clean_json = ($ai_stdout | ansi strip | str replace -a "```json\n" "" | str replace -a "```\n" "" | str replace -a "```" "" | str trim)
+    
+    let try_parse = (try { $clean_json | from json } catch { null })
+
+    if ($try_parse != null) and not ($try_parse | is-empty) {
+      $parsed = $try_parse
+      break
+    } else {
+      print -e "Error: Failed to parse AI output as JSON. Retrying..."
+      if ($attempts == ($max_attempts - 1)) {
+        print -e $"Raw output from final attempt:\n($ai_stdout)"
+      }
+      $attempts += 1
+    }
+  }
 
   if ($parsed | is-empty) {
-    print -e "Error: AI returned empty JSON."
+    print -e "Error: AI failed to return valid JSON after multiple attempts."
     exit 1
   }
 
