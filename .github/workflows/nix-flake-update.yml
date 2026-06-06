@@ -59,28 +59,49 @@ jobs:
             exit 1
           fi
 
+      - name: Write Codex repair prompt
+        id: repair_prompt
+        if: steps.update.outcome == 'failure' || steps.check.outcome == 'failure'
+        run: |
+          prompt_file=".codex-nix-flake-update-prompt.md"
+
+          {
+            printf '%s\n' "You are maintaining the Nix flake in ${{ github.repository }}."
+            printf '\n'
+            printf '%s\n' "A scheduled \`nix flake update\` automation failed, or the updated flake failed validation."
+            printf '%s\n' "Read AGENTS.md first. Then use the logs included below."
+            printf '\n'
+            printf '%s\n' "Make the smallest appropriate changes so that:"
+            printf '%s\n' "- \`nix flake update\` succeeds"
+            printf '%s\n' "- \`nix flake check -L\` succeeds on the GitHub Actions x86_64-linux runner"
+            printf '\n'
+            printf '%s\n' "Keep the update focused on flake input updates and compatibility fixes caused by those updates."
+            printf '%s\n' "Do not refactor unrelated code or change user-facing configuration unless required by the update."
+            printf '%s\n' "Leave a concise summary of what you changed."
+            printf '\n'
+
+            for log in \
+              "$RUNNER_TEMP/nix-flake-update-logs/nix-flake-update.log" \
+              "$RUNNER_TEMP/nix-flake-update-logs/nix-flake-check.log"
+            do
+              if [ -f "$log" ]; then
+                printf '## %s\n\n' "$(basename "$log")"
+                printf '```text\n'
+                tail -c 60000 "$log"
+                printf '\n```\n\n'
+              fi
+            done
+          } > "$prompt_file"
+
+          echo "prompt_file=$prompt_file" >> "$GITHUB_OUTPUT"
+
       - name: Repair failed update with Codex
         if: steps.update.outcome == 'failure' || steps.check.outcome == 'failure'
         uses: openai/codex-action@main
         with:
           openai-api-key: ${{ secrets.OPENAI_API_KEY }}
           sandbox: workspace-write
-          prompt: |
-            You are maintaining the Nix flake in ${{ github.repository }}.
-
-            A scheduled `nix flake update` automation failed, or the updated flake failed validation.
-            Read AGENTS.md first. Then inspect these logs when present:
-            - ${{ runner.temp }}/nix-flake-update-logs/nix-flake-update.log
-            - ${{ runner.temp }}/nix-flake-update-logs/nix-flake-check.log
-
-            Make the smallest appropriate changes so that:
-            - `nix flake update` succeeds
-            - `nix flake check -L` succeeds on the GitHub Actions x86_64-linux runner
-
-            Keep the update focused on flake input updates and compatibility fixes caused by those updates.
-            Do not refactor unrelated code or change user-facing configuration unless required by the update.
-            Leave a concise summary of what you changed.
-          codex-args: '["--ask-for-approval","never","--add-dir","${{ runner.temp }}/nix-flake-update-logs"]'
+          prompt-file: ${{ steps.repair_prompt.outputs.prompt_file }}
 
       - name: Verify Codex repair
         if: steps.update.outcome == 'failure' || steps.check.outcome == 'failure'
@@ -88,6 +109,10 @@ jobs:
           set -o pipefail
           nix flake update 2>&1 | tee "$RUNNER_TEMP/nix-flake-update-logs/nix-flake-update-after-codex.log"
           nix flake check -L 2>&1 | tee "$RUNNER_TEMP/nix-flake-update-logs/nix-flake-check-after-codex.log"
+
+      - name: Remove generated Codex prompt
+        if: always()
+        run: rm -f .codex-nix-flake-update-prompt.md
 
       - name: Describe update path
         id: path
