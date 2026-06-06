@@ -63,7 +63,8 @@ jobs:
         if: steps.update.outcome == 'failure' || steps.check.outcome == 'failure'
         uses: openai/codex-action@main
         with:
-          openai_api_key: ${{ secrets.OPENAI_API_KEY }}
+          openai-api-key: ${{ secrets.OPENAI_API_KEY }}
+          sandbox: workspace-write
           prompt: |
             You are maintaining the Nix flake in ${{ github.repository }}.
 
@@ -79,7 +80,7 @@ jobs:
             Keep the update focused on flake input updates and compatibility fixes caused by those updates.
             Do not refactor unrelated code or change user-facing configuration unless required by the update.
             Leave a concise summary of what you changed.
-          codex_args: '["--sandbox","workspace-write","--ask-for-approval","never","--add-dir","${{ runner.temp }}/nix-flake-update-logs"]'
+          codex-args: '["--ask-for-approval","never","--add-dir","${{ runner.temp }}/nix-flake-update-logs"]'
 
       - name: Verify Codex repair
         if: steps.update.outcome == 'failure' || steps.check.outcome == 'failure'
