@@ -1,7 +1,6 @@
 {
   lib,
   config,
-  pkgs,
   ...
 }: let
   inherit (lib) types mkOption;
@@ -514,7 +513,7 @@ in {
           niri = "switch-focus-between-floating-and-tiling;";
         }
         {
-          key = "cmd+alt+ctrl-w";
+          key = "cmd+alt+ctrl-t";
           niri = "toggle-column-tabbed-display;";
           omni = omni "toggle-column-tabbed";
         }
@@ -524,7 +523,7 @@ in {
           omni = omni "cycle-column-width forward";
         }
         {
-          key = "cmd+alt+shift-space";
+          key = "cmd+alt+ctrl-space";
           niri = "switch-preset-window-height;";
         }
         {
