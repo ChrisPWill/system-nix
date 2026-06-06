@@ -18,5 +18,5 @@ def main [
 
   let full_prompt = $"($system)\n\n($prompt)"
   
-  ^ollama run $model $full_prompt
+  ^ollama run --nowordwrap $model $full_prompt
 }

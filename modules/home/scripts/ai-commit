@@ -1,6 +1,8 @@
 #!/usr/bin/env nu
 
-def main [] {
+def main [
+  --print-prompt # Print the final prompt sent to the AI and exit
+] {
   let is_git = (".git" | path exists)
   let is_jj = (".jj" | path exists)
 
@@ -30,11 +32,11 @@ def main [] {
     mut excluded_files = []
 
     for line in $lines {
-      if not ($line | str contains " line") { continue }
-      let parts = ($line | split row " : ")
+      if (($line | str contains "insertions") or ($line | str contains "deletions")) { continue }
+      let parts = ($line | split row " | ")
       if ($parts | length) < 2 { continue }
       let file = ($parts.0 | str trim)
-      let lines_changed = (try { $parts.1 | split row " line" | get 0 | into int } catch { 0 })
+      let lines_changed = (try { $parts.1 | str trim | split row " " | get 0 | into int } catch { 0 })
       
       if $lines_changed > 1000 {
         $excluded_files = ($excluded_files | append $file)
@@ -46,7 +48,7 @@ def main [] {
     let diff_content = if ($diff_args | is-empty) {
       ""
     } else {
-      (^jj diff ...$diff_args | complete).stdout
+      (^jj diff --git ...$diff_args | complete).stdout
     }
 
     let status_content = (^jj st | complete).stdout
@@ -114,6 +116,14 @@ Example format:
 ]
 
 Each object must have a 'summary' field (the conventional commit title) and a 'description' field. The 'description' MUST be detailed and informative (typically 2-4 sentences or a short bulleted list), thoroughly explaining the 'why' and 'what' of the changes to give a reviewer full context. Do NOT include any ANSI escape codes, terminal control sequences, or backspace characters. IMPORTANT: You must escape all newlines inside JSON string values as \\n."
+
+  if $print_prompt {
+    print "=== SYSTEM PROMPT ==="
+    print $system_prompt
+    print "\n=== USER PROMPT (DIFF + STATUS) ==="
+    print $final_context
+    exit 0
+  }
 
   mut parsed = []
   mut attempts = 0
