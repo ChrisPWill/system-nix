@@ -2,6 +2,7 @@
 
 def main [
   --print-prompt # Print the final prompt sent to the AI and exit
+  --print-json # Print raw JSON responses from ai-ask while generating commit messages
 ] {
   let is_git = (".git" | path exists)
   let is_jj = (".jj" | path exists)
@@ -137,6 +138,11 @@ Each object must have a 'summary' field (the conventional commit title) and a 'd
       print -e "Error running AI."
       exit 1
     })
+
+    if $print_json {
+      print "=== AI JSON RESPONSE ==="
+      print $ai_stdout
+    }
 
     let clean_json = ($ai_stdout | ansi strip | str replace -a "```json\n" "" | str replace -a "```\n" "" | str replace -a "```" "" | str trim)
     
