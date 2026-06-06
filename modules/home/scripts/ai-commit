@@ -19,6 +19,7 @@ def summarize-file-change [file: string, diff_content: string] {
 def main [
   --print-prompt # Print the final prompt sent to the AI and exit
   --print-json # Print raw JSON responses from ai-ask while generating commit messages
+  --include-deleted # Include deleted files in per-file AI summaries
 ] {
   let is_git = (".git" | path exists)
   let is_jj = (".jj" | path exists)
@@ -43,8 +44,22 @@ def main [
   mut status_content = ""
   mut diff_args = []
   mut excluded_files = []
+  mut deleted_files = []
 
   if $is_jj {
+    let summary_out = (^jj diff --summary | complete).stdout
+    for line in ($summary_out | lines) {
+      if ($line | str trim | is-empty) { continue }
+      let parts = ($line | str trim | split row " ")
+      if (($parts | length) < 2) { continue }
+      let status = ($parts | first)
+      let file = ($parts | skip 1 | str join " ")
+
+      if $status == "D" {
+        $deleted_files = ($deleted_files | append $file)
+      }
+    }
+
     let stat_out = (^jj diff --stat | complete).stdout
     let lines = ($stat_out | lines)
 
@@ -54,9 +69,12 @@ def main [
       if ($parts | length) < 2 { continue }
       let file = ($parts.0 | str trim)
       let lines_changed = (try { $parts.1 | str trim | split row " " | get 0 | into int } catch { 0 })
+      let is_deleted = ($deleted_files | any {|deleted| $deleted == $file })
       
-      # TODO: Also exclude complete deletions and file moves
-      if $lines_changed > 1000 {
+      # Deleted files are listed in the final context, but are not summarized by default.
+      if ($is_deleted and not $include_deleted) {
+        continue
+      } else if $lines_changed > 1000 {
         $excluded_files = ($excluded_files | append $file)
       } else {
         $diff_args = ($diff_args | append $file)
@@ -77,6 +95,19 @@ def main [
       ^git add .
     }
 
+    let name_status = (^git diff --cached --name-status | complete).stdout
+    for line in ($name_status | lines) {
+      if ($line | is-empty) { continue }
+      let parts = ($line | split row "\t")
+      if (($parts | length) < 2) { continue }
+      let status = ($parts | first)
+      let file = ($parts | last)
+
+      if $status == "D" {
+        $deleted_files = ($deleted_files | append $file)
+      }
+    }
+
     let numstat = (^git diff --cached --numstat | complete)
     let lines = ($numstat.stdout | lines)
 
@@ -86,8 +117,11 @@ def main [
       let added = (if $parts.0 == "-" { 0 } else { $parts.0 | into int })
       let deleted = (if $parts.1 == "-" { 0 } else { $parts.1 | into int })
       let file = $parts.2
+      let is_deleted = ($deleted_files | any {|deleted_file| $deleted_file == $file })
 
-      if ($added + $deleted) > 1000 {
+      if ($is_deleted and not $include_deleted) {
+        continue
+      } else if ($added + $deleted) > 1000 {
         $excluded_files = ($excluded_files | append $file)
       } else {
         $diff_args = ($diff_args | append $file)
@@ -154,6 +188,11 @@ Each object must have a 'summary' field (the conventional commit title) and a 'd
   if ($excluded_files | is-not-empty) {
     let excluded_str = ($excluded_files | str join ", ")
     $final_context = $"($final_context)\n[NOTE]: The following files were modified but their diffs were not summarized because they are too large (>1000 lines): ($excluded_str)"
+  }
+
+  if (($deleted_files | is-not-empty) and not $include_deleted) {
+    let deleted_str = ($deleted_files | str join ", ")
+    $final_context = $"($final_context)\n[NOTE]: The following deleted files were not summarized by default: ($deleted_str)"
   }
 
   if $print_prompt {
