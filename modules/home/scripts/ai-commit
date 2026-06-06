@@ -1,0 +1,168 @@
+#!/usr/bin/env nu
+
+def main [] {
+  let is_git = (".git" | path exists)
+  let is_jj = (".jj" | path exists)
+
+  if not ($is_git or $is_jj) {
+    print -e "Error: Not a git or jj repository."
+    exit 1
+  }
+
+  let has_gum = (which gum | is-not-empty)
+  if not $has_gum {
+    print -e "Error: 'gum' is not installed."
+    exit 1
+  }
+
+  let has_ai = (which ai-ask | is-not-empty)
+  if not $has_ai {
+    print -e "Error: 'ai-ask' wrapper is not in PATH."
+    exit 1
+  }
+
+  mut final_context = ""
+
+  if $is_jj {
+    let stat_out = (^jj diff --stat | complete).stdout
+    let lines = ($stat_out | lines)
+    mut diff_args = []
+    mut excluded_files = []
+
+    for line in $lines {
+      if not ($line | str contains " line") { continue }
+      let parts = ($line | split row " : ")
+      if ($parts | length) < 2 { continue }
+      let file = ($parts.0 | str trim)
+      let lines_changed = (try { $parts.1 | split row " line" | get 0 | into int } catch { 0 })
+      
+      if $lines_changed > 1000 {
+        $excluded_files = ($excluded_files | append $file)
+      } else {
+        $diff_args = ($diff_args | append $file)
+      }
+    }
+
+    let diff_content = if ($diff_args | is-empty) {
+      ""
+    } else {
+      (^jj diff ...$diff_args | complete).stdout
+    }
+
+    let status_content = (^jj st | complete).stdout
+    $final_context = $"STATUS:\n($status_content)\n\nDIFF:\n($diff_content)\n"
+
+    if ($excluded_files | is-not-empty) {
+      let excluded_str = ($excluded_files | str join ", ")
+      $final_context = $"($final_context)\n\n[NOTE]: The following files were modified but their diffs are excluded from the prompt because they are too large (>1000 lines): ($excluded_str)"
+    }
+  } else {
+    # git
+    let staged = (^git diff --cached --name-only | complete)
+    if ($staged.stdout | is-empty) {
+      # Try gum confirm
+      let confirm_res = (try { ^gum confirm "Nothing is staged. Stage all changes (git add .)?"; 0 } catch { 1 })
+      if $confirm_res != 0 {
+        print "Aborting."
+        exit 0
+      }
+      ^git add .
+    }
+
+    let numstat = (^git diff --cached --numstat | complete)
+    let lines = ($numstat.stdout | lines)
+    mut diff_args = []
+    mut excluded_files = []
+
+    for line in $lines {
+      if ($line | is-empty) { continue }
+      let parts = ($line | split row "\t")
+      let added = (if $parts.0 == "-" { 0 } else { $parts.0 | into int })
+      let deleted = (if $parts.1 == "-" { 0 } else { $parts.1 | into int })
+      let file = $parts.2
+
+      if ($added + $deleted) > 1000 {
+        $excluded_files = ($excluded_files | append $file)
+      } else {
+        $diff_args = ($diff_args | append $file)
+      }
+    }
+
+    let diff_content = if ($diff_args | is-empty) {
+      ""
+    } else {
+      (^git diff --cached -- ...$diff_args | complete).stdout
+    }
+
+    let status_content = (^git status | complete).stdout
+    $final_context = $"STATUS:\n($status_content)\n\nDIFF:\n($diff_content)\n"
+
+    if ($excluded_files | is-not-empty) {
+      let excluded_str = ($excluded_files | str join ", ")
+      $final_context = $"($final_context)\n\n[NOTE]: The following files were modified but their diffs are excluded from the prompt because they are too large (>1000 lines): ($excluded_str)"
+    }
+  }
+
+  print "Generating commit messages with AI..."
+
+  let system_prompt = "You are an expert software developer. Generate exactly 3 Git commit messages for the provided diff. Follow the Conventional Commits specification. Output ONLY a raw JSON array of objects, with no markdown blocks or other text.
+
+Example format:
+[
+  {
+    \"summary\": \"feat: add user authentication\",
+    \"description\": \"Implemented JWT-based login flow.\\nAdded middleware for route protection.\"
+  }
+]
+
+Each object must have a 'summary' field (the conventional commit title) and a 'description' field. The 'description' MUST be detailed and informative (typically 2-4 sentences or a short bulleted list), thoroughly explaining the 'why' and 'what' of the changes to give a reviewer full context. Do NOT include any ANSI escape codes, terminal control sequences, or backspace characters in your output."
+
+  let ai_stdout = (try { ai-ask $final_context --system $system_prompt } catch {
+    print -e "Error running AI."
+    exit 1
+  })
+
+  let clean_json = ($ai_stdout | ansi strip | str replace -a "```json\n" "" | str replace -a "```\n" "" | str replace -a "```" "" | str trim)
+  
+  let parsed = (try { $clean_json | from json } catch {
+    print -e "Error: Failed to parse AI output as JSON."
+    print -e $"Raw output:\n($ai_stdout)"
+    exit 1
+  })
+
+  if ($parsed | is-empty) {
+    print -e "Error: AI returned empty JSON."
+    exit 1
+  }
+
+  # Clean the summaries to ensure they don't contain newlines, which breaks gum choose
+  let parsed = ($parsed | each { |it| 
+    let clean_sum = (try { $it.summary | str replace -a "\n" " " | str trim } catch { "" })
+    $it | update summary $clean_sum 
+  })
+
+  let summaries = ($parsed | get summary)
+  
+  # Join with newlines and pipe to gum choose
+  let chosen_summary = (try { $summaries | str join "\n" | ^gum choose | str trim } catch { "" })
+
+  if ($chosen_summary | is-empty) {
+    print "Aborted."
+    exit 0
+  }
+
+  let selected_matches = ($parsed | where summary == $chosen_summary)
+  if ($selected_matches | is-empty) {
+    print -e "Error: Selected summary not found in parsed options."
+    exit 1
+  }
+  
+  let selected_obj = ($selected_matches | first)
+  let full_message = $"($selected_obj.summary)\n\n($selected_obj.description)"
+
+  if $is_jj {
+    ^jj describe -m $full_message
+  } else {
+    ^git commit -m $full_message
+  }
+}

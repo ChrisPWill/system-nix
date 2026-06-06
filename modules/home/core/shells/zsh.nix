@@ -44,10 +44,19 @@
 
         zle -N viddy-widget
 
+        ai-commit-widget() {
+          zle -I
+          ai-commit < /dev/tty
+          zle reset-prompt
+        }
+
+        zle -N ai-commit-widget
+
         # Define extra bindings for zsh-vi-mode
         function zvm_after_init() {
           zvm_bindkey viins '^[o' tv-nvim-widget
           zvm_bindkey viins '^[w' viddy-widget
+          zvm_bindkey viins '^g' ai-commit-widget
           # Re-bind Atuin and Television which are often clobbered by vi-mode
           zvm_bindkey viins '^R' atuin-search-viins
           zvm_bindkey viins '^T' tv-smart-autocomplete

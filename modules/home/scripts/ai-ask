@@ -1,0 +1,22 @@
+#!/usr/bin/env nu
+
+def main [
+  prompt: string # The user prompt
+  --system (-s): string # The system prompt
+] {
+  let model = "qwen2.5-coder:3b"
+
+  if ($prompt | is-empty) {
+    print -e "Error: No input provided"
+    exit 1
+  }
+
+  if ($system | is-empty) {
+    print -e "Error: System prompt is required"
+    exit 1
+  }
+
+  let full_prompt = $"($system)\n\n($prompt)"
+  
+  ^ollama run $model $full_prompt
+}

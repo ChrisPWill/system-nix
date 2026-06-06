@@ -76,6 +76,16 @@
                           send: executehostcommand,
                           cmd: "let cmd = (commandline); if ($cmd | str length) > 0 { viddy -n 1 -- $cmd }"
                       }
+                  },
+                  {
+                      name: ai_commit,
+                      modifier: Control,
+                      keycode: char_g,
+                      mode: [vi_normal, vi_insert, emacs],
+                      event: {
+                          send: executehostcommand,
+                          cmd: "ai-commit"
+                      }
                   }
               ]
           )

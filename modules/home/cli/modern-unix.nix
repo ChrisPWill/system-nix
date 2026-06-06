@@ -21,6 +21,9 @@
       # Modern watch replacement
       viddy
 
+      # Glamorous shell scripts
+      gum
+
       # Terminal-based websocket client
       websocat
 
