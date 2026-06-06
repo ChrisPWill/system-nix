@@ -217,69 +217,78 @@ Each object must have a 'summary' field (the conventional commit title) and a 'd
     exit 0
   }
 
-  mut parsed = []
-  mut attempts = 0
-  let max_attempts = 3
+  mut selected_obj = null
 
-  while $attempts < $max_attempts {
-    print ("Generating commit messages with AI (attempt " + ($attempts + 1 | into string) + ")...")
+  while $selected_obj == null {
+    mut parsed = []
+    mut attempts = 0
+    let max_attempts = 3
 
-    let ai_stdout = (try { ai-ask $final_context --system $system_prompt } catch {
-      print -e "Error running AI."
+    while $attempts < $max_attempts {
+      print ("Generating commit messages with AI (attempt " + ($attempts + 1 | into string) + ")...")
+
+      let ai_stdout = (try { ai-ask $final_context --system $system_prompt } catch {
+        print -e "Error running AI."
+        exit 1
+      })
+
+      if $print_json {
+        print "=== AI JSON RESPONSE ==="
+        print $ai_stdout
+      }
+
+      let clean_json = (clean-ai-json $ai_stdout)
+      
+      let try_parse = (try { $clean_json | from json } catch { null })
+
+      if ($try_parse != null) and not ($try_parse | is-empty) {
+        $parsed = $try_parse
+        break
+      } else {
+        print -e "Error: Failed to parse AI output as JSON. Retrying..."
+        if ($attempts == ($max_attempts - 1)) {
+          print -e $"Raw output from final attempt:\n($ai_stdout)"
+        }
+        $attempts += 1
+      }
+    }
+
+    if ($parsed | is-empty) {
+      print -e "Error: AI failed to return valid JSON after multiple attempts."
       exit 1
+    }
+
+    # Clean the summaries to ensure they don't contain newlines, which breaks gum choose
+    let parsed = ($parsed | each { |it| 
+      let clean_sum = (try { $it.summary | str replace -a "\n" " " | str trim } catch { "" })
+      $it | update summary $clean_sum 
     })
 
-    if $print_json {
-      print "=== AI JSON RESPONSE ==="
-      print $ai_stdout
-    }
+    print-commit-options $parsed
 
-    let clean_json = (clean-ai-json $ai_stdout)
+    let summaries = (["<Retry>"] | append ($parsed | get summary))
     
-    let try_parse = (try { $clean_json | from json } catch { null })
+    # Join with newlines and pipe to gum choose
+    let chosen_summary = (try { $summaries | str join "\n" | ^gum choose | str trim } catch { "" })
 
-    if ($try_parse != null) and not ($try_parse | is-empty) {
-      $parsed = $try_parse
-      break
-    } else {
-      print -e "Error: Failed to parse AI output as JSON. Retrying..."
-      if ($attempts == ($max_attempts - 1)) {
-        print -e $"Raw output from final attempt:\n($ai_stdout)"
-      }
-      $attempts += 1
+    if ($chosen_summary | is-empty) {
+      print "Aborted."
+      exit 0
     }
+
+    if $chosen_summary == "<Retry>" {
+      continue
+    }
+
+    let selected_matches = ($parsed | where summary == $chosen_summary)
+    if ($selected_matches | is-empty) {
+      print -e "Error: Selected summary not found in parsed options."
+      exit 1
+    }
+    
+    $selected_obj = ($selected_matches | first)
   }
 
-  if ($parsed | is-empty) {
-    print -e "Error: AI failed to return valid JSON after multiple attempts."
-    exit 1
-  }
-
-  # Clean the summaries to ensure they don't contain newlines, which breaks gum choose
-  let parsed = ($parsed | each { |it| 
-    let clean_sum = (try { $it.summary | str replace -a "\n" " " | str trim } catch { "" })
-    $it | update summary $clean_sum 
-  })
-
-  print-commit-options $parsed
-
-  let summaries = ($parsed | get summary)
-  
-  # Join with newlines and pipe to gum choose
-  let chosen_summary = (try { $summaries | str join "\n" | ^gum choose | str trim } catch { "" })
-
-  if ($chosen_summary | is-empty) {
-    print "Aborted."
-    exit 0
-  }
-
-  let selected_matches = ($parsed | where summary == $chosen_summary)
-  if ($selected_matches | is-empty) {
-    print -e "Error: Selected summary not found in parsed options."
-    exit 1
-  }
-  
-  let selected_obj = ($selected_matches | first)
   let full_message = $"($selected_obj.summary)\n\n($selected_obj.description)"
 
   if $is_jj {
