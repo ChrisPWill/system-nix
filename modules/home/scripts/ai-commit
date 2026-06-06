@@ -5,7 +5,7 @@ def clean-ai-json [ai_stdout: string] {
 }
 
 def summarize-file-change [file: string, diff_content: string] {
-  let summary_prompt = "You are an expert software developer summarizing a single file change for commit message generation. Output concise plain text only, with no markdown block and no JSON. Summarize what changed in this file, why it likely changed when evident, and any behavior or integration impact. Do not write a commit message."
+  let summary_prompt = "You are an expert software developer summarizing a single file change for commit message generation. Output concise plain text only, with no markdown block and no JSON. Summarize what changed in this file, why it likely changed when evident, and any behavior or integration impact. It is in git diff format, meaning lines starting with '-' are removed lines, and lines starting with '+' are added lines."
   let file_context = $"FILE: ($file)\n\nDIFF:\n($diff_content)"
 
   try {
@@ -172,7 +172,7 @@ Example format:
   }
 ]
 
-Each object must have a 'summary' field (the conventional commit title) and a 'description' field. The 'description' MUST be detailed and informative (typically 2-4 sentences or a short bulleted list), thoroughly explaining the 'why' and 'what' of the changes to give a reviewer full context. Do NOT include any ANSI escape codes, terminal control sequences, or backspace characters. IMPORTANT: You must escape all newlines inside JSON string values as \\n."
+Each object must have a 'summary' field (the conventional commit title) and a 'description' field. The 'description' MUST be detailed and informative (typically 2-4 sentences or a short bulleted list), thoroughly explaining the 'why' and 'what' of the changes to give a reviewer full context. Do NOT include any ANSI escape codes, terminal control sequences, or backspace characters. IMPORTANT: You must escape all newlines inside JSON string values as \\n. Follow the hint from the user if possible."
 
   mut file_summaries = []
 
@@ -197,7 +197,7 @@ Each object must have a 'summary' field (the conventional commit title) and a 'd
   mut final_context = $"STATUS:\n($status_content)\n"
 
   if (($hint | default "" | str trim) | is-not-empty) {
-    $final_context = $"($final_context)\nUSER GUIDANCE:\n($hint | str trim)\n"
+    $final_context = $"($final_context)\nHINT FOR COMMIT MESSAGE FROM USER:\n($hint | str trim)\n"
   }
 
   $final_context = $"($final_context)\nFILE SUMMARIES:\n"
