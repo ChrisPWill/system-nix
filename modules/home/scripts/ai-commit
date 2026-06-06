@@ -4,8 +4,12 @@ def clean-ai-json [ai_stdout: string] {
   $ai_stdout | ansi strip | str replace -a "```json\n" "" | str replace -a "```\n" "" | str replace -a "```" "" | str trim
 }
 
+def file-summary-system-prompt [] {
+  "You are an expert software developer summarizing a single file change for commit message generation. Output concise plain text only, with no markdown block and no JSON. Summarize what changed in this file, why it likely changed when evident, and any behavior or integration impact. It is in git diff format, meaning lines starting with '-' are removed lines, and lines starting with '+' are added lines."
+}
+
 def summarize-file-change [file: string, diff_content: string] {
-  let summary_prompt = "You are an expert software developer summarizing a single file change for commit message generation. Output concise plain text only, with no markdown block and no JSON. Summarize what changed in this file, why it likely changed when evident, and any behavior or integration impact. It is in git diff format, meaning lines starting with '-' are removed lines, and lines starting with '+' are added lines."
+  let summary_prompt = (file-summary-system-prompt)
   let file_context = $"FILE: ($file)\n\nDIFF:\n($diff_content)"
 
   try {
@@ -149,7 +153,7 @@ def main [
     $status_content = (^git status | complete).stdout
   }
 
-  let summary_prompt = "You are an expert software developer summarizing a single file change for commit message generation. Output concise plain text only, with no markdown block and no JSON. Summarize what changed in this file, why it likely changed when evident, and any behavior or integration impact. Do not write a commit message."
+  let summary_prompt = (file-summary-system-prompt)
 
   if $print_prompt {
     print "=== FILE SUMMARY SYSTEM PROMPT ==="
