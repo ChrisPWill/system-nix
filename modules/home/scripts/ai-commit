@@ -38,6 +38,7 @@ def main [
       let file = ($parts.0 | str trim)
       let lines_changed = (try { $parts.1 | str trim | split row " " | get 0 | into int } catch { 0 })
       
+      # TODO: Also exclude complete deletions and file moves
       if $lines_changed > 1000 {
         $excluded_files = ($excluded_files | append $file)
       } else {
