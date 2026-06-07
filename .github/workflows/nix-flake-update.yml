@@ -105,6 +105,8 @@ jobs:
         uses: openai/codex-action@main
         with:
           openai-api-key: ${{ secrets.OPENAI_API_KEY }}
+          model: gpt-5.4-mini
+          effort: medium
           sandbox: danger-full-access
           prompt-file: ${{ steps.repair_prompt.outputs.prompt_file }}
 
