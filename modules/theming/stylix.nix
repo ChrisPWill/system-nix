@@ -10,6 +10,9 @@
   ];
 
   stylix.enable = true;
+  # nix-darwin and Stylix both track their upstream unstable branches here, so
+  # their release metadata can disagree briefly even while they share nixpkgs.
+  stylix.enableReleaseChecks = false;
   stylix.base16Scheme = "${inputs.stylix.inputs.tinted-schemes}/base16/onedark.yaml";
 
   stylix.fonts = {
