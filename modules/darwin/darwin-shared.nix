@@ -1,5 +1,6 @@
 {inputs, ...}: {
   config,
+  lib,
   pkgs,
   ...
 }: let
@@ -16,6 +17,23 @@ in {
     Hour = 3;
     Minute = 15;
     Weekday = 2;
+  };
+
+  # Home Manager owns the interactive zsh prompt and completions. Leaving the
+  # nix-darwin defaults on runs compinit before Home Manager runs it again.
+  programs.zsh = {
+    enableCompletion = false;
+    promptInit = "";
+  };
+
+  programs.fish = {
+    # The foreign-env bridge currently costs multiple seconds on each fish start
+    # even for empty shell snippets. Babelfish keeps the Darwin environment setup
+    # in native fish syntax.
+    useBabelfish = true;
+    interactiveShellInit = lib.mkForce ''
+      brew shellenv fish 2>/dev/null | source || true
+    '';
   };
 
   nix-homebrew = {

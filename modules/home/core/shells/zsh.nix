@@ -15,6 +15,7 @@
         fi
         if [[ ! -f ''${ZDOTDIR:-$HOME}/.zcompdump.zwc ||
               ''${ZDOTDIR:-$HOME}/.zcompdump -nt ''${ZDOTDIR:-$HOME}/.zcompdump.zwc ]]; then
+          rm -f ''${ZDOTDIR:-$HOME}/.zcompdump.zwc
           zcompile ''${ZDOTDIR:-$HOME}/.zcompdump
         fi
       '';
