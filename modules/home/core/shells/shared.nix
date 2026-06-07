@@ -34,10 +34,14 @@ in {
     # Shared shell-related programs
     programs.starship.enable = true;
     programs.starship.settings = {
-      right_format = "$os$shell$git_status$git_metrics$memory_usage";
-      command_timeout = 1000;
+      right_format = "$os$shell$memory_usage";
+      # Old format - can re-add once git is more optimised
+      # right_format = "$os$shell$git_status$git_metrics$memory_usage";
+      command_timeout = 100;
       cmd_duration.min_time = 200;
-      git_metrics.disabled = false;
+      # Disabled git prompt to improve performance
+      git_metrics.disabled = true;
+      git_status.disabled = true;
       memory_usage.disabled = false;
       memory_usage.threshold = 90;
       os.disabled = false;

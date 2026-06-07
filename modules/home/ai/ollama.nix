@@ -12,9 +12,7 @@ with lib; let
     then pkgs.ollama-cuda
     else pkgs.ollama;
 in {
-  options.services.local-ollama = {
-    enable = mkEnableOption "Local Ollama server for LLM code completions";
-  };
+  options.services.local-ollama.enable = mkEnableOption "Local Ollama server for LLM code completions";
 
   config = mkIf cfg.enable {
     home.packages = [ollamaPkg];
