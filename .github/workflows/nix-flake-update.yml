@@ -77,6 +77,8 @@ jobs:
             printf '\n'
             printf '%s\n' "Keep the update focused on flake input updates and compatibility fixes caused by those updates."
             printf '%s\n' "Do not refactor unrelated code or change user-facing configuration unless required by the update."
+            printf '%s\n' "If updated nixpkgs marks a package insecure or end-of-life, prefer updating or removing the stale package/output that caused evaluation to fail."
+            printf '%s\n' "Do not paper over update failures with NIXPKGS_ALLOW_INSECURE or broad permittedInsecurePackages exceptions unless the repo already documents that exact exception as intentional."
             printf '%s\n' "Leave a concise summary of what you changed."
             printf '\n'
 
