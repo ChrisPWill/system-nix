@@ -75,6 +75,9 @@ jobs:
             printf '%s\n' "- \`nix flake update\` succeeds"
             printf '%s\n' "- \`nix flake check -L\` succeeds on the GitHub Actions x86_64-linux runner"
             printf '\n'
+            printf '%s\n' "After making changes, run \`nix flake update\` and \`nix flake check -L\` yourself before finishing."
+            printf '%s\n' "You have full runner sandbox access for this repair step because Nix needs network and daemon-socket access."
+            printf '\n'
             printf '%s\n' "Keep the update focused on flake input updates and compatibility fixes caused by those updates."
             printf '%s\n' "Do not refactor unrelated code or change user-facing configuration unless required by the update."
             printf '%s\n' "If updated nixpkgs marks a package insecure or end-of-life, prefer updating or removing the stale package/output that caused evaluation to fail."
@@ -102,7 +105,7 @@ jobs:
         uses: openai/codex-action@main
         with:
           openai-api-key: ${{ secrets.OPENAI_API_KEY }}
-          sandbox: workspace-write
+          sandbox: danger-full-access
           prompt-file: ${{ steps.repair_prompt.outputs.prompt_file }}
 
       - name: Verify Codex repair
