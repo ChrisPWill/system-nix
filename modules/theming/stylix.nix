@@ -10,7 +10,7 @@
   ];
 
   stylix.enable = true;
-  stylix.base16Scheme = "${pkgs.base16-schemes}/share/themes/onedark.yaml";
+  stylix.base16Scheme = "${inputs.stylix.inputs.tinted-schemes}/base16/onedark.yaml";
 
   stylix.fonts = {
     monospace = {
