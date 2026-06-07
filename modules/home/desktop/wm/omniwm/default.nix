@@ -186,9 +186,9 @@
     };
 
     focus = {
-      followsMouse = false;
+      followsMouse = true;
       followsWindowToMonitor = true;
-      moveMouseToFocusedWindow = true;
+      moveMouseToFocusedWindow = false; # interacts badly with `followsMouse` making it center each time
     };
 
     gaps = {
