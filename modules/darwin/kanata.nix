@@ -22,9 +22,12 @@
     daemonPath = "/Library/Application Support/org.pqrs/Karabiner-DriverKit-VirtualHIDDevice/Applications/Karabiner-VirtualHIDDevice-Daemon.app/Contents/MacOS/Karabiner-VirtualHIDDevice-Daemon";
     managerPath = "/Applications/.Karabiner-VirtualHIDDevice-Manager.app/Contents/MacOS/Karabiner-VirtualHIDDevice-Manager";
   };
+  kanataStoreBinary = "${pkgs.kanata}/bin/kanata";
+  kanataStableDir = "/Library/Application Support/Kanata";
+  kanataStableBinary = "${kanataStableDir}/kanata";
   kanataCommandArgs =
     [
-      "${pkgs.kanata}/bin/kanata"
+      kanataStableBinary
       "--cfg"
       "${kanataConfig}"
     ]
@@ -36,6 +39,15 @@ in {
     ];
 
     system.activationScripts.extraActivation.text = lib.mkAfter ''
+      /bin/mkdir -p "${kanataStableDir}"
+      /usr/sbin/chown root:wheel "${kanataStableDir}"
+      /bin/chmod 0755 "${kanataStableDir}"
+
+      if ! /usr/bin/cmp -s "${kanataStoreBinary}" "${kanataStableBinary}"; then
+        /usr/bin/install -m 0555 -o root -g wheel "${kanataStoreBinary}" "${kanataStableBinary}.tmp"
+        /bin/mv "${kanataStableBinary}.tmp" "${kanataStableBinary}"
+      fi
+
       karabiner_virtual_hid_version="${karabinerVirtualHid.version}"
       karabiner_virtual_hid_receipt="${karabinerVirtualHid.receipt}"
       karabiner_virtual_hid_installed_version="$(
