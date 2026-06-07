@@ -8,8 +8,6 @@
     ./logseq-capture.nix
   ];
 
-  services.logseq-capture.enable = true;
-
   home.packages = with pkgs;
     [
       # Note taking

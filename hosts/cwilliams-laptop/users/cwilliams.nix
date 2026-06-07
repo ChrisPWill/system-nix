@@ -7,6 +7,7 @@
   ];
 
   services.local-ollama.enable = true;
+  services.logseq-capture.enable = true;
 
   hasNvidiaGpu = true;
 
