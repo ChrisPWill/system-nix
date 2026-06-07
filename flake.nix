@@ -34,13 +34,6 @@
     stylix.url = "github:nix-community/stylix";
     stylix.inputs.nixpkgs.follows = "nixpkgs";
 
-    astal.url = "github:aylur/astal";
-    astal.inputs.nixpkgs.follows = "nixpkgs";
-
-    ags.url = "github:aylur/ags";
-    ags.inputs.nixpkgs.follows = "nixpkgs";
-    ags.inputs.astal.follows = "astal";
-
     devshell.url = "github:numtide/devshell";
     devshell.inputs.nixpkgs.follows = "nixpkgs";
 
