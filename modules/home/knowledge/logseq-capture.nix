@@ -18,7 +18,7 @@ in {
 
   # config = lib.mkIf cfg.enable (lib.mkMerge [
   # Disabled until I figure out the knowledge-base input
-  config = lib.mkIf false (lib.mkMerge [
+  config = lib.mkIf config.services.logseq-capture.enable (lib.mkMerge [
     (lib.mkIf pkgs.stdenv.isLinux {
       systemd.user.services.logseq-capture = {
         Unit = {
