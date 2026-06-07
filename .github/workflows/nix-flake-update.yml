@@ -47,7 +47,7 @@ jobs:
         continue-on-error: true
         run: |
           set -o pipefail
-          nix flake show --json 2>&1 >/dev/null | tee "$RUNNER_TEMP/nix-flake-update-logs/nix-flake-eval.log"
+          nix flake check --no-build 2>&1 | tee "$RUNNER_TEMP/nix-flake-update-logs/nix-flake-eval.log"
 
       - name: Require OpenAI API key for Codex repair
         if: steps.update.outcome == 'failure' || steps.check.outcome == 'failure'
@@ -73,9 +73,9 @@ jobs:
             printf '\n'
             printf '%s\n' "Make the smallest appropriate changes so that:"
             printf '%s\n' "- \`nix flake update\` succeeds"
-            printf '%s\n' "- \`nix flake show --json\` succeeds on the GitHub Actions x86_64-linux runner"
+            printf '%s\n' "- \`nix flake check --no-build\` succeeds on the GitHub Actions x86_64-linux runner"
             printf '\n'
-            printf '%s\n' "After making changes, run \`nix flake update\` and \`nix flake show --json\` yourself before finishing."
+            printf '%s\n' "After making changes, run \`nix flake update\` and \`nix flake check --no-build\` yourself before finishing."
             printf '%s\n' "You have full runner sandbox access for this repair step because Nix needs network and daemon-socket access."
             printf '\n'
             printf '%s\n' "Keep the update focused on flake input updates and compatibility fixes caused by those updates."
@@ -115,7 +115,7 @@ jobs:
         run: |
           set -o pipefail
           nix flake update 2>&1 | tee "$RUNNER_TEMP/nix-flake-update-logs/nix-flake-update-after-codex.log"
-          nix flake show --json 2>&1 >/dev/null | tee "$RUNNER_TEMP/nix-flake-update-logs/nix-flake-eval-after-codex.log"
+          nix flake check --no-build 2>&1 | tee "$RUNNER_TEMP/nix-flake-update-logs/nix-flake-eval-after-codex.log"
 
       - name: Remove generated Codex prompt
         if: always()
@@ -144,7 +144,7 @@ jobs:
           body: |
             ## Summary
             - ${{ steps.path.outputs.summary }}
-            - Validation: `nix flake show --json`
+            - Validation: `nix flake check --no-build`
 
             ## Run
             - ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
