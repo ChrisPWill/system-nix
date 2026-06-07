@@ -1,0 +1,384 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+DEFAULT_HOST="cwilliams-work-laptop"
+DETERMINATE_INSTALL_CMD="curl -fsSL https://install.determinate.systems/nix | sh -s -- install"
+
+host=""
+dry_run=false
+no_install_nix=false
+skip_jj=false
+
+usage() {
+  cat <<'EOF'
+Usage: scripts/bootstrap-macos [OPTIONS]
+
+Bootstrap this nix-darwin configuration on macOS.
+
+Options:
+  --host <name>       Darwin configuration hostname to activate.
+  --dry-run           Run detection logic and print commands without changing the system.
+  --no-install-nix    Fail instead of prompting to install Nix when missing.
+  --skip-jj           Leave a Git-only clone unchanged.
+  -h, --help          Show this help text.
+
+Dry-run test overrides:
+  BOOTSTRAP_ASSUME_NIX=present|missing
+  BOOTSTRAP_ASSUME_JJ=present|missing
+  BOOTSTRAP_ASSUME_REPO=jj|git-only|none
+EOF
+}
+
+log() {
+  printf '%s\n' "$*"
+}
+
+die() {
+  printf 'error: %s\n' "$*" >&2
+  exit 1
+}
+
+quote_command() {
+  local arg
+  local separator=""
+
+  for arg in "$@"; do
+    printf '%s%q' "$separator" "$arg"
+    separator=" "
+  done
+
+  printf '\n'
+}
+
+print_command() {
+  printf '[dry-run] '
+  quote_command "$@"
+}
+
+run_command() {
+  if [[ $dry_run == true ]]; then
+    print_command "$@"
+  else
+    "$@"
+  fi
+}
+
+prompt_yes_no() {
+  local prompt="$1"
+  local reply
+
+  if [[ ! -t 0 ]]; then
+    return 1
+  fi
+
+  read -r -p "$prompt [y/N] " reply
+  [[ $reply =~ ^[Yy]$ ]]
+}
+
+command_exists() {
+  command -v "$1" >/dev/null 2>&1
+}
+
+ensure_sudo() {
+  if [[ "$(id -u)" -eq 0 ]]; then
+    log "Sudo: running as root."
+    return
+  fi
+
+  if [[ $dry_run == true ]]; then
+    log "[dry-run] would verify sudo/admin access"
+    print_command sudo -v
+    return
+  fi
+
+  log "Checking sudo/admin access..."
+  if ! sudo -v; then
+    die "this Mac user needs sudo/admin rights to install Nix or activate nix-darwin"
+  fi
+}
+
+parse_args() {
+  while [[ $# -gt 0 ]]; do
+    case "$1" in
+    --host)
+      [[ $# -ge 2 ]] || die "--host requires a hostname"
+      host="$2"
+      shift 2
+      ;;
+    --dry-run)
+      dry_run=true
+      shift
+      ;;
+    --no-install-nix)
+      no_install_nix=true
+      shift
+      ;;
+    --skip-jj)
+      skip_jj=true
+      shift
+      ;;
+    -h | --help)
+      usage
+      exit 0
+      ;;
+    *)
+      die "unknown option: $1"
+      ;;
+    esac
+  done
+}
+
+assert_test_overrides_are_safe() {
+  if [[ $dry_run == true ]]; then
+    return
+  fi
+
+  [[ -z ${BOOTSTRAP_ASSUME_NIX:-} ]] || die "BOOTSTRAP_ASSUME_NIX is only supported with --dry-run"
+  [[ -z ${BOOTSTRAP_ASSUME_JJ:-} ]] || die "BOOTSTRAP_ASSUME_JJ is only supported with --dry-run"
+  [[ -z ${BOOTSTRAP_ASSUME_REPO:-} ]] || die "BOOTSTRAP_ASSUME_REPO is only supported with --dry-run"
+}
+
+script_dir() {
+  local source="${BASH_SOURCE[0]}"
+  cd -- "$(dirname -- "$source")" >/dev/null 2>&1
+  pwd -P
+}
+
+repo_root() {
+  local dir
+  dir="$(script_dir)"
+  cd -- "${dir}/.." >/dev/null 2>&1
+  pwd -P
+}
+
+require_macos() {
+  local system_name
+  system_name="$(uname -s)"
+  [[ $system_name == "Darwin" ]] || die "this bootstrap script only supports macOS; detected ${system_name}"
+}
+
+select_host() {
+  local reply
+
+  if [[ -n $host ]]; then
+    return
+  fi
+
+  if [[ -t 0 ]]; then
+    read -r -p "Darwin hostname [${DEFAULT_HOST}]: " reply
+    host="${reply:-$DEFAULT_HOST}"
+  else
+    host="$DEFAULT_HOST"
+    log "No interactive stdin detected; using default hostname: ${host}"
+  fi
+}
+
+has_nix() {
+  case "${BOOTSTRAP_ASSUME_NIX:-auto}" in
+  auto | "")
+    command_exists nix
+    ;;
+  present)
+    return 0
+    ;;
+  missing)
+    return 1
+    ;;
+  *)
+    die "BOOTSTRAP_ASSUME_NIX must be present or missing"
+    ;;
+  esac
+}
+
+try_load_nix_profile() {
+  local nix_profile="/nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh"
+
+  if [[ -r $nix_profile ]]; then
+    # shellcheck disable=SC1090
+    . "$nix_profile" || true
+  fi
+}
+
+ensure_nix() {
+  if has_nix; then
+    if [[ $dry_run == true ]]; then
+      log "[dry-run] Nix: present"
+    else
+      log "Nix: $(nix --version)"
+    fi
+    return
+  fi
+
+  log "Nix is not installed or is not on PATH."
+
+  if [[ $no_install_nix == true ]]; then
+    die "install Nix first, or rerun without --no-install-nix to be prompted"
+  fi
+
+  if [[ $dry_run == true ]]; then
+    log "[dry-run] would prompt before installing Nix with Determinate"
+    log "[dry-run] ${DETERMINATE_INSTALL_CMD}"
+    log "[dry-run] would continue after Nix is available"
+    return
+  fi
+
+  if ! prompt_yes_no "Install Nix now using the Determinate installer?"; then
+    die "Nix is required before nix-darwin can be activated"
+  fi
+
+  sh -c "$DETERMINATE_INSTALL_CMD"
+  try_load_nix_profile
+
+  if ! command_exists nix; then
+    cat <<'EOF'
+
+Nix was installed, but this shell cannot see it yet.
+Open a new terminal and rerun:
+
+  ~/.system-nix/scripts/bootstrap-macos
+EOF
+    exit 0
+  fi
+}
+
+refresh_profile_path() {
+  local user_name
+  user_name="$(id -un)"
+
+  export PATH="/run/current-system/sw/bin:/etc/profiles/per-user/${user_name}/bin:${HOME}/.nix-profile/bin:${PATH}"
+}
+
+activate_darwin() {
+  local flake_ref=".#${host}"
+  local switch_cmd=(
+    nix
+    run
+    --no-write-lock-file
+    --inputs-from
+    .
+    nix-darwin
+    --
+    switch
+    --flake
+    "$flake_ref"
+  )
+
+  log "Activating nix-darwin host: ${host}"
+  run_command "${switch_cmd[@]}"
+}
+
+repo_state() {
+  case "${BOOTSTRAP_ASSUME_REPO:-auto}" in
+  auto | "")
+    if [[ -d .jj ]]; then
+      printf 'jj\n'
+    elif [[ -e .git ]]; then
+      printf 'git-only\n'
+    else
+      printf 'none\n'
+    fi
+    ;;
+  jj | git-only | none)
+    printf '%s\n' "$BOOTSTRAP_ASSUME_REPO"
+    ;;
+  *)
+    die "BOOTSTRAP_ASSUME_REPO must be jj, git-only, or none"
+    ;;
+  esac
+}
+
+has_jj() {
+  case "${BOOTSTRAP_ASSUME_JJ:-auto}" in
+  auto | "")
+    command_exists jj
+    ;;
+  present)
+    return 0
+    ;;
+  missing)
+    return 1
+    ;;
+  *)
+    die "BOOTSTRAP_ASSUME_JJ must be present or missing"
+    ;;
+  esac
+}
+
+ensure_jj_workspace() {
+  local state
+  state="$(repo_state)"
+
+  if [[ $skip_jj == true ]]; then
+    log "Skipping Jujutsu conversion because --skip-jj was provided."
+    return
+  fi
+
+  case "$state" in
+  jj)
+    log "Jujutsu: repo already has a .jj workspace."
+    ;;
+  git-only)
+    if ! has_jj; then
+      if [[ $dry_run == true ]]; then
+        log "[dry-run] Jujutsu: missing; would stop before converting the Git clone"
+        return
+      fi
+
+      die "jj is not available after activation; open a new shell and rerun this script"
+    fi
+
+    log "Converting Git clone to a colocated Jujutsu workspace."
+    run_command jj git init --colocate
+    ;;
+  none)
+    log "Jujutsu: no .git repository found; skipping conversion."
+    ;;
+  *)
+    die "unexpected repository state: ${state}"
+    ;;
+  esac
+}
+
+print_next_steps() {
+  cat <<EOF
+
+Post-install macOS steps:
+1. Open System Settings > Privacy & Security.
+2. Approve the pqrs.org Karabiner VirtualHIDDevice system extension if prompted.
+3. Grant Accessibility to kanata, OmniWM, and skhd.
+4. Grant Input Monitoring to kanata and OmniWM.
+5. Optional: grant Full Disk Access to OmniWM and skhd.
+
+Useful verification commands:
+  jj st
+  darwin-rebuild --version
+  launchctl print system/org.nixos.kanata
+EOF
+}
+
+main() {
+  local root
+
+  parse_args "$@"
+  assert_test_overrides_are_safe
+  require_macos
+  select_host
+
+  root="$(repo_root)"
+  cd -- "$root"
+  [[ -f flake.nix ]] || die "expected flake.nix in ${root}"
+
+  log "Repository: ${root}"
+  log "Hostname: ${host}"
+  [[ $dry_run == false ]] || log "Mode: dry run"
+
+  ensure_sudo
+  try_load_nix_profile
+  ensure_nix
+  activate_darwin
+  refresh_profile_path
+  ensure_jj_workspace
+  print_next_steps
+}
+
+main "$@"
