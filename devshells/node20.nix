@@ -4,9 +4,9 @@ in
   pkgs.mkShell {
     # Add build dependencies
     packages = with pkgs; [
-      nodejs_20
+      nodejs_22
       (yarn.override {
-        nodejs = nodejs_20;
+        nodejs = nodejs_22;
       })
     ];
 
@@ -21,13 +21,13 @@ in
 
     # Load custom bash code
     shellHook = ''
-      # Add node20 packages bin to PATH
+      # Add node22 packages bin to PATH
       export PATH="${
         if stdenv.isDarwin
         then "/Users"
         else "/home"
       }/cwilliams/.node22-packages/bin:$PATH"
 
-      export PS1="(node20) $PS1"
+      export PS1="(node22) $PS1"
     '';
   }
