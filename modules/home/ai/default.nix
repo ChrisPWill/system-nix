@@ -1,4 +1,10 @@
-{lib, ...}: {
+{
+  config,
+  lib,
+  ...
+}: let
+  scriptDir = "${config.homeModuleDir}/ai/scripts";
+in {
   options.home.ai = {
     agentProvider = lib.mkOption {
       type = lib.types.enum ["codex" "gemini" "antigravity" "none"];
@@ -21,4 +27,11 @@
     ./gemini.nix
     ./antigravity.nix
   ];
+
+  config = {
+    home.sessionPath = [scriptDir];
+    programs.nushell.extraEnv = ''
+      $env.PATH = ($env.PATH | split row (char esep) | append "${scriptDir}")
+    '';
+  };
 }

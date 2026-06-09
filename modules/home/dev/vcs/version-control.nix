@@ -3,7 +3,9 @@
   lib,
   pkgs,
   ...
-}: {
+}: let
+  scriptDir = "${config.homeModuleDir}/dev/vcs/scripts";
+in {
   home.packages = with pkgs; [
     # Neat TUI for jujutsu
     # https://github.com/Cretezy/lazyjj
@@ -12,6 +14,11 @@
     # Another fancy git UI
     tig
   ];
+
+  home.sessionPath = [scriptDir];
+  programs.nushell.extraEnv = ''
+    $env.PATH = ($env.PATH | split row (char esep) | append "${scriptDir}")
+  '';
 
   services.ssh-agent.enable = true;
   programs.ssh = {

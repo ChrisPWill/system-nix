@@ -16,6 +16,7 @@
   };
 
   inherit (neovimPackage) mainNixCatsPackageName;
+  scriptDir = "${config.homeModuleDir}/dev/editors/neovim/scripts";
 in {
   imports = [
     inputs.nixCats.homeModule
@@ -29,6 +30,11 @@ in {
 
   config = {
     programs.zsh.shellAliases."nvimconfig" = "(cd ${config.homeModuleDir}/dev/editors/neovim; ${mainNixCatsPackageName} ./config/init.lua)";
+
+    home.sessionPath = [scriptDir];
+    programs.nushell.extraEnv = ''
+      $env.PATH = ($env.PATH | split row (char esep) | append "${scriptDir}")
+    '';
 
     home.sessionVariables = {
       EDITOR = "meow";

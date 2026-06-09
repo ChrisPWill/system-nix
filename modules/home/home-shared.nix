@@ -47,11 +47,6 @@
   config = {
     nix.settings.experimental-features = ["nix-command" "flakes"];
 
-    home.sessionPath = ["${config.homeModuleDir}/scripts"];
-    programs.nushell.extraEnv = ''
-      $env.PATH = ($env.PATH | split row (char esep) | append "${config.homeModuleDir}/scripts")
-    '';
-
     home.stateVersion = "25.05";
 
     # Can likely remove this later

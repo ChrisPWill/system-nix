@@ -209,11 +209,12 @@
     workspaceKeys);
 
   # skhd wrappers
+  scriptDir = "${config.homeModuleDir}/desktop/wm/scripts";
   run = command: command;
   omni = command: run "omniwmctl command ${command}";
   openApp = application: run "open -a ${lib.escapeShellArg application}";
   openUrl = url: run "open ${lib.escapeShellArg url}";
-  script = name: lib.escapeShellArg "${config.homeModuleDir}/scripts/${name}";
+  script = name: lib.escapeShellArg "${scriptDir}/${name}";
   osascript = expression: run "osascript -e ${lib.escapeShellArg expression}";
   lockScreen = run "${lib.escapeShellArg "/System/Library/CoreServices/Menu Extras/User.menu/Contents/Resources/CGSession"} -suspend";
 in {
@@ -230,6 +231,11 @@ in {
   };
 
   config = {
+    home.sessionPath = [scriptDir];
+    programs.nushell.extraEnv = ''
+      $env.PATH = ($env.PATH | split row (char esep) | append "${scriptDir}")
+    '';
+
     home.desktop.wm.lib = {
       inherit toSkhdKey toNiriKey;
     };
