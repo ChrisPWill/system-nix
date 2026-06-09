@@ -34,8 +34,8 @@ in {
     # Shared shell-related programs
     programs.starship.enable = true;
     programs.starship.settings = {
-      format = "$all$custom$character";
-      right_format = "$os$shell$memory_usage";
+      format = "$all$character";
+      right_format = "$git_branch$git_commit$custom$os$shell$memory_usage";
       # Old format - can re-add once git is more optimised
       # right_format = "$os$shell$git_status$git_metrics$memory_usage";
       command_timeout = 100;
