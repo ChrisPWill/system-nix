@@ -2,11 +2,22 @@
   pkgs,
   config,
   lib,
+  inputs,
   ...
 }: {
   imports = [
     ./logseq-capture.nix
+    inputs.knowledge-base.homeManagerModules.knowledge-base
   ];
+
+  programs.knowledge-base.logseqShellSummary = {
+    enable = true;
+    personalPath = "${config.home.homeDirectory}/knowledge-base/personal";
+    workPath = "${config.home.homeDirectory}/knowledge-base/work";
+    countOnlyTags = ["inbox"];
+    digestTags = ["reminder"];
+    intervalSeconds = 3600;
+  };
 
   home.packages = with pkgs;
     [
