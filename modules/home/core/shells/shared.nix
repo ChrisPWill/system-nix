@@ -34,14 +34,27 @@ in {
     # Shared shell-related programs
     programs.starship.enable = true;
     programs.starship.settings = {
+      format = "$all$custom$character";
       right_format = "$os$shell$memory_usage";
       # Old format - can re-add once git is more optimised
       # right_format = "$os$shell$git_status$git_metrics$memory_usage";
       command_timeout = 100;
+      scan_timeout = 10;
       cmd_duration.min_time = 200;
+      direnv = {
+        disabled = false;
+        format = "[$symbol$loaded/$allowed]($style) ";
+      };
       # Disabled git prompt to improve performance
       git_metrics.disabled = true;
       git_status.disabled = true;
+      nix_shell = {
+        heuristic = true;
+        impure_msg = "impure";
+        pure_msg = "pure";
+        unknown_msg = "nix";
+        format = "[$symbol$state( \\($name\\))]($style) ";
+      };
       memory_usage.disabled = false;
       memory_usage.threshold = 90;
       os.disabled = false;
@@ -52,6 +65,14 @@ in {
       };
       shell.disabled = false;
       status.disabled = false;
+      custom.jj = {
+        when = "jj root --quiet";
+        command = "jj log -r @ --no-graph --ignore-working-copy --color never -T 'change_id.shortest(8)'";
+        shell = ["zsh"];
+        symbol = "jj ";
+        style = "bold purple";
+        format = "[$symbol$output]($style) ";
+      };
     };
   };
 }
