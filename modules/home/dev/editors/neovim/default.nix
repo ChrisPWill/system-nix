@@ -30,6 +30,45 @@ in {
 
   config = {
     programs.zsh.shellAliases."nvimconfig" = "(cd ${config.homeModuleDir}/dev/editors/neovim; ${mainNixCatsPackageName} ./config/init.lua)";
+    programs.zsh.initContent = ''
+      tv-nvim-widget() {
+        zle -I
+        tv-nvim < /dev/tty
+        zle reset-prompt
+      }
+
+      zle -N tv-nvim-widget
+
+      typeset -ga zvm_after_init_commands
+      zvm_after_init_commands+=("zvm_bindkey viins '^[o' tv-nvim-widget")
+    '';
+
+    programs.fish.interactiveShellInit = lib.mkAfter ''
+      for mode in default insert
+          bind --mode $mode \eo 'tv-nvim; commandline -f repaint'
+      end
+    '';
+
+    programs.nushell.extraConfig = ''
+      $env.config = (
+        $env.config
+        | upsert keybindings (
+            $env.config.keybindings
+            | append [
+                {
+                    name: tv_nvim,
+                    modifier: Alt,
+                    keycode: char_o,
+                    mode: [vi_normal, vi_insert, emacs],
+                    event: {
+                        send: executehostcommand,
+                        cmd: "tv-nvim"
+                    }
+                }
+            ]
+        )
+      )
+    '';
 
     home.sessionPath = [scriptDir];
     programs.nushell.extraEnv = ''

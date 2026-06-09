@@ -23,67 +23,8 @@
         # Enables vi(m)-like key bindings (insert mode by default)
         fish_vi_key_bindings
 
-        # TV picker for nvim
-        for mode in default insert
-            bind --mode $mode \eo 'tv-nvim; commandline -f repaint'
-        end
-
-        # Viddy current command
-        for mode in default insert
-            bind --mode $mode \ew 'set -l cmd (commandline); if test -n "$cmd"; commandline -r "viddy -n 1 -- $cmd"; commandline -f execute; end'
-        end
-
-        # AI Intentional Commits
-        for mode in default insert
-            bind --mode $mode \cg 'ai-commit; commandline -f repaint'
-        end
-
         ${pkgs.fastfetch}/bin/fastfetch -s title:separator:os:cpu:memory:host:chassis:kernel:de:wm:wmtheme:swap:disk:battery:poweradapter:uptime:separator:shell:font:terminal:terminalfont:break:colors
       '';
-
-      shellAbbrs = {
-        # Nix
-        # ---
-        nfc = "nix flake check";
-        nfu = "nix flake update";
-        # Nix shell "interactive"
-        nsi = {
-          expansion = "nix shell -p % --run fish";
-          setCursor = true;
-        };
-
-        # Jujutsu
-        # ---
-        jjrm = "jj rebase -s @ -d master@origin";
-        jjnm = {
-          expansion = "jj new master@origin -m \"%\"";
-          setCursor = true;
-        };
-
-        # Archives
-        # ---
-        zip = {
-          expansion = "ouch compress %<files> output.zip";
-          setCursor = true;
-        };
-        unzip = "ouch decompress";
-        unzipToDir = {
-          expansion = "ouch decompress -d %<dir> X.zip";
-          setCursor = true;
-        };
-
-        # Image/Video conversions
-        # ---
-        iconvert = {
-          expansion = "magick % output.png"; # imagemagick
-          setCursor = true;
-        };
-
-        vconvert = {
-          expansion = "ffmpeg -i % output.mp4";
-          setCursor = true;
-        };
-      };
 
       plugins = let
         fishP = name: {

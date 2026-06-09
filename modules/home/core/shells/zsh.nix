@@ -21,46 +21,13 @@
       '';
 
       initContent = ''
-        tv-nvim-widget() {
-          # Notify ZLE that we are going to use the terminal
-          zle -I
+        typeset -ga zvm_after_init_commands
 
-          # Run the command with stdin redirected to the terminal
-          # Also, use 'command' if it's a binary, or ensure the function is defined
-          tv-nvim < /dev/tty
-
-          # Redraw the prompt so your line doesn't look broken
-          zle reset-prompt
-        }
-
-        zle -N tv-nvim-widget
-
-        viddy-widget() {
-          local cmd=$BUFFER
-          if [[ -n $cmd ]]; then
-            BUFFER="viddy -n 1 -- $cmd"
-            zle accept-line
-          fi
-        }
-
-        zle -N viddy-widget
-
-        ai-commit-widget() {
-          zle -I
-          ai-commit < /dev/tty
-          zle reset-prompt
-        }
-
-        zle -N ai-commit-widget
-
-        # Define extra bindings for zsh-vi-mode
         function zvm_after_init() {
-          zvm_bindkey viins '^[o' tv-nvim-widget
-          zvm_bindkey viins '^[w' viddy-widget
-          zvm_bindkey viins '^g' ai-commit-widget
-          # Re-bind Atuin and Television which are often clobbered by vi-mode
-          zvm_bindkey viins '^R' atuin-search-viins
-          zvm_bindkey viins '^T' tv-smart-autocomplete
+          local zvm_command
+          for zvm_command in "''${zvm_after_init_commands[@]}"; do
+            eval "$zvm_command"
+          done
         }
       '';
 
@@ -87,8 +54,6 @@
       };
 
       shellAliases = {
-        # Quick alias to enable a devshell
-        nd = "f() { nix develop ${config.nixConfigDir}/.#$1 --command zsh };f";
       };
     };
   };

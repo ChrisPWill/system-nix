@@ -1,16 +1,16 @@
-# Shell Configuration Module
+# Core Shell Configuration
 
-This directory contains the configuration for various shells and shared shell-related tools.
+This directory contains foundational configuration for interactive shells.
 
 ## Structure
 
-- `shared.nix`: Common aliases, prompt (Starship), and shared shell utilities (zoxide, atuin, etc.) that apply across all installed shells.
-- `zsh.nix`: Zsh-specific configuration, plugins, and init scripts.
-- `fish.nix`: Fish-specific configuration, abbreviations, and interactive init logic.
-- `nushell.nix`: Nushell-specific configuration, environment variables, and plugins.
+- `shared.nix`: Common directory/navigation aliases and prompt configuration.
+- `zsh.nix`: Zsh enablement, completion, history, vi-mode, and shared vi-mode hook infrastructure.
+- `fish.nix`: Fish enablement, default-shell handoff, vi mode, and startup behavior.
+- `nushell.nix`: Nushell enablement, default-shell handoff, environment, settings, and plugins.
 
 ## Philosophy
 
-We aim to keep shell configuration as modular as possible. Common aliases and tools are defined in `shared.nix`, while shell-specific features (like Zsh widgets or Fish abbreviations) remain in their respective files.
+Core shell configuration should stay independent of higher-level tools. Tool-specific widgets, keybindings, abbreviations, aliases, and shell functions live in the domain module that owns the tool.
 
 See [CLI Tools & Hotkeys](../../cli/README.md) for a list of global interactive hotkeys (Alt-O, Alt-W, etc.) and modern Unix tools available across all shells.

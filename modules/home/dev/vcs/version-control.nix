@@ -87,4 +87,12 @@ in {
   programs.zsh.shellAliases.ljj = "lazyjj";
   programs.fish.shellAliases.ljj = "lazyjj";
   programs.nushell.shellAliases.ljj = "lazyjj";
+
+  programs.fish.shellAbbrs = {
+    jjrm = "jj rebase -s @ -d master@origin";
+    jjnm = {
+      expansion = "jj new master@origin -m \"%\"";
+      setCursor = true;
+    };
+  };
 }

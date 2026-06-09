@@ -3,6 +3,49 @@
   lib,
   ...
 }: {
+  programs.zsh.initContent = ''
+    viddy-widget() {
+      local cmd=$BUFFER
+      if [[ -n $cmd ]]; then
+        BUFFER="viddy -n 1 -- $cmd"
+        zle accept-line
+      fi
+    }
+
+    zle -N viddy-widget
+
+    typeset -ga zvm_after_init_commands
+    zvm_after_init_commands+=("zvm_bindkey viins '^[w' viddy-widget")
+    zvm_after_init_commands+=("zvm_bindkey viins '^R' atuin-search-viins")
+  '';
+
+  programs.fish.interactiveShellInit = lib.mkAfter ''
+    for mode in default insert
+        bind --mode $mode \ew 'set -l cmd (commandline); if test -n "$cmd"; commandline -r "viddy -n 1 -- $cmd"; commandline -f execute; end'
+    end
+  '';
+
+  programs.nushell.extraConfig = ''
+    $env.config = (
+      $env.config
+      | upsert keybindings (
+          $env.config.keybindings
+          | append [
+              {
+                  name: viddy_command,
+                  modifier: Alt,
+                  keycode: char_w,
+                  mode: [vi_normal, vi_insert, emacs],
+                  event: {
+                      send: executehostcommand,
+                      cmd: "let cmd = (commandline); if ($cmd | str length) > 0 { viddy -n 1 -- $cmd }"
+                  }
+              }
+          ]
+      )
+    )
+  '';
+
   home.packages = with pkgs;
     [
       # Fast alternative to find

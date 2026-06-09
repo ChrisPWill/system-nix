@@ -1,4 +1,9 @@
 {pkgs, ...}: {
+  programs.zsh.initContent = ''
+    typeset -ga zvm_after_init_commands
+    zvm_after_init_commands+=("zvm_bindkey viins '^T' tv-smart-autocomplete")
+  '';
+
   home.packages = with pkgs; [
     tealdeer
     nix-search-cli # useful for searching for packages
