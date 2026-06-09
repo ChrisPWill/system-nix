@@ -142,7 +142,7 @@ in {
         AppleKeyboardUIMode = 3;
         ApplePressAndHoldEnabled = false;
         AppleFontSmoothing = 1;
-        _HIHideMenuBar = false;
+        _HIHideMenuBar = true;
         InitialKeyRepeat = 15;
         KeyRepeat = 1;
         "com.apple.mouse.tapBehavior" = 1;
