@@ -66,12 +66,12 @@ in {
       shell.disabled = false;
       status.disabled = false;
       custom.jj = {
-        when = "jj root --quiet";
-        command = "jj log -r @ --no-graph --ignore-working-copy --color never -T 'change_id.shortest(8)'";
+        when = true;
+        command = "id=$(jj log -r @ --no-graph --ignore-working-copy --color never -T 'change_id.shortest(8)' 2>/dev/null) && printf 'jj %s ' \"$id\"";
         shell = ["zsh"];
-        symbol = "jj ";
+        symbol = "";
         style = "bold purple";
-        format = "[$symbol$output]($style) ";
+        format = "[$output]($style)";
       };
     };
   };
