@@ -90,7 +90,7 @@ in {
 
   config = {
     home.desktop.wm.toggleApps =
-      lib.optionalAttrs (!config.isPersonalMachine) {
+      lib.optionalAttrs (config.isPersonalMachine) {
         discord = {
           key = "cmd+alt+ctrl-d";
           appId = "discord";
