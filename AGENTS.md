@@ -4,13 +4,13 @@ Modular Nix system configuration managed with [numtide/blueprint](https://github
 
 ## Quick Reference
 
-| Alias       | Action                                                  |
-| :---------- | :------------------------------------------------------ |
-| `nhs`       | Preferred smart switch via `nh`                         |
-| `hms`       | Deprecated compatibility command for `nh home switch`   |
-| `nrs`       | Deprecated compatibility command for `nh os switch`     |
-| `drs`       | Deprecated compatibility command for `nh darwin switch` |
-| `nd <name>` | `nix develop .#<name>`                                  |
+| Alias       | Action                                                        |
+| :---------- | :------------------------------------------------------------ |
+| `nhs`       | Preferred smart switch via `nh` using this flake/current host |
+| `hms`       | Deprecated compatibility command for `nh home switch`         |
+| `nrs`       | Deprecated compatibility command for `nh os switch`           |
+| `drs`       | Deprecated compatibility command for `nh darwin switch`       |
+| `nd <name>` | `nix develop .#<name>`                                        |
 
 ## Global Leader
 

@@ -82,13 +82,13 @@ nix flake init -t .#rust-simple
 
 ## 🚀 Common Commands
 
-| Alias       | Command                | Description                                          |
-| :---------- | :--------------------- | :--------------------------------------------------- |
-| `nhs`       | `nh <platform> switch` | Smart switch for nix-darwin, NixOS, or Home Manager. |
-| `hms`       | `nh home switch`       | Deprecated compatibility command for Home Manager.   |
-| `nrs`       | `nh os switch`         | Deprecated compatibility command for NixOS.          |
-| `drs`       | `nh darwin switch`     | Deprecated compatibility command for nix-darwin.     |
-| `nd <name>` | `nix develop .#<name>` | Enter a devshell (e.g., `nd node24`).                |
+| Alias       | Command                | Description                                         |
+| :---------- | :--------------------- | :-------------------------------------------------- |
+| `nhs`       | `nh <platform> switch` | Smart switch using this flake and the current host. |
+| `hms`       | `nh home switch`       | Deprecated shim using this flake and home config.   |
+| `nrs`       | `nh os switch`         | Deprecated shim using this flake and current host.  |
+| `drs`       | `nh darwin switch`     | Deprecated shim using this flake and current host.  |
+| `nd <name>` | `nix develop .#<name>` | Enter a devshell (e.g., `nd node24`).               |
 
 ---
 

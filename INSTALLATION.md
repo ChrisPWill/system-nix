@@ -103,7 +103,8 @@ launchctl print system/org.nixos.kanata
 ```
 
 After the first successful activation, future rebuilds use `nhs`, which routes
-to the correct `nh` switch command for the current platform:
+to the correct `nh` switch command for the current platform and defaults to this
+flake plus the current hostname:
 
 ```bash
 nhs
