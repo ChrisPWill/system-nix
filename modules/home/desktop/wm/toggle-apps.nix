@@ -3,18 +3,23 @@
   lib,
   ...
 }: let
+  # To add a toggle for an app that is already running:
+  # - NixOS/niri: run `niri msg --json windows` and use the target window's
+  #   `app_id` for niri.appId. Use `title` only when app_id is too broad.
+  # - macOS/OmniWM: run `omniwmctl query windows --format json` and inspect the
+  #   target window's `app.name`, `app.bundleId`, and `title`. Use the stable
+  #   app/name or bundle identifier for omni.appId, and the macOS app name/title
+  #   for omni.title.
+  # - command is the platform-specific launch command used when the app is not
+  #   running. Prefer the Linux binary name on niri; on macOS this can be the
+  #   application name used by `open -a` when there is no matching command on PATH.
   inherit (lib) mkOption types;
 
   scriptDir = "${config.homeModuleDir}/desktop/wm/scripts";
   togglePinned = "${scriptDir}/toggle-pinned";
 
-  toggleAppType = types.submodule {
+  toggleTargetType = types.submodule {
     options = {
-      key = mkOption {
-        type = types.str;
-        description = "Shared keybinding used to toggle this app.";
-      };
-
       appId = mkOption {
         type = types.str;
         description = "Window/app identifier matched by toggle-pinned.";
@@ -25,22 +30,37 @@
         description = "Command used to launch the app when it is not already running.";
       };
 
+      title = mkOption {
+        type = types.nullOr types.str;
+        default = null;
+        description = "Optional title matcher passed to toggle-pinned.";
+      };
+    };
+  };
+
+  toggleAppType = types.submodule {
+    options = {
+      key = mkOption {
+        type = types.str;
+        description = "Shared keybinding used to toggle this app.";
+      };
+
       description = mkOption {
         type = types.nullOr types.str;
         default = null;
         description = "Description shown in keybinding overlays.";
       };
 
-      niriTitle = mkOption {
-        type = types.nullOr types.str;
+      niri = mkOption {
+        type = types.nullOr toggleTargetType;
         default = null;
-        description = "Optional niri window title matcher passed to toggle-pinned.";
+        description = "niri-specific app match and launch settings.";
       };
 
-      omniTitle = mkOption {
-        type = types.nullOr types.str;
+      omni = mkOption {
+        type = types.nullOr toggleTargetType;
         default = null;
-        description = "Optional macOS application/title matcher passed to toggle-pinned.";
+        description = "OmniWM-specific app match and launch settings.";
       };
 
       floating = mkOption {
@@ -53,33 +73,31 @@
 
   niriSpawn = args: ''spawn ${lib.concatMapStringsSep " " builtins.toJSON args};'';
 
-  titleArgs = app: title:
+  titleArgs = floating: title:
     if title != null
     then [title]
-    else lib.optional (!app.floating) "";
+    else lib.optional (!floating) "";
 
-  toggleArgs = app: title:
+  targetArgs = target: floating:
     [
-      "toggle-pinned"
-      app.appId
-      app.command
+      target.appId
+      target.command
     ]
-    ++ titleArgs app title
-    ++ lib.optional (!app.floating) "false";
+    ++ titleArgs floating target.title
+    ++ lib.optional (!floating) "false";
 
-  omniArgs = app:
-    [
-      togglePinned
-      app.appId
-      app.command
-    ]
-    ++ titleArgs app app.omniTitle
-    ++ lib.optional (!app.floating) "false";
+  hasTarget = app: app.niri != null || app.omni != null;
 
   mkToggleKeybind = _name: app: {
     inherit (app) key description;
-    niri = niriSpawn (toggleArgs app app.niriTitle);
-    omni = lib.escapeShellArgs (omniArgs app);
+    niri =
+      if app.niri != null
+      then niriSpawn (["toggle-pinned"] ++ targetArgs app.niri app.floating)
+      else null;
+    omni =
+      if app.omni != null
+      then lib.escapeShellArgs ([togglePinned] ++ targetArgs app.omni app.floating)
+      else null;
   };
 in {
   options.home.desktop.wm.toggleApps = mkOption {
@@ -93,41 +111,65 @@ in {
       lib.optionalAttrs (config.isPersonalMachine) {
         discord = {
           key = "cmd+alt+ctrl-d";
-          appId = "discord";
-          command = "Discord";
-          omniTitle = "Discord";
           description = "Toggle Discord";
+          niri = {
+            appId = "discord";
+            command = "Discord";
+          };
+          omni = {
+            appId = "discord";
+            command = "Discord";
+            title = "Discord";
+          };
         };
 
         signal = {
           key = "cmd+alt+ctrl-s";
-          appId = "signal";
-          command = "signal-desktop";
-          omniTitle = "Signal";
           description = "Toggle Signal";
+          niri = {
+            appId = "signal";
+            command = "signal-desktop";
+          };
+          omni = {
+            appId = "signal";
+            command = "signal-desktop";
+            title = "Signal";
+          };
         };
       }
       // {
         obsidian = {
           key = "cmd+alt+ctrl-o";
-          appId = "electron";
-          command = "obsidian";
-          niriTitle = "Obsidian";
-          omniTitle = "Obsidian";
           description = "Toggle Obsidian";
+          niri = {
+            appId = "electron";
+            command = "obsidian";
+            title = "Obsidian";
+          };
+          omni = {
+            appId = "electron";
+            command = "obsidian";
+            title = "Obsidian";
+          };
         };
 
         logseq = {
           key = "cmd+alt+ctrl-backslash";
-          appId = "logseq";
-          command = "logseq";
-          niriTitle = "logseq";
-          omniTitle = "Logseq";
           description = "Toggle LogSeq";
+          niri = {
+            appId = "logseq";
+            command = "logseq";
+            title = "logseq";
+          };
+          omni = {
+            appId = "logseq";
+            command = "logseq";
+            title = "Logseq";
+          };
         };
       };
 
     home.desktop.wm.keybinds =
-      lib.mapAttrsToList mkToggleKeybind config.home.desktop.wm.toggleApps;
+      lib.mapAttrsToList mkToggleKeybind (lib.filterAttrs (_name: hasTarget) config.home.desktop.wm.toggleApps);
   };
 }
