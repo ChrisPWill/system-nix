@@ -12,10 +12,17 @@
     "/nix/var/nix/profiles/default/bin"
     "$PATH"
   ];
+  skhdBinary = "/Library/Application Support/Skhd/skhd";
   unsupportedSkhdKeys = [
     "xf86launch1"
     "ctrl-xf86launch1"
     "alt-xf86launch1"
+    "print"
+    "ctrl-print"
+    "alt-print"
+    "fn-f10"
+    "fn-f11"
+    "fn-f12"
   ];
 
   # Generate skhdrc strings for all binds with an `omni` action
@@ -28,12 +35,25 @@ in {
   ];
 
   config = lib.mkIf pkgs.stdenv.isDarwin {
-    services.skhd = {
-      enable = true;
-      errorLogFile = "${config.home.homeDirectory}/Library/Logs/skhd.err.log";
-      outLogFile = "${config.home.homeDirectory}/Library/Logs/skhd.out.log";
+    home.packages = [pkgs.skhd];
 
-      config = skhdBinds;
+    xdg.configFile."skhd/skhdrc".text = skhdBinds;
+
+    launchd.agents.skhd = {
+      enable = true;
+      config = {
+        ProgramArguments = [
+          skhdBinary
+        ];
+        RunAtLoad = true;
+        KeepAlive = true;
+        ProcessType = "Interactive";
+        EnvironmentVariables = {
+          PATH = commandPath;
+        };
+        StandardErrorPath = "${config.home.homeDirectory}/Library/Logs/skhd.err.log";
+        StandardOutPath = "${config.home.homeDirectory}/Library/Logs/skhd.out.log";
+      };
     };
   };
 }

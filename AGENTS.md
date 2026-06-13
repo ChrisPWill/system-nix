@@ -12,15 +12,15 @@ Modular Nix system configuration managed with [numtide/blueprint](https://github
 | `drs`       | Deprecated compatibility command for `nh darwin switch` |
 | `nd <name>` | `nix develop .#<name>`                                  |
 
-## Global Leader (Kanata/Niri)
+## Global Leader
 
-The system implements a **Global Leader** capability using **Kanata** for keyboard layers and **Niri** for window management.
+The system implements a **Global Leader** capability using **Kanata** for keyboard layers, with platform window-manager bindings handled by **skhd/OmniWM** on macOS and **Niri** on NixOS.
 
 - **Caps Lock** acts as the Global Leader:
   - **Tap:** Sends `Esc`.
   - **Hold:** Activates the primary window-manager layer as **`Win/Cmd+Alt`**.
   - **Double-tap hold:** Activates the shifted layer as **`Win/Cmd+Alt+Shift`**.
-- This allows for consistent, mnemonic, system-wide hotkeys that can be configured in both Kanata (at the hardware level) and Niri (as window manager actions).
+- This allows for consistent, mnemonic, system-wide hotkeys that can be configured in both Kanata (at the hardware level) and the platform window manager.
 - **Note:** New global leader hotkeys must be bound in the platform window-manager config after Kanata emits the shared modifier chord.
 
 ## Development Conventions

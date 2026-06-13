@@ -49,9 +49,9 @@ Following a **Domain-Driven Design (DDD)** approach, configuration is organized 
 
 ## ✨ Key Features
 
-### ⌨️ Global Leader (Kanata/Niri)
+### ⌨️ Global Leader
 
-The system implements a **Global Leader** capability using **Kanata** for hardware-level keyboard layers and **Niri** for window management.
+The system implements a **Global Leader** capability using **Kanata** for hardware-level keyboard layers, with platform window-manager bindings handled by **skhd/OmniWM** on macOS and **Niri** on NixOS.
 
 - **Caps Lock** acts as the Leader: **Tap** for `Esc`, **Hold** for `Win/Cmd+Alt`, **Double-tap hold** for `Win/Cmd+Alt+Shift`.
 - This enables consistent, mnemonic hotkeys across all environments.

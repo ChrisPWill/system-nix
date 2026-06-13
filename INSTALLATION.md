@@ -81,15 +81,15 @@ After the initial activation, open **System Settings > Privacy & Security** and
 grant:
 
 1. **Accessibility**
-   - `kanata`
+   - `/Library/Application Support/Kanata/kanata`
    - `OmniWM`
-   - `skhd`
+   - `/Library/Application Support/Skhd/skhd`
 2. **Input Monitoring**
-   - `kanata`
+   - `/Library/Application Support/Kanata/kanata`
    - `OmniWM`
+   - `/Library/Application Support/Skhd/skhd`
 3. **Full Disk Access** (optional but useful)
    - `OmniWM`
-   - `skhd`
 
 Approve the **pqrs.org Karabiner VirtualHIDDevice** system extension when macOS
 prompts for it. This is required for Kanata's virtual keyboard support.
@@ -136,11 +136,35 @@ tail -n 100 /var/log/karabiner-vhidmanager.log
 
 ### Kanata is not responding
 
-Confirm Accessibility and Input Monitoring permissions for `kanata`, then check:
+Confirm Accessibility and Input Monitoring permissions for
+`/Library/Application Support/Kanata/kanata`, then check:
 
 ```bash
 launchctl print system/org.nixos.kanata
 tail -n 100 /var/log/kanata.log
+```
+
+### skhd hotkeys are not responding
+
+Confirm Accessibility and Input Monitoring permissions for
+`/Library/Application Support/Skhd/skhd`. The LaunchAgent intentionally runs this
+stable binary instead of a Nix store or profile symlink so macOS permissions
+survive rebuilds.
+
+Check the service and logs:
+
+```bash
+launchctl print gui/$(id -u)/org.nix-community.home.skhd
+tail -n 100 ~/Library/Logs/skhd.err.log
+tail -n 100 ~/Library/Logs/skhd.out.log
+```
+
+After changing permissions, restart the agent:
+
+```bash
+launchctl bootout gui/$(id -u) ~/Library/LaunchAgents/org.nix-community.home.skhd.plist 2>/dev/null || true
+launchctl bootstrap gui/$(id -u) ~/Library/LaunchAgents/org.nix-community.home.skhd.plist
+launchctl kickstart -k gui/$(id -u)/org.nix-community.home.skhd
 ```
 
 ## Other Platforms

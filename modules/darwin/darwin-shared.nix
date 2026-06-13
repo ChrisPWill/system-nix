@@ -11,6 +11,7 @@ in {
     inputs.nix-homebrew.darwinModules.nix-homebrew
     inputs.stylix.darwinModules.stylix
     inputs.self.modules.theming.theme
+    ./skhd.nix
   ];
   nix.settings.experimental-features = ["nix-command" "flakes"];
   nix.gc.interval = {
