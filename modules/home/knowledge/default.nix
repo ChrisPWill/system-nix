@@ -12,6 +12,7 @@
 
   programs.knowledge-base.logseqShellSummary = {
     enable = true;
+    package = inputs.knowledge-base.packages.${pkgs.stdenv.hostPlatform.system}.knowledge-base-summary;
     personalPath = "${config.home.homeDirectory}/knowledge-base/personal";
     workPath = "${config.home.homeDirectory}/knowledge-base/work";
     countOnlyTags = ["inbox"];
