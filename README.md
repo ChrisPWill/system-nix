@@ -82,12 +82,13 @@ nix flake init -t .#rust-simple
 
 ## 🚀 Common Commands
 
-| Alias       | Command                               | Description                           |
-| :---------- | :------------------------------------ | :------------------------------------ |
-| `hms`       | `home-manager switch --flake .`       | Rebuild Home Manager profile.         |
-| `nrs`       | `sudo nixos-rebuild switch --flake .` | Rebuild NixOS (Linux).                |
-| `drs`       | `darwin-rebuild switch --flake .`     | Rebuild nix-darwin (macOS).           |
-| `nd <name>` | `nix develop .#<name>`                | Enter a devshell (e.g., `nd node24`). |
+| Alias       | Command                | Description                                          |
+| :---------- | :--------------------- | :--------------------------------------------------- |
+| `nhs`       | `nh <platform> switch` | Smart switch for nix-darwin, NixOS, or Home Manager. |
+| `hms`       | `nh home switch`       | Deprecated compatibility command for Home Manager.   |
+| `nrs`       | `nh os switch`         | Deprecated compatibility command for NixOS.          |
+| `drs`       | `nh darwin switch`     | Deprecated compatibility command for nix-darwin.     |
+| `nd <name>` | `nix develop .#<name>` | Enter a devshell (e.g., `nd node24`).                |
 
 ---
 

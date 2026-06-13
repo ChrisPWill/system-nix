@@ -1,17 +1,7 @@
 # Common shell configuration shared across Zsh, Fish, and Nushell.
 # This includes aliases, prompt settings (Starship), and shared CLI tools.
-{
-  config,
-  lib,
-  pkgs,
-  ...
-}: let
+{...}: let
   commonAliases = {
-    # NixOS/Darwin switch aliases
-    hms = lib.mkIf config.programs.home-manager.enable "home-manager switch --flake ${config.nixConfigDir}/.";
-    drs = lib.mkIf pkgs.stdenv.isDarwin "sudo /run/current-system/sw/bin/darwin-rebuild switch --flake ${config.nixConfigDir}/.";
-    nrs = lib.mkIf (pkgs.stdenv.isLinux && !config.programs.home-manager.enable) "sudo nixos-rebuild switch --flake ${config.nixConfigDir}/.";
-
     # Common directory navigation
     ".." = "cd ..";
     "..." = "cd ../..";

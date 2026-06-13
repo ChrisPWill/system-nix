@@ -4,12 +4,13 @@ Modular Nix system configuration managed with [numtide/blueprint](https://github
 
 ## Quick Reference
 
-| Alias       | Action                                         |
-| :---------- | :--------------------------------------------- |
-| `hms`       | `home-manager switch --flake .`                |
-| `nrs`       | `sudo nixos-rebuild switch --flake .` (Linux)  |
-| `drs`       | `sudo darwin-rebuild switch --flake .` (macOS) |
-| `nd <name>` | `nix develop .#<name>`                         |
+| Alias       | Action                                                  |
+| :---------- | :------------------------------------------------------ |
+| `nhs`       | Preferred smart switch via `nh`                         |
+| `hms`       | Deprecated compatibility command for `nh home switch`   |
+| `nrs`       | Deprecated compatibility command for `nh os switch`     |
+| `drs`       | Deprecated compatibility command for `nh darwin switch` |
+| `nd <name>` | `nix develop .#<name>`                                  |
 
 ## Global Leader (Kanata/Niri)
 
