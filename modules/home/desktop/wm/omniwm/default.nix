@@ -13,6 +13,11 @@
   workspaces = import ./workspaces.nix {inherit omniwmLib;};
 
   settings = {
+    monitorBarOverrides = [];
+    monitorDwindleOverrides = [];
+    monitorNiriOverrides = [];
+    monitorOrientationOverrides = [];
+
     appearance.mode = "dark";
 
     borders = {
@@ -28,6 +33,13 @@
       smartSplit = false;
       splitWidthMultiplier = 1.0;
       useGlobalGaps = true;
+    };
+
+    clipboard = {
+      historyEnabled = false;
+      maxItemBytes = 8388608;
+      maxItems = 200;
+      maxTotalBytes = 67108864;
     };
 
     focus = {
@@ -50,11 +62,10 @@
       animationsEnabled = true;
       defaultLayoutType = "niri";
       hotkeysEnabled = false;
-      hyperTrigger = "Option";
+      hyperKeyHoldThresholdMilliseconds = 150;
+      hyperTrigger = "Left Option";
       ipcEnabled = true;
-      leaderKey = "Hyper+Space";
       preventSleepEnabled = false;
-      sequenceTimeoutMilliseconds = 800;
       updateChecksEnabled = true;
     };
 
