@@ -218,6 +218,10 @@
   osascript = expression: run "osascript -e ${lib.escapeShellArg expression}";
   lockScreen = run "${lib.escapeShellArg "/System/Library/CoreServices/Menu Extras/User.menu/Contents/Resources/CGSession"} -suspend";
 in {
+  imports = [
+    ./toggle-apps.nix
+  ];
+
   options.home.desktop.wm.keybinds = mkOption {
     type = types.listOf keybindType;
     default = [];
@@ -325,30 +329,6 @@ in {
           key = "cmd+alt+ctrl-y";
           niri = ''spawn "ghostty" "--title=ghostty-floating" "-e" "lazyjournal";'';
           description = "Open LazyJournal";
-        }
-        {
-          key = "cmd+alt+ctrl-d";
-          niri = ''spawn "toggle-pinned" "discord" "Discord";'';
-          omni = run "${script "toggle-pinned"} discord Discord Discord";
-          description = "Toggle Discord";
-        }
-        {
-          key = "cmd+alt+ctrl-s";
-          niri = ''spawn "toggle-pinned" "signal" "signal-desktop";'';
-          omni = run "${script "toggle-pinned"} signal Signal Signal";
-          description = "Toggle Signal";
-        }
-        {
-          key = "cmd+alt+ctrl-o";
-          niri = ''spawn "toggle-pinned" "electron" "obsidian" "Obsidian";'';
-          omni = run "${script "toggle-pinned"} electron obsidian Obsidian";
-          description = "Toggle Obsidian";
-        }
-        {
-          key = "cmd+alt+ctrl-backslash";
-          niri = ''spawn "toggle-pinned" "logseq" "logseq" "logseq";'';
-          omni = run "${script "toggle-pinned"} logseq logseq Logseq";
-          description = "Toggle LogSeq";
         }
 
         # Security
