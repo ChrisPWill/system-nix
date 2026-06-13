@@ -89,41 +89,43 @@ in {
   };
 
   config = {
-    home.desktop.wm.toggleApps = {
-      discord = {
-        key = "cmd+alt+ctrl-d";
-        appId = "discord";
-        command = "Discord";
-        omniTitle = "Discord";
-        description = "Toggle Discord";
-      };
+    home.desktop.wm.toggleApps =
+      lib.optionalAttrs (!config.isPersonalMachine) {
+        discord = {
+          key = "cmd+alt+ctrl-d";
+          appId = "discord";
+          command = "Discord";
+          omniTitle = "Discord";
+          description = "Toggle Discord";
+        };
 
-      signal = {
-        key = "cmd+alt+ctrl-s";
-        appId = "signal";
-        command = "signal-desktop";
-        omniTitle = "Signal";
-        description = "Toggle Signal";
-      };
+        signal = {
+          key = "cmd+alt+ctrl-s";
+          appId = "signal";
+          command = "signal-desktop";
+          omniTitle = "Signal";
+          description = "Toggle Signal";
+        };
+      }
+      // {
+        obsidian = {
+          key = "cmd+alt+ctrl-o";
+          appId = "electron";
+          command = "obsidian";
+          niriTitle = "Obsidian";
+          omniTitle = "Obsidian";
+          description = "Toggle Obsidian";
+        };
 
-      obsidian = {
-        key = "cmd+alt+ctrl-o";
-        appId = "electron";
-        command = "obsidian";
-        niriTitle = "Obsidian";
-        omniTitle = "Obsidian";
-        description = "Toggle Obsidian";
+        logseq = {
+          key = "cmd+alt+ctrl-backslash";
+          appId = "logseq";
+          command = "logseq";
+          niriTitle = "logseq";
+          omniTitle = "Logseq";
+          description = "Toggle LogSeq";
+        };
       };
-
-      logseq = {
-        key = "cmd+alt+ctrl-backslash";
-        appId = "logseq";
-        command = "logseq";
-        niriTitle = "logseq";
-        omniTitle = "Logseq";
-        description = "Toggle LogSeq";
-      };
-    };
 
     home.desktop.wm.keybinds =
       lib.mapAttrsToList mkToggleKeybind config.home.desktop.wm.toggleApps;
