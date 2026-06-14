@@ -8,11 +8,13 @@
     blueprint.url = "github:numtide/blueprint";
     blueprint.inputs.nixpkgs.follows = "nixpkgs";
 
-    # https://github.com/dfrankland/envoluntary
-    # direnv-like matcher that avoids needing to create gitignored nix files in projects
-    envoluntary.url = "github:dfrankland/envoluntary";
-    envoluntary.inputs.nixpkgs.follows = "nixpkgs";
-    envoluntary.inputs.home-manager.follows = "home-manager";
+    envoluntary = {
+      # https://github.com/dfrankland/envoluntary
+      # direnv-like matcher that avoids needing to create gitignored nix files in projects
+      url = "github:dfrankland/envoluntary";
+      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.home-manager.follows = "home-manager";
+    };
 
     # Darwin things
     nix-darwin.url = "github:LnL7/nix-darwin";

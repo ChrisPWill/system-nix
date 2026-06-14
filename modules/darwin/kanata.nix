@@ -62,43 +62,45 @@ in {
       fi
     '';
 
-    launchd.daemons."karabiner-vhidmanager" = {
-      serviceConfig = {
-        ProgramArguments = [
-          karabinerVirtualHid.managerPath
-          "activate"
-        ];
-        RunAtLoad = true;
-        KeepAlive = false;
-        UserName = "root";
-        StandardOutPath = "/var/log/karabiner-vhidmanager.log";
-        StandardErrorPath = "/var/log/karabiner-vhidmanager.log";
+    launchd.daemons = {
+      "karabiner-vhidmanager" = {
+        serviceConfig = {
+          ProgramArguments = [
+            karabinerVirtualHid.managerPath
+            "activate"
+          ];
+          RunAtLoad = true;
+          KeepAlive = false;
+          UserName = "root";
+          StandardOutPath = "/var/log/karabiner-vhidmanager.log";
+          StandardErrorPath = "/var/log/karabiner-vhidmanager.log";
+        };
       };
-    };
 
-    launchd.daemons."karabiner-vhiddaemon" = {
-      serviceConfig = {
-        ProgramArguments = [
-          karabinerVirtualHid.daemonPath
-        ];
-        RunAtLoad = true;
-        KeepAlive = true;
-        UserName = "root";
-        ProcessType = "Interactive";
-        StandardOutPath = "/var/log/karabiner-vhiddaemon.log";
-        StandardErrorPath = "/var/log/karabiner-vhiddaemon.log";
+      "karabiner-vhiddaemon" = {
+        serviceConfig = {
+          ProgramArguments = [
+            karabinerVirtualHid.daemonPath
+          ];
+          RunAtLoad = true;
+          KeepAlive = true;
+          UserName = "root";
+          ProcessType = "Interactive";
+          StandardOutPath = "/var/log/karabiner-vhiddaemon.log";
+          StandardErrorPath = "/var/log/karabiner-vhiddaemon.log";
+        };
       };
-    };
 
-    launchd.daemons.kanata = {
-      serviceConfig = {
-        ProgramArguments = kanataCommandArgs;
-        RunAtLoad = true;
-        KeepAlive = true;
-        UserName = "root";
-        ProcessType = "Interactive";
-        StandardOutPath = "/var/log/kanata.log";
-        StandardErrorPath = "/var/log/kanata.log";
+      kanata = {
+        serviceConfig = {
+          ProgramArguments = kanataCommandArgs;
+          RunAtLoad = true;
+          KeepAlive = true;
+          UserName = "root";
+          ProcessType = "Interactive";
+          StandardOutPath = "/var/log/kanata.log";
+          StandardErrorPath = "/var/log/kanata.log";
+        };
       };
     };
   };

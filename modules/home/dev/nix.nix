@@ -64,12 +64,27 @@
     }
   '';
 in {
-  programs.nh = {
-    enable = true;
-    flake = config.nixConfigDir;
-    homeFlake = config.nixConfigDir;
-    osFlake = config.nixConfigDir;
-    darwinFlake = config.nixConfigDir;
+  programs = {
+    nh = {
+      enable = true;
+      flake = config.nixConfigDir;
+      homeFlake = config.nixConfigDir;
+      osFlake = config.nixConfigDir;
+      darwinFlake = config.nixConfigDir;
+    };
+
+    zsh.shellAliases = {
+      nd = "f() { nix develop ${config.nixConfigDir}/.#$1 --command zsh };f";
+    };
+
+    fish.shellAbbrs = {
+      nfc = "nix flake check";
+      nfu = "nix flake update";
+      nsi = {
+        expansion = "nix shell -p % --run fish";
+        setCursor = true;
+      };
+    };
   };
 
   home.packages = [
@@ -120,17 +135,4 @@ in {
       exec nh os switch "$flake" "''${host_args[@]}" "$@"
     '')
   ];
-
-  programs.zsh.shellAliases = {
-    nd = "f() { nix develop ${config.nixConfigDir}/.#$1 --command zsh };f";
-  };
-
-  programs.fish.shellAbbrs = {
-    nfc = "nix flake check";
-    nfu = "nix flake update";
-    nsi = {
-      expansion = "nix shell -p % --run fish";
-      setCursor = true;
-    };
-  };
 }

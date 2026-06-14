@@ -9,25 +9,28 @@
     (modulesPath + "/installer/scan/not-detected.nix")
   ];
 
-  boot.initrd.availableKernelModules = ["xhci_pci" "ahci" "nvme" "usbhid" "usb_storage" "sd_mod"];
-  boot.initrd.kernelModules = [];
-  boot.kernelPackages = pkgs.cachyosKernels.linuxPackages-cachyos-latest-lto-x86_64-v3;
-  boot.kernelModules = ["kvm-intel"];
-  boot.kernelParams = [
-    "zswap.enabled=1" # enables zswap
-    "zswap.compressor=lz4" # compression algorithm
-    "zswap.max_pool_percent=20" # maximum percentage of RAM that zswap is allowed to use
-    "zswap.shrinker_enabled=1" # whether to shrink the pool proactively on high memory pressure
-  ];
-  boot.initrd.systemd.enable = true; # needed for lz4 zswap algorithm
-  boot.extraModulePackages = [];
+  boot = {
+    initrd = {
+      availableKernelModules = ["xhci_pci" "ahci" "nvme" "usbhid" "usb_storage" "sd_mod"];
+      kernelModules = [];
+      systemd.enable = true; # needed for lz4 zswap algorithm
+      luks.devices."luks-3064df00-c86d-44b5-8aa1-3c9dacf3cbbf".device = "/dev/disk/by-uuid/3064df00-c86d-44b5-8aa1-3c9dacf3cbbf";
+    };
+    kernelPackages = pkgs.cachyosKernels.linuxPackages-cachyos-latest-lto-x86_64-v3;
+    kernelModules = ["kvm-intel"];
+    kernelParams = [
+      "zswap.enabled=1" # enables zswap
+      "zswap.compressor=lz4" # compression algorithm
+      "zswap.max_pool_percent=20" # maximum percentage of RAM that zswap is allowed to use
+      "zswap.shrinker_enabled=1" # whether to shrink the pool proactively on high memory pressure
+    ];
+    extraModulePackages = [];
+  };
 
   fileSystems."/" = {
     device = "/dev/disk/by-uuid/d91a6e87-a656-4cd1-8eae-5321fad4f5a8";
     fsType = "ext4";
   };
-
-  boot.initrd.luks.devices."luks-3064df00-c86d-44b5-8aa1-3c9dacf3cbbf".device = "/dev/disk/by-uuid/3064df00-c86d-44b5-8aa1-3c9dacf3cbbf";
 
   fileSystems."/boot" = {
     device = "/dev/disk/by-uuid/EFEC-F0BD";
@@ -47,24 +50,29 @@
   # networking.interfaces.enp63s0.useDHCP = lib.mkDefault true;
   # networking.interfaces.wlp0s20f3.useDHCP = lib.mkDefault true;
 
-  # Bluetooth
-  hardware.bluetooth.enable = true;
+  hardware = {
+    # Bluetooth
+    bluetooth.enable = true;
+
+    cpu.intel.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
+
+    # Graphics
+    graphics.enable = true;
+    nvidia = {
+      open = false;
+      powerManagement.enable = true;
+      modesetting.enable = true;
+      prime = {
+        offload.enable = true;
+        offload.enableOffloadCmd = true;
+
+        intelBusId = "PCI:0:2:0";
+        nvidiaBusId = "PCI:1:0:0";
+        #amdgpuBusId = "PCI:54:0:0"; # If you have an AMD iGPU
+      };
+    };
+  };
 
   nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
-  hardware.cpu.intel.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
-
-  # Graphics
-  hardware.graphics.enable = true;
   services.xserver.videoDrivers = ["nvidia"];
-  hardware.nvidia.open = false;
-  hardware.nvidia.powerManagement.enable = true;
-  hardware.nvidia.modesetting.enable = true;
-  hardware.nvidia.prime = {
-    offload.enable = true;
-    offload.enableOffloadCmd = true;
-
-    intelBusId = "PCI:0:2:0";
-    nvidiaBusId = "PCI:1:0:0";
-    #amdgpuBusId = "PCI:54:0:0"; # If you have an AMD iGPU
-  };
 }

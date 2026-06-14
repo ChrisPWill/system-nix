@@ -1,8 +1,4 @@
-{
-  inputs,
-  pkgs,
-  ...
-}:
+{pkgs, ...}:
 pkgs.mkShell {
   packages = with pkgs; [
     typescript

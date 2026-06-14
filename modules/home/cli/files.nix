@@ -1,4 +1,4 @@
-{...}: {
+_: {
   programs.fish.shellAbbrs = {
     zip = {
       expansion = "ouch compress %<files> output.zip";

@@ -17,12 +17,12 @@
     plugins = let
       yz = pkgs.yaziPlugins;
     in {
-      git = yz.git; # Git status
-      sudo = yz.sudo; # Call sudo
-      ouch = yz.ouch; # Preview archives
-      glow = yz.glow; # Preview markdown files
-      mount = yz.mount; # Mount manager
-      starship = yz.starship; # Starship prompt integration
+      inherit (yz) git; # Git status
+      inherit (yz) sudo; # Call sudo
+      inherit (yz) ouch; # Preview archives
+      inherit (yz) glow; # Preview markdown files
+      inherit (yz) mount; # Mount manager
+      inherit (yz) starship; # Starship prompt integration
       relative-motions = yz."relative-motions"; # Vim-like motions
     };
   };

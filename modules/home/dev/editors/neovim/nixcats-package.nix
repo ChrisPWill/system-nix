@@ -37,7 +37,7 @@
 
   commonExtra = {
     nixdExtras.nixpkgs = "import ${pkgs.path} {}";
-    docsPath = docsPath;
+    inherit docsPath;
   };
 
   aiWrapperArgs = lib.optionalAttrs (geminiApiKeyPath != null) {
@@ -247,7 +247,7 @@
   };
 
   packageDefinitions = {
-    "${mainNixCatsPackageName}" = {...}: {
+    "${mainNixCatsPackageName}" = _: {
       settings =
         commonSettings
         // {
@@ -261,7 +261,7 @@
       extra = commonExtra;
     };
 
-    "nvim-llm" = {...}: {
+    "nvim-llm" = _: {
       settings =
         commonSettings
         // {
@@ -275,7 +275,7 @@
       extra = commonExtra;
     };
 
-    "nvim-ai" = {...}: {
+    "nvim-ai" = _: {
       settings =
         commonSettings
         // {
@@ -292,7 +292,7 @@
       extra = commonExtra;
     };
 
-    "leet" = {...}: {
+    "leet" = _: {
       settings = commonSettings;
       categories = {
         general = true;

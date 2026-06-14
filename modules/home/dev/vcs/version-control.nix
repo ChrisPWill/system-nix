@@ -16,83 +16,95 @@ in {
   ];
 
   home.sessionPath = [scriptDir];
-  programs.nushell.extraEnv = ''
-    $env.PATH = ($env.PATH | split row (char esep) | append "${scriptDir}")
-  '';
+  programs = {
+    nushell = {
+      extraEnv = ''
+        $env.PATH = ($env.PATH | split row (char esep) | append "${scriptDir}")
+      '';
+      shellAliases.lg = "lazygit";
+      shellAliases.ljj = "lazyjj";
+    };
+
+    ssh = {
+      enable = true;
+      enableDefaultConfig = false;
+
+      extraConfig = lib.optionalString pkgs.stdenv.isDarwin ''
+        IgnoreUnknown UseKeychain
+        UseKeychain yes
+      '';
+
+      settings = {
+        "*" = {
+          AddKeysToAgent = "yes";
+          Compression = true;
+          ForwardAgent = true;
+          ServerAliveCountMax = 2;
+          ServerAliveInterval = 300;
+        };
+      };
+    };
+
+    git = {
+      enable = true;
+
+      lfs.enable = true;
+
+      settings = {
+        user.name = "Chris Williams";
+        user.email = config.userEmail;
+        push.autoSetupRemote = true;
+        core = {
+          # Improved performance on MacOS
+          # https://github.blog/2022-06-29-improve-git-monorepo-performance-with-a-file-system-monitor/
+          fsmonitor = true;
+          untrackedcache = true;
+        };
+      };
+    };
+
+    diff-so-fancy.enable = true;
+
+    # Neat TUI for git
+    # https://github.com/jesseduffield/lazygit
+    lazygit.enable = true;
+    zsh.shellAliases = {
+      lg = "lazygit";
+      ljj = "lazyjj";
+    };
+    fish = {
+      shellAliases = {
+        lg = "lazygit";
+        ljj = "lazyjj";
+      };
+      shellAbbrs = {
+        jjrm = "jj rebase -s @ -d master@origin";
+        jjnm = {
+          expansion = "jj new master@origin -m \"%\"";
+          setCursor = true;
+        };
+      };
+    };
+
+    # https://jj-vcs.github.io/jj/latest/
+    # VCS built on top of git
+    # Experimenting with this for personal projects
+    jujutsu = {
+      enable = true;
+      settings = {
+        user.name = "Chris Williams";
+        user.email = config.userEmail;
+
+        fix.tools.treefmt = {
+          command = ["nix" "fmt" "--" "--stdin" "$path"];
+          patterns = ["glob:**/*"];
+        };
+
+        # Workaround for lack of native pre-push hooks
+        aliases.push = ["util" "exec" "--" "sh" "-c" "nix flake check && jj git push \"$@\"" "--"];
+      };
+    };
+  };
 
   services.ssh-agent.enable = true;
-  programs.ssh = {
-    enable = true;
-    enableDefaultConfig = false;
-
-    extraConfig = lib.optionalString pkgs.stdenv.isDarwin ''
-      IgnoreUnknown UseKeychain
-      UseKeychain yes
-    '';
-
-    settings = {
-      "*" = {
-        AddKeysToAgent = "yes";
-        Compression = true;
-        ForwardAgent = true;
-        ServerAliveCountMax = 2;
-        ServerAliveInterval = 300;
-      };
-    };
-  };
-
-  programs.git = {
-    enable = true;
-
-    lfs.enable = true;
-
-    settings = {
-      user.name = "Chris Williams";
-      user.email = config.userEmail;
-      push.autoSetupRemote = true;
-      core = {
-        # Improved performance on MacOS
-        # https://github.blog/2022-06-29-improve-git-monorepo-performance-with-a-file-system-monitor/
-        fsmonitor = true;
-        untrackedcache = true;
-      };
-    };
-  };
-  programs.diff-so-fancy.enable = true;
-
-  # Neat TUI for git
-  # https://github.com/jesseduffield/lazygit
-  programs.lazygit.enable = true;
-  programs.zsh.shellAliases.lg = "lazygit";
-  programs.fish.shellAliases.lg = "lazygit";
-  programs.nushell.shellAliases.lg = "lazygit";
-
-  # https://jj-vcs.github.io/jj/latest/
-  # VCS built on top of git
-  # Experimenting with this for personal projects
-  programs.jujutsu.enable = true;
-  programs.jujutsu.settings = {
-    user.name = "Chris Williams";
-    user.email = config.userEmail;
-
-    fix.tools.treefmt = {
-      command = ["nix" "fmt" "--" "--stdin" "$path"];
-      patterns = ["glob:**/*"];
-    };
-
-    # Workaround for lack of native pre-push hooks
-    aliases.push = ["util" "exec" "--" "sh" "-c" "nix flake check && jj git push \"$@\"" "--"];
-  };
-  # LazyJJ - easy TUI for jujutsu VCS
-  programs.zsh.shellAliases.ljj = "lazyjj";
-  programs.fish.shellAliases.ljj = "lazyjj";
-  programs.nushell.shellAliases.ljj = "lazyjj";
-
-  programs.fish.shellAbbrs = {
-    jjrm = "jj rebase -s @ -d master@origin";
-    jjnm = {
-      expansion = "jj new master@origin -m \"%\"";
-      setCursor = true;
-    };
-  };
 }

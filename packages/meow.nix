@@ -5,7 +5,7 @@
 }: let
   neovimPackage = import ../modules/home/dev/editors/neovim/nixcats-package.nix {
     inherit inputs pkgs;
-    lib = pkgs.lib;
+    inherit (pkgs) lib;
     luaPath = ../modules/home/dev/editors/neovim/config;
     docsPath = ../modules/home/dev/editors/neovim/docs;
   };

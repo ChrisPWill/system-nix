@@ -12,10 +12,11 @@
   nixpkgs.hostPlatform = "x86_64-linux";
 
   # Bootloader.
-  boot.loader.systemd-boot.enable = true;
-  boot.loader.efi.canTouchEfiVariables = true;
-
-  boot.initrd.luks.devices."luks-3d722d8b-ae18-4ff6-ba21-e4743d9f9250".device = "/dev/disk/by-uuid/3d722d8b-ae18-4ff6-ba21-e4743d9f9250";
+  boot = {
+    loader.systemd-boot.enable = true;
+    loader.efi.canTouchEfiVariables = true;
+    initrd.luks.devices."luks-3d722d8b-ae18-4ff6-ba21-e4743d9f9250".device = "/dev/disk/by-uuid/3d722d8b-ae18-4ff6-ba21-e4743d9f9250";
+  };
   networking.hostName = "cwilliams-laptop"; # Define your hostname.
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
 

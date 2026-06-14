@@ -21,7 +21,20 @@ in {
   ];
 
   config = {
-    xdg.configFile."DankMaterialShell/settings.json".source = config.lib.file.mkOutOfStoreSymlink "${config.homeModuleDir}/graphical-nixos/dms/settings.json";
+    xdg = {
+      configFile."DankMaterialShell/settings.json".source = config.lib.file.mkOutOfStoreSymlink "${config.homeModuleDir}/graphical-nixos/dms/settings.json";
+      portal = {
+        enable = true;
+        xdgOpenUsePortal = true;
+        config.common.default = ["gnome" "gtk"];
+        extraPortals = with pkgs; [
+          xdg-desktop-portal-gtk
+          xdg-desktop-portal-gnome
+          gnome-keyring
+        ];
+      };
+    };
+
     # Complete desktop shell for Wayland compositors e.g. niri/hyprland
     programs.dank-material-shell = {
       enable = true;
@@ -79,15 +92,6 @@ in {
         };
       };
     };
-
-    xdg.portal.enable = true;
-    xdg.portal.xdgOpenUsePortal = true;
-    xdg.portal.config.common.default = ["gnome" "gtk"];
-    xdg.portal.extraPortals = with pkgs; [
-      xdg-desktop-portal-gtk
-      xdg-desktop-portal-gnome
-      gnome-keyring
-    ];
 
     home.packages = with pkgs; [
       qimgv # quick image viewer

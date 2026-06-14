@@ -7,18 +7,20 @@
     localNetworkGameTransfers.openFirewall = true; # Open ports in the firewall for Steam Local Network Game Transfers
   };
 
-  networking.firewall.allowedTCPPorts = [
-    # Spotify syncing tracks with mobile devices
-    57621
-  ];
+  networking.firewall = {
+    allowedTCPPorts = [
+      # Spotify syncing tracks with mobile devices
+      57621
+    ];
 
-  networking.firewall.allowedUDPPorts = [
-    # Spotify discovery of Google Cast + Spotify Connect
-    5353
-  ];
+    allowedUDPPorts = [
+      # Spotify discovery of Google Cast + Spotify Connect
+      5353
+    ];
 
-  # ProtonVPN
-  networking.firewall.checkReversePath = false;
+    # ProtonVPN
+    checkReversePath = false;
+  };
   environment.systemPackages = with pkgs; [
     wireguard-tools
     proton-vpn
