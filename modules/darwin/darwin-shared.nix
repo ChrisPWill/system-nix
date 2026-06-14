@@ -62,9 +62,6 @@ in {
       # github.com/BarutSRB/omni
       "omniwm"
 
-      # A graph-based notes app
-      "logseq"
-
       # Useful spotlight alternative
       "raycast"
 

@@ -36,17 +36,6 @@ in {
   ];
 
   homebrew = {
-    brews = [
-      "awscli"
-
-      # Used for managing terraform versions. Simpler than nixifying for now
-      # https://github.com/tofuutils/tenv
-      "tenv"
-
-      # For SignalFM
-      "pipx"
-    ];
-
     taps = [
       {
         name = "atlassian/lanyard";
@@ -77,9 +66,6 @@ in {
 
       # Screen recordings
       "loom"
-
-      # Music
-      "spotify"
 
       # Atlassian's browser
       "thebrowsercompany-dia"
