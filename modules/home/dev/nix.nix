@@ -88,7 +88,7 @@ in {
   };
 
   home.packages = [
-    (nhWrapper "nhs" ''
+    (nhWrapper "sw" ''
       ${nhWrapperPrelude}
 
       mapfile -t host_args < <(hostname_args "$@")
@@ -115,7 +115,7 @@ in {
 
       mapfile -t home_args < <(home_configuration_args "$@")
 
-      printf '%s\n' 'hms is deprecated; use nhs or nh home switch.' >&2
+      printf '%s\n' 'hms is deprecated; use sw or nh home switch.' >&2
       exec nh home switch "$flake" "''${home_args[@]}" "$@"
     '')
     (nhWrapper "drs" ''
@@ -123,7 +123,7 @@ in {
 
       mapfile -t host_args < <(hostname_args "$@")
 
-      printf '%s\n' 'drs is deprecated; use nhs or nh darwin switch.' >&2
+      printf '%s\n' 'drs is deprecated; use sw or nh darwin switch.' >&2
       exec nh darwin switch "$flake" "''${host_args[@]}" "$@"
     '')
     (nhWrapper "nrs" ''
@@ -131,7 +131,7 @@ in {
 
       mapfile -t host_args < <(hostname_args "$@")
 
-      printf '%s\n' 'nrs is deprecated; use nhs or nh os switch.' >&2
+      printf '%s\n' 'nrs is deprecated; use sw or nh os switch.' >&2
       exec nh os switch "$flake" "''${host_args[@]}" "$@"
     '')
   ];
