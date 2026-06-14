@@ -95,13 +95,33 @@ in {
         user.name = "Chris Williams";
         user.email = config.userEmail;
 
-        fix.tools.treefmt = {
-          command = ["nix" "fmt" "--" "--stdin" "$path"];
-          patterns = ["glob:**/*"];
-        };
+        fix.tools = {
+          "1-treefmt" = {
+            command = ["nix" "fmt" "--" "--stdin" "$path"];
+            patterns = ["glob:**/*"];
+          };
 
-        # Workaround for lack of native pre-push hooks
-        aliases.push = ["util" "exec" "--" "sh" "-c" "nix flake check && jj git push \"$@\"" "--"];
+          "2-statix" = {
+            command = ["${pkgs.statix}/bin/statix" "fix" "--stdin" "--config" "$root"];
+            patterns = ["glob:**/*.nix"];
+          };
+
+          "3-deadnix" = {
+            command = [
+              "sh"
+              "-c"
+              ''
+                tmp="$(mktemp "''${TMPDIR:-/tmp}/jj-deadnix.XXXXXX.nix")"
+                trap 'rm -f "$tmp"' EXIT
+
+                cat > "$tmp"
+                ${pkgs.deadnix}/bin/deadnix --edit --quiet "$tmp" >/dev/null
+                cat "$tmp"
+              ''
+            ];
+            patterns = ["glob:**/*.nix"];
+          };
+        };
       };
     };
   };
