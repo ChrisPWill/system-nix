@@ -4,6 +4,8 @@
     # Nix
     nixd
     alejandra
+    deadnix
+    statix
 
     # Python
     basedpyright

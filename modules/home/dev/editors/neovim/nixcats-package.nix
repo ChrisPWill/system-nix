@@ -78,7 +78,9 @@
       ];
       nix = with pkgs; [
         alejandra
+        deadnix
         nixd
+        statix
       ];
       node = with pkgs; [
         eslint_d

@@ -15,6 +15,7 @@ return {
 				javascript = nixCats("node") and jslint or nil,
 				typescript = nixCats("node") and jslint or nil,
 				go = nixCats("go") and { "golangcilint" } or nil,
+				nix = nixCats("nix") and { "statix", "deadnix" } or nil,
 				rust = nixCats("rust") and { "clippy" } or nil,
 				toml = nixCats("rust") and { "tombi" } or nil,
 				sh = nixCats("general") and { "shellcheck" } or nil,

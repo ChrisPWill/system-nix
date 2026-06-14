@@ -15,6 +15,7 @@ This configuration is built for a NixOS/Darwin system, leveraging the `nixCats` 
 ## 󰘦 Nix-Aware Tools
 
 - **LSP:** `nixd` provides diagnostics and completion.
+- **Linting:** `statix` and `deadnix` provide buffer diagnostics through `nvim-lint`.
 - **Formatting:** `alejandra` is the default formatter via `conform.nvim`.
 - **Tree-sitter:** Parsers for `nix` and `just` are pre-installed.
 

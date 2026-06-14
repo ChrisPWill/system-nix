@@ -40,6 +40,16 @@
       linter = "ktlint";
       expectDiagnostics = false;
     };
+    nix = {
+      file = "default.nix";
+      clients = "nixd";
+      trigger = "fixtureTargetAl";
+      completion = "";
+      executables = "nixd,alejandra,deadnix,statix";
+      formatter = "alejandra";
+      linter = "statix,deadnix";
+      expectDiagnostics = false;
+    };
   };
 
   case = cases.${language};

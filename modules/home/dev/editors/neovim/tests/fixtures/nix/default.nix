@@ -1,0 +1,3 @@
+{
+  fixtureTargetAlpha = "nix";
+}

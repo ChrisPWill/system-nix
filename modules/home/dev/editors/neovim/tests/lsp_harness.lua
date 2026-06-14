@@ -182,7 +182,9 @@ local function check_lint(ft, expected)
 	assert_true(ok, "nvim-lint did not load")
 
 	local configured = lint.linters_by_ft[ft] or {}
-	assert_true(contains(configured, expected), "expected linter " .. expected .. " for filetype " .. ft)
+	for _, linter in ipairs(split(expected)) do
+		assert_true(contains(configured, linter), "expected linter " .. linter .. " for filetype " .. ft)
+	end
 end
 
 local function load_plugin_spec(module_name, plugin_name)
@@ -300,6 +302,8 @@ local function main()
 			vim.bo[bufnr].filetype = "typescript"
 		elseif file:match("%.py$") then
 			vim.bo[bufnr].filetype = "python"
+		elseif file:match("%.nix$") then
+			vim.bo[bufnr].filetype = "nix"
 		end
 	end
 	local ft = vim.bo[bufnr].filetype
