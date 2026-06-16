@@ -213,6 +213,7 @@
   run = command: command;
   omni = command: run "omniwmctl command ${command}";
   openApp = application: run "open -a ${lib.escapeShellArg application}";
+  firefoxDeveloperEdition = "/Applications/Firefox Developer Edition.app/Contents/MacOS/firefox";
   openUrl = url: run "open ${lib.escapeShellArg url}";
   osascript = expression: run "osascript -e ${lib.escapeShellArg expression}";
   lockScreen = run "${lib.escapeShellArg "/System/Library/CoreServices/Menu Extras/User.menu/Contents/Resources/CGSession"} -suspend";
@@ -273,7 +274,7 @@ in {
           {
             key = "cmd+alt-b";
             niri = ''spawn "vivaldi";'';
-            omni = openApp "Firefox Developer Edition";
+            omni = run "${lib.escapeShellArg firefoxDeveloperEdition} --new-window about:blank";
             description = "Browser";
           }
           {
