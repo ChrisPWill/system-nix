@@ -124,8 +124,8 @@ in {
         static-only = true;
       };
       spaces = {
-        # OmniWM expects one unified Space spanning all displays.
-        spans-displays = true;
+        # OmniWM expects separate spaces for separate displays.
+        spans-displays = false;
       };
       finder = {
         AppleShowAllExtensions = true;
