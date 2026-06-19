@@ -20,9 +20,6 @@
     "print"
     "ctrl-print"
     "alt-print"
-    "fn-f10"
-    "fn-f11"
-    "fn-f12"
   ];
 
   # Generate skhdrc strings for all binds with an `omni` action

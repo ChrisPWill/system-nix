@@ -754,19 +754,6 @@ in {
 
           # Audio and Media
           {
-            key = "fn-f10";
-            omni = osascript "set volume output muted not (output muted of (get volume settings))";
-          }
-          {
-            key = "fn-f11";
-            omni = osascript "set volume output volume (output volume of (get volume settings) - 5)";
-          }
-          {
-            key = "fn-f12";
-            omni = osascript "set volume output volume (output volume of (get volume settings) + 5)";
-          }
-
-          {
             key = "xf86audioraisevolume";
             niri = ''spawn "dms" "ipc" "call" "audio" "increment" "3";'';
             niriArgs = "allow-when-locked=true";

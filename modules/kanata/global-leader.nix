@@ -9,7 +9,9 @@
     defcfg = lib.mkOption {
       type = lib.types.lines;
       default = ''
-        process-unmapped-keys yes
+        ;; Only process keys listed in defsrc. On macOS, processing every
+        ;; unmapped key causes the top-row keys to bypass native Fn/media handling.
+        process-unmapped-keys no
       '';
       description = "The content of the defcfg block for Kanata.";
     };

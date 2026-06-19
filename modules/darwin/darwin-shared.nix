@@ -140,6 +140,8 @@ in {
         AppleKeyboardUIMode = 3;
         ApplePressAndHoldEnabled = false;
         AppleFontSmoothing = 1;
+        # Keep top-row keys as F1-F12; hold Fn for native media controls.
+        "com.apple.keyboard.fnState" = true;
         _HIHideMenuBar = true;
         InitialKeyRepeat = 15;
         KeyRepeat = 1;
