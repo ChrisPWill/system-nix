@@ -186,6 +186,131 @@ Ensure Nix is installed, then activate the standalone Home Manager profile:
 nix-shell -p home-manager --run "home-manager switch --flake ~/.system-nix#cwilliams@<hostname>"
 ```
 
+## Windows VM Installation
+
+This repository can be booted and explored inside a Windows-hosted VM by using
+the custom installer ISO. That path is useful for testing the live image,
+verifying the graphical environment, and rehearsing the install flow.
+
+The repository does **not** currently include a dedicated VM host like
+`hosts/windows-vm/` or `hosts/qemu-vm/`. The documented laptop target
+(`cwilliams-laptop`) is tied to bare-metal hardware and should not be treated
+as a reusable VM profile.
+
+### What this path supports today
+
+- Booting the custom installer ISO in a Windows hypervisor.
+- Exploring the live environment with the repo already available at
+  `/etc/nix-config`.
+- Manually partitioning a virtual disk and rehearsing `nixos-install`.
+
+### What is still a gap
+
+- There is no VM-specific NixOS host configuration in `hosts/`.
+- `cwilliams-laptop` imports hardware-specific settings for the physical laptop
+  such as disk UUIDs, GPU configuration, and kernel choices.
+- A production VM install should wait for a dedicated VM host entry or a fresh
+  hardware configuration generated from inside the guest.
+
+### 1. Build the installer ISO on an existing Nix machine
+
+Build from this repository on an existing NixOS, nix-darwin, or other machine
+that already has Nix working:
+
+```bash
+cd ~/.system-nix
+nix build .#nixosConfigurations.installer.config.system.build.isoImage --out-link result-iso
+```
+
+The ISO will be available under `result-iso/iso/`.
+
+### 2. Move the ISO to Windows
+
+Copy the generated `.iso` file to the Windows machine by whatever method is
+convenient for you, for example:
+
+- a shared folder;
+- `scp`/SFTP;
+- a USB drive;
+- a cloud drive.
+
+### 3. Create the VM on Windows
+
+Use a Windows hypervisor that can boot an `x86_64` UEFI ISO. Hyper-V Generation
+2 VMs and typical desktop hypervisors with EFI enabled both fit that
+requirement.
+
+Recommended baseline settings:
+
+- `x86_64` guest
+- 4 vCPUs
+- 8 GB RAM minimum
+- 40 GB virtual disk minimum
+- EFI/UEFI boot enabled
+
+If the hypervisor exposes a graphics adapter choice, prefer the default virtual
+adapter first. The installer ISO already includes QEMU guest additions for local
+testing, but Windows-hosted hypervisors may expose different virtual hardware.
+
+### 4. Boot the live ISO
+
+Boot the VM from the copied ISO.
+
+The live environment is configured with:
+
+- user: `cwilliams`
+- password: `nixos`
+- repository checkout available at `/etc/nix-config`
+
+### 5. Partition and mount the virtual disk
+
+The exact disk name depends on the hypervisor. Inside the live environment,
+identify it first:
+
+```bash
+lsblk
+```
+
+Then create an EFI system partition and a root partition on the VM disk using
+your preferred tooling (`cfdisk`, `parted`, or `gdisk`). After partitioning,
+format and mount them, substituting the correct device names:
+
+```bash
+sudo mkfs.fat -F 32 -n boot /dev/<disk>p1
+sudo mkfs.ext4 -L nixos /dev/<disk>p2
+sudo mount /dev/disk/by-label/nixos /mnt
+sudo mkdir -p /mnt/boot
+sudo mount /dev/disk/by-label/boot /mnt/boot
+```
+
+If you also create swap, initialize it before installation.
+
+### 6. Understand the current install limitation
+
+At this point you can rehearse the installer workflow, but the repository does
+not yet ship a safe VM target to install.
+
+Do **not** assume this command is correct for a VM:
+
+```bash
+sudo nixos-install --flake /etc/nix-config#cwilliams-laptop
+```
+
+`cwilliams-laptop` depends on the laptop's generated hardware configuration and
+desktop assumptions. Installing that host directly into a VM will require manual
+rework at minimum and may fail outright.
+
+### 7. If you want a real installed VM
+
+The missing piece is a dedicated VM host configuration. Once that exists, the
+expected flow will be:
+
+1. Boot the installer ISO in the Windows VM.
+2. Partition and mount the virtual disk.
+3. Generate a VM hardware profile with `nixos-generate-config --root /mnt`.
+4. Add a new host entry such as `hosts/windows-vm/`.
+5. Run `sudo nixos-install --flake /etc/nix-config#<vm-hostname>`.
+
 ## Custom NixOS Installer ISO
 
 Build the custom installer ISO:
