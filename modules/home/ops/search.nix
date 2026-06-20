@@ -11,6 +11,18 @@
       enable = true;
       settings = {
         ui.theme = "onedark";
+        shell_integration.channel_triggers = {
+          "files" = [
+            "nvim"
+            "hx"
+            "helix"
+            "meow"
+          ];
+          "git-repos" = [
+            "code"
+            "git clone"
+          ];
+        };
       };
     };
 
