@@ -47,6 +47,14 @@ Following a **Domain-Driven Design (DDD)** approach, configuration is organized 
 
 ---
 
+## 🤖 Automation
+
+- A daily GitHub Actions workflow, [`installer-iso.yml`](./.github/workflows/installer-iso.yml), builds `.#nixosConfigurations.installer.config.system.build.isoImage` and uploads the resulting ISO as a workflow artifact.
+- The workflow skips the build when the current default-branch `HEAD` matches the commit from the previous completed installer ISO run.
+- Manual dispatch supports a `force` toggle when a rebuild is needed without a new commit.
+
+---
+
 ## ✨ Key Features
 
 ### ⌨️ Global Leader
