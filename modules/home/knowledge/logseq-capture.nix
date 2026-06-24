@@ -6,6 +6,10 @@
   ...
 }: let
   cfg = config.services.logseq-capture;
+  defaultJournal =
+    if config.isPersonalMachine
+    then "personal"
+    else "work";
   commonAliases = {
     "lc" = "logseq-capture send";
     "lr" = "logseq-capture review today";
@@ -38,6 +42,7 @@ in {
       home.packages = [
         inputs.knowledge-base.packages.${pkgs.stdenv.hostPlatform.system}.logseq-capture
       ];
+      home.sessionVariables.LOGSEQ_CAPTURE_DEFAULT_JOURNAL = defaultJournal;
     }
     (lib.mkIf pkgs.stdenv.isLinux {
       systemd.user.services.logseq-capture = {
@@ -50,6 +55,7 @@ in {
           Restart = "always";
           RestartSec = "10";
           WorkingDirectory = cfg.workingDirectory;
+          Environment = ["LOGSEQ_CAPTURE_DEFAULT_JOURNAL=${defaultJournal}"];
           EnvironmentFile = config.sops.secrets.logseq_capture_tokens.path;
         };
         Install.WantedBy = ["default.target"];
@@ -63,7 +69,7 @@ in {
           ProgramArguments = [
             "/bin/sh"
             "-c"
-            "set -a; [ -f ${config.sops.secrets.logseq_capture_tokens.path} ] && . ${config.sops.secrets.logseq_capture_tokens.path}; set +a; exec ${inputs.knowledge-base.packages.${pkgs.stdenv.hostPlatform.system}.default}/bin/logseq-capture"
+            "export LOGSEQ_CAPTURE_DEFAULT_JOURNAL=${defaultJournal}; set -a; [ -f ${config.sops.secrets.logseq_capture_tokens.path} ] && . ${config.sops.secrets.logseq_capture_tokens.path}; set +a; exec ${inputs.knowledge-base.packages.${pkgs.stdenv.hostPlatform.system}.default}/bin/logseq-capture"
           ];
           RunAtLoad = true;
           KeepAlive = true;

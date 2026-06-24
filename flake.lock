@@ -405,11 +405,11 @@
         "utils": "utils"
       },
       "locked": {
-        "lastModified": 1782288277,
-        "narHash": "sha256-Gk9RJr7x1DSDh10f1FV2gaOoWHFFPhwyQaddA8RtBsg=",
+        "lastModified": 1782296287,
+        "narHash": "sha256-83UQBmnc1YMLh0DsvN5ANt601XOM1m0Ac7kIOReyRrE=",
         "owner": "ChrisPWill",
         "repo": "knowledge-base",
-        "rev": "931f1daa86a786f7a1f788fccc2919b148a37873",
+        "rev": "ea0e7a5fbe8008aaac72752311cca1214f0152d4",
         "type": "github"
       },
       "original": {
