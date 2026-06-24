@@ -26,7 +26,13 @@ in {
     {
       programs = {
         zsh.shellAliases = commonAliases;
-        fish.shellAliases = commonAliases;
+        fish = {
+          shellAliases = commonAliases;
+          functions.brag = ''
+            set -l timestamp (date '+%Y-%m-%d %H:%M:%S %z')
+            logseq-capture send "$argv #brag [$timestamp]"
+          '';
+        };
         nushell.shellAliases = commonAliases;
       };
       home.packages = [
