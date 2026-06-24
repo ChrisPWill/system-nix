@@ -2,7 +2,6 @@
   scriptDir = "${config.homeModuleDir}/ops/scripts";
 in {
   imports = [
-    ./cloud.nix
     ./search.nix
     ./monitor.nix
     ./file-io.nix

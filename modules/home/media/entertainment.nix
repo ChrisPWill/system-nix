@@ -10,7 +10,7 @@
       steamcmd
       steam-tui
     ]
-    ++ lib.optionals (config.isPersonalMachine || config.isAtlassianMachine) [
+    ++ [
       spotify
     ];
 }

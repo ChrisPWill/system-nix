@@ -7,7 +7,7 @@
 - **Global Leader:** Triggered via `leader + p` (Capture to **P**ipeline).
 - **Capture:** Trigger a region-select screenshot using native tools (macOS `screencapture`, Linux `grim` or `slurp`).
 - **Graph Detection:**
-  - If `isAtlassianMachine`: Default to `~/Notes/work/assets/`.
+  - If `isWorkMachine`: Default to `~/Notes/work/assets/`.
   - Else: Default to `~/Notes/personal/assets/`.
 - **Optimize:** Automatically compress the image to save space (using `pngquant` or `oxipng`).
 - **Store:** Move the optimized image into the detected LogSeq `assets/` directory with a timestamped name.
@@ -27,7 +27,7 @@
     - Handle macOS: `screencapture -i $tmp_path` -> `pngquant` -> move -> `pbcopy`.
     - Handle Linux: `grim -g (slurp) $tmp_path` -> `pngquant` -> move -> `wl-copy`.
 2.  **Nix Integration:**
-    - Pass the target LogSeq path to the script or set an environment variable based on `config.isAtlassianMachine`.
+    - Pass the target LogSeq path to the script or set an environment variable based on `config.isWorkMachine`.
 3.  **WM Integration:**
     - **OmniWM/skhd:** Bind `cmd + alt + shift - p` to execute `devdoc-capture`.
     - **Niri:** Bind `Mod+Alt+Shift+P` to execute `devdoc-capture`.

@@ -23,7 +23,7 @@
 1.  **Define Base Config:** Set up the standard Espanso configuration (toggle key, search bar).
 2.  **Migrate Snippets:**
     - Create a starter set: `:email`, `:date`, `:shrug`.
-    - Add Atlassian-specific work snippets (Jira links, PR templates) gated by `config.isAtlassianMachine`.
+    - Add employer-specific work snippets (for example Jira links or PR templates) gated by either `config.isWorkMachine` or an employer-specific module.
 3.  **Cross-Platform Activation:** Ensure the service starts automatically on login via `systemd` (Linux) and `launchd` (macOS).
 
 ## Success Criteria

@@ -10,12 +10,12 @@ A **Domain-Driven** Nix system configuration managed with [numtide/blueprint](ht
 
 ## 🧭 Quick Links
 
-| Guide                                    | Description                                                  |
-| :--------------------------------------- | :----------------------------------------------------------- |
+| Guide                                    | Description                                                                   |
+| :--------------------------------------- | :---------------------------------------------------------------------------- |
 | **[INSTALLATION.md](./INSTALLATION.md)** | Fast macOS bootstrap, platform setup, Windows VM notes, and ISO installation. |
-| **[AGENTS.md](./AGENTS.md)**             | **Developer Guide:** Architectural mandates and conventions. |
-| **[SECRETS.md](./SECRETS.md)**           | Guide for managing encrypted secrets with `sops-nix`.        |
-| **[PERFORMANCE.md](./PERFORMANCE.md)**   | Instructions for profiling evaluation and system speed.      |
+| **[AGENTS.md](./AGENTS.md)**             | **Developer Guide:** Architectural mandates and conventions.                  |
+| **[SECRETS.md](./SECRETS.md)**           | Guide for managing encrypted secrets with `sops-nix`.                         |
+| **[PERFORMANCE.md](./PERFORMANCE.md)**   | Instructions for profiling evaluation and system speed.                       |
 
 ---
 

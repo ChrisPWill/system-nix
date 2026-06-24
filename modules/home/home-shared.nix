@@ -23,7 +23,7 @@
     };
 
     isPersonalMachine = mkEnableOption "personal machine packages/config";
-    isAtlassianMachine = mkEnableOption "Atlassian work machine packages/config";
+    isWorkMachine = mkEnableOption "work machine packages/config";
     hasNvidiaGpu = mkEnableOption "whether the machine has an NVIDIA GPU";
 
     terminalFontSize = mkOption {

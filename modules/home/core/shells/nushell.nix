@@ -41,10 +41,6 @@
             |
             append "/opt/homebrew/bin"
           ''
-          + lib.optionalString config.isAtlassianMachine ''
-            |
-            append "/opt/atlassian/bin"
-          ''
           + ")");
       };
       extraConfig = ''

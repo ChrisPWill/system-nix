@@ -3,16 +3,14 @@
   inputs,
   ...
 }: {
-  imports = [inputs.self.homeModules.home-shared];
+  imports = [
+    inputs.self.homeModules.home-shared
+    inputs.self.homeModules.work-machine
+    inputs.self.homeModules.sequence
+  ];
 
   config = {
-    userEmail = "cwilliams@atlassian.com";
-
-    isAtlassianMachine = true;
-
     home.sessionPath = [
-      # Add Atlassian tools to PATH
-      "/opt/atlassian/bin"
       # pip and other stuff
       "${config.home.homeDirectory}/.local/bin"
     ];

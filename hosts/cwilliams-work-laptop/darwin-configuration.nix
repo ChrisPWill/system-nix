@@ -26,6 +26,7 @@ in {
   imports = [
     # Typical darwin configuration that isn't work or personal specific
     inputs.self.darwinModules.darwin-shared
+    inputs.self.darwinModules.sequence
     # Shared host settings across nixos and darwin
     inputs.self.nixosModules.host-shared
     # Cross-platform Caps Lock global leader configuration
@@ -35,21 +36,7 @@ in {
   ];
 
   homebrew = {
-    taps = [
-      {
-        name = "atlassian/lanyard";
-        clone_target = "git@bitbucket.org:atlassian/lanyard-tap.git";
-      }
-      {
-        name = "atlassian/cloudtoken";
-        clone_target = "git@bitbucket.org:atlassian/cloudtoken-homebrew-tap.git";
-        force_auto_update = true;
-      }
-    ];
-
     casks = [
-      "cloudtoken"
-
       # AI VSCode wrapper
       "cursor"
 
@@ -60,14 +47,8 @@ in {
       # Test requests
       "insomnia"
 
-      # For testing Atlassian service calls
-      "lanyard"
-
       # Screen recordings
       "loom"
-
-      # Atlassian's browser
-      "thebrowsercompany-dia"
     ];
   };
 
