@@ -6,6 +6,10 @@
   ...
 }: let
   cfg = config.services.logseq-capture;
+  commonAliases = {
+    "lc" = "logseq-capture send";
+    "lr" = "logseq-capture review today";
+  };
 in {
   options.services.logseq-capture = {
     enable = lib.mkEnableOption "Logseq Capture Bot";
@@ -19,6 +23,16 @@ in {
   # config = lib.mkIf cfg.enable (lib.mkMerge [
   # Disabled until I figure out the knowledge-base input
   config = lib.mkIf config.services.logseq-capture.enable (lib.mkMerge [
+    {
+      programs = {
+        zsh.shellAliases = commonAliases;
+        fish.shellAliases = commonAliases;
+        nushell.shellAliases = commonAliases;
+      };
+      home.packages = [
+        inputs.knowledge-base.packages.${pkgs.stdenv.hostPlatform.system}.logseq-capture
+      ];
+    }
     (lib.mkIf pkgs.stdenv.isLinux {
       systemd.user.services.logseq-capture = {
         Unit = {
