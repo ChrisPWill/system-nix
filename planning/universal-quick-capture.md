@@ -5,7 +5,7 @@
 ## Core Requirements
 
 - **Cross-Platform:** Must work on Linux (Niri) and macOS (OmniWM).
-- **Global Access:** Triggered by `leader + n` (handled by Kanata -> skhd/niri).
+- **Global Access:** Triggered by `leader + ctrl - n` (handled by Kanata -> skhd/niri).
 - **Minimal Friction:** Uses `gum input` in a small, floating terminal.
 - **Backend:** Appends to the daily LogSeq journal file.
 
@@ -34,11 +34,11 @@
 
 - **OmniWM:** Add a window rule for `app == "quick-capture"` to float and center.
 - **Niri:** Add a similar rule in `windowrules.kdl`.
-- **Kanata:** Map `n` in the `leader` layer to `Mod+Alt+Shift+N`.
+- **Kanata:** Map the `leader` layer to the correct hotkey.
 - **skhd/Niri:** Map the hotkey to spawn the capture terminal.
 
 ## Success Criteria
 
-- Pressing `leader + n` on either OS opens a minimal terminal prompt.
+- Pressing `leader + ctrl - n` on either OS opens a minimal terminal prompt.
 - Typing a note and hitting Enter appends it to today's LogSeq journal.
 - The window closes automatically upon completion.

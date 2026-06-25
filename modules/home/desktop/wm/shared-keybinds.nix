@@ -210,6 +210,9 @@
 
   # skhd wrappers
   scriptDir = "${config.homeModuleDir}/desktop/wm/scripts";
+  quickCapture = "${config.homeModuleDir}/knowledge/scripts/quick-capture";
+  quickCaptureNiri = args: ''spawn "ghostty" "--title=quick-capture" "-e" "${quickCapture}" ${args};'';
+  quickCaptureOmni = args: run "ghostty --title=quick-capture -e ${lib.escapeShellArg quickCapture} ${args}";
   run = command: command;
   omni = command: run "omniwmctl command ${command}";
   openApp = application: run "open -a ${lib.escapeShellArg application}";
@@ -311,6 +314,30 @@ in {
             niri = ''spawn "dms" "ipc" "call" "notepad" "toggle";'';
             omni = openUrl "raycast://extensions/raycast/raycast-notes/raycast-notes";
             description = "Notepad";
+          }
+          {
+            key = "cmd+alt+ctrl-n";
+            niri = quickCaptureNiri "";
+            omni = quickCaptureOmni "";
+            description = "Quick Capture";
+          }
+          {
+            key = "cmd+alt+ctrl+shift-t";
+            niri = quickCaptureNiri ''"--todo"'';
+            omni = quickCaptureOmni "--todo";
+            description = "Quick Task Capture";
+          }
+          {
+            key = "cmd+alt+ctrl+shift-r";
+            niri = quickCaptureNiri ''"--reminder"'';
+            omni = quickCaptureOmni "--reminder";
+            description = "Quick Reminder Capture";
+          }
+          {
+            key = "cmd+alt+ctrl+shift-b";
+            niri = quickCaptureNiri ''"--brag"'';
+            omni = quickCaptureOmni "--brag";
+            description = "Quick Brag Capture";
           }
           {
             key = "cmd+alt-p";

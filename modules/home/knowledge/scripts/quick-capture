@@ -1,0 +1,72 @@
+#!/usr/bin/env nu
+
+def journals_dir [] {
+  let default_graph = ($env.LOGSEQ_CAPTURE_DEFAULT_JOURNAL? | default "personal")
+
+  (
+    $env.LOGSEQ_QUICK_CAPTURE_JOURNALS_DIR?
+    | default $"($env.HOME)/knowledge-base/($default_graph)/journals"
+    | path expand
+  )
+}
+
+def prompt_text [placeholder: string, text: list<string>] {
+  if (($text | length) > 0) {
+    $text | str join " " | str trim
+  } else {
+    gum input --placeholder $placeholder --width 70
+    | str trim
+  }
+}
+
+def main [
+  --todo
+  --reminder
+  --brag
+  ...text: string
+] {
+  let mode_count = ([$todo $reminder $brag] | where $it | length)
+  if $mode_count > 1 {
+    print "Use only one capture mode."
+    exit 2
+  }
+
+  let placeholder = if $todo {
+    "Capture task..."
+  } else if $reminder {
+    "Capture reminder..."
+  } else if $brag {
+    "Capture brag..."
+  } else {
+    "Capture note..."
+  }
+
+  let capture = if (($text | length) > 0) {
+    $text | str join " " | str trim
+  } else {
+    prompt_text $placeholder $text
+  }
+
+  if ($capture | is-empty) {
+    return
+  }
+
+  let dir = (journals_dir)
+  mkdir $dir
+
+  let journal = ($dir | path join (date now | format date "%Y_%m_%d.md"))
+  let timestamp = (date now | format date "%H:%M")
+  let full_timestamp = (date now | format date "%Y-%m-%d %H:%M:%S %z")
+
+  let block = if $todo {
+    $"- TODO ($timestamp): ($capture)"
+  } else if $reminder {
+    $"- ($timestamp): ($capture) #reminder"
+  } else if $brag {
+    $"- ($timestamp): ($capture) #brag [($full_timestamp)]"
+  } else {
+    $"- ($timestamp): ($capture)"
+  }
+
+  $"($block)\n" | save --append $journal
+}

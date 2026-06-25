@@ -4,7 +4,9 @@
   lib,
   inputs,
   ...
-}: {
+}: let
+  scriptDir = "${config.homeModuleDir}/knowledge/scripts";
+in {
   imports = [
     ./logseq-capture.nix
     inputs.knowledge-base.homeManagerModules.knowledge-base
@@ -23,6 +25,7 @@
   home.packages = with pkgs;
     [
       # Note taking
+      gum
       logseq
     ]
     ++ lib.optionals config.isPersonalMachine [
@@ -39,4 +42,15 @@
 
   # PDF viewer
   programs.zathura.enable = !pkgs.stdenv.isDarwin; # Disabled on MacOS due to https://github.com/NixOS/nixpkgs/issues/514566
+
+  home.sessionPath = [scriptDir];
+  home.sessionVariables.LOGSEQ_QUICK_CAPTURE_JOURNALS_DIR = "${config.home.homeDirectory}/knowledge-base/${
+    if config.isPersonalMachine
+    then "personal"
+    else "work"
+  }/journals";
+
+  programs.nushell.extraEnv = ''
+    $env.PATH = ($env.PATH | split row (char esep) | append "${scriptDir}")
+  '';
 }

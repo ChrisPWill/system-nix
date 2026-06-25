@@ -143,6 +143,21 @@ window-rule {
     open-floating true
 }
 window-rule {
+    match title="quick-capture"
+    open-floating true
+    default-column-width { fixed 700; }
+    default-window-height { fixed 160; }
+    shadow {
+        on
+        spread 2
+        softness 30
+        draw-behind-window true
+
+        color "#98c379"
+        inactive-color "#00000070"
+    }
+}
+window-rule {
     match title="ghostty-floating"
     open-floating true
     default-column-width { proportion 0.60; }
@@ -217,5 +232,4 @@ include "dms/outputs.kdl"
 include "dms/windowrules.kdl"
 include "dms-overrides.kdl"
 include "niri-host.kdl"
-
 

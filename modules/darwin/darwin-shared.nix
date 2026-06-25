@@ -65,6 +65,9 @@ in {
       # Useful spotlight alternative
       "raycast"
 
+      # Terminal used by floating utility prompts such as quick-capture
+      "ghostty"
+
       # Mandatory, fixes bad scroll behaviour
       "scroll-reverser"
     ];
