@@ -47,20 +47,35 @@ in {
 
   homebrew = {
     casks = [
+      "cleanshot"
+
       # AI VSCode wrapper
       "cursor"
 
       "docker-desktop"
 
+      "gcloud-cli"
       "google-drive"
+
+      # AI note taker
+      "granola"
 
       # Test requests
       "insomnia"
 
       "intellij-idea"
 
+      # Reduce image sizes
+      "imageoptim"
+
       # Screen recordings
       "loom"
+
+      # Test APIs etc.
+      "rapidapi"
+
+      # DB management
+      "tableplus"
 
       "vivaldi"
     ];
