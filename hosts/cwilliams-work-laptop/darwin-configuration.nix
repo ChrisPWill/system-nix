@@ -37,10 +37,12 @@ in {
   ];
 
   # Temporary hack until I figure out a better solution to det nix
-  nix.enable = false;
-  nix.optimise.automatic = lib.mkForce false;
-  nix.gc.automatic = lib.mkForce false;
-  nix.package = pkgs.nix;
+  nix = {
+    enable = false;
+    gc = {automatic = lib.mkForce false;};
+    optimise = {automatic = lib.mkForce false;};
+    package = pkgs.nix;
+  };
   # End hack
 
   homebrew = {
