@@ -52,6 +52,9 @@ in {
       # AI VSCode wrapper
       "cursor"
 
+      # Added as a brew cask to get latest updates
+      "claude-code"
+
       "docker-desktop"
 
       "gcloud-cli"
