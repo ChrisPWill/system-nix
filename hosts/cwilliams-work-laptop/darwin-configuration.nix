@@ -57,6 +57,8 @@ in {
       # Test requests
       "insomnia"
 
+      "intellij-idea"
+
       # Screen recordings
       "loom"
 
