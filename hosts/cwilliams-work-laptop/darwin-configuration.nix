@@ -2,6 +2,7 @@
   config,
   inputs,
   pkgs,
+  lib,
   ...
 }: let
   primaryUser = config.system.primaryUser;
@@ -34,6 +35,13 @@ in {
     # macOS-specific kanata service and dependencies
     inputs.self.modules.darwin.kanata
   ];
+
+  # Temporary hack until I figure out a better solution to det nix
+  nix.enable = false;
+  nix.optimise.automatic = lib.mkForce false;
+  nix.gc.automatic = lib.mkForce false;
+  nix.package = pkgs.nix;
+  # End hack
 
   homebrew = {
     casks = [

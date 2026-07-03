@@ -1,6 +1,7 @@
 {
   config,
   inputs,
+  pkgs,
   ...
 }: {
   imports = [
@@ -10,6 +11,9 @@
   ];
 
   config = {
+    # Temp hack to solve det nix
+    nix.package = pkgs.nix;
+
     home.sessionPath = [
       # pip and other stuff
       "${config.home.homeDirectory}/.local/bin"
