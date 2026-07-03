@@ -49,6 +49,8 @@ in {
 
       # Screen recordings
       "loom"
+
+      "vivaldi"
     ];
   };
 
