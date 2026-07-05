@@ -24,5 +24,7 @@
 
     # Enable copilot
     nixCats.custom.enableCopilot = true;
+
+    services.logseq-capture.enable = true;
   };
 }
