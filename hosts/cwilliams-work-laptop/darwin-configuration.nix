@@ -55,6 +55,8 @@ in {
       # Added as a brew cask to get latest updates
       "claude-code"
 
+      "datagrip"
+
       "docker-desktop"
 
       "gcloud-cli"
