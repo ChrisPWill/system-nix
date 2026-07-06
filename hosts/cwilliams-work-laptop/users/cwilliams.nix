@@ -19,6 +19,12 @@
       "${config.home.homeDirectory}/.local/bin"
     ];
 
+    home.packages = with pkgs; [
+      # These are added temporarily to help sequence api build
+      ruby
+      libyaml
+    ];
+
     # Envoluntary configuration
     xdg.configFile."envoluntary/config.toml".source = config.lib.file.mkOutOfStoreSymlink "${config.nixConfigDir}/hosts/cwilliams-work-laptop/users/envoluntary.toml";
 
