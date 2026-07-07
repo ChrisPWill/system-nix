@@ -97,6 +97,16 @@ in {
     blacklist = ["Loom"];
   };
 
+  launchd.user.agents.set-gui-path = {
+    script = ''
+      /bin/launchctl setenv PATH "/run/current-system/sw/bin:/etc/profiles/per-user/$USER/bin:$PATH"
+    '';
+    serviceConfig = {
+      Label = "set-gui-path";
+      RunAtLoad = true;
+    };
+  };
+
   system = {
     keyboard.enableKeyMapping = false;
     keyboard.remapCapsLockToEscape = false;
