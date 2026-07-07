@@ -155,7 +155,7 @@ in {
         AppleFontSmoothing = 1;
         # Keep top-row keys for media controls; hold Fn for function keys
         "com.apple.keyboard.fnState" = false;
-        _HIHideMenuBar = true;
+        _HIHideMenuBar = false;
         InitialKeyRepeat = 15;
         KeyRepeat = 1;
         "com.apple.mouse.tapBehavior" = 1;
