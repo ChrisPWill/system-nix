@@ -44,7 +44,8 @@ in {
     };
 
     programs.sketchybar = {
-      enable = true;
+      # Rely on OmniWM inbuilt bar
+      enable = false;
       extraPackages = [pkgs.jq];
       service.enable = false;
     };
