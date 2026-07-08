@@ -91,6 +91,10 @@ in {
     '';
   };
 
+  # See https://github.com/nix-darwin/nix-darwin/issues/1817 - maybe can remove shortly
+  documentation.enable = false;
+  system.tools.darwin-uninstaller.enable = false;
+
   services.jankyborders = {
     enable = true;
     width = 7.0;
