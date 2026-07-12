@@ -351,7 +351,6 @@
   "batteryNotifyCritical": true,
   "batteryLowThreshold": 20,
   "batteryNotifyLow": false,
-  "batteryNotificationType": 0,
   "batteryAutoPowerSaver": false,
   "lockBeforeSuspend": false,
   "loginctlLockIntegration": true,
@@ -456,7 +455,6 @@
   "maxFprintTries": 15,
   "enableU2f": false,
   "u2fMode": "or",
-  "lockScreenActiveMonitor": "all",
   "lockScreenInactiveColor": "#000000",
   "lockScreenNotificationMode": 0,
   "lockScreenVideoEnabled": false,
@@ -534,7 +532,9 @@
       "name": "Main Bar",
       "enabled": true,
       "position": 0,
-      "screenPreferences": ["all"],
+      "screenPreferences": [
+        "all"
+      ],
       "showOnLastDisplay": true,
       "leftWidgets": [
         "launcherButton",
@@ -649,7 +649,9 @@
   "desktopClockY": -1,
   "desktopClockWidth": 280,
   "desktopClockHeight": 180,
-  "desktopClockDisplayPreferences": ["all"],
+  "desktopClockDisplayPreferences": [
+    "all"
+  ],
   "systemMonitorEnabled": false,
   "systemMonitorShowHeader": true,
   "systemMonitorTransparency": 0.8,
@@ -686,7 +688,9 @@
   "systemMonitorY": -1,
   "systemMonitorWidth": 320,
   "systemMonitorHeight": 480,
-  "systemMonitorDisplayPreferences": ["all"],
+  "systemMonitorDisplayPreferences": [
+    "all"
+  ],
   "systemMonitorVariants": [],
   "desktopWidgetPositions": {},
   "desktopWidgetGridSettings": {},
@@ -701,7 +705,11 @@
   "clipboardEnterToPaste": false,
   "clipboardRememberTypeFilter": false,
   "clipboardTypeFilter": "all",
-  "clipboardVisibleEntryActions": ["pin", "edit", "delete"],
+  "clipboardVisibleEntryActions": [
+    "pin",
+    "edit",
+    "delete"
+  ],
   "launcherPluginVisibility": {},
   "launcherPluginOrder": [],
   "frameEnabled": false,
@@ -709,7 +717,9 @@
   "frameRounding": 23,
   "frameColor": "",
   "frameOpacity": 1,
-  "frameScreenPreferences": ["all"],
+  "frameScreenPreferences": [
+    "all"
+  ],
   "frameBarSize": 40,
   "frameShowOnOverview": false,
   "frameBlurEnabled": true,
@@ -717,5 +727,8 @@
   "frameLauncherEmergeSide": "bottom",
   "frameLauncherArcExtender": false,
   "frameMode": "connected",
-  "configVersion": 11
+  "configVersion": 12,
+  "batteryChargeLimitNotificationType": 0,
+  "batteryLowNotificationType": 0,
+  "batteryCriticalNotificationType": 0
 }
