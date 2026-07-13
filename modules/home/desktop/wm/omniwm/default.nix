@@ -62,8 +62,6 @@
       animationsEnabled = true;
       defaultLayoutType = "niri";
       hotkeysEnabled = false;
-      hyperKeyHoldThresholdMilliseconds = 150;
-      hyperTrigger = "Left Option";
       ipcEnabled = true;
       preventSleepEnabled = false;
       updateChecksEnabled = true;
@@ -79,9 +77,8 @@
     };
 
     mouseWarp = {
-      axis = "horizontal";
+      enabled = true;
       margin = 1;
-      monitorOrder = [];
     };
 
     niri = {
@@ -121,8 +118,8 @@
       enabled = true;
       height = 24.0;
       hideEmptyWorkspaces = false;
-      labelFontSize = 12.0;
-      notchAware = true;
+      notchActiveZoneWidth = 180.0;
+      notchMode = "moveBelowMenuBar";
       position = "overlappingMenuBar";
       reserveLayoutSpace = false;
       showFloatingWindows = false;
@@ -133,6 +130,16 @@
       accentColor = stylixColor "base0D";
       textColor = stylixColor "base05";
     };
+
+    # Bound via skhd (cmd+alt+shift-slash -> omniwmctl command open-command-palette, see
+    # shared-keybinds.nix) instead, since the built-in binding clashes with macOS's
+    # "select previous input source" shortcut.
+    hotkeys = [
+      {
+        id = "openCommandPalette";
+        binding = "Unassigned";
+      }
+    ];
 
     inherit appRules;
     inherit workspaces;
