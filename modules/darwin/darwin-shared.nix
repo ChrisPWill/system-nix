@@ -54,7 +54,10 @@ in {
 
     taps = [
       # Tap for OmniWM window manager
-      "BarutSRB/tap"
+      {
+        name = "BarutSRB/tap";
+        trusted = true;
+      }
     ];
 
     casks = [
@@ -74,7 +77,7 @@ in {
   };
 
   services.sketchybar = {
-      # Disabled in preference to built-in OmniWM bar
+    # Disabled in preference to built-in OmniWM bar
     enable = false;
     extraPackages = [pkgs.jq];
     config = ''
@@ -170,7 +173,7 @@ in {
       trackpad = {
         Clicking = true; # tap to click
         TrackpadRightClick = true; # two finger right click
-        TrackpadThreeFingerDrag = true;
+        TrackpadThreeFingerDrag = false; # frees up 3-finger swipes for OmniWM gestures
       };
     };
   };

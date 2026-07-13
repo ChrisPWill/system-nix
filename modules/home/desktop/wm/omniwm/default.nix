@@ -74,6 +74,12 @@
       scrollEnabled = true;
       scrollModifierKey = "optionShift";
       scrollSensitivity = 5.0;
+      # Vertical 3-finger swipe switches workspaces. Requires macOS's Mission
+      # Control 3/4-finger vertical swipe gesture to be disabled (System
+      # Settings > Trackpad > More Gestures), otherwise it intercepts the swipe.
+      workspaceSwipeEnabled = true;
+      workspaceSwipeFingerCount = "three";
+      workspaceSwipeAxis = "vertical";
     };
 
     mouseWarp = {
