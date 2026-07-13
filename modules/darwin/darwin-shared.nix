@@ -74,7 +74,8 @@ in {
   };
 
   services.sketchybar = {
-    enable = true;
+      # Disabled in preference to built-in OmniWM bar
+    enable = false;
     extraPackages = [pkgs.jq];
     config = ''
       #!/bin/zsh

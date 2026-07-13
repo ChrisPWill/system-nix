@@ -22,7 +22,8 @@
 in {
   config = lib.mkIf pkgs.stdenv.isDarwin {
     launchd.agents.sketchybar-omniwm-watch = {
-      enable = true;
+      # Disabled in preference to built-in OmniWM bar
+      enable = false;
       config = {
         ProgramArguments = [
           "${config.home.homeDirectory}/.config/sketchybar/plugins/omniwm.sh"
