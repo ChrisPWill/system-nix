@@ -78,7 +78,7 @@
       # Control 3/4-finger vertical swipe gesture to be disabled (System
       # Settings > Trackpad > More Gestures), otherwise it intercepts the swipe.
       workspaceSwipeEnabled = true;
-      workspaceSwipeFingerCount = "three";
+      workspaceSwipeFingerCount = 3;
       workspaceSwipeAxis = "vertical";
     };
 
