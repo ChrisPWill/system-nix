@@ -25,6 +25,13 @@
   kanataStoreBinary = "${pkgs.kanata}/bin/kanata";
   kanataStableDir = "/Library/Application Support/Kanata";
   kanataStableBinary = "${kanataStableDir}/kanata";
+  kanataSourceMarker = "${kanataStableDir}/.source-store-path";
+  # kanata ships ad-hoc signed, which macOS TCC keys Input Monitoring grants to by raw
+  # binary hash (cdhash). Every nixpkgs version bump silently invalidates the grant even
+  # though it still shows enabled in System Settings. Re-signing with a persistent local
+  # certificate gives TCC a stable identity to key off instead, so grants survive rebuilds.
+  kanataCertCommonName = "org.nixos.kanata-codesign";
+  kanataCodesignIdentifier = "org.nixos.kanata";
   kanataCommandArgs =
     [
       kanataStableBinary
@@ -43,9 +50,34 @@ in {
       /usr/sbin/chown root:wheel "${kanataStableDir}"
       /bin/chmod 0755 "${kanataStableDir}"
 
-      if ! /usr/bin/cmp -s "${kanataStoreBinary}" "${kanataStableBinary}"; then
+      if ! /usr/bin/security find-certificate -c "${kanataCertCommonName}" /Library/Keychains/System.keychain >/dev/null 2>&1; then
+        echo "generating self-signed code-signing certificate for kanata..." >&2
+        kanataCertTmp="$(/usr/bin/mktemp -d)"
+        ${pkgs.openssl}/bin/openssl req -x509 -newkey rsa:2048 \
+          -keyout "$kanataCertTmp/key.pem" -out "$kanataCertTmp/cert.pem" \
+          -days 36500 -nodes -subj "/CN=${kanataCertCommonName}" \
+          -addext "keyUsage=critical,digitalSignature" \
+          -addext "extendedKeyUsage=codeSigning" \
+          -addext "basicConstraints=critical,CA:false"
+        ${pkgs.openssl}/bin/openssl pkcs12 -export -legacy \
+          -out "$kanataCertTmp/cert.p12" \
+          -inkey "$kanataCertTmp/key.pem" -in "$kanataCertTmp/cert.pem" \
+          -keypbe PBE-SHA1-3DES -certpbe PBE-SHA1-3DES -macalg sha1 \
+          -passout pass:kanata-codesign-transient
+        /usr/bin/security import "$kanataCertTmp/cert.p12" -k /Library/Keychains/System.keychain \
+          -P kanata-codesign-transient -T /usr/bin/codesign -T /usr/bin/security
+        /usr/bin/security add-trusted-cert -d -r trustRoot -p codeSign \
+          -k /Library/Keychains/System.keychain "$kanataCertTmp/cert.pem"
+        /bin/rm -rf "$kanataCertTmp"
+      fi
+
+      if [ ! -e "${kanataStableBinary}" ] || [ "$(/bin/cat "${kanataSourceMarker}" 2>/dev/null)" != "${kanataStoreBinary}" ]; then
         /usr/bin/install -m 0555 -o root -g wheel "${kanataStoreBinary}" "${kanataStableBinary}.tmp"
+        /usr/bin/codesign --force --timestamp=none \
+          --sign "${kanataCertCommonName}" --identifier "${kanataCodesignIdentifier}" \
+          "${kanataStableBinary}.tmp"
         /bin/mv "${kanataStableBinary}.tmp" "${kanataStableBinary}"
+        printf '%s' "${kanataStoreBinary}" > "${kanataSourceMarker}"
       fi
 
       karabiner_virtual_hid_version="${karabinerVirtualHid.version}"
