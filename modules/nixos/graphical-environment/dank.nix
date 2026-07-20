@@ -4,7 +4,7 @@
   ...
 }: {
   imports = [
-    inputs.dankMaterialShell.nixosModules.greeter
+    inputs.dankGreeter.nixosModules.default
   ];
 
   config = {
@@ -13,7 +13,7 @@
       power-profiles-daemon # performance mode, etc.
     ];
 
-    programs.dank-material-shell.greeter = {
+    services.displayManager.dms-greeter = {
       enable = true;
       compositor.name = "niri";
     };
