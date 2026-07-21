@@ -60,7 +60,7 @@ in {
           caps
           ${lib.optionalString macOSFunctionRow ''
           f1 f2 f3 f4 f5 f6 f7 f8 f9 f10 f11 f12
-          fn
+          fn up down
         ''}
         )
 
@@ -68,7 +68,7 @@ in {
           @lead
           ${lib.optionalString macOSFunctionRow ''
           brdn brup f3 f4 f5 f6 prev pp next mute vold volu
-          @fn-row
+          @fn-row up down
         ''}
         )
 
@@ -76,7 +76,7 @@ in {
           (deflayer function-keys
             _
             f1 f2 f3 f4 f5 f6 f7 f8 f9 f10 f11 f12
-            _
+            _ pgup pgdn
           )
         ''}
       '';
