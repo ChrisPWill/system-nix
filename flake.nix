@@ -32,6 +32,8 @@
 
     dankMaterialShell.url = "github:AvengeMedia/DankMaterialShell";
     dankMaterialShell.inputs.nixpkgs.follows = "nixpkgs";
+    dankGreeter.url = "github:AvengeMedia/dank-greeter";
+    dankGreeter.inputs.nixpkgs.follows = "nixpkgs";
 
     stylix.url = "github:nix-community/stylix";
     stylix.inputs.nixpkgs.follows = "nixpkgs";
