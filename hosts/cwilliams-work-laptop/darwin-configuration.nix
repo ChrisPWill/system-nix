@@ -109,6 +109,20 @@ in {
   users.users.cwilliams.home = /Users/cwilliams;
   system.primaryUser = "cwilliams";
 
+  # Keep the logical layout aligned with the laptop's physical UK keyboard.
+  # HIToolbox applies this to the logged-in user's macOS input source.
+  system.defaults.CustomUserPreferences."com.apple.HIToolbox" = let
+    britishKeyboard = {
+      InputSourceKind = "Keyboard Layout";
+      "KeyboardLayout ID" = 2;
+      "KeyboardLayout Name" = "British";
+    };
+  in {
+    AppleCurrentKeyboardLayoutInputSourceID = "com.apple.keylayout.British";
+    AppleEnabledInputSources = [britishKeyboard];
+    AppleSelectedInputSources = [britishKeyboard];
+  };
+
   # Every once in a while, a new nix-darwin release may change configuration defaults
   # in a way incompatible with stateful data. For instance, if the default version of
   # PostgreSQL changes, the new version will probably be unable to read your existing
