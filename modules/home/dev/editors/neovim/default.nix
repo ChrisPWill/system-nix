@@ -2,6 +2,7 @@
   inputs,
   config,
   lib,
+  perSystem,
   pkgs,
   ...
 }: let
@@ -9,6 +10,7 @@
     inherit inputs lib pkgs;
     luaPath = config.lib.file.mkOutOfStoreSymlink "${config.homeModuleDir}/dev/editors/neovim/config";
     docsPath = "${config.homeModuleDir}/dev/editors/neovim/docs";
+    kotlinLsp = perSystem.self.kotlin-lsp;
     enableCopilot = config.nixCats.custom.enableCopilot;
     enableLocalOllama = config.services.local-ollama.enable;
     neovimProvider = config.home.ai.neovimProvider;

@@ -32,12 +32,16 @@
     };
     kotlin = {
       file = "src/main/kotlin/Main.kt";
-      clients = "kotlin_language_server";
+      clients = "kotlin_lsp";
       trigger = "fixtureTargetAl";
       completion = "fixtureTargetAlpha";
-      executables = "kotlin-language-server,ktlint";
-      formatter = "ktlint";
-      linter = "ktlint";
+      executables = "kotlin-lsp";
+      formatter = "";
+      linter = "";
+      forbiddenFormatter = "ktlint";
+      forbiddenLinter = "ktlint";
+      lspFormatting = true;
+      formattedText = "  if(true) {\n    val styleIssue = \"EditorConfig should control formatting\"";
       expectDiagnostics = false;
     };
     nix = {
@@ -55,7 +59,7 @@
   case = cases.${language};
 in
   pkgs.runCommand "neovim-lsp-${language}-check" {
-    nativeBuildInputs = [pkgs.coreutils];
+    nativeBuildInputs = [pkgs.coreutils] ++ pkgs.lib.optionals (language == "kotlin") [pkgs.gradle];
     meta.platforms = pkgs.lib.platforms.linux;
   } ''
     set -euo pipefail
@@ -71,12 +75,14 @@ in
     mkdir -p "$work" "$home" "$state" "$cache" "$data"
     cp -R ${fixtureRoot}/. "$work/"
     chmod -R u+w "$work"
+    ${pkgs.lib.optionalString (language == "kotlin") ''ln -s ${pkgs.gradle}/bin/gradle "$work/gradlew"''}
 
     export HOME="$home"
     export XDG_CONFIG_HOME="$home/.config"
     export XDG_STATE_HOME="$state"
     export XDG_CACHE_HOME="$cache"
     export XDG_DATA_HOME="$data"
+    export IJ_JAVA_OPTIONS="-Duser.home=$home"
     export NVIM_LSP_LOG_FILE="$lsp_log"
     export NVIM_LSP_TEST_REPORT="$report"
     export NVIM_LSP_TEST_FILE="$work/${case.file}"
@@ -86,6 +92,14 @@ in
     export NVIM_LSP_TEST_EXECUTABLES="${case.executables}"
     export NVIM_LSP_TEST_FORMATTER="${case.formatter}"
     export NVIM_LSP_TEST_LINTER="${case.linter}"
+    export NVIM_LSP_TEST_FORBIDDEN_FORMATTER="${case.forbiddenFormatter or ""}"
+    export NVIM_LSP_TEST_FORBIDDEN_LINTER="${case.forbiddenLinter or ""}"
+    export NVIM_LSP_TEST_LSP_FORMATTING="${
+      if case.lspFormatting or false
+      then "1"
+      else "0"
+    }"
+    export NVIM_LSP_TEST_FORMATTED_TEXT=${pkgs.lib.escapeShellArg (case.formattedText or "")}
     export NVIM_LSP_TEST_EXPECT_DIAGNOSTICS="${
       if case.expectDiagnostics
       then "1"

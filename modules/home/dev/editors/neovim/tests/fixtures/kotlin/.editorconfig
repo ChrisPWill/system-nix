@@ -1,0 +1,16 @@
+root = true
+
+[*]
+charset = utf-8
+end_of_line = lf
+insert_final_newline = true
+indent_style = space
+indent_size = 2
+
+[*.kt]
+ij_kotlin_code_style_defaults = KOTLIN_OFFICIAL
+ij_kotlin_space_before_if_parentheses = false
+
+[*.kts]
+ij_kotlin_code_style_defaults = KOTLIN_OFFICIAL
+ij_kotlin_space_before_if_parentheses = false

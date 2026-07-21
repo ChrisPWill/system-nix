@@ -1,4 +1,8 @@
-{pkgs, ...}: {
+{
+  perSystem,
+  pkgs,
+  ...
+}: {
   # Mirroring the LSP/Formatter setup from Neovim
   home.packages = with pkgs; [
     # Nix
@@ -44,7 +48,6 @@
     marksman
 
     # Kotlin
-    kotlin-language-server
-    ktlint
+    perSystem.self.kotlin-lsp
   ];
 }

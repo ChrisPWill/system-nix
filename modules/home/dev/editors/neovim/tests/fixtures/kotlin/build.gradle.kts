@@ -1,7 +1,9 @@
 plugins {
-    kotlin("jvm") version "2.0.0"
+    java
 }
 
-kotlin {
-    jvmToolchain(21)
+sourceSets {
+    main {
+        java.srcDir("src/main/kotlin")
+    }
 }

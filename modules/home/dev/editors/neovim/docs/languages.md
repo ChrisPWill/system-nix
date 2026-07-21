@@ -22,7 +22,7 @@ This configuration provides robust support for a wide range of development envir
 - **HTML / CSS:** Full LSP support including `jsonls` and `yamlls`.
 - **Go:** Integrated via `gopls` with formatting and linting.
 - **Java:** Robust support using `jdtls` and `google-java-format`.
-- **Kotlin:** Powered by `kotlin-language-server` and `ktlint`.
+- **Kotlin:** Powered by JetBrains' alpha `kotlin-lsp`; IntelliJ EditorConfig rules are authoritative for LSP formatting and diagnostics.
 - **Python:** Managed with `basedpyright` and `ruff`.
 
 ## 󰘦 Data & Documentation

@@ -8,6 +8,8 @@ A Helix configuration aligned with the project's **Hybrid Philosophy** to provid
 - **UI/UX Sync:** Visual settings (Relative lines, cursor shapes, theme) should be kept in sync with the Neovim UX to minimize context switching friction.
 - **Auto-Formatting:** Enabled by default for all supported languages using the same tools as Neovim.
 
+For Kotlin, Helix uses JetBrains' official alpha `kotlin-lsp` for diagnostics and formatting. The LSP's IntelliJ code-style engine applies the closest EditorConfig settings, including `ij_kotlin_*` properties and EditorConfig files outside source roots. No editor-side `ktlint` formatter or check is configured; repository Gradle lint tasks remain available separately.
+
 ## 󱄅 Nix Implementation
 
 The configuration is managed in `modules/home/dev/editors/helix/default.nix`. It explicitly:

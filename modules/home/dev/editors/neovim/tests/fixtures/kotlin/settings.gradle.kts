@@ -1,15 +1,1 @@
-pluginManagement {
-    repositories {
-        gradlePluginPortal()
-        mavenCentral()
-    }
-}
-
-dependencyResolutionManagement {
-    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
-    repositories {
-        mavenCentral()
-    }
-}
-
-rootProject.name = "meow-lsp-kotlin-fixture"
+rootProject.name = "kotlin-lsp-fixture"

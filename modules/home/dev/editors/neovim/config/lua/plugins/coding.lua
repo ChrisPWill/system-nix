@@ -23,7 +23,6 @@ return {
 				zsh = nixCats("general") and { "shellcheck" } or nil,
 				cpp = nixCats("cpp") and { "cppcheck" } or nil,
 				c = nixCats("cpp") and { "cppcheck" } or nil,
-				kotlin = nixCats("kotlin") and { "ktlint" } or nil,
 			}
 
 			-- Note - general compiler warnings should cover the majority of these
@@ -95,7 +94,7 @@ return {
 					toml = nixCats("general") and get_formatters({ "tombi" }) or nil,
 					python = nixCats("python") and { "ruff_organize_imports", lsp_format = "last" } or nil,
 					java = nixCats("java") and { "google-java-format" } or nil,
-					kotlin = nixCats("kotlin") and get_formatters({ "ktlint" }) or nil,
+					kotlin = nixCats("kotlin") and { lsp_format = "only" } or nil,
 					html = nixCats("web") and get_formatters({ "prettierd" }) or nil,
 					css = nixCats("web") and get_formatters({ "prettierd" }) or nil,
 					graphql = nixCats("node") and get_formatters({ "prettierd" }) or nil,

@@ -5,7 +5,9 @@ fun fixtureTargetAlpha(value: String): String {
 }
 
 fun main() {
-    fixtureTargetAl
-    val styleIssue= "ktlint should prefer spaces around equals"
-    println(styleIssue)
+        fixtureTargetAl
+        if (true) {
+                val styleIssue= "EditorConfig should control formatting"
+                println(styleIssue)
+        }
 }

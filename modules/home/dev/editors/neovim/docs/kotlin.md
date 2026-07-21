@@ -1,13 +1,17 @@
 # 󱘗 Kotlin Support
 
-Robust support for Kotlin development using industry-standard tools.
+Kotlin support built around JetBrains' official, IntelliJ-based language server.
 
 ## 󰘦 Features
 
-- **LSP:** Powered by `kotlin-language-server` via `nvim-lspconfig`.
-- **Formatting:** Handled by `ktlint` via `conform.nvim`.
-- **Linting:** Integrated via `nvim-lint` using `ktlint`.
+- **LSP:** Powered by JetBrains' official `kotlin-lsp` via `nvim-lspconfig`.
+- **Formatting:** Routed through the LSP by `conform.nvim`, using IntelliJ's code-style engine and EditorConfig support.
+- **Diagnostics:** Kotlin compiler diagnostics and IntelliJ inspections come from the LSP.
 - **Tree-sitter:** Syntax highlighting and structural navigation are always enabled.
+
+The official server is currently alpha software. It is used here because its IntelliJ formatter understands both generic EditorConfig properties and IntelliJ-specific `ij_kotlin_*` properties. The closest applicable `.editorconfig` takes precedence, including files outside Kotlin source roots.
+
+There is deliberately no editor-side `ktlint` formatter or `nvim-lint` check for Kotlin, so it cannot contradict IntelliJ EditorConfig rules. Projects can still run repository-native Gradle tasks such as ktlint or detekt independently, including in CI.
 
 ## 󰘦 Keybindings
 

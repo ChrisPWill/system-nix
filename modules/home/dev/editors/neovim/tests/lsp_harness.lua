@@ -25,7 +25,12 @@ local function write_report()
 		"",
 		"== clients ==",
 	}
-
+	local lsp_log = vim.lsp.get_log_path()
+	if vim.fn.filereadable(lsp_log) == 1 then
+		table.insert(lines, "")
+		table.insert(lines, "== lsp log contents ==")
+		vim.list_extend(lines, vim.fn.readfile(lsp_log))
+	end
 	for _, client in ipairs(vim.lsp.get_clients({ bufnr = 0 })) do
 		table.insert(lines, string.format("%s (%d)", client.name, client.id))
 	end
@@ -174,16 +179,15 @@ local function request_document_symbol(bufnr, clients, expected)
 end
 
 local function check_lint(ft, expected)
-	if expected == "" then
-		return
-	end
-
 	local ok, lint = pcall(require, "lint")
 	assert_true(ok, "nvim-lint did not load")
 
 	local configured = lint.linters_by_ft[ft] or {}
 	for _, linter in ipairs(split(expected)) do
 		assert_true(contains(configured, linter), "expected linter " .. linter .. " for filetype " .. ft)
+	end
+	for _, linter in ipairs(split(vim.env.NVIM_LSP_TEST_FORBIDDEN_LINTER)) do
+		assert_true(not contains(configured, linter), "unexpected linter " .. linter .. " for filetype " .. ft)
 	end
 end
 
@@ -261,27 +265,59 @@ local function start_expected_lsp_clients(bufnr, expected_clients)
 end
 
 local function check_formatter(bufnr, expected)
-	if expected == "" then
-		return
-	end
-
 	local ok, conform = pcall(require, "conform")
 	assert_true(ok, "conform.nvim did not load")
 
-	if conform.get_formatter_info then
+	if expected ~= "" and conform.get_formatter_info then
 		local info = conform.get_formatter_info(expected, bufnr)
 		assert_true(info ~= nil, "formatter is not configured: " .. expected)
 		assert_true(info.available ~= false, "formatter is configured but unavailable: " .. expected)
 		return
 	end
 
-	for _, formatter in ipairs(conform.list_formatters(bufnr)) do
+	local configured = conform.list_formatters(bufnr)
+	for _, formatter in ipairs(configured) do
 		if formatter.name == expected then
-			return
+			expected = ""
+		end
+		for _, forbidden in ipairs(split(vim.env.NVIM_LSP_TEST_FORBIDDEN_FORMATTER)) do
+			assert_true(formatter.name ~= forbidden, "unexpected formatter " .. forbidden)
 		end
 	end
 
-	fail("formatter is not configured: " .. expected)
+	assert_true(expected == "", "formatter is not configured: " .. expected)
+end
+
+local function check_lsp_formatting(bufnr, clients)
+	if vim.env.NVIM_LSP_TEST_LSP_FORMATTING ~= "1" then
+		return
+	end
+
+	local supports_formatting = false
+	for _, client in ipairs(clients) do
+		if client.supports_method and client:supports_method("textDocument/formatting", bufnr) then
+			supports_formatting = true
+		end
+	end
+	assert_true(supports_formatting, "no attached client advertises document formatting")
+	assert_true(
+		vim.wait(45000, function()
+			return vim.g.kotlin_lsp_ready_for_test == true
+		end, 100),
+		"timed out waiting for Kotlin LSP workspace initialization"
+	)
+
+	local ok, conform = pcall(require, "conform")
+	assert_true(ok, "conform.nvim did not load")
+	conform.format({ bufnr = bufnr, async = false, timeout_ms = 30000, lsp_format = "only" })
+
+	local formatted_lines = vim.api.nvim_buf_get_lines(bufnr, 0, -1, false)
+	for line in vim.env.NVIM_LSP_TEST_FORMATTED_TEXT:gmatch("[^\n]+") do
+		assert_true(
+			contains(formatted_lines, line),
+			"formatted line missing: " .. line .. "\n" .. table.concat(formatted_lines, "\n")
+		)
+	end
 end
 
 local function main()
@@ -292,6 +328,9 @@ local function main()
 	assert_true(file and file ~= "", "NVIM_LSP_TEST_FILE is required")
 	local expected_clients = split(vim.env.NVIM_LSP_TEST_CLIENTS)
 	assert_true(#expected_clients > 0, "NVIM_LSP_TEST_CLIENTS is required")
+	vim.lsp.handlers["intellij/ready-for-test"] = function()
+		vim.g.kotlin_lsp_ready_for_test = true
+	end
 
 	vim.cmd.edit(vim.fn.fnameescape(file))
 	local bufnr = vim.api.nvim_get_current_buf()
@@ -351,6 +390,7 @@ local function main()
 	)
 
 	local clients = vim.lsp.get_clients({ bufnr = bufnr })
+	check_lsp_formatting(bufnr, clients)
 	if vim.env.NVIM_LSP_TEST_COMPLETION and vim.env.NVIM_LSP_TEST_COMPLETION ~= "" then
 		assert_true(
 			vim.wait(15000, function()

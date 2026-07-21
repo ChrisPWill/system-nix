@@ -4,6 +4,7 @@
   pkgs,
   luaPath,
   docsPath,
+  kotlinLsp,
   enableCopilot ? false,
   enableLocalOllama ? false,
   neovimProvider ? null,
@@ -118,8 +119,7 @@
         jdt-language-server
       ];
       kotlin = with pkgs; [
-        kotlin-language-server
-        ktlint
+        kotlinLsp
       ];
       web = with pkgs; [
         tailwindcss
