@@ -23,9 +23,9 @@ return {
 					end
 
 					-- Navigation
-					map({ "n", "v" }, "]g", function()
+					map({ "n", "v" }, "]h", function()
 						if vim.wo.diff then
-							return "]g"
+							return "]h"
 						end
 						vim.schedule(function()
 							gs.next_hunk()
@@ -33,9 +33,9 @@ return {
 						return "<Ignore>"
 					end, { expr = true, desc = "Next hunk" })
 
-					map({ "n", "v" }, "[g", function()
+					map({ "n", "v" }, "[h", function()
 						if vim.wo.diff then
-							return "[g"
+							return "[h"
 						end
 						vim.schedule(function()
 							gs.prev_hunk()
@@ -74,8 +74,8 @@ return {
 
 					if not vim.b[bufnr].gitsigns_which_key_registered then
 						local registered = utils.registerWhichKey({
-							{ "]g", desc = "Next hunk", mode = { "n", "v" } },
-							{ "[g", desc = "Previous hunk", mode = { "n", "v" } },
+							{ "]h", desc = "Next hunk", mode = { "n", "v" } },
+							{ "[h", desc = "Previous hunk", mode = { "n", "v" } },
 							{ "<leader>gs", desc = "Stage hunk", mode = { "n", "v" } },
 							{ "<leader>gr", desc = "Reset hunk", mode = { "n", "v" } },
 							{ "<leader>gS", desc = "Stage buffer" },

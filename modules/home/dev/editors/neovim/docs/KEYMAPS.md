@@ -95,7 +95,7 @@ Secondary tools are organized into mnemonic groups:
 
 ## 9. Plugin-Specific Navigation
 
-- `]g / [g`: Next/Previous Git hunk
+- `]h / [h`: Next/Previous Git hunk
 - `]f / [f`: Next/Previous Function start
 - `]F / [F`: Next/Previous Function end
 - `]c / [c`: Next/Previous Class start

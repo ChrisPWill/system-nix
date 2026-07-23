@@ -6,7 +6,7 @@ Integrated VCS with `gitsigns`, `lazygit`, and your custom **Koji** conventional
 
 | Key          | Action                 | Mode          |
 | :----------- | :--------------------- | :------------ |
-| `]g` / `[g`  | **Next/Prev** Hunk     | Normal/Visual |
+| `]h` / `[h`  | **Next/Prev** Hunk     | Normal/Visual |
 | `<leader>gs` | **Stage** Hunk         | Normal/Visual |
 | `<leader>gr` | **Reset** Hunk         | Normal/Visual |
 | `<leader>gp` | **Preview** Hunk       | Normal        |
