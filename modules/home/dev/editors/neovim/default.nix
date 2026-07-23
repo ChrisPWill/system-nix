@@ -14,7 +14,10 @@
     enableCopilot = config.nixCats.custom.enableCopilot;
     enableLocalOllama = config.services.local-ollama.enable;
     neovimProvider = config.home.ai.neovimProvider;
-    geminiApiKeyPath = config.sops.secrets.gemini_api_key.path;
+    geminiApiKeyPath =
+      if config.home.ai.neovimProvider == "gemini"
+      then config.sops.secrets.gemini_api_key.path
+      else null;
   };
 
   inherit (neovimPackage) mainNixCatsPackageName;
