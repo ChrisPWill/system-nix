@@ -136,6 +136,11 @@ return {
 			end
 
 			local avante_provider = nixCats("codex") and "codex" or (nixCats("gemini") and "gemini-cli") or "ollama"
+			local acp_path = table.concat({
+				"/etc/profiles/per-user/cwilliams/bin",
+				"/run/current-system/sw/bin",
+				os.getenv("PATH") or "",
+			}, ":")
 
 			require("avante").setup({
 				provider = avante_provider,
@@ -154,11 +159,23 @@ return {
 				acp_providers = {
 					["codex"] = {
 						command = "codex-acp",
-						args = {},
+						args = {
+							"-c",
+							'model="gpt-5.5"',
+							"-c",
+							"shell_environment_policy.inherit=all",
+							"-c",
+							'sandbox_mode="workspace-write"',
+							"-c",
+							'approval_policy="on-request"',
+						},
 						env = {
 							NODE_NO_WARNINGS = "1",
 							HOME = os.getenv("HOME"),
-							PATH = os.getenv("PATH"),
+							USER = os.getenv("USER"),
+							SHELL = os.getenv("SHELL"),
+							PATH = acp_path,
+							TMPDIR = os.getenv("TMPDIR") or "/tmp",
 							OPENAI_API_KEY = os.getenv("OPENAI_API_KEY"),
 						},
 					},
