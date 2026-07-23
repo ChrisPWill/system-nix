@@ -8,15 +8,23 @@ def file-summary-system-prompt [] {
   "You are an expert software developer summarizing a single file change for commit message generation. Output concise plain text only, with no markdown block and no JSON. Summarize what changed in this file, why it likely changed when evident, and any behavior or integration impact. It is in git diff format, meaning lines starting with '-' are removed lines, and lines starting with '+' are added lines."
 }
 
-def summarize-file-change [file: string, diff_content: string] {
+def summarize-file-change [file: string, diff_content: string, llm: string] {
   let summary_prompt = (file-summary-system-prompt)
   let file_context = $"FILE: ($file)\n\nDIFF:\n($diff_content)"
 
   try {
-    ai-ask $file_context --system $summary_prompt
+    ai-ask $file_context --system $summary_prompt --llm $llm
   } catch {
-    print -e $"Error running AI while summarizing ($file)."
+    print -e $"Error running ($llm) while summarizing ($file)."
     exit 1
+  }
+}
+
+def get-file-diff [file: string, is_jj: bool] {
+  if $is_jj {
+    (^jj diff --git $file | complete).stdout
+  } else {
+    (^git diff --cached -- $file | complete).stdout
   }
 }
 
@@ -40,7 +48,8 @@ def print-commit-options [options: list<any>] {
 def build-final-context [
   status_content: string,
   hint: string,
-  file_summaries: list<any>,
+  change_contexts: list<any>,
+  context_heading: string,
   excluded_files: list<any>,
   deleted_files: list<any>,
   include_deleted: bool
@@ -51,13 +60,13 @@ def build-final-context [
     $final_context = $"($final_context)\nHINT FOR COMMIT MESSAGE FROM USER:\n($hint | str trim)\n"
   }
 
-  $final_context = $"($final_context)\nFILE SUMMARIES:\n"
+  $final_context = $"($final_context)\n($context_heading):\n"
 
-  if ($file_summaries | is-empty) {
+  if ($change_contexts | is-empty) {
     $final_context = ($final_context + "(none)\n")
   } else {
-    let joined_summaries = ($file_summaries | str join "\n\n")
-    $final_context = $"($final_context)($joined_summaries)\n"
+    let joined_contexts = ($change_contexts | str join "\n\n")
+    $final_context = $"($final_context)($joined_contexts)\n"
   }
 
   if ($excluded_files | is-not-empty) {
@@ -77,8 +86,18 @@ def main [
   hint?: string # Optional guidance for the generated commit messages
   --print-prompt # Print the final prompt sent to the AI and exit
   --print-json # Print raw JSON responses from ai-ask while generating commit messages
-  --include-deleted # Include deleted files in per-file AI summaries
+  --include-deleted # Include deleted files in the AI change context
+  --llm: string = "claude" # LLM provider: claude, codex, or ollama
 ] {
+  let provider = ($llm | str lowercase)
+  let supported_providers = ["claude" "codex" "ollama"]
+  let use_full_diffs = $provider != "ollama"
+
+  if not ($provider in $supported_providers) {
+    print -e $"Error: Unsupported LLM provider '($llm)'. Expected claude, codex, or ollama."
+    exit 1
+  }
+
   let is_git = (".git" | path exists)
   let is_jj = (".jj" | path exists)
 
@@ -190,19 +209,26 @@ def main [
   }
 
   let summary_prompt = (file-summary-system-prompt)
+  let context_heading = if $use_full_diffs { "FILE DIFFS" } else { "FILE SUMMARIES" }
+  let context_files = if $use_full_diffs {
+    $diff_args | append $excluded_files
+  } else {
+    $diff_args
+  }
+  let context_excluded_files = if $use_full_diffs { [] } else { $excluded_files }
 
-  if $print_prompt {
+  if ($print_prompt and not $use_full_diffs) {
     print "=== FILE SUMMARY SYSTEM PROMPT ==="
     print $summary_prompt
     print "\n=== FILES TO SUMMARIZE ==="
-    if ($diff_args | is-empty) {
+    if ($context_files | is-empty) {
       print "(none)"
     } else {
-      print ($diff_args | str join "\n")
+      print ($context_files | str join "\n")
     }
   }
 
-  let system_prompt = "You are an expert software developer. Generate exactly 3 Git commit messages for the provided repository status and per-file change summaries. Follow the Conventional Commits specification. Output ONLY a raw JSON array of objects, with no markdown blocks or other text.
+  let system_prompt = "You are an expert software developer. Generate exactly 3 Git commit messages for the provided repository status and change context. The change context contains either complete file diffs or per-file summaries. Follow the Conventional Commits specification. Output ONLY a raw JSON array of objects, with no markdown blocks or other text.
 
 Example format:
 [
@@ -214,50 +240,50 @@ Example format:
 
 Each object must have a 'summary' field (the conventional commit title) and a 'description' field. The 'description' MUST be detailed and informative (typically 2-4 sentences or a short bulleted list), thoroughly explaining the 'why' and 'what' of the changes to give a reviewer full context. Do NOT include any ANSI escape codes, terminal control sequences, or backspace characters. IMPORTANT: You must escape all newlines inside JSON string values as \\n. Follow the hint from the user if possible."
 
-  mut file_summaries = []
+  mut change_contexts = []
 
-  if $print_prompt {
-    for file in $diff_args {
-      $file_summaries = ($file_summaries | append $"FILE: ($file)\nSUMMARY:\n<ai-generated summary would be inserted here>")
+  if $use_full_diffs {
+    for file in $context_files {
+      let diff_content = (get-file-diff $file $is_jj)
+      $change_contexts = ($change_contexts | append $"FILE: ($file)\nDIFF:\n($diff_content)")
+    }
+  } else if $print_prompt {
+    for file in $context_files {
+      $change_contexts = ($change_contexts | append $"FILE: ($file)\nSUMMARY:\n<ai-generated summary would be inserted here>")
     }
   } else {
-    for file in $diff_args {
-      print $"Summarizing ($file) with AI..."
-      let diff_content = if $is_jj {
-        (^jj diff --git $file | complete).stdout
-      } else {
-        (^git diff --cached -- $file | complete).stdout
-      }
-
-      let summary = (summarize-file-change $file $diff_content | ansi strip | str trim)
-      $file_summaries = ($file_summaries | append $"FILE: ($file)\nSUMMARY:\n($summary)")
+    for file in $context_files {
+      print $"Summarizing ($file) with ($provider)..."
+      let diff_content = (get-file-diff $file $is_jj)
+      let summary = (summarize-file-change $file $diff_content $provider | ansi strip | str trim)
+      $change_contexts = ($change_contexts | append $"FILE: ($file)\nSUMMARY:\n($summary)")
     }
   }
 
   mut current_hint = ($hint | default "" | str trim)
-  let final_context = (build-final-context $status_content $current_hint $file_summaries $excluded_files $deleted_files $include_deleted)
+  let final_context = (build-final-context $status_content $current_hint $change_contexts $context_heading $context_excluded_files $deleted_files $include_deleted)
 
   if $print_prompt {
     print "\n=== FINAL JSON SYSTEM PROMPT ==="
     print $system_prompt
-    print "\n=== FINAL USER PROMPT (STATUS + FILE SUMMARIES) ==="
+    print $"\n=== FINAL USER PROMPT \(STATUS + ($context_heading)) ==="
     print $final_context
     exit 0
   }
 
-  mut selected_obj = null
+  mut selected_obj: any = null
 
   while $selected_obj == null {
-    let final_context = (build-final-context $status_content $current_hint $file_summaries $excluded_files $deleted_files $include_deleted)
+    let final_context = (build-final-context $status_content $current_hint $change_contexts $context_heading $context_excluded_files $deleted_files $include_deleted)
     mut parsed = []
     mut attempts = 0
     let max_attempts = 3
 
     while $attempts < $max_attempts {
-      print ("Generating commit messages with AI (attempt " + ($attempts + 1 | into string) + ")...")
+      print ($"Generating commit messages with ($provider) \(attempt " + ($attempts + 1 | into string) + ")...")
 
-      let ai_stdout = (try { ai-ask $final_context --system $system_prompt } catch {
-        print -e "Error running AI."
+      let ai_stdout = (try { ai-ask $final_context --system $system_prompt --llm $provider } catch {
+        print -e $"Error running ($provider)."
         exit 1
       })
 
@@ -287,15 +313,17 @@ Each object must have a 'summary' field (the conventional commit title) and a 'd
       exit 1
     }
 
-    # Clean the summaries to keep the generated option display compact.
-    let parsed = ($parsed | each { |it| 
-      let clean_sum = (try { $it.summary | str replace -a "\n" " " | str trim } catch { "" })
-      $it | update summary $clean_sum 
+    # Normalize model output into fresh records instead of mutating dynamically typed JSON.
+    let options = ($parsed | each { |item|
+      {
+        summary: (try { $item.summary | str replace -a "\n" " " | str trim } catch { "" })
+        description: (try { $item.description | str trim } catch { "" })
+      }
     })
 
-    print-commit-options $parsed
+    print-commit-options $options
 
-    let max_choice = ($parsed | length)
+    let max_choice = ($options | length)
     let choice_input = (try { ^gum input --placeholder $"Enter retries; 1-($max_choice) chooses; text updates hint" --prompt "Option # or hint [retry]: " | str trim } catch { "" })
 
     if ($choice_input | is-empty) {
@@ -315,7 +343,7 @@ Each object must have a 'summary' field (the conventional commit title) and a 'd
       continue
     }
 
-    $selected_obj = ($parsed | get ($choice - 1))
+    $selected_obj = ($options | get ($choice - 1))
   }
 
   let full_message = $"($selected_obj.summary)\n\n($selected_obj.description)"

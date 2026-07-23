@@ -3,9 +3,8 @@
 def main [
   prompt: string # The user prompt
   --system (-s): string # The system prompt
+  --llm: string = "claude" # LLM provider: claude, codex, or ollama
 ] {
-  let model = "qwen2.5-coder:3b-16k"
-
   if ($prompt | is-empty) {
     print -e "Error: No input provided"
     exit 1
@@ -16,7 +15,39 @@ def main [
     exit 1
   }
 
-  let full_prompt = $"($system)\n\n($prompt)"
-  
-  ^ollama run --nowordwrap $model $full_prompt
+  let provider = ($llm | str lowercase)
+
+  match $provider {
+    "claude" => {
+      if (which claude | is-empty) {
+        print -e "Error: 'claude' is not installed. Use --llm codex or --llm ollama instead."
+        exit 1
+      }
+
+      ^claude --print --no-session-persistence --tools "" --system-prompt $system $prompt
+    }
+    "codex" => {
+      if (which codex | is-empty) {
+        print -e "Error: 'codex' is not installed."
+        exit 1
+      }
+
+      let full_prompt = $"($system)\n\n($prompt)"
+      ^codex exec --ephemeral --sandbox read-only --color never $full_prompt
+    }
+    "ollama" => {
+      if (which ollama | is-empty) {
+        print -e "Error: 'ollama' is not installed."
+        exit 1
+      }
+
+      let model = "qwen2.5-coder:3b-16k"
+      let full_prompt = $"($system)\n\n($prompt)"
+      ^ollama run --nowordwrap $model $full_prompt
+    }
+    _ => {
+      print -e $"Error: Unsupported LLM provider '($llm)'. Expected claude, codex, or ollama."
+      exit 1
+    }
+  }
 }
