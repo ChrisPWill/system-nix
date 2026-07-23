@@ -1,5 +1,14 @@
 local utils = require("utils")
 
+local function is_openable_file(item)
+	if not item.file then
+		return false
+	end
+
+	local path = vim.fs.joinpath(item.cwd or vim.uv.cwd(), item.file)
+	return vim.uv.fs_stat(path) ~= nil
+end
+
 require("snacks").setup({
 	explorer = {},
 	picker = {},
@@ -107,6 +116,29 @@ vim.keymap.set("n", "<leader>gf", function()
 		Snacks.picker.git_files()
 	end
 end, { desc = "Git / JJ Files" })
+
+vim.keymap.set("n", "<leader>gc", function()
+	if utils.isJujutsu() then
+		local root = utils.getProjectRoot({ ".jj" })
+		require("snacks").picker.pick({
+			finder = "proc",
+			cwd = root,
+			cmd = "jj",
+			args = { "--no-pager", "--color=never", "diff", "--name-only", "-r", "@" },
+			transform = function(item)
+				item.cwd = root
+				item.file = item.text
+			end,
+			filter = { filter = is_openable_file },
+			title = "Changed Files (Jujutsu)",
+		})
+	else
+		Snacks.picker.git_status({
+			filter = { filter = is_openable_file },
+			title = "Changed Files (Git)",
+		})
+	end
+end, { desc = "Changed Files" })
 
 -- ── Grep ──────────────────────────────────────────────────────────────────────
 

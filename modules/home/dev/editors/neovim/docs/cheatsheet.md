@@ -53,7 +53,8 @@ This configuration uses a **Hybrid Philosophy** (Helix-inspired navigation + Neo
 | Key          | Action                    |
 | :----------- | :------------------------ |
 | `<leader>f`  | **Find Files**            |
-| `<leader>gf` | **Find Git Files**        |
+| `<leader>gf` | **Find VCS Files**        |
+| `<leader>gc` | **Find Changed Files**    |
 | `<leader>F`  | **Smart Find**            |
 | `<leader>b`  | **Search Buffers**        |
 | `<leader>d`  | **Buffer Diagnostics**    |
