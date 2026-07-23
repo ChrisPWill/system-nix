@@ -24,6 +24,10 @@ in
       lib.optionals stdenv.hostPlatform.isDarwin [unzip]
       ++ lib.optionals stdenv.hostPlatform.isLinux [autoPatchelfHook];
 
+    buildInputs = lib.optionals stdenv.hostPlatform.isLinux [
+      stdenv.cc.cc.lib
+    ];
+
     sourceRoot = "kotlin-server-${version}";
 
     unpackPhase = ''
@@ -44,7 +48,7 @@ in
 
       ${lib.optionalString stdenv.hostPlatform.isLinux ''
         rm -rf "$out/libexec/kotlin-lsp/jbr"
-        ln -s ${jdk25} "$out/libexec/kotlin-lsp/jbr"
+        ln -s ${jdk25}/lib/openjdk "$out/libexec/kotlin-lsp/jbr"
       ''}
 
       ln -s ../libexec/kotlin-lsp/bin/intellij-server "$out/bin/kotlin-lsp"
