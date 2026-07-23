@@ -94,7 +94,7 @@ in {
       enable = true;
 
       addOverlays = neovimPackage.dependencyOverlays;
-      packageNames = [mainNixCatsPackageName] ++ pkgs.lib.optionals config.isPersonalMachine ["leet" "nvim-ai" "nvim-llm"];
+      packageNames = [mainNixCatsPackageName] ++ pkgs.lib.optionals config.isPersonalMachine ["leet" "nvim-llm"];
       luaPath = config.lib.file.mkOutOfStoreSymlink "${config.homeModuleDir}/dev/editors/neovim/config";
 
       categoryDefinitions.replace = neovimPackage.categoryDefinitions;

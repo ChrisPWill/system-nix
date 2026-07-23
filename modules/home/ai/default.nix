@@ -7,14 +7,14 @@
 in {
   options.home.ai = {
     agentProvider = lib.mkOption {
-      type = lib.types.enum ["codex" "gemini" "antigravity" "none"];
+      type = lib.types.enum ["codex" "gemini" "none"];
       default = "codex";
       description = "Primary command-line coding agent to configure.";
     };
 
     neovimProvider = lib.mkOption {
-      type = lib.types.enum ["ollama" "gemini" "antigravity" "none"];
-      default = "none";
+      type = lib.types.enum ["codex" "ollama" "gemini" "none"];
+      default = "codex";
       description = "Provider used by Neovim AI chat/completion plugins.";
     };
   };
@@ -25,7 +25,6 @@ in {
     ./opencode.nix
     ./codex.nix
     ./gemini.nix
-    ./antigravity.nix
   ];
 
   config = {

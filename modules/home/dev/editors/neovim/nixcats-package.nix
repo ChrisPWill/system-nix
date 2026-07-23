@@ -46,10 +46,6 @@
       "--run"
       " 'test -f ${geminiApiKeyPath} && export GEMINI_API_KEY=$(cat ${geminiApiKeyPath})' "
     ];
-    antigravity = [
-      "--run"
-      " 'test -f ${geminiApiKeyPath} && export GEMINI_API_KEY=$(cat ${geminiApiKeyPath})' "
-    ];
   };
 
   dependencyOverlays = [(utils.standardPluginOverlay inputs)];
@@ -120,6 +116,9 @@
       ];
       kotlin = with pkgs; [
         kotlinLsp
+      ];
+      codex = with pkgs; [
+        codex-acp
       ];
       web = with pkgs; [
         tailwindcss
@@ -258,7 +257,10 @@
       categories =
         commonCategories
         // {
-          local-llm = false;
+          ai = neovimProvider == "codex" || neovimProvider == "gemini";
+          local-llm = neovimProvider == "ollama" && enableLocalOllama;
+          codex = neovimProvider == "codex";
+          gemini = neovimProvider == "gemini";
         };
       extra = commonExtra;
     };
@@ -273,23 +275,6 @@
         commonCategories
         // {
           local-llm = enableLocalOllama;
-        };
-      extra = commonExtra;
-    };
-
-    "nvim-ai" = _: {
-      settings =
-        commonSettings
-        // {
-          aliases = ["nva"];
-        };
-      categories =
-        commonCategories
-        // {
-          ai = neovimProvider == "gemini" || neovimProvider == "antigravity";
-          local-llm = neovimProvider == "ollama" && enableLocalOllama;
-          gemini = neovimProvider == "gemini";
-          antigravity = neovimProvider == "antigravity";
         };
       extra = commonExtra;
     };

@@ -39,13 +39,13 @@ return {
 				desc = "Trigger AI completion (minuet)",
 			},
 		},
-		enabled = nixCats("local-llm") or nixCats("ai") or false,
+		enabled = nixCats("local-llm") or nixCats("gemini") or false,
 		after = function()
 			-- Load the required dependency if using lz.n optional loading
 			vim.cmd("packadd plenary.nvim")
 
 			local provider = "openai_fim_compatible"
-			if nixCats("antigravity") or nixCats("gemini") then
+			if nixCats("gemini") then
 				provider = "gemini"
 			end
 
@@ -135,12 +135,12 @@ return {
 				}
 			end
 
+			local avante_provider = nixCats("codex") and "codex" or (nixCats("gemini") and "gemini-cli") or "ollama"
+
 			require("avante").setup({
-				provider = nixCats("antigravity") and "antigravity-cli"
-					or (nixCats("gemini") and "gemini-cli" or "ollama"),
+				provider = avante_provider,
 				-- Keep auto-suggestions disabled here if you are using llm.nvim for FIM
-				auto_suggestions_provider = nixCats("antigravity") and "antigravity-cli"
-					or (nixCats("gemini") and "gemini-cli" or "ollama"),
+				auto_suggestions_provider = avante_provider,
 				hints = { enabled = true },
 				providers = {
 					ollama = {
@@ -152,16 +152,15 @@ return {
 					},
 				},
 				acp_providers = {
-					["antigravity-cli"] = {
-						command = "agy",
-						args = { "--experimental-acp" },
+					["codex"] = {
+						command = "codex-acp",
+						args = {},
 						env = {
 							NODE_NO_WARNINGS = "1",
 							HOME = os.getenv("HOME"),
-							GEMINI_API_KEY = os.getenv("GEMINI_API_KEY"),
-							GEMINI_DEFAULT_AUTH_TYPE = "oauth-personal",
+							PATH = os.getenv("PATH"),
+							OPENAI_API_KEY = os.getenv("OPENAI_API_KEY"),
 						},
-						auth_method = "oauth-personal",
 					},
 					["gemini-cli"] = {
 						command = "gemini",
