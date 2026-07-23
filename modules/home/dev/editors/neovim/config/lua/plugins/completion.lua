@@ -18,16 +18,20 @@ return {
 		on_require = { "blink", "blink.cmp" },
 		after = function()
 			vim.cmd.packadd("luasnip")
+			local hasMinuet = nixCats("local-llm") or nixCats("gemini")
+			local hasAvante = nixCats("local-llm") or nixCats("ai")
 			local defaultSources = { "snippets", "lsp", "path", "buffer" }
 			if nixCats("copilot") then
 				table.insert(defaultSources, 2, "copilot")
 			end
-			if nixCats("local-llm") or nixCats("ai") then
+			if hasMinuet then
 				table.insert(defaultSources, 2, "minuet")
-				table.insert(defaultSources, 3, "avante_commands")
-				table.insert(defaultSources, 4, "avante_mentions")
-				table.insert(defaultSources, 5, "avante_shortcuts")
-				table.insert(defaultSources, 6, "avante_files")
+			end
+			if hasAvante then
+				table.insert(defaultSources, 2, "avante_commands")
+				table.insert(defaultSources, 3, "avante_mentions")
+				table.insert(defaultSources, 4, "avante_shortcuts")
+				table.insert(defaultSources, 5, "avante_files")
 			end
 			require("blink.cmp").setup({
 				-- 'default' (recommended) for mappings similar to built-in completions (C-y to accept)
@@ -66,13 +70,12 @@ return {
 							score_offset = 100,
 							async = true,
 						} or nil,
-						minuet = {
+						minuet = hasMinuet and {
 							name = "minuet",
-							enabled = nixCats("local-llm") or nixCats("ai"),
 							module = "minuet.blink",
 							score_offset = 100, -- Forces LLM suggestions to the top of the menu
 							async = true,
-						},
+						} or nil,
 						avante_commands = {
 							name = "avante_commands",
 							module = "blink.compat.source",
