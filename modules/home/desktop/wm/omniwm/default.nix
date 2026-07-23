@@ -127,7 +127,7 @@
       notchActiveZoneWidth = 180.0;
       notchMode = "moveBelowMenuBar";
       position = "overlappingMenuBar";
-      reserveLayoutSpace = false;
+      reserveLayoutSpace = true;
       showFloatingWindows = false;
       showLabels = true;
       windowLevel = "popup";
