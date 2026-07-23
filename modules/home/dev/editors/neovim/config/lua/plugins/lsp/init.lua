@@ -1,10 +1,12 @@
 local M = {}
+local utils = require("utils")
 
 function M.on_attach(client, bufnr)
 	if client.server_capabilities.documentSymbolProvider then
 		require("nvim-navic").attach(client, bufnr)
 	end
 
+	local which_key_specs = {}
 	local nmap = function(keys, func, desc, extras)
 		if desc then
 			desc = "LSP: " .. desc
@@ -13,6 +15,7 @@ function M.on_attach(client, bufnr)
 		config.buffer = bufnr
 		config.desc = desc
 		vim.keymap.set("n", keys, func, config)
+		table.insert(which_key_specs, { keys, desc = desc })
 	end
 
 	-- speed up gr by removing inbuilts
@@ -84,6 +87,11 @@ function M.on_attach(client, bufnr)
 	vim.api.nvim_buf_create_user_command(bufnr, "Format", function(_)
 		vim.lsp.buf.format()
 	end, { desc = "Format (LSP)" })
+
+	if not vim.b[bufnr].lsp_which_key_registered then
+		local registered = utils.registerWhichKey(which_key_specs, bufnr)
+		vim.b[bufnr].lsp_which_key_registered = registered
+	end
 end
 
 return M

@@ -7,6 +7,21 @@ function M.nmap(keys, func, desc, opts)
 	vim.keymap.set("n", keys, func, opts)
 end
 
+-- Register mappings created after WhichKey may have cached the current buffer.
+function M.registerWhichKey(specs, bufnr)
+	local ok, which_key = pcall(require, "which-key")
+	if not ok then
+		return false
+	end
+
+	local scoped_specs = vim.deepcopy(specs)
+	for _, spec in ipairs(scoped_specs) do
+		spec.buffer = bufnr
+	end
+	which_key.add(scoped_specs)
+	return true
+end
+
 -- Helper function for finding project types
 function M.rootHasFiles(files)
 	return #vim.fs.find(files, { upward = true, stop = vim.env.HOME }) > 0

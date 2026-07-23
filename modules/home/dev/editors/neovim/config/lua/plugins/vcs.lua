@@ -4,6 +4,7 @@ return {
 		enabled = nixCats("general") or false,
 		event = "DeferredUIEnter",
 		after = function()
+			local utils = require("utils")
 			require("gitsigns").setup({
 				signs = {
 					add = { text = "+" },
@@ -42,11 +43,6 @@ return {
 						return "<Ignore>"
 					end, { expr = true, desc = "Previous hunk" })
 
-					require("which-key").add({
-						{ "]g", desc = "Next hunk", mode = { "n", "v" }, buffer = bufnr },
-						{ "[g", desc = "Previous hunk", mode = { "n", "v" }, buffer = bufnr },
-					})
-
 					-- Actions
 					map("v", "<leader>gs", function()
 						gs.stage_hunk({ vim.fn.line("."), vim.fn.line("v") })
@@ -75,6 +71,26 @@ return {
 
 					-- Text object
 					map({ "o", "x" }, "ih", ":<C-U>Gitsigns select_hunk<CR>", { desc = "Select hunk" })
+
+					if not vim.b[bufnr].gitsigns_which_key_registered then
+						local registered = utils.registerWhichKey({
+							{ "]g", desc = "Next hunk", mode = { "n", "v" } },
+							{ "[g", desc = "Previous hunk", mode = { "n", "v" } },
+							{ "<leader>gs", desc = "Stage hunk", mode = { "n", "v" } },
+							{ "<leader>gr", desc = "Reset hunk", mode = { "n", "v" } },
+							{ "<leader>gS", desc = "Stage buffer" },
+							{ "<leader>gu", desc = "Undo stage" },
+							{ "<leader>gR", desc = "Reset buffer" },
+							{ "<leader>gp", desc = "Preview hunk" },
+							{ "<leader>gl", desc = "Blame (Inline)" },
+							{ "<leader>gd", desc = "Diff (Index)" },
+							{ "<leader>gD", desc = "Diff (Last commit)" },
+							{ "<leader>gtb", desc = "Toggle: Blame line" },
+							{ "<leader>gtd", desc = "Toggle: Deleted" },
+							{ "ih", desc = "Select hunk", mode = { "o", "x" } },
+						}, bufnr)
+						vim.b[bufnr].gitsigns_which_key_registered = registered
+					end
 				end,
 			})
 			vim.cmd([[hi GitSignsAdd guifg=#04de21]])

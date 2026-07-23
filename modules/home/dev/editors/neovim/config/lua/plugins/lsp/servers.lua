@@ -97,12 +97,36 @@ return {
 					lsp_utils.on_attach(client, bufnr)
 
 					-- Custom TypeScript keymaps
-					utils.nmap("<leader>cio", "<cmd>TSToolsOrganizeImports<CR>", "[C]ode [I]mport [O]rganise")
-					utils.nmap("<leader>cis", "<cmd>TSToolsSortImports<CR>", "[C]ode [I]mport [S]ort")
-					utils.nmap("<leader>cim", "<cmd>TSToolsAddMissingImports<CR>", "[C]ode [I]mport [M]issing")
-					utils.nmap("<leader>cxa", "<cmd>TSToolsFixAll<CR>", "[C]ode Fi[x] [A]ll")
-					utils.nmap("<leader>cFe", "<cmd>TSToolsRenameFile<CR>", "[C]ode [F]ILE r[E]name")
-					utils.nmap("<leader>cFr", "<cmd>TSToolsFileReferences<CR>", "[C]ode [F]ILE [R]eferences")
+					local keymaps = {
+						{
+							"<leader>cio",
+							"<cmd>TSToolsOrganizeImports<CR>",
+							"[C]ode [I]mport [O]rganise",
+						},
+						{ "<leader>cis", "<cmd>TSToolsSortImports<CR>", "[C]ode [I]mport [S]ort" },
+						{
+							"<leader>cim",
+							"<cmd>TSToolsAddMissingImports<CR>",
+							"[C]ode [I]mport [M]issing",
+						},
+						{ "<leader>cxa", "<cmd>TSToolsFixAll<CR>", "[C]ode Fi[x] [A]ll" },
+						{ "<leader>cFe", "<cmd>TSToolsRenameFile<CR>", "[C]ode [F]ILE r[E]name" },
+						{
+							"<leader>cFr",
+							"<cmd>TSToolsFileReferences<CR>",
+							"[C]ode [F]ILE [R]eferences",
+						},
+					}
+					local which_key_specs = {}
+					for _, keymap in ipairs(keymaps) do
+						utils.nmap(keymap[1], keymap[2], keymap[3], { buffer = bufnr })
+						table.insert(which_key_specs, { keymap[1], desc = keymap[3] })
+					end
+
+					if not vim.b[bufnr].typescript_which_key_registered then
+						local registered = utils.registerWhichKey(which_key_specs, bufnr)
+						vim.b[bufnr].typescript_which_key_registered = registered
+					end
 				end,
 				settings = {
 					-- possible values: ("off"|"all"|"implementations_only"|"references_only")
