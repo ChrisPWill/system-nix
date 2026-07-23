@@ -237,7 +237,13 @@ return {
 		enabled = nixCats("general") or false,
 		event = "DeferredUIEnter",
 		after = function()
-			require("which-key").setup({})
+			require("which-key").setup({
+				triggers = {
+					{ "<auto>", mode = "nixsotc" },
+					{ "[", mode = { "n", "x", "s", "o" } },
+					{ "]", mode = { "n", "x", "s", "o" } },
+				},
+			})
 			require("which-key").add({
 				{ "<leader><leader>", group = "Buffer Commands" },
 				{ "<leader><leader>_", hidden = true },
@@ -277,6 +283,8 @@ return {
 				{ "mm", desc = "Match bracket" },
 				{ "ma", desc = "Align (Regex)" },
 				{ "mA", desc = "Align (Interactive)" },
+				{ "[", group = "Previous" },
+				{ "]", group = "Next" },
 				{ "<leader>[", group = "Prev" },
 				{ "<leader>[t", desc = "Prev Tab" },
 				{ "<leader>]", group = "Next" },

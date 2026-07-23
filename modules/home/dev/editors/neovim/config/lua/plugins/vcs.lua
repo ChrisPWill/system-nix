@@ -42,6 +42,11 @@ return {
 						return "<Ignore>"
 					end, { expr = true, desc = "Previous hunk" })
 
+					require("which-key").add({
+						{ "]g", desc = "Next hunk", mode = { "n", "v" }, buffer = bufnr },
+						{ "[g", desc = "Previous hunk", mode = { "n", "v" }, buffer = bufnr },
+					})
+
 					-- Actions
 					map("v", "<leader>gs", function()
 						gs.stage_hunk({ vim.fn.line("."), vim.fn.line("v") })
