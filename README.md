@@ -3,6 +3,9 @@
 [![NixOS](https://img.shields.io/badge/NixOS-unstable-blue.svg?logo=nixos&logoColor=white)](https://nixos.org)
 [![nix-darwin](https://img.shields.io/badge/nix--darwin-unstable-blue.svg?logo=apple&logoColor=white)](https://github.com/LnL7/nix-darwin)
 [![Home Manager](https://img.shields.io/badge/Home%20Manager-unstable-blue.svg?logo=nixos&logoColor=white)](https://github.com/nix-community/home-manager)
+[![Neovim LSP](https://github.com/ChrisPWill/system-nix/actions/workflows/neovim-lsp.yml/badge.svg?branch=master)](https://github.com/ChrisPWill/system-nix/actions/workflows/neovim-lsp.yml)
+[![Installer ISO](https://github.com/ChrisPWill/system-nix/actions/workflows/installer-iso.yml/badge.svg?branch=master)](https://github.com/ChrisPWill/system-nix/actions/workflows/installer-iso.yml)
+[![Last Commit](https://img.shields.io/github/last-commit/ChrisPWill/system-nix?logo=git&logoColor=white)](https://github.com/ChrisPWill/system-nix/commits/master)
 
 A **Domain-Driven** Nix system configuration managed with [numtide/blueprint](https://github.com/numtide/blueprint). This repository provides a unified, "Intent-over-Syntax" approach for NixOS, nix-darwin, and Home Manager across personal and work environments.
 
