@@ -1,6 +1,6 @@
 # Common shell configuration shared across Zsh, Fish, and Nushell.
 # This includes aliases, prompt settings (Starship), and shared CLI tools.
-_: let
+{config, ...}: let
   commonAliases = {
     # Common directory navigation
     ".." = "cd ..";
@@ -16,6 +16,8 @@ _: let
   };
 in {
   config = {
+    home.sessionPath = ["${config.home.homeDirectory}/.local/bin"];
+
     programs = {
       # Apply aliases to shells
       zsh.shellAliases = commonAliases // zshSpecificAliases;

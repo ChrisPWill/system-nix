@@ -1,6 +1,16 @@
-{config, ...}: {
+{
+  config,
+  pkgs,
+  ...
+}: {
   programs.claude-code = {
     enable = true;
+    # Homebrew supplies the fast-moving CLI on work Macs; Home Manager still
+    # owns its rules and LSP configuration.
+    package =
+      if pkgs.stdenv.isDarwin && config.isWorkMachine
+      then null
+      else pkgs.claude-code;
 
     rulesDir = config.lib.file.mkOutOfStoreSymlink "${config.homeModuleDir}/ai/claude/rules";
 

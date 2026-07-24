@@ -1,6 +1,7 @@
 {
   config,
   lib,
+  pkgs,
   ...
 }: {
   options = with lib; {
@@ -24,6 +25,7 @@
 
     isPersonalMachine = mkEnableOption "personal machine packages/config";
     isWorkMachine = mkEnableOption "work machine packages/config";
+    usesDeterminateNix = mkEnableOption "Determinate Nix compatibility";
     hasNvidiaGpu = mkEnableOption "whether the machine has an NVIDIA GPU";
 
     terminalFontSize = mkOption {
@@ -44,12 +46,17 @@
     ./ai
   ];
 
-  config = {
-    nix.settings.experimental-features = ["nix-command" "flakes"];
+  config = lib.mkMerge [
+    {
+      nix.settings.experimental-features = ["nix-command" "flakes"];
 
-    home.stateVersion = "25.05";
+      home.stateVersion = "25.05";
 
-    # Can likely remove this later
-    # gtk.gtk4.theme = config.gtk.theme;
-  };
+      # Can likely remove this later
+      # gtk.gtk4.theme = config.gtk.theme;
+    }
+    (lib.mkIf config.usesDeterminateNix {
+      nix.package = pkgs.nix;
+    })
+  ];
 }

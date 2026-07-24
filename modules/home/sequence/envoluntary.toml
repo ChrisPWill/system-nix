@@ -1,0 +1,7 @@
+[[entries]]
+pattern = "~/code/sequence-platform-api(/.*)?"
+flake_reference = "~/.system-nix#sequence-platform-api"
+
+[[entries]]
+pattern = "~/code/sequence-web(/.*)?"
+flake_reference = "~/.system-nix#sequence-web"

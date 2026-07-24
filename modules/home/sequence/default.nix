@@ -1,9 +1,7 @@
-{pkgs, ...}: {
+{config, ...}: {
+  isWorkMachine = true;
   userEmail = "chris.williams@sequencehq.com";
 
-  # Devenv management
-  programs.mise.enable = true;
-  # Github CLI
   programs = {
     gh = {
       enable = true;
@@ -13,13 +11,8 @@
     };
   };
 
-  home.packages = with pkgs; [
-    libpq # Postgres
-    terragrunt # TF wrapper
-    terraform
-    google-cloud-sdk
-    mkcert
-    cloudflared
-    uv
-  ];
+  # Keep employer repository mappings immediately editable without rebuilding
+  # this flake's source into the Nix store.
+  xdg.configFile."envoluntary/config.toml".source =
+    config.lib.file.mkOutOfStoreSymlink "${config.homeModuleDir}/sequence/envoluntary.toml";
 }

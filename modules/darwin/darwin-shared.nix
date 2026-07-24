@@ -11,6 +11,7 @@ in {
     inputs.nix-homebrew.darwinModules.nix-homebrew
     inputs.stylix.darwinModules.stylix
     inputs.self.modules.theming.theme
+    ./desktop.nix
     ./skhd.nix
   ];
   nix.settings.experimental-features = ["nix-command" "flakes"];
@@ -58,21 +59,6 @@ in {
         name = "BarutSRB/tap";
         trusted = true;
       }
-    ];
-
-    casks = [
-      # Modern macOS window manager
-      # github.com/BarutSRB/omni
-      "omniwm"
-
-      # Useful spotlight alternative
-      "raycast"
-
-      # Terminal used by floating utility prompts such as quick-capture
-      "ghostty"
-
-      # Mandatory, fixes bad scroll behaviour
-      "scroll-reverser"
     ];
   };
 

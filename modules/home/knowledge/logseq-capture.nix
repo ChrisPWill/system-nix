@@ -16,7 +16,11 @@
   };
 in {
   options.services.logseq-capture = {
-    enable = lib.mkEnableOption "Logseq Capture Bot";
+    enable = lib.mkOption {
+      type = lib.types.bool;
+      default = true;
+      description = "Whether to enable the Logseq Capture Bot";
+    };
     workingDirectory = lib.mkOption {
       type = lib.types.str;
       default = "${config.home.homeDirectory}/knowledge-base";

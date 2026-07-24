@@ -1,3 +1,12 @@
 _: {
-  # Employer-specific Darwin settings live here when they are actually needed.
+  homebrew.casks = [
+    "claude-code"
+    "datagrip"
+    "google-drive"
+    "granola"
+    "insomnia"
+    "intellij-idea"
+    "loom"
+    "rapidapi"
+  ];
 }
