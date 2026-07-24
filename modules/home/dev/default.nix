@@ -6,6 +6,7 @@
     ./multiplexer
     ./vcs/version-control.nix
     ./nix.nix
+    ./node.nix
     ./utils.nix
   ];
 }
