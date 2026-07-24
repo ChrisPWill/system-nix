@@ -2,6 +2,11 @@
 
 This config leverages LSP for deep code understanding, navigation, and automated modifications.
 
+Servers are enabled only when their command is executable at editor startup.
+Use `nd <shell>` (or an envoluntary mapping) before launching `meow`. `:LspInfo`
+shows attached/configured clients; no unavailable language client should attach
+in the base environment.
+
 ## 󰙅 Navigation (Helix-aligned `g` prefix)
 
 | Key     | Action                                  |

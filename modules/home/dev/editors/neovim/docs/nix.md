@@ -14,6 +14,9 @@ This configuration is built for a NixOS/Darwin system, leveraging the `nixCats` 
 
 ## 󰘦 Nix-Aware Tools
 
+Enter `nd nix` for a standalone Nix project. This repository maps to the
+composite `system-nix` shell through envoluntary.
+
 - **LSP:** `nixd` provides diagnostics and completion.
 - **Linting:** `statix` and `deadnix` provide buffer diagnostics through `nvim-lint`.
 - **Formatting:** `alejandra` is the default formatter via `conform.nvim`.

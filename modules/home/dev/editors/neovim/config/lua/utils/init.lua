@@ -51,6 +51,19 @@ function M.isJujutsu()
 	return M.rootHasFiles({ ".jj" })
 end
 
+function M.hasExecutable(command)
+	return vim.fn.executable(command) == 1
+end
+
+function M.hasExecutables(commands)
+	for _, command in ipairs(commands) do
+		if not M.hasExecutable(command) then
+			return false
+		end
+	end
+	return true
+end
+
 function M.insertIfTrue(t, exp, value)
 	if exp then
 		table.insert(t, value)

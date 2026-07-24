@@ -8,6 +8,7 @@
   testRoot = ./.;
   fixtureRoot = "${testRoot}/fixtures/${language}";
   harness = "${testRoot}/lsp_harness.lua";
+  languageTooling = (import ../../../../../../lib {}).languageTooling {inherit perSystem pkgs;};
 
   cases = {
     python = {
@@ -57,9 +58,21 @@
   };
 
   case = cases.${language};
+  stackName =
+    {
+      python = "python";
+      typescript = "node22";
+      kotlin = "jvm";
+      nix = "nix";
+    }.${
+      language
+    };
 in
   pkgs.runCommand "neovim-lsp-${language}-check" {
-    nativeBuildInputs = [pkgs.coreutils] ++ pkgs.lib.optionals (language == "kotlin") [pkgs.gradle];
+    nativeBuildInputs =
+      [pkgs.coreutils]
+      ++ languageTooling.packagesFor [stackName]
+      ++ pkgs.lib.optionals (language == "kotlin") [pkgs.gradle];
     meta.platforms = pkgs.lib.platforms.linux;
   } ''
     set -euo pipefail

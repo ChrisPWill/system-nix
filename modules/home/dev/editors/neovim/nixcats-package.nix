@@ -4,7 +4,6 @@
   pkgs,
   luaPath,
   docsPath,
-  kotlinLsp,
   enableCopilot ? false,
   enableLocalOllama ? false,
   neovimProvider ? null,
@@ -17,8 +16,9 @@
     suffix-path = true;
     suffix-LD = true;
     wrapRc = true;
-    hosts.python3.enable = true;
-    hosts.node.enable = true;
+    autowrapRuntimeDeps = false;
+    hosts.python3.enable = false;
+    hosts.node.enable = false;
   };
 
   commonCategories = {
@@ -54,77 +54,25 @@
     lspsAndRuntimeDeps = {
       general = with pkgs; [
         ast-grep
-        bash-language-server
         fd
-        fish-lsp
-        koji
         lazygit
-        marksman
-        prettierd
         ripgrep
-        shellcheck
-        shfmt
         silicon
-        tombi
         tree-sitter
-        treefmt
       ];
-      lua = with pkgs; [
-        lua-language-server
-        stylua
-      ];
-      nix = with pkgs; [
-        alejandra
-        deadnix
-        nixd
-        statix
-      ];
-      node = with pkgs; [
-        eslint_d
-        graphql-language-service-cli
-        prettier
-        typescript
-        typescript-language-server
-        vscode-js-debug
-      ];
-      rust = with pkgs; [
-        clippy
-        lldb
-        rust-analyzer
-        rustfmt
-      ];
-      cpp = with pkgs; [
-        clang-tools
-        gdb
-        lldb
-      ];
-      python = with pkgs; [
-        basedpyright
-        python3Packages.debugpy
-        ruff
-      ];
-      go = with pkgs; [
-        delve
-        go
-        go-tools
-        golangci-lint
-        gopls
-      ];
-      java = with pkgs; [
-        google-java-format
-        jdt-language-server
-      ];
-      kotlin = with pkgs; [
-        kotlinLsp
-      ];
+      lua = [];
+      nix = [];
+      node = [];
+      rust = [];
+      cpp = [];
+      python = [];
+      go = [];
+      java = [];
+      kotlin = [];
       codex = with pkgs; [
         codex-acp
       ];
-      web = with pkgs; [
-        tailwindcss
-        vscode-langservers-extracted
-        yaml-language-server
-      ];
+      web = [];
     };
 
     startupPlugins = {
@@ -241,8 +189,6 @@
     };
 
     environmentVariables = {};
-
-    python3.libraries = {};
 
     extraWrapperArgs = aiWrapperArgs;
   };

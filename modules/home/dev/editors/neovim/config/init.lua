@@ -53,6 +53,9 @@ require("autocmds")
 local lsp_utils = require("plugins.lsp")
 vim.g.rustaceanvim = {
 	server = {
+		auto_attach = function()
+			return utils.hasExecutable("rust-analyzer")
+		end,
 		on_attach = lsp_utils.on_attach,
 	},
 }

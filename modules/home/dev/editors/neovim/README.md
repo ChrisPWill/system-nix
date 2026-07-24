@@ -55,9 +55,13 @@ This configuration follows a **Hybrid Philosophy** designed to reduce friction w
 
 The configuration is integrated into the NixOS/Darwin system via `nixCats`. This allows for:
 
-- **Category-based plugin loading:** Plugins and LSPs are enabled/disabled based on categories defined in `default.nix`.
-- **Runtime Dependencies:** LSPs and tools like `ripgrep`, `fd`, and `stylua` are automatically provided by Nix.
+- **Packaged integrations:** Language plugins and tree-sitter parsers remain available in the base editor.
+- **Environment detection:** LSPs, formatters, linters, test adapters, and debuggers activate only when their executable is visible on `PATH`.
+- **Runtime dependencies:** General editor utilities such as `ripgrep` and `fd` are packaged with `meow`; language tools come from the named devshells.
 - **OutOfStoreSymlinks:** The configuration is symlinked to allow for rapid iteration without full Nix rebuilds.
+
+Launch `meow` from an activated environment (`nd python`, or an envoluntary
+mapping). An already-running editor does not inherit tools activated later.
 
 ## 󰲎 Loading Logic
 

@@ -25,7 +25,9 @@ return {
 	},
 	{
 		"tombi",
-		enabled = nixCats("general") or false,
+		enabled = function()
+			return utils.hasExecutable("tombi")
+		end,
 		lsp = {
 			cmd = { "tombi", "lsp" },
 			fileTypes = { "toml" },
@@ -34,21 +36,27 @@ return {
 	},
 	{
 		"basedpyright",
-		enabled = nixCats("python") or false,
+		enabled = function()
+			return utils.hasExecutable("basedpyright-langserver")
+		end,
 		lsp = {
 			fileTypes = { "python" },
 		},
 	},
 	{
 		"nushell",
-		enabled = nixCats("general") or false,
+		enabled = function()
+			return utils.hasExecutable("nu")
+		end,
 		lsp = {
 			fileTypes = { "nu" },
 		},
 	},
 	{
 		"ruff",
-		enabled = nixCats("python") or false,
+		enabled = function()
+			return utils.hasExecutable("ruff")
+		end,
 		lsp = {
 			fileTypes = { "python" },
 		},
@@ -56,7 +64,9 @@ return {
 	{
 		-- name of the lsp
 		"lua_ls",
-		enabled = nixCats("lua") or false,
+		enabled = function()
+			return utils.hasExecutable("lua-language-server")
+		end,
 		-- provide a table containing filetypes,
 		-- and then whatever your functions defined in the function type specs expect.
 		-- in our case, it just expects the normal lspconfig setup options.
@@ -83,7 +93,7 @@ return {
 	{
 		"typescript-tools.nvim",
 		enabled = function()
-			return nixCats("node") and not utils.isDeno()
+			return utils.hasExecutable("tsserver") and not utils.isDeno()
 		end,
 		ft = { "javascript", "javascriptreact", "typescript", "typescriptreact" },
 		on_require = { "typescript-tools" },
@@ -139,7 +149,7 @@ return {
 	{
 		"denols",
 		enabled = function()
-			return nixCats("node") and utils.isDeno()
+			return utils.hasExecutable("deno") and utils.isDeno()
 		end,
 		lsp = {
 			filetypes = { "javascript", "javascriptreact", "typescript", "typescriptreact" },
@@ -148,7 +158,9 @@ return {
 	},
 	{
 		"gopls",
-		enabled = nixCats("go") or false,
+		enabled = function()
+			return utils.hasExecutable("gopls")
+		end,
 		-- if you don't provide the filetypes it asks lspconfig for them using the function we set above
 		lsp = {
 			-- filetypes = { "go", "gomod", "gowork", "gotmpl" },
@@ -156,7 +168,9 @@ return {
 	},
 	{
 		"nixd",
-		enabled = nixCats("nix") or false,
+		enabled = function()
+			return utils.hasExecutable("nixd")
+		end,
 		lsp = {
 			filetypes = { "nix" },
 			settings = {
@@ -195,35 +209,45 @@ return {
 	},
 	{
 		"html",
-		enabled = nixCats("web") or false,
+		enabled = function()
+			return utils.hasExecutable("vscode-html-language-server")
+		end,
 		lsp = {
 			filetypes = { "html", "templ" },
 		},
 	},
 	{
 		"cssls",
-		enabled = nixCats("web") or false,
+		enabled = function()
+			return utils.hasExecutable("vscode-css-language-server")
+		end,
 		lsp = {
 			filetypes = { "css", "scss", "less" },
 		},
 	},
 	{
 		"graphql",
-		enabled = nixCats("node") or false,
+		enabled = function()
+			return utils.hasExecutable("graphql-lsp")
+		end,
 		lsp = {
 			filetypes = { "graphql", "typescriptreact", "javascriptreact" },
 		},
 	},
 	{
 		"marksman",
-		enabled = nixCats("general") or false,
+		enabled = function()
+			return utils.hasExecutable("marksman")
+		end,
 		lsp = {
 			filetypes = { "markdown", "markdown.mdx" },
 		},
 	},
 	{
 		"kotlin_lsp",
-		enabled = nixCats("kotlin") or false,
+		enabled = function()
+			return utils.hasExecutable("kotlin-lsp")
+		end,
 		lsp = {
 			cmd = { "kotlin-lsp", "--stdio" },
 			filetypes = { "kotlin" },
@@ -239,15 +263,36 @@ return {
 		},
 	},
 	{
+		"jdtls",
+		enabled = function()
+			return utils.hasExecutable("jdtls")
+		end,
+		lsp = {
+			filetypes = { "java" },
+			root_markers = {
+				"settings.gradle",
+				"settings.gradle.kts",
+				"build.gradle",
+				"build.gradle.kts",
+				"pom.xml",
+				".git",
+			},
+		},
+	},
+	{
 		"jsonls",
-		enabled = nixCats("general") or false,
+		enabled = function()
+			return utils.hasExecutable("vscode-json-language-server")
+		end,
 		lsp = {
 			filetypes = { "json", "jsonc" },
 		},
 	},
 	{
 		"yamlls",
-		enabled = nixCats("general") or false,
+		enabled = function()
+			return utils.hasExecutable("yaml-language-server")
+		end,
 		lsp = {
 			filetypes = { "yaml", "yaml.dockerfile", "yaml.gitlab" },
 			settings = {
@@ -266,7 +311,9 @@ return {
 	},
 	{
 		"tailwindcss",
-		enabled = nixCats("web") or false,
+		enabled = function()
+			return utils.hasExecutable("tailwindcss-language-server")
+		end,
 		lsp = {
 			filetypes = {
 				"html",
@@ -282,21 +329,27 @@ return {
 	},
 	{
 		"bashls",
-		enabled = nixCats("general") or false,
+		enabled = function()
+			return utils.hasExecutable("bash-language-server")
+		end,
 		lsp = {
 			filetypes = { "sh", "bash", "zsh" },
 		},
 	},
 	{
 		"fish_lsp",
-		enabled = nixCats("general") or false,
+		enabled = function()
+			return utils.hasExecutable("fish-lsp")
+		end,
 		lsp = {
 			filetypes = { "fish" },
 		},
 	},
 	{
 		"clangd",
-		enabled = nixCats("cpp") or false,
+		enabled = function()
+			return utils.hasExecutable("clangd")
+		end,
 		lsp = {
 			filetypes = { "c", "cpp", "h", "hpp", "objc", "objcpp", "cuda", "proto" },
 		},

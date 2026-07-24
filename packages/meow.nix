@@ -1,6 +1,5 @@
 {
   inputs,
-  perSystem,
   pkgs,
   ...
 }: let
@@ -9,7 +8,6 @@
     inherit (pkgs) lib;
     luaPath = ../modules/home/dev/editors/neovim/config;
     docsPath = ../modules/home/dev/editors/neovim/docs;
-    kotlinLsp = perSystem.self.kotlin-lsp;
   };
 in
   neovimPackage.meow

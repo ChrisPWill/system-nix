@@ -10,6 +10,7 @@ Modular Nix system configuration managed with [numtide/blueprint](https://github
 | `hms`       | Deprecated compatibility command for `nh home switch`         |
 | `nrs`       | Deprecated compatibility command for `nh os switch`           |
 | `drs`       | Deprecated compatibility command for `nh darwin switch`       |
+| `nd`        | List devshells available on the current system                |
 | `nd <name>` | `nix develop .#<name>`                                        |
 
 ## Global Leader

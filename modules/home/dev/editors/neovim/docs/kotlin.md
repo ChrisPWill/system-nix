@@ -11,6 +11,9 @@ Kotlin support built around JetBrains' official, IntelliJ-based language server.
 
 The official server is currently alpha software. It is used here because its IntelliJ formatter understands both generic EditorConfig properties and IntelliJ-specific `ij_kotlin_*` properties. The closest applicable `.editorconfig` takes precedence, including files outside Kotlin source roots.
 
+Launch `meow` from `nd jvm`. The shell supplies JDK 21, Kotlin tooling, JDTLS,
+and the Java formatter; project Gradle wrappers remain authoritative.
+
 There is deliberately no editor-side `ktlint` formatter or `nvim-lint` check for Kotlin, so it cannot contradict IntelliJ EditorConfig rules. Projects can still run repository-native Gradle tasks such as ktlint or detekt independently, including in CI.
 
 ## 󰘦 Keybindings
@@ -28,5 +31,5 @@ Standard LSP keybindings apply for Kotlin:
 
 ## 󱄅 Configuration
 
-The Kotlin environment is gated by the `kotlin` category in `nixCats`.
-To use it, ensure `kotlin = true` is set in your package definitions.
+The Kotlin integration is packaged but remains dormant until `kotlin-lsp` is
+executable in the editor's startup environment.

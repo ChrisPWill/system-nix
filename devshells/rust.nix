@@ -4,8 +4,5 @@ args @ {
   ...
 }:
 ((import ../lib args).languageTooling {inherit perSystem pkgs;}).mkShell {
-  stacks = ["node24"];
-  shellHook = ''
-    export PS1="(node24) $PS1"
-  '';
+  stacks = ["rust"];
 }

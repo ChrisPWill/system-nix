@@ -123,11 +123,11 @@ return {
 				virt_text_win_col = nil,
 			})
 
-			if nixCats("python") then
+			if utils.hasExecutables({ "python", "debugpy-adapter" }) then
 				require("dap-python").setup("python")
 			end
 
-			if nixCats("rust") or nixCats("cpp") then
+			if utils.hasExecutable("lldb-dap") then
 				dap.adapters.lldb = {
 					type = "executable",
 					command = "lldb-dap",
@@ -135,7 +135,7 @@ return {
 				}
 			end
 
-			if nixCats("rust") then
+			if utils.hasExecutables({ "cargo", "lldb-dap" }) then
 				dap.configurations.rust = {
 					{
 						name = "Launch",
@@ -151,7 +151,7 @@ return {
 				}
 			end
 
-			if nixCats("cpp") then
+			if utils.hasExecutables({ "clang", "lldb-dap" }) then
 				dap.configurations.cpp = {
 					{
 						name = "Launch",
@@ -174,7 +174,9 @@ return {
 	},
 	{
 		"nvim-dap-python",
-		enabled = nixCats("python") or false,
+		enabled = function()
+			return utils.hasExecutables({ "python", "debugpy-adapter" })
+		end,
 		on_require = { "dap-python" },
 	},
 	{
@@ -189,7 +191,9 @@ return {
 	},
 	{
 		"nvim-dap-go",
-		enabled = nixCats("go") or false,
+		enabled = function()
+			return utils.hasExecutable("dlv")
+		end,
 		on_plugin = { "nvim-dap" },
 		after = function()
 			require("dap-go").setup()
@@ -197,7 +201,9 @@ return {
 	},
 	{
 		"nvim-dap-vscode-js",
-		enabled = nixCats("node") or false,
+		enabled = function()
+			return utils.hasExecutable("js-debug")
+		end,
 		on_plugin = { "nvim-dap" },
 		after = function()
 			require("dap-vscode-js").setup({

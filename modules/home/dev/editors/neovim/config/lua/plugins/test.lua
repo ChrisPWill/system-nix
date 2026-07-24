@@ -7,7 +7,7 @@ return {
 		event = "DeferredUIEnter",
 		after = function()
 			local adapters = {}
-			if nixCats("python") then
+			if utils.hasExecutable("pytest") then
 				table.insert(
 					adapters,
 					require("neotest-python")({
@@ -15,10 +15,10 @@ return {
 					})
 				)
 			end
-			if nixCats("rust") then
+			if utils.hasExecutable("cargo") then
 				table.insert(adapters, require("rustaceanvim.neotest"))
 			end
-			if nixCats("cpp") then
+			if utils.hasExecutable("ctest") then
 				table.insert(
 					adapters,
 					require("neotest-ctest").setup({
@@ -26,10 +26,10 @@ return {
 					})
 				)
 			end
-			if nixCats("java") then
+			if utils.hasExecutable("java") then
 				table.insert(adapters, require("neotest-java")({}))
 			end
-			if nixCats("kotlin") then
+			if utils.hasExecutables({ "java", "kotlin-lsp" }) then
 				table.insert(adapters, require("neotest-kotlin"))
 			end
 			require("neotest").setup({
@@ -57,22 +57,30 @@ return {
 	},
 	{
 		"neotest-python",
-		enabled = nixCats("python") or false,
+		enabled = function()
+			return utils.hasExecutable("pytest")
+		end,
 		on_require = { "neotest-python" },
 	},
 	{
 		"neotest-ctest",
-		enabled = nixCats("cpp") or false,
+		enabled = function()
+			return utils.hasExecutable("ctest")
+		end,
 		on_require = { "neotest-ctest" },
 	},
 	{
 		"neotest-java",
-		enabled = nixCats("java") or false,
+		enabled = function()
+			return utils.hasExecutable("java")
+		end,
 		on_require = { "neotest-java" },
 	},
 	{
 		"neotest-kotlin",
-		enabled = nixCats("kotlin") or false,
+		enabled = function()
+			return utils.hasExecutables({ "java", "kotlin-lsp" })
+		end,
 		on_require = { "neotest-kotlin" },
 	},
 }

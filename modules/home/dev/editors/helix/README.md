@@ -12,8 +12,13 @@ For Kotlin, Helix uses JetBrains' official alpha `kotlin-lsp` for diagnostics an
 
 ## 󱄅 Nix Implementation
 
-The configuration is managed in `modules/home/dev/editors/helix/default.nix`. It explicitly:
+The configuration is managed in `modules/home/dev/editors/helix/default.nix`. It:
 
-1.  Declares all necessary LSP and formatter binaries in `home.packages`.
-2.  Configures `programs.helix.languages` to map these binaries to their respective languages.
-3.  Overrides default styling targets (like Stylix) where necessary to ensure precise manual alignment with the "Hybrid" UX.
+1. Configures `programs.helix.languages` to map executable names to languages.
+2. Leaves language binaries out of `home.packages`; named devshells provide them.
+3. Overrides styling targets where needed to retain the Hybrid UX.
+
+Run `hx --health <language>` inside and outside a representative devshell to
+inspect detection. Missing tools outside a shell are expected. Launch `hx` from
+`nd <shell>` or from an envoluntary-mapped directory so it inherits the active
+`PATH`.

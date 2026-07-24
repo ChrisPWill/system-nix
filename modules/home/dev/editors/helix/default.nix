@@ -1,8 +1,4 @@
 {...}: {
-  imports = [
-    ../lsps.nix
-  ];
-
   config = {
     stylix.targets.helix.enable = false;
 

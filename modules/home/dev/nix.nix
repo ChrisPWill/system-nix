@@ -11,6 +11,24 @@
       inherit name text;
       runtimeInputs = [config.programs.nh.package];
     };
+  nd = pkgs.writeShellApplication {
+    name = "nd";
+    runtimeInputs = [pkgs.nix];
+    text = ''
+      flake=${lib.escapeShellArg flakePath}
+
+      if [[ "$#" -eq 0 ]]; then
+        printf '%s\n' 'Available devshells:'
+        nix eval --json "$flake#devShells.${pkgs.stdenv.hostPlatform.system}" --apply builtins.attrNames \
+          | ${pkgs.jq}/bin/jq -r '.[] | "  " + .'
+        exit 0
+      fi
+
+      name="$1"
+      shift
+      exec nix develop "$flake#$name" --command zsh "$@"
+    '';
+  };
   nhWrapperPrelude = ''
     flake=${lib.escapeShellArg flakePath}
     home_user=${lib.escapeShellArg homeUsername}
@@ -73,10 +91,6 @@ in {
       darwinFlake = config.nixConfigDir;
     };
 
-    zsh.shellAliases = {
-      nd = "f() { nix develop ${config.nixConfigDir}/.#$1 --command zsh };f";
-    };
-
     fish.shellAbbrs = {
       nfc = "nix flake check";
       nfu = "nix flake update";
@@ -88,6 +102,7 @@ in {
   };
 
   home.packages = [
+    nd
     (nhWrapper "sw" ''
       ${nhWrapperPrelude}
 

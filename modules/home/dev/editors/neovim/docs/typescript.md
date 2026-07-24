@@ -2,6 +2,9 @@
 
 This configuration dynamically switches between Node.js and Deno based on the project root.
 
+Launch `meow` from `nd node22` or `nd node24`. Node, TypeScript, web servers,
+formatters, linters, and the JavaScript debugger are supplied by that shell.
+
 ## 󰘦 Multi-Runtime Support
 
 - **Node.js:** Active when no `deno.json` is present. Uses `typescript-tools.nvim`.
@@ -30,5 +33,4 @@ This configuration dynamically switches between Node.js and Deno based on the pr
 - **Formatting:**
   - **Node:** Prioritizes `prettierd`.
   - **Deno:** Uses `deno_fmt`.
-  - Both use `treefmt` if a configuration is found.
 - **Diagnostics:** Hover with `K` to see the error, and use `<leader>/d` to see the buffer's diagnostics.

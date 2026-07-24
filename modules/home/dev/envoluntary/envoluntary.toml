@@ -1,4 +1,8 @@
 [[entries]]
+pattern = "~/.system-nix(/.*)?"
+flake_reference = "~/.system-nix#system-nix"
+
+[[entries]]
 pattern = "~/code/sequence-platform-api(/.*)?"
 flake_reference = "~/.system-nix#sequence-platform-api"
 

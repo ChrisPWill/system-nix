@@ -70,7 +70,7 @@ The system implements a **Global Leader** capability using **Kanata** for hardwa
 ### 🌓 Hybrid Development Philosophy
 
 - **Neovim & Helix Parity:** Neovim (`meow`) uses Helix-inspired navigation (`g` prefix) and selection modes while retaining its native "Verb-Noun" model.
-- **Unified Tooling:** Both editors share synchronized LSPs (nixd, ruff, etc.) and themes for zero-friction switching.
+- **Unified Tooling:** Both editors activate the same devshell-provided LSPs and formatters when launched from an active environment.
 
 ### 🏗️ Project Templates
 
@@ -93,13 +93,20 @@ nix flake init -t .#rust-simple
 
 ## 🚀 Common Commands
 
-| Alias       | Command                | Description                                         |
-| :---------- | :--------------------- | :-------------------------------------------------- |
-| `sw`        | `nh <platform> switch` | Smart switch using this flake and the current host. |
-| `hms`       | `nh home switch`       | Deprecated shim using this flake and home config.   |
-| `nrs`       | `nh os switch`         | Deprecated shim using this flake and current host.  |
-| `drs`       | `nh darwin switch`     | Deprecated shim using this flake and current host.  |
-| `nd <name>` | `nix develop .#<name>` | Enter a devshell (e.g., `nd node24`).               |
+| Alias       | Command                | Description                                          |
+| :---------- | :--------------------- | :--------------------------------------------------- |
+| `sw`        | `nh <platform> switch` | Smart switch using this flake and the current host.  |
+| `hms`       | `nh home switch`       | Deprecated shim using this flake and home config.    |
+| `nrs`       | `nh os switch`         | Deprecated shim using this flake and current host.   |
+| `drs`       | `nh darwin switch`     | Deprecated shim using this flake and current host.   |
+| `nd`        | List devshells         | Print all devshells available on the current system. |
+| `nd <name>` | `nix develop .#<name>` | Enter a devshell (e.g., `nd rust`).                  |
+
+Language runtimes and development tools are intentionally absent from the
+global system and editor closures. See the
+**[development environment guide](./modules/home/dev/README.md)** for the shell
+catalog, temporary and persistent activation, marker mappings, diagnostics, and
+cache refresh.
 
 ---
 

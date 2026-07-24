@@ -6,27 +6,33 @@ return {
 		enabled = nixCats("general") or false,
 		event = { "BufWritePost", "BufReadPost", "InsertLeave" },
 		after = function()
-			local jslint = { "eslint_d" }
-			if utils.isDeno() then
+			local function available(commands)
+				return vim.tbl_filter(utils.hasExecutable, commands)
+			end
+
+			local jslint = available({ "eslint_d" })
+			if utils.isDeno() and utils.hasExecutable("deno") then
 				jslint = { "deno" }
 			end
 			require("lint").linters.clippy.ignore_exitcode = true
 			require("lint").linters_by_ft = {
-				javascript = nixCats("node") and jslint or nil,
-				typescript = nixCats("node") and jslint or nil,
-				go = nixCats("go") and { "golangcilint" } or nil,
-				nix = nixCats("nix") and { "statix", "deadnix" } or nil,
-				rust = nixCats("rust") and { "clippy" } or nil,
-				toml = nixCats("rust") and { "tombi" } or nil,
-				sh = nixCats("general") and { "shellcheck" } or nil,
-				bash = nixCats("general") and { "shellcheck" } or nil,
-				zsh = nixCats("general") and { "shellcheck" } or nil,
-				cpp = nixCats("cpp") and { "cppcheck" } or nil,
-				c = nixCats("cpp") and { "cppcheck" } or nil,
+				javascript = jslint,
+				typescript = jslint,
+				go = available({ "golangci-lint" }),
+				nix = available({ "statix", "deadnix" }),
+				rust = utils.hasExecutable("cargo-clippy") and { "clippy" } or {},
+				toml = available({ "tombi" }),
+				sh = available({ "shellcheck" }),
+				bash = available({ "shellcheck" }),
+				zsh = available({ "shellcheck" }),
+				cpp = available({ "cppcheck" }),
+				c = available({ "cppcheck" }),
 			}
 
 			-- Note - general compiler warnings should cover the majority of these
-			table.insert(require("lint").linters.cppcheck.args, "--suppress=unusedStructMember")
+			if utils.hasExecutable("cppcheck") then
+				table.insert(require("lint").linters.cppcheck.args, "--suppress=unusedStructMember")
+			end
 
 			vim.api.nvim_create_autocmd({ "CursorHold", "BufWritePost", "InsertLeave" }, {
 				callback = function()
@@ -75,39 +81,42 @@ return {
 				return list
 			end
 
-			local jslint = { "prettierd" }
-			if utils.isDeno() then
-				jslint = { "deno_fmt" }
+			local function formatter(command, spec)
+				return utils.hasExecutable(command) and spec or nil
 			end
-			if utils.isEslint() then
+
+			local jslint = formatter("prettierd", { "prettierd" })
+			if utils.isDeno() and utils.hasExecutable("deno") then
+				jslint = { "deno_fmt" }
+			elseif utils.isEslint() and utils.hasExecutable("eslint_d") then
 				jslint = { "eslint_d" }
 			end
 
 			conform.setup({
 				formatters_by_ft = {
-					lua = nixCats("lua") and get_formatters({ "stylua" }) or nil,
-					go = nixCats("go") and get_formatters({ "gofmt", "golint", stop_after_first = true }) or nil,
-					javascript = nixCats("node") and get_formatters(jslint) or nil,
-					typescript = nixCats("node") and get_formatters(jslint) or nil,
-					nix = nixCats("nix") and get_formatters({ "alejandra" }) or nil,
-					rust = nixCats("rust") and get_formatters({ "rustfmt" }) or nil,
-					toml = nixCats("general") and get_formatters({ "tombi" }) or nil,
-					python = nixCats("python") and { "ruff_organize_imports", lsp_format = "last" } or nil,
-					java = nixCats("java") and { "google-java-format" } or nil,
-					kotlin = nixCats("kotlin") and { lsp_format = "only" } or nil,
-					html = nixCats("web") and get_formatters({ "prettierd" }) or nil,
-					css = nixCats("web") and get_formatters({ "prettierd" }) or nil,
-					graphql = nixCats("node") and get_formatters({ "prettierd" }) or nil,
-					markdown = nixCats("general") and get_formatters({ "prettierd" }) or nil,
-					json = nixCats("general") and get_formatters({ "prettierd" }) or nil,
-					yaml = nixCats("general") and get_formatters({ "prettierd" }) or nil,
-					sh = nixCats("general") and { "shfmt" } or nil,
-					bash = nixCats("general") and { "shfmt" } or nil,
-					zsh = nixCats("general") and { "shfmt" } or nil,
-					fish = nixCats("general") and { "fish_indent" } or nil,
-					cpp = nixCats("cpp") and get_formatters({ "clang-format" }) or nil,
-					c = nixCats("cpp") and get_formatters({ "clang-format" }) or nil,
-					nu = { lsp_format = "last" },
+					lua = formatter("stylua", get_formatters({ "stylua" })),
+					go = formatter("gofmt", get_formatters({ "gofmt" })),
+					javascript = jslint and get_formatters(jslint) or nil,
+					typescript = jslint and get_formatters(jslint) or nil,
+					nix = formatter("alejandra", get_formatters({ "alejandra" })),
+					rust = formatter("rustfmt", get_formatters({ "rustfmt" })),
+					toml = formatter("tombi", get_formatters({ "tombi" })),
+					python = formatter("ruff", { "ruff_organize_imports", lsp_format = "last" }),
+					java = formatter("google-java-format", { "google-java-format" }),
+					kotlin = formatter("kotlin-lsp", { lsp_format = "only" }),
+					html = formatter("prettierd", get_formatters({ "prettierd" })),
+					css = formatter("prettierd", get_formatters({ "prettierd" })),
+					graphql = formatter("prettierd", get_formatters({ "prettierd" })),
+					markdown = formatter("prettierd", get_formatters({ "prettierd" })),
+					json = formatter("prettierd", get_formatters({ "prettierd" })),
+					yaml = formatter("prettierd", get_formatters({ "prettierd" })),
+					sh = formatter("shfmt", { "shfmt" }),
+					bash = formatter("shfmt", { "shfmt" }),
+					zsh = formatter("shfmt", { "shfmt" }),
+					fish = formatter("fish_indent", { "fish_indent" }),
+					cpp = formatter("clang-format", get_formatters({ "clang-format" })),
+					c = formatter("clang-format", get_formatters({ "clang-format" })),
+					nu = formatter("nu", { lsp_format = "last" }),
 				},
 				formatters = {
 					tombi = {

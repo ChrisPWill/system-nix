@@ -20,7 +20,7 @@ Tool-specific settings, plugins, and init scripts are encapsulated within their 
 
 - **[core/](./core)**: The foundational shell environment, prompts, and system-wide font declarations.
 - **[cli/](./cli)**: Modern enhancements to the standard Unix toolset, providing high-performance and feature-rich command-line utilities.
-- **[dev/](./dev)**: The primary software engineering environment, including text editors, multiplexers, and version control systems.
+- **[dev/](./dev)**: The software engineering environment, including editors, devshell-provided language stacks, envoluntary mappings, multiplexers, and version control.
 - **[ops/](./ops)**: Operational utilities for system administration, process monitoring, and advanced filesystem manipulation.
 - **[knowledge/](./knowledge)**: The "Second Brain" domain, focused on information ingestion, note-taking, and long-term knowledge organization. Logseq is installed here, while the Logseq Capture service is opt-in via `services.logseq-capture.enable` in a host or role module.
 - **[media/](./media)**: Digital signal processing and leisure-focused applications for multimedia manipulation and entertainment.

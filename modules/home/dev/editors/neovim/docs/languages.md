@@ -1,6 +1,9 @@
 # 󰗀 Language Support
 
-This configuration provides robust support for a wide range of development environments and tools.
+Language plugins stay installed, while executable-backed features activate at
+runtime. Enter the matching named devshell and launch `meow` from it; outside a
+shell, missing LSPs and formatters are intentionally dormant. The complete
+catalog and envoluntary workflow are in `../../../README.md`.
 
 ## 󰙅 Shell Scripting
 
