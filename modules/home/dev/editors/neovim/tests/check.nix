@@ -1,10 +1,10 @@
 {
+  inputs,
   language,
   pkgs,
-  perSystem,
   ...
 }: let
-  meow = perSystem.self.meow;
+  meow = pkgs.callPackage ../../../../../../packages/meow.nix {inherit inputs;};
   testRoot = ./.;
   fixtureRoot = "${testRoot}/fixtures/${language}";
   harness = "${testRoot}/lsp_harness.lua";

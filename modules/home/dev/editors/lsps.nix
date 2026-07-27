@@ -1,8 +1,9 @@
 {
-  perSystem,
   pkgs,
   ...
-}: {
+}: let
+  kotlinLsp = pkgs.callPackage ../../../../packages/kotlin-lsp.nix {};
+in {
   # Mirroring the LSP/Formatter setup from Neovim
   home.packages = with pkgs; [
     # Nix
@@ -48,6 +49,6 @@
     marksman
 
     # Kotlin
-    perSystem.self.kotlin-lsp
+    kotlinLsp
   ];
 }

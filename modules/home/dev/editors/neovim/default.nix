@@ -2,15 +2,15 @@
   inputs,
   config,
   lib,
-  perSystem,
   pkgs,
   ...
 }: let
+  kotlinLsp = pkgs.callPackage ../../../../../packages/kotlin-lsp.nix {};
   neovimPackage = import ./nixcats-package.nix {
     inherit inputs lib pkgs;
     luaPath = config.lib.file.mkOutOfStoreSymlink "${config.homeModuleDir}/dev/editors/neovim/config";
     docsPath = "${config.homeModuleDir}/dev/editors/neovim/docs";
-    kotlinLsp = perSystem.self.kotlin-lsp;
+    inherit kotlinLsp;
     enableCopilot = config.nixCats.custom.enableCopilot;
     enableLocalOllama = config.services.local-ollama.enable;
     neovimProvider = config.home.ai.neovimProvider;
