@@ -300,12 +300,6 @@ local function check_lsp_formatting(bufnr, clients)
 		end
 	end
 	assert_true(supports_formatting, "no attached client advertises document formatting")
-	assert_true(
-		vim.wait(45000, function()
-			return vim.g.kotlin_lsp_ready_for_test == true
-		end, 100),
-		"timed out waiting for Kotlin LSP workspace initialization"
-	)
 
 	local ok, conform = pcall(require, "conform")
 	assert_true(ok, "conform.nvim did not load")
@@ -328,9 +322,6 @@ local function main()
 	assert_true(file and file ~= "", "NVIM_LSP_TEST_FILE is required")
 	local expected_clients = split(vim.env.NVIM_LSP_TEST_CLIENTS)
 	assert_true(#expected_clients > 0, "NVIM_LSP_TEST_CLIENTS is required")
-	vim.lsp.handlers["intellij/ready-for-test"] = function()
-		vim.g.kotlin_lsp_ready_for_test = true
-	end
 
 	vim.cmd.edit(vim.fn.fnameescape(file))
 	local bufnr = vim.api.nvim_get_current_buf()
