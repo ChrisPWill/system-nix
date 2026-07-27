@@ -1,0 +1,49 @@
+#!/usr/bin/env nu
+
+print "Select bookmarks with Tab, then press Enter to delete."
+print "Press Esc to quit."
+
+loop {
+    let result = (
+        jj bookmark list -T 'name ++ "\n"'
+        | lines
+        | where {|name| not ($name | is-empty) }
+        | where {|name| $name != "main" }
+        | where {|name| $name != "master" }
+        | uniq
+        | sort
+        | str join "\n"
+        | ^fzf
+            --multi
+            --prompt="Delete bookmarks> "
+            --header="Tab: select | Enter: delete | Esc: quit"
+        | complete
+    )
+
+    # Esc or Ctrl-C exits fzf with a non-zero status.
+    if $result.exit_code != 0 {
+        break
+    }
+
+    let selected = (
+        $result.stdout
+        | lines
+        | where {|name| not ($name | is-empty) }
+    )
+
+    if ($selected | is-empty) {
+        continue
+    }
+
+    for bookmark in $selected {
+        print $"Deleting ($bookmark)..."
+        jj bookmark delete $bookmark
+    }
+
+    # Permanently delete the corresponding tracked branches on origin.
+    jj git push --remote origin --deleted
+
+    print ""
+}
+
+print "Done."
