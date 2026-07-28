@@ -509,7 +509,7 @@ in {
           {
             key = "cmd+alt-f";
             niri = "maximize-column;";
-            omni = omni "toggle-column-full-width";
+            omni = omni "toggle-container-full-primary-span";
           }
           {
             key = "cmd+alt+shift-f";
@@ -533,7 +533,7 @@ in {
           {
             key = "cmd+alt-space";
             niri = "switch-preset-column-width;";
-            omni = omni "cycle-column-width forward";
+            omni = omni "cycle-size forward";
           }
           {
             key = "cmd+alt+ctrl-space";

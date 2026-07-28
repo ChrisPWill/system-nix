@@ -15,8 +15,10 @@
   settings = {
     monitorBarOverrides = [];
     monitorDwindleOverrides = [];
+    monitorGapOverrides = [];
     monitorNiriOverrides = [];
     monitorOrientationOverrides = [];
+    monitorRoutingOverrides = [];
 
     appearance.mode = "dark";
 
@@ -29,7 +31,7 @@
     dwindle = {
       defaultSplitRatio = 1.0;
       moveToRootStable = true;
-      singleWindowAspectRatio = "4:3";
+      singleWindowFit = "1920x1440";
       smartSplit = false;
       splitWidthMultiplier = 1.0;
       useGlobalGaps = true;
@@ -43,10 +45,15 @@
     };
 
     focus = {
+      crossesMonitorAtEdge = false;
       followsMouse = false;
       followsWindowToMonitor = true;
+      lockModifier = "off";
+      moveCrossesMonitorAtEdge = false;
       moveMouseToFocusedWindow = true; # interacts badly with `followsMouse` making it center each time
     };
+
+    routing.mode = "macOS";
 
     gaps = {
       size = 4.0;
@@ -64,6 +71,7 @@
       hotkeysEnabled = false;
       ipcEnabled = true;
       preventSleepEnabled = false;
+      systemHyperTrigger = "none";
       updateChecksEnabled = true;
     };
 
@@ -74,6 +82,7 @@
       scrollEnabled = true;
       scrollModifierKey = "optionShift";
       scrollSensitivity = 5.0;
+      trackpadScrollStyle = "snap";
       # Vertical 3-finger swipe switches workspaces. Requires macOS's Mission
       # Control 3/4-finger vertical swipe gesture to be disabled (System
       # Settings > Trackpad > More Gestures), otherwise it intercepts the swipe.
@@ -83,6 +92,7 @@
     };
 
     mouseWarp = {
+      constrainToArrangement = false;
       enabled = true;
       margin = 1;
     };
@@ -90,15 +100,31 @@
     niri = {
       alwaysCenterSingleColumn = false;
       centerFocusedColumn = "never";
-      columnWidthPresets = [
+      containerPrimarySpanPresets = [
         0.3333333333333333
         0.5
         0.6666666666666666
       ];
-      defaultColumnWidth = 0.5;
+      defaultContainerPrimarySpan = 0.5;
       infiniteLoop = false;
-      maxVisibleColumns = 2;
-      singleWindowAspectRatio = "none";
+      singleWindowFit = "fill";
+      visibleContainerCount = 2;
+    };
+
+    overview = {
+      zoom = 1.0;
+      backdrop = {red = 0.05; green = 0.05; blue = 0.08; alpha = 1.0;};
+      windowBorders = {
+        normal = {red = 0.3; green = 0.3; blue = 0.35; alpha = 0.5;};
+        hovered = {red = 0.4; green = 0.6; blue = 1.0; alpha = 1.0;};
+        selected = {red = 0.3; green = 0.8; blue = 0.4; alpha = 1.0;};
+      };
+    };
+
+    hiddenBar = {
+      enabled = true;
+      hiddenBundleIDs = [];
+      rehideIntervalSeconds = 5.0;
     };
 
     quakeTerminal = {
@@ -106,6 +132,8 @@
       autoHide = false;
       enabled = true;
       heightPercent = 50.0;
+      # backgroundEffect = "standardBlur";
+      # backgroundBlurRadius = 0;
       monitorMode = "focusedWindow";
       opacity = 1.0;
       position = "center";
@@ -122,14 +150,19 @@
       backgroundOpacity = 0.1;
       deduplicateAppIcons = false;
       enabled = true;
+      excludedBundleIDs = [];
       height = 24.0;
       hideEmptyWorkspaces = false;
+      iconOverrides = {};
       notchActiveZoneWidth = 180.0;
       notchMode = "moveBelowMenuBar";
       position = "overlappingMenuBar";
       reserveLayoutSpace = true;
+      revealModifier = "off";
+      revealHoldMilliseconds = 200.0;
       showFloatingWindows = false;
       showLabels = true;
+      systemStatsButton = false;
       windowLevel = "popup";
       xOffset = 0.0;
       yOffset = 0.0;
