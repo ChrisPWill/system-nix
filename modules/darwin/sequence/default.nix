@@ -1,5 +1,6 @@
 _: {
   homebrew.casks = [
+    "cap"
     "claude-code"
     "datagrip"
     "google-drive"
