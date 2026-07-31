@@ -9,7 +9,8 @@ This repository uses [sops-nix](https://github.com/Mic92/sops-nix) to manage sec
 
 ### 1. Requirements
 
-The following tools are installed via `modules/home/ops/sops.nix`:
+The following tools are installed by both `modules/home/ops/sops.nix` and
+`modules/nixos/ops/sops.nix`:
 
 - `sops`: The CLI tool for editing secrets.
 - `age`: The encryption backend.
@@ -20,9 +21,13 @@ The following tools are installed via `modules/home/ops/sops.nix`:
 We use **age** keys for encryption:
 
 - **User Key**: Located at `~/.config/sops/age/keys.txt`. Used for manual editing and Home Manager secrets.
-- **Host Key**: Derived from `/etc/ssh/ssh_host_ed25519_key`. Used by NixOS for system-level secrets.
+- **NixOS identities**: sops-nix generates and stores a dedicated age key at
+  `/var/lib/sops-nix/key.txt`. The NixOS module also uses
+  `/etc/ssh/ssh_host_ed25519_key` as a decryption identity.
 
-The public keys for both are configured in the root `.sops.yaml`.
+The user and host recipients allowed to decrypt the repository secrets are
+configured in the root `.sops.yaml`. At least one corresponding private identity
+must be available on each machine.
 
 ## Common Workflows
 
@@ -40,7 +45,7 @@ sops secrets/secrets.yaml
 1. Run `sops secrets/secrets.yaml` and add a new key-value pair.
 2. Reference the secret in your Nix configuration:
 
-#### In NixOS (`modules/nixos/ops/sops.nix`):
+#### In NixOS (`modules/nixos/ops/sops.nix`)
 
 ```nix
 sops.secrets.my_secret = {
@@ -50,21 +55,23 @@ sops.secrets.my_secret = {
 
 Access via: `config.sops.secrets.my_secret.path` (resolves to `/run/secrets/my_secret`).
 
-#### In Home Manager (`modules/home/ops/sops.nix`):
+#### In Home Manager (`modules/home/ops/sops.nix`)
 
 ```nix
 sops.secrets.my_home_secret = {};
 ```
 
-Access via: `config.sops.secrets.my_home_secret.path` (resolves to `/run/user/1000/secrets/my_home_secret`).
+Access via: `config.sops.secrets.my_home_secret.path` (normally resolves below
+`$XDG_RUNTIME_DIR/secrets/`).
 
 ### Setting Up a New Machine (Host)
 
-1. **Get the Host Age Key**:
+1. **Convert the host SSH public key to an age recipient**:
    ```bash
    sudo ssh-to-age -i /etc/ssh/ssh_host_ed25519_key.pub
    ```
-2. **Update `.sops.yaml`**: Add the new host key to the `keys` and `creation_rules` sections.
+2. **Update `.sops.yaml`**: Add the new host recipient to the `keys` and
+   `creation_rules` sections.
 3. **Re-encrypt**:
    ```bash
    sops updatekeys secrets/secrets.yaml
@@ -97,9 +104,10 @@ ssh-to-age -private-key -i ~/.ssh/id_ed25519 > ~/.config/sops/age/keys.txt
 
 ## Practical Examples
 
-### 1. Injecting Secrets into a Systemd Service (NixOS)
+### 1. Injecting an environment file into a systemd service (NixOS)
 
-This is the most secure way to use secrets in services.
+This form expects the decrypted secret to contain `KEY=VALUE` lines. For a
+single raw value, pass its path as an argument or use a sops template instead.
 
 ```nix
 sops.secrets.api_key = {};
@@ -114,7 +122,7 @@ systemd.services.my-service = {
 };
 ```
 
-### 2. Using Secrets in your Shell (Zsh/Nushell)
+### 2. Reading a secret in Zsh
 
 Since secrets are only available at runtime, you can source them in your shell configuration.
 
@@ -123,10 +131,9 @@ Since secrets are only available at runtime, you can source them in your shell c
 ```nix
 sops.secrets.github_token = {};
 
-programs.zsh.initExtra = ''
-  # Source the secret if it exists
+programs.zsh.initContent = ''
   if [ -f ${config.sops.secrets.github_token.path} ]; then
-    export GITHUB_TOKEN=$(cat ${config.sops.secrets.github_token.path})
+    export GITHUB_TOKEN="$(<${config.sops.secrets.github_token.path})"
   fi
 '';
 ```
@@ -141,5 +148,5 @@ sops.templates."config.env".content = ''
   API_KEY=${config.sops.placeholder.api_key}
 '';
 
-# The resulting file is at /run/secrets-render/config.env
+# In a NixOS module, the resulting file is at /run/secrets-render/config.env
 ```

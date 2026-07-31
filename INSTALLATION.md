@@ -15,7 +15,7 @@ Fresh Macs normally have `git` before they have `jj`, so start with a normal Git
 clone:
 
 ```bash
-git clone https://github.com/cwilliams/.system-nix.git ~/.system-nix
+git clone https://github.com/ChrisPWill/system-nix.git ~/.system-nix
 ```
 
 If `git` is missing, install Apple's command line tools first:
@@ -87,9 +87,9 @@ grant:
 2. **Input Monitoring**
    - `/Library/Application Support/Kanata/kanata`
    - `OmniWM`
-   - `/Library/Application Support/Skhd/skhd`
 3. **Full Disk Access** (optional but useful)
    - `OmniWM`
+   - `/Library/Application Support/Skhd/skhd`
 
 Approve the **pqrs.org Karabiner VirtualHIDDevice** system extension when macOS
 prompts for it. This is required for Kanata's virtual keyboard support.
@@ -147,10 +147,9 @@ tail -n 100 /var/log/kanata.log
 
 ### skhd hotkeys are not responding
 
-Confirm Accessibility and Input Monitoring permissions for
-`/Library/Application Support/Skhd/skhd`. The LaunchAgent intentionally runs this
-stable binary instead of a Nix store or profile symlink so macOS permissions
-survive rebuilds.
+Confirm Accessibility permission for `/Library/Application Support/Skhd/skhd`.
+The LaunchAgent intentionally runs this stable binary instead of a Nix store or
+profile symlink so macOS permissions survive rebuilds.
 
 Check the service and logs:
 
@@ -324,8 +323,11 @@ The resulting ISO will be in `result/iso/`.
 Test the installation process in QEMU:
 
 ```bash
-./modules/home/scripts/test-iso-vm
+./modules/home/ops/scripts/test-iso-vm
 ```
+
+The helper expects a Linux host with KVM, builds or reuses `result-iso`, and
+creates a persistent `test-disk.img` in the repository root.
 
 From the live ISO:
 
@@ -341,8 +343,6 @@ From the live ISO:
    sudo mount /dev/disk/by-label/boot /mnt/boot
    ```
 
-4. Install:
-
-   ```bash
-   sudo nixos-install --flake /etc/nix-config#cwilliams-laptop
-   ```
+4. Stop before `nixos-install` unless you have added a VM-specific host. As
+   described above, `cwilliams-laptop` is a bare-metal configuration and is not
+   a safe VM installation target.

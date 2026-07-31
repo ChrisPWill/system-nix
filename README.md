@@ -31,11 +31,12 @@ Following a **Domain-Driven Design (DDD)** approach, configuration is organized 
 - 🛠️ **[core/](./modules/home/core)**: Foundational shell, prompts, and fonts.
 - 🐚 **[cli/](./modules/home/cli)**: Modern enhancements to the standard Unix toolset.
 - 💻 **[dev/](./modules/home/dev)**: Engineering environment (Editors, VCS, Multiplexers).
-- ⚙️ **[ops/](./modules/home/ops)**: System administration, monitoring, and sops.
-- 🖥️ **[desktop/](./modules/home/desktop)**: Graphical interface, Niri WM, and Terminals.
+- ⚙️ **[ops/](./modules/home/ops)**: System administration, monitoring, search, and secrets tooling.
+- 🖥️ **[desktop/](./modules/home/desktop)**: Cross-platform GUI applications, terminals, and macOS window management.
+- 🐧 **[graphical-nixos/](./modules/home/graphical-nixos)**: Niri, DankMaterialShell, and Linux desktop integration.
 - 🧠 **[knowledge/](./modules/home/knowledge)**: Note-taking and information organization.
 - 🎬 **[media/](./modules/home/media)**: Multimedia processing and entertainment.
-- 🤖 **[ai/](./modules/home/ai)**: Local LLMs (Ollama) and AI service orchestration.
+- 🤖 **[ai/](./modules/home/ai)**: Coding agents, AI command-line workflows, and local LLM services.
 
 ---
 
@@ -77,8 +78,8 @@ The system implements a **Global Leader** capability using **Kanata** for hardwa
 Bootstrap new projects instantly using pre-configured flake templates:
 
 ```bash
-# List available templates
-nix flake show .#templates
+# List all flake outputs, including templates
+nix flake show
 
 # Initialize a new project
 nix flake init -t .#rust-simple
@@ -86,7 +87,7 @@ nix flake init -t .#rust-simple
 
 ### 🧰 Modern Workflows
 
-- **[envoluntary](https://github.com/dfrankland/envoluntary):** A direnv-like matcher that avoids needing to create gitignored nix files in projects.
+- **[envoluntary](https://github.com/dfrankland/envoluntary):** A direnv-like matcher used for work-project development shells without per-project Nix files.
 - **Jujutsu (`jj`):** The preferred VCS for this repository (supports git operations with a more powerful model).
 
 ---

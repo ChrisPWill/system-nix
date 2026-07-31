@@ -24,5 +24,12 @@ Tool-specific settings, plugins, and init scripts are encapsulated within their 
 - **[ops/](./ops)**: Operational utilities for system administration, process monitoring, and advanced filesystem manipulation.
 - **[knowledge/](./knowledge)**: The "Second Brain" domain, focused on information ingestion, note-taking, and long-term knowledge organization. Logseq is installed here, while the Logseq Capture service is opt-in via `services.logseq-capture.enable` in a host or role module.
 - **[media/](./media)**: Digital signal processing and leisure-focused applications for multimedia manipulation and entertainment.
-- **[desktop/](./desktop)**: The graphical interface layer, encompassing window management, terminal emulators, and standalone GUI applications.
+- **[desktop/](./desktop)**: Cross-platform graphical applications, terminal emulators, and macOS window management through OmniWM/skhd.
+- **[graphical-nixos/](./graphical-nixos)**: NixOS Home Manager integration for Niri, DankMaterialShell, portals, and Linux desktop applications. Hosts import this explicitly rather than through `home-shared.nix`.
 - **[ai/](./ai)**: Integration and orchestration of artificial intelligence services and local machine learning models.
+
+## Role and Host Modules
+
+- **`personal-machine.nix`** and **`work-machine.nix`**: Set the high-level role flags consumed by domain modules.
+- **`standalone.nix`**: Adds Stylix and shared theming for standalone Home Manager profiles such as WSL2.
+- **[sequence/](./sequence)**: Applies the employer-specific work role, email, GitHub settings, and envoluntary mappings.
