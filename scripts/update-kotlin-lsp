@@ -1,0 +1,143 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+script_dir=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
+repository_root=$(cd "$script_dir/.." && pwd)
+metadata_file="$repository_root/packages/kotlin-lsp.json"
+github_api_url=${KOTLIN_LSP_GITHUB_API_URL:-https://api.github.com/repos/Kotlin/kotlin-lsp/releases?per_page=100}
+download_base_url=${KOTLIN_LSP_DOWNLOAD_BASE_URL:-https://download-cdn.jetbrains.com/language-server/kotlin-server}
+requested_version=${1:-}
+
+if [ "$#" -gt 1 ]; then
+  echo "Usage: scripts/update-kotlin-lsp [VERSION]" >&2
+  exit 2
+fi
+
+for command in curl jq nix; do
+  if ! command -v "$command" >/dev/null 2>&1; then
+    echo "Required command not found: $command" >&2
+    exit 1
+  fi
+done
+
+current_version=$(jq -er '.version | select(type == "string")' "$metadata_file")
+
+if [ -z "$requested_version" ]; then
+  curl_args=(
+    --fail
+    --silent
+    --show-error
+    --location
+    --header "Accept: application/vnd.github+json"
+    --header "X-GitHub-Api-Version: 2022-11-28"
+  )
+  if [ -n "${GITHUB_TOKEN:-}" ]; then
+    curl_args+=(--header "Authorization: Bearer $GITHUB_TOKEN")
+  fi
+
+  release_tag=$(
+    curl "${curl_args[@]}" "$github_api_url" |
+      jq -er '[.[] | select(.draft == false and .prerelease == false)][0].tag_name'
+  )
+
+  if [[ ! "$release_tag" =~ ^kotlin-lsp/v([0-9]+(\.[0-9]+)+)$ ]]; then
+    echo "Invalid Kotlin LSP release tag: $release_tag" >&2
+    exit 1
+  fi
+  requested_version=${BASH_REMATCH[1]}
+fi
+
+if [[ ! "$requested_version" =~ ^[0-9]+(\.[0-9]+)+$ ]]; then
+  echo "Invalid Kotlin LSP version: $requested_version" >&2
+  exit 1
+fi
+
+if [[ ! "$current_version" =~ ^[0-9]+(\.[0-9]+)+$ ]]; then
+  echo "Invalid current Kotlin LSP version in $metadata_file: $current_version" >&2
+  exit 1
+fi
+
+if [ "$requested_version" = "$current_version" ]; then
+  echo "Kotlin LSP is already current at $current_version."
+  exit 0
+fi
+
+if ! awk -v candidate="$requested_version" -v current="$current_version" 'BEGIN {
+  candidate_count = split(candidate, candidate_parts, ".")
+  current_count = split(current, current_parts, ".")
+  count = candidate_count > current_count ? candidate_count : current_count
+  for (part_index = 1; part_index <= count; part_index++) {
+    candidate_part = part_index <= candidate_count ? candidate_parts[part_index] + 0 : 0
+    current_part = part_index <= current_count ? current_parts[part_index] + 0 : 0
+    if (candidate_part > current_part) exit 0
+    if (candidate_part < current_part) exit 1
+  }
+  exit 1
+}'; then
+  echo "Refusing to downgrade Kotlin LSP from $current_version to $requested_version." >&2
+  exit 1
+fi
+
+temporary_dir=$(mktemp -d "${TMPDIR:-/tmp}/update-kotlin-lsp.XXXXXX")
+metadata_tmp=
+cleanup() {
+  rm -rf -- "$temporary_dir"
+  if [ -n "$metadata_tmp" ]; then
+    rm -f -- "$metadata_tmp"
+  fi
+}
+trap cleanup EXIT
+
+fetch_hash() {
+  local archive=$1
+  local checksum_file="$temporary_dir/$archive.sha256"
+  local checksum
+  local checksum_filename
+  local extra
+
+  if ! curl --fail --silent --show-error --location \
+    "$download_base_url/$requested_version/$archive.sha256" \
+    --output "$checksum_file"; then
+    echo "Missing checksum file for $archive." >&2
+    return 1
+  fi
+
+  if [ "$(awk 'NF { count++ } END { print count + 0 }' "$checksum_file")" -ne 1 ]; then
+    echo "Malformed checksum file for $archive: expected one non-empty line." >&2
+    return 1
+  fi
+
+  read -r checksum checksum_filename extra < "$checksum_file" || true
+  if [[ ! "$checksum" =~ ^[[:xdigit:]]{64}$ ]] ||
+    { [ "$checksum_filename" != "$archive" ] && [ "$checksum_filename" != "*$archive" ]; } ||
+    [ -n "${extra:-}" ]; then
+    echo "Malformed checksum file for $archive." >&2
+    return 1
+  fi
+
+  nix hash convert --hash-algo sha256 --to sri "$checksum"
+}
+
+darwin_archive="kotlin-server-$requested_version-aarch64.sit"
+linux_archive="kotlin-server-$requested_version.tar.gz"
+darwin_hash=$(fetch_hash "$darwin_archive")
+linux_hash=$(fetch_hash "$linux_archive")
+
+metadata_tmp=$(mktemp "$repository_root/packages/.kotlin-lsp.json.XXXXXX")
+jq -n \
+  --arg version "$requested_version" \
+  --arg darwin_hash "$darwin_hash" \
+  --arg linux_hash "$linux_hash" \
+  '{
+    version: $version,
+    hashes: {
+      "aarch64-darwin": $darwin_hash,
+      "x86_64-linux": $linux_hash
+    }
+  }' > "$metadata_tmp"
+chmod 0644 "$metadata_tmp"
+mv "$metadata_tmp" "$metadata_file"
+metadata_tmp=
+
+echo "Updated Kotlin LSP from $current_version to $requested_version."

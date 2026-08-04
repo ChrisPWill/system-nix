@@ -1,0 +1,111 @@
+name: Kotlin LSP update
+
+on:
+  schedule:
+    - cron: "41 8 * * *"
+  workflow_dispatch:
+    inputs:
+      version:
+        description: Optional Kotlin LSP version (defaults to the latest non-prerelease)
+        required: false
+        type: string
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: kotlin-lsp-update
+  cancel-in-progress: false
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    environment: master
+    env:
+      UPDATE_BRANCH: automation/kotlin-lsp-update
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: cachix/install-nix-action@v31
+        with:
+          extra_nix_config: |
+            experimental-features = nix-command flakes
+
+      - uses: DeterminateSystems/magic-nix-cache-action@v13
+
+      - name: Create log directory
+        run: mkdir -p "$RUNNER_TEMP/kotlin-lsp-update-logs"
+
+      - name: Update Kotlin LSP metadata
+        id: update
+        env:
+          GH_TOKEN: ${{ github.token }}
+          VERSION_OVERRIDE: ${{ inputs.version }}
+        run: |
+          set -euo pipefail
+          old_version=$(jq -r .version packages/kotlin-lsp.json)
+          if [ -n "$VERSION_OVERRIDE" ]; then
+            scripts/update-kotlin-lsp "$VERSION_OVERRIDE" 2>&1 | tee "$RUNNER_TEMP/kotlin-lsp-update-logs/update.log"
+          else
+            GITHUB_TOKEN="$GH_TOKEN" scripts/update-kotlin-lsp 2>&1 | tee "$RUNNER_TEMP/kotlin-lsp-update-logs/update.log"
+          fi
+          new_version=$(jq -r .version packages/kotlin-lsp.json)
+
+          echo "old-version=$old_version" >> "$GITHUB_OUTPUT"
+          echo "new-version=$new_version" >> "$GITHUB_OUTPUT"
+          if git diff --quiet -- packages/kotlin-lsp.json; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Build Kotlin LSP
+        run: |
+          set -o pipefail
+          nix build -L .#kotlin-lsp --no-link 2>&1 | tee "$RUNNER_TEMP/kotlin-lsp-update-logs/package.log"
+
+      - name: Force Kotlin LSP integration test
+        run: |
+          set -o pipefail
+          # --rebuild requires the output to exist first when a new release changes the derivation.
+          nix build -L .#checks.x86_64-linux.neovim-lsp-kotlin 2>&1 | tee "$RUNNER_TEMP/kotlin-lsp-update-logs/integration.log"
+          nix build --rebuild -L .#checks.x86_64-linux.neovim-lsp-kotlin 2>&1 | tee -a "$RUNNER_TEMP/kotlin-lsp-update-logs/integration.log"
+
+      - name: Create or update pull request
+        if: steps.update.outputs.changed == 'true'
+        id: pull-request
+        uses: peter-evans/create-pull-request@v7
+        with:
+          branch: ${{ env.UPDATE_BRANCH }}
+          base: master
+          delete-branch: true
+          add-paths: packages/kotlin-lsp.json
+          commit-message: "chore(kotlin): update LSP to ${{ steps.update.outputs.new-version }}"
+          title: "Update Kotlin LSP to ${{ steps.update.outputs.new-version }}"
+          body: |
+            ## Summary
+            - Update Kotlin LSP from `${{ steps.update.outputs.old-version }}` to `${{ steps.update.outputs.new-version }}`.
+            - Validation: package build and forced `checks.x86_64-linux.neovim-lsp-kotlin` rebuild.
+
+            ## Run
+            - ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+
+      - name: Squash-merge validated update
+        if: steps.pull-request.outputs.pull-request-number != ''
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR_NUMBER: ${{ steps.pull-request.outputs.pull-request-number }}
+        run: gh pr merge "$PR_NUMBER" --squash --delete-branch
+
+      - name: Upload Kotlin LSP logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: kotlin-lsp-update-logs
+          path: |
+            ${{ runner.temp }}/kotlin-lsp-update-logs/*.log
+            result/logs/*
+          if-no-files-found: ignore

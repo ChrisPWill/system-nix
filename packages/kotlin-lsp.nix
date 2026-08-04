@@ -1,15 +1,16 @@
 {pkgs, ...}: let
   inherit (pkgs) fetchurl jdk25 lib stdenv unzip;
   autoPatchelfHook = pkgs.autoPatchelfHook or null;
-  version = "262.8190.0";
+  release = builtins.fromJSON (builtins.readFile ./kotlin-lsp.json);
+  inherit (release) version;
   sources = {
     aarch64-darwin = {
       url = "https://download-cdn.jetbrains.com/language-server/kotlin-server/${version}/kotlin-server-${version}-aarch64.sit";
-      hash = "sha256-4gGDJieEu35mXOGupIVYcqixbyEeu0eNRSdzVTcy2fs=";
+      hash = release.hashes.aarch64-darwin;
     };
     x86_64-linux = {
       url = "https://download-cdn.jetbrains.com/language-server/kotlin-server/${version}/kotlin-server-${version}.tar.gz";
-      hash = "sha256-i0xw6VBlQg54Z8mar58Y4LTnYxHsRT5MGjnj9q53TL8=";
+      hash = release.hashes.x86_64-linux;
     };
   };
   source = sources.${stdenv.hostPlatform.system};
