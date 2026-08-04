@@ -1,10 +1,10 @@
 {
+  inputs,
   language,
   pkgs,
-  perSystem,
   ...
 }: let
-  meow = perSystem.self.meow;
+  meow = inputs.self.packages.${pkgs.stdenv.hostPlatform.system}.meow;
   testRoot = ./.;
   fixtureRoot = "${testRoot}/fixtures/${language}";
   harness = "${testRoot}/lsp_harness.lua";

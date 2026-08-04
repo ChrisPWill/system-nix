@@ -1,5 +1,5 @@
 {
-  perSystem,
+  inputs,
   pkgs,
   ...
 }: {
@@ -48,6 +48,6 @@
     marksman
 
     # Kotlin
-    perSystem.self.kotlin-lsp
+    inputs.self.packages.${pkgs.stdenv.hostPlatform.system}.kotlin-lsp
   ];
 }
