@@ -8,6 +8,10 @@
   testRoot = ./.;
   fixtureRoot = "${testRoot}/fixtures/${language}";
   harness = "${testRoot}/lsp_harness.lua";
+  kotlinGradle = pkgs.gradle_9;
+  kotlinGradleWrapperProperties = pkgs.writeText "kotlin-lsp-gradle-wrapper.properties" ''
+    distributionUrl=file://${kotlinGradle.unwrapped.src}
+  '';
 
   cases = {
     python = {
@@ -41,7 +45,8 @@
       forbiddenFormatter = "ktlint";
       forbiddenLinter = "ktlint";
       lspFormatting = true;
-      formattedText = "  if(true) {\n    val styleIssue = \"EditorConfig should control formatting\"";
+      waitForProgress = "Importing project";
+      formattedText = "    if (true) {\n        val styleIssue = \"EditorConfig should control formatting\"";
       expectDiagnostics = false;
     };
     nix = {
@@ -59,7 +64,7 @@
   case = cases.${language};
 in
   pkgs.runCommand "neovim-lsp-${language}-check" {
-    nativeBuildInputs = [pkgs.coreutils] ++ pkgs.lib.optionals (language == "kotlin") [pkgs.gradle];
+    nativeBuildInputs = [pkgs.coreutils] ++ pkgs.lib.optionals (language == "kotlin") [kotlinGradle];
     meta.platforms = pkgs.lib.platforms.linux;
   } ''
     set -euo pipefail
@@ -75,7 +80,11 @@ in
     mkdir -p "$work" "$home" "$state" "$cache" "$data"
     cp -R ${fixtureRoot}/. "$work/"
     chmod -R u+w "$work"
-    ${pkgs.lib.optionalString (language == "kotlin") ''ln -s ${pkgs.gradle}/bin/gradle "$work/gradlew"''}
+    ${pkgs.lib.optionalString (language == "kotlin") ''
+      mkdir -p "$work/gradle/wrapper"
+      ln -s ${kotlinGradle}/bin/gradle "$work/gradlew"
+      ln -s ${kotlinGradleWrapperProperties} "$work/gradle/wrapper/gradle-wrapper.properties"
+    ''}
 
     export HOME="$home"
     export XDG_CONFIG_HOME="$home/.config"
@@ -99,6 +108,7 @@ in
       then "1"
       else "0"
     }"
+    export NVIM_LSP_TEST_WAIT_FOR_PROGRESS="${case.waitForProgress or ""}"
     export NVIM_LSP_TEST_FORMATTED_TEXT=${pkgs.lib.escapeShellArg (case.formattedText or "")}
     export NVIM_LSP_TEST_EXPECT_DIAGNOSTICS="${
       if case.expectDiagnostics

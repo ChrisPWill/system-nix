@@ -314,6 +314,42 @@ local function check_lsp_formatting(bufnr, clients)
 	end
 end
 
+local function track_server_progress(expected_title)
+	local state = { error = nil, finished = expected_title == "", tokens = {} }
+	if expected_title == "" then
+		return state
+	end
+
+	local progress_handler = vim.lsp.handlers["$/progress"]
+	vim.lsp.handlers["$/progress"] = function(err, result, ctx, config)
+		local value = result and result.value or nil
+		local token = result and tostring(result.token) or nil
+		if value and value.kind == "begin" and value.title == expected_title and token then
+			state.tokens[token] = true
+		elseif value and value.kind == "end" and token and state.tokens[token] then
+			state.finished = true
+		end
+
+		if progress_handler then
+			return progress_handler(err, result, ctx, config)
+		end
+	end
+
+	local log_handler = vim.lsp.handlers["window/logMessage"]
+	vim.lsp.handlers["window/logMessage"] = function(err, result, ctx, config)
+		local message = result and result.message or ""
+		if message:find("Error importing folder", 1, true) then
+			state.error = message
+		end
+
+		if log_handler then
+			return log_handler(err, result, ctx, config)
+		end
+	end
+
+	return state
+end
+
 local function main()
 	vim.o.swapfile = false
 	vim.o.writebackup = false
@@ -337,6 +373,7 @@ local function main()
 		end
 	end
 	local ft = vim.bo[bufnr].filetype
+	local progress_state = track_server_progress(vim.env.NVIM_LSP_TEST_WAIT_FOR_PROGRESS or "")
 
 	pcall(vim.api.nvim_exec_autocmds, "BufReadPost", { buffer = bufnr, modeline = false })
 	pcall(vim.api.nvim_exec_autocmds, "FileType", { buffer = bufnr, modeline = false })
@@ -381,6 +418,13 @@ local function main()
 	)
 
 	local clients = vim.lsp.get_clients({ bufnr = bufnr })
+	assert_true(
+		vim.wait(180000, function()
+			return progress_state.finished or progress_state.error ~= nil
+		end, 250),
+		"timed out waiting for LSP progress: " .. (vim.env.NVIM_LSP_TEST_WAIT_FOR_PROGRESS or "")
+	)
+	assert_true(progress_state.error == nil, progress_state.error or "workspace import failed")
 	check_lsp_formatting(bufnr, clients)
 	if vim.env.NVIM_LSP_TEST_COMPLETION and vim.env.NVIM_LSP_TEST_COMPLETION ~= "" then
 		assert_true(
