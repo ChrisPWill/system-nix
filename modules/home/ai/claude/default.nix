@@ -12,7 +12,7 @@
       then null
       else pkgs.claude-code;
 
-    rulesDir = config.lib.file.mkOutOfStoreSymlink "${config.homeModuleDir}/ai/claude/rules";
+    rulesDir = config.lib.file.mkOutOfStoreSymlink "${config.homeModuleDir}/ai/shared-rules";
 
     lspServers = {
       nix = {
