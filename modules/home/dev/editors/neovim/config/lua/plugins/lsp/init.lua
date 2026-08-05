@@ -2,7 +2,12 @@ local M = {}
 local utils = require("utils")
 
 function M.on_attach(client, bufnr)
-	if client.server_capabilities.documentSymbolProvider then
+	-- kotlin-lsp imports sizeable Gradle workspaces and serializes these extra
+	-- requests with completion. Tree-sitter still provides structural navigation,
+	-- while inlay hints remain available on demand via <leader>ti.
+	local is_kotlin_lsp = client.name == "kotlin_lsp"
+
+	if client.server_capabilities.documentSymbolProvider and not is_kotlin_lsp then
 		require("nvim-navic").attach(client, bufnr)
 	end
 
@@ -71,7 +76,9 @@ function M.on_attach(client, bufnr)
 	end, "Hover")
 	nmap("<C-k>", vim.lsp.buf.signature_help, "Signature")
 	if client.server_capabilities.inlayHintProvider then
-		vim.lsp.inlay_hint.enable(true, { bufnr = bufnr })
+		if not is_kotlin_lsp then
+			vim.lsp.inlay_hint.enable(true, { bufnr = bufnr })
+		end
 	end
 	nmap("<leader>ti", function()
 		vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled({ bufnr = bufnr }), { bufnr = bufnr })
