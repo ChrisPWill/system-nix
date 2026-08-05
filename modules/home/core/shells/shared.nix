@@ -1,11 +1,20 @@
 # Common shell configuration shared across Zsh, Fish, and Nushell.
 # This includes aliases, prompt settings (Starship), and shared CLI tools.
-{config, ...}: let
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}: let
   commonAliases = {
     # Common directory navigation
     ".." = "cd ..";
     "..." = "cd ../..";
     "...." = "cd ../../..";
+  };
+
+  darwinAliases = lib.optionalAttrs pkgs.stdenv.isDarwin {
+    cafe = "caffeinate -d -t 5400";
   };
 
   # Aliases that only work or make sense in Zsh
@@ -20,9 +29,9 @@ in {
 
     programs = {
       # Apply aliases to shells
-      zsh.shellAliases = commonAliases // zshSpecificAliases;
-      fish.shellAliases = commonAliases;
-      nushell.shellAliases = commonAliases;
+      zsh.shellAliases = commonAliases // darwinAliases // zshSpecificAliases;
+      fish.shellAliases = commonAliases // darwinAliases;
+      nushell.shellAliases = commonAliases // darwinAliases;
 
       # Shared shell-related programs
       starship = {
