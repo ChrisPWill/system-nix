@@ -53,6 +53,15 @@ return {
 					-- Need to find a better solution to the issue where `enabled` doesn't work as I'd hope
 					default = defaultSources,
 					providers = {
+						-- Do not hold the menu open for an LSP response. Blink merges these
+						-- results once they arrive, so completion remains responsive across
+						-- servers and larger projects.
+						lsp = {
+							async = true,
+						},
+						buffer = {
+							async = true,
+						},
 						snippets = {
 							min_keyword_length = 2,
 							score_offset = 5,
