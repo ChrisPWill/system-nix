@@ -71,7 +71,7 @@
       hotkeysEnabled = false;
       ipcEnabled = true;
       preventSleepEnabled = false;
-      systemHyperTrigger = "none";
+      systemHyperTrigger = "None";
       updateChecksEnabled = true;
     };
 
@@ -113,11 +113,31 @@
 
     overview = {
       zoom = 1.0;
-      backdrop = {red = 0.05; green = 0.05; blue = 0.08; alpha = 1.0;};
+      backdrop = {
+        red = 0.05;
+        green = 0.05;
+        blue = 0.08;
+        alpha = 1.0;
+      };
       windowBorders = {
-        normal = {red = 0.3; green = 0.3; blue = 0.35; alpha = 0.5;};
-        hovered = {red = 0.4; green = 0.6; blue = 1.0; alpha = 1.0;};
-        selected = {red = 0.3; green = 0.8; blue = 0.4; alpha = 1.0;};
+        normal = {
+          red = 0.3;
+          green = 0.3;
+          blue = 0.35;
+          alpha = 0.5;
+        };
+        hovered = {
+          red = 0.4;
+          green = 0.6;
+          blue = 1.0;
+          alpha = 1.0;
+        };
+        selected = {
+          red = 0.3;
+          green = 0.8;
+          blue = 0.4;
+          alpha = 1.0;
+        };
       };
     };
 
@@ -183,8 +203,54 @@
     inherit appRules;
     inherit workspaces;
   };
-in {
-  xdg.configFile."omniwm/settings.toml" = lib.mkIf pkgs.stdenv.isDarwin {
-    source = settingsFormat.generate "omniwm-settings.toml" settings;
+
+  # OmniWM owns the monitor topology and GUI-maintained collections. Everything
+  # else remains policy managed while unknown keys are preserved by the merge.
+  policySettings =
+    (builtins.removeAttrs settings [
+      "monitorBarOverrides"
+      "monitorDwindleOverrides"
+      "monitorGapOverrides"
+      "monitorNiriOverrides"
+      "monitorOrientationOverrides"
+      "monitorRoutingOverrides"
+      "routing"
+    ])
+    // {
+      hiddenBar = builtins.removeAttrs settings.hiddenBar ["hiddenBundleIDs"];
+      workspaceBar = builtins.removeAttrs settings.workspaceBar [
+        "excludedBundleIDs"
+        "iconOverrides"
+      ];
+    };
+
+  seedFile = settingsFormat.generate "omniwm-settings-seed.toml" settings;
+  policyFile = settingsFormat.generate "omniwm-settings-policy.toml" policySettings;
+  configPath = "${config.xdg.configHome}/omniwm/settings.toml";
+  stateDir = "${config.xdg.stateHome}/system-nix/omniwm";
+
+  mergeSettings = pkgs.writeShellApplication {
+    name = "omniwm-config-merge";
+    runtimeInputs = [
+      pkgs.coreutils
+      pkgs.diffutils
+      pkgs.jq
+      pkgs.remarshal
+    ];
+    text = ''
+      export OMNIWM_CONFIG_PATH=${lib.escapeShellArg configPath}
+      export OMNIWM_STATE_DIR=${lib.escapeShellArg stateDir}
+      export OMNIWM_SEED_PATH=${lib.escapeShellArg seedFile}
+      export OMNIWM_POLICY_PATH=${lib.escapeShellArg policyFile}
+      export OMNIWM_MERGE_FILTER=${./merge-settings.jq}
+
+      ${builtins.readFile ./merge-settings.sh}
+    '';
   };
+in {
+  home.packages = lib.optionals pkgs.stdenv.isDarwin [mergeSettings];
+
+  home.activation.mergeOmniwmSettings = lib.mkIf pkgs.stdenv.isDarwin (lib.hm.dag.entryAfter ["writeBoundary"] ''
+    run ${lib.getExe mergeSettings}
+  '');
 }
