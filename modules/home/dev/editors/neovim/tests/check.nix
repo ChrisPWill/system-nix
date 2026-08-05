@@ -129,11 +129,5 @@ in
     fi
 
     mkdir -p "$out/logs"
-    if [ ! -f "$report" ]; then
-      echo "Neovim exited successfully but did not write a report." > "$report"
-    fi
-    cp "$report" "$out/logs/neovim-lsp-${language}-report.txt"
-    if [ -f "$lsp_log" ]; then
-      cp "$lsp_log" "$out/logs/neovim-lsp-${language}-lsp.log"
-    fi
+    printf '%s\n' "neovim-lsp ${language} passed" > "$out/logs/neovim-lsp-${language}-report.txt"
   ''
