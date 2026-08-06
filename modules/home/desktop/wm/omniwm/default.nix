@@ -50,7 +50,7 @@
       followsWindowToMonitor = true;
       lockModifier = "off";
       moveCrossesMonitorAtEdge = false;
-      moveMouseToFocusedWindow = true; # interacts badly with `followsMouse` making it center each time
+      moveMouseToFocusedWindow = false;
     };
 
     gaps = {
