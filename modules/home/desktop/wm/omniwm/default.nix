@@ -53,8 +53,6 @@
       moveMouseToFocusedWindow = true; # interacts badly with `followsMouse` making it center each time
     };
 
-    routing.mode = "macOS";
-
     gaps = {
       size = 4.0;
       outer = {
@@ -214,7 +212,6 @@
       "monitorNiriOverrides"
       "monitorOrientationOverrides"
       "monitorRoutingOverrides"
-      "routing"
     ])
     // {
       hiddenBar = builtins.removeAttrs settings.hiddenBar ["hiddenBundleIDs"];
