@@ -38,6 +38,7 @@
     "period" = "0x2F";
     "minus" = "0x1B";
     "equal" = "0x18";
+    "grave" = "0x32";
   };
 
   niriModMap = {
@@ -255,6 +256,11 @@ in {
             niri = ''spawn "ghostty";'';
             omni = run "wezterm start";
             description = "Open Terminal";
+          }
+          {
+            key = "cmd+alt-grave";
+            omni = omni "toggle-quake-terminal";
+            description = "Toggle Quake Terminal";
           }
           {
             key = "cmd+alt-tab";
