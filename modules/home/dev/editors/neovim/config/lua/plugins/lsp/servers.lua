@@ -1,23 +1,6 @@
 local utils = require("utils")
 local lsp_utils = require("plugins.lsp")
 
-local kotlin_lsp_launcher = [[
-	server="$1"
-	shift
-
-	# kotlin-lsp can remain alive after its stdio client exits, retaining an
-	# exclusive RocksDB workspace lock. An orphan has no editor client, so it is
-	# safe to stop before launching a replacement.
-	for pid in $(pgrep -f 'kotlin-lsp --stdio' 2>/dev/null || true); do
-		parent=$(ps -o ppid= -p "$pid" | tr -d ' ')
-		if [ "$parent" = "1" ]; then
-			kill "$pid" 2>/dev/null || true
-		fi
-	done
-
-	exec "$server" "$@"
-]]
-
 vim.api.nvim_create_autocmd("LspAttach", {
 	callback = function(ev)
 		local client = vim.lsp.get_client_by_id(ev.data.client_id)
@@ -244,16 +227,18 @@ return {
 		lsp = {
 			-- Keep IntelliJ's indexes between server restarts. The server imports
 			-- the Gradle/Maven workspace, so avoiding a broad VCS-root workspace
-			-- is equally important for its request latency.
+			-- is equally important for its request latency. kotlin-lsp otherwise
+			-- places part of its analyzer database in a global JetBrains cache,
+			-- where it conflicts with other editor clients.
 			cmd = {
-				"sh",
-				"-c",
-				kotlin_lsp_launcher,
-				"kotlin-lsp-launcher",
-				vim.fn.exepath("kotlin-lsp"),
+				"kotlin-lsp",
 				"--stdio",
 				"--system-path",
 				vim.fs.joinpath(vim.fn.stdpath("cache"), "kotlin-lsp"),
+			},
+			cmd_env = {
+				IJ_JAVA_OPTIONS = "-Duser.home="
+					.. vim.fs.joinpath(vim.fn.stdpath("cache"), "kotlin-lsp-home"),
 			},
 			filetypes = { "kotlin" },
 			root_markers = {

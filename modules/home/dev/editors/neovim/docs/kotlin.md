@@ -15,7 +15,7 @@ Kotlin workspaces are deliberately rooted at the nearest Gradle or Maven build f
 
 To keep completion responsive while the server handles a large workspace, Meow does not automatically request Kotlin inlay hints or document-symbol breadcrumbs. Tree-sitter continues to provide structural navigation; use `<leader>ti` to enable Kotlin inlay hints for the current buffer when needed.
 
-The JetBrains server keeps an exclusive workspace database lock. Before starting it, Meow removes only orphaned `kotlin-lsp --stdio` processes (those whose parent has exited); this prevents a stale server from blocking subsequent editor sessions. A concurrently open Kotlin editor remains unsupported by the server's single-writer workspace cache, so close or stop its Kotlin LSP before opening the same project elsewhere.
+The JetBrains server keeps an exclusive workspace database lock. Meow assigns it a private JetBrains user-home cache in addition to its private system cache, preventing collisions with Kotlin LSPs started by another editor or coding agent. This does not alter the Gradle user home, so existing Gradle dependency caches remain available.
 
 There is deliberately no editor-side `ktlint` formatter or `nvim-lint` check for Kotlin, so it cannot contradict IntelliJ EditorConfig rules. Projects can still run repository-native Gradle tasks such as ktlint or detekt independently, including in CI.
 
