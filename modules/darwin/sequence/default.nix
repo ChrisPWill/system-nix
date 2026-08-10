@@ -1,6 +1,7 @@
 _: {
   homebrew.casks = [
     "cap"
+    "chatgpt"
     "claude"
     "claude-code"
     "datagrip"
