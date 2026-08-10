@@ -140,6 +140,93 @@ vim.keymap.set("n", "<leader>gc", function()
 	end
 end, { desc = "Changed Files" })
 
+local function changed_files(callback)
+	local root
+	local command
+	local args
+
+	if utils.isJujutsu() then
+		root = utils.getProjectRoot({ ".jj" })
+		command = "jj"
+		args = { "--no-pager", "--color=never", "diff", "--name-only", "-r", "@" }
+	else
+		root = utils.getProjectRoot({ ".git" })
+		command = "git"
+		args = { "status", "--short", "--untracked-files=all" }
+	end
+
+	if not root then
+		vim.notify("Not in a Jujutsu or Git repository", vim.log.levels.WARN)
+		return
+	end
+
+	vim.system({ command, unpack(args) }, { cwd = root, text = true }, function(result)
+		if result.code ~= 0 then
+			vim.schedule(function()
+				vim.notify(result.stderr ~= "" and result.stderr or "Could not read changed files", vim.log.levels.ERROR)
+			end)
+			return
+		end
+
+		local files = {}
+		local seen = {}
+		for line in result.stdout:gmatch("[^\r\n]+") do
+			local file = line
+			if command == "git" then
+				file = line:sub(4)
+				-- Porcelain status represents renames as "old -> new".
+				file = file:match("^.* %-> (.*)$") or file
+			end
+			local path = vim.fs.joinpath(root, file)
+			if file ~= "" and vim.uv.fs_stat(path) and not seen[file] then
+				seen[file] = true
+				table.insert(files, file)
+			end
+		end
+
+		vim.schedule(function()
+			callback(root, files)
+		end)
+	end)
+end
+
+local function navigate_changed_file(direction)
+	changed_files(function(root, files)
+		if #files == 0 then
+			vim.notify("No changed files", vim.log.levels.INFO)
+			return
+		end
+
+		local current = vim.fs.normalize(vim.api.nvim_buf_get_name(0))
+		local current_index
+		for index, file in ipairs(files) do
+			if vim.fs.normalize(vim.fs.joinpath(root, file)) == current then
+				current_index = index
+				break
+			end
+		end
+
+		local next_index
+		if current_index then
+			next_index = ((current_index - 1 + direction) % #files) + 1
+		elseif direction > 0 then
+			next_index = 1
+		else
+			next_index = #files
+		end
+
+		vim.cmd.edit(vim.fn.fnameescape(vim.fs.joinpath(root, files[next_index])))
+	end)
+end
+
+vim.keymap.set("n", "<leader>]f", function()
+	navigate_changed_file(1)
+end, { desc = "Next changed file" })
+
+vim.keymap.set("n", "<leader>[f", function()
+	navigate_changed_file(-1)
+end, { desc = "Previous changed file" })
+
 -- ── Grep ──────────────────────────────────────────────────────────────────────
 
 vim.keymap.set("n", "<leader>/b", function()

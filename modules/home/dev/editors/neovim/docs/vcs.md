@@ -11,7 +11,8 @@ Integrated VCS with `gitsigns`, `lazygit`, and your custom **Koji** conventional
 | `<leader>gr` | **Reset** Hunk         | Normal/Visual |
 | `<leader>gp` | **Preview** Hunk       | Normal        |
 | `<leader>gb` | **Blame** Line         | Normal        |
-| `<leader>gd` | **Diff** against Index | Normal        |
+| `<leader>gd`       | **Diff** against Index              | Normal        |
+| `<leader>[f / ]f`  | **Previous/Next** changed file      | Normal        |
 
 ## 󰘦 Committing with Koji
 

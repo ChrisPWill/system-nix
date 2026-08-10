@@ -70,6 +70,7 @@ High-frequency actions mapped to single keys under the `<leader>` (Space) prefix
 - `<leader>f`: Find files
 - `<leader>gf`: Find VCS files
 - `<leader>gc`: Find changed files
+- `<leader>[f / ]f`: Previous / next changed file (Jujutsu, falling back to Git)
 - `<leader>F`: Smart find files (Files, Recents, Buffers)
 - `<leader>b`: Search open buffers
 - `<leader>d`: Buffer diagnostics
