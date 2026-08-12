@@ -10,6 +10,8 @@ This configuration uses a **Hybrid Philosophy** (Helix-inspired navigation + Neo
 | `Ctrl-Alt-J/K`  | **Move Selection Down / Up**           |
 | `Alt-n / Alt-N` | **Search & Select Next / Prev**        |
 | `gn / gp`       | **Next / Prev Buffer**                 |
+| `]] / [[`       | **Repeat Next / Prev Bracket Navigation** |
+| `} / {`         | **Aliases for Bracket Repeat**         |
 | `[t / ]t`       | **Next / Prev Tab**                    |
 | `-`             | **Explorer**                           |
 | `Ctrl-\`        | **Terminal**                           |

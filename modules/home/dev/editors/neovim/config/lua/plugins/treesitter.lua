@@ -44,24 +44,6 @@ return {
 				},
 			})
 
-			local ts_repeat_move = require("nvim-treesitter-textobjects.repeatable_move")
-
-			-- Repeat movement with } and {
-			-- ensure } goes forward and { goes backward regardless of the last direction
-			vim.keymap.set({ "n", "x", "o" }, "}", ts_repeat_move.repeat_last_move_next, { desc = "Repeat next move" })
-			vim.keymap.set(
-				{ "n", "x", "o" },
-				"{",
-				ts_repeat_move.repeat_last_move_previous,
-				{ desc = "Repeat previous move" }
-			)
-
-			-- Optionally, make builtin f, F, t, T also repeatable with } and {
-			vim.keymap.set({ "n", "x", "o" }, "f", ts_repeat_move.builtin_f_expr, { expr = true })
-			vim.keymap.set({ "n", "x", "o" }, "F", ts_repeat_move.builtin_F_expr, { expr = true })
-			vim.keymap.set({ "n", "x", "o" }, "t", ts_repeat_move.builtin_t_expr, { expr = true })
-			vim.keymap.set({ "n", "x", "o" }, "T", ts_repeat_move.builtin_T_expr, { expr = true })
-
 			-- select keymaps (Helix-like)
 			vim.keymap.set({ "x", "o" }, "af", function()
 				require("nvim-treesitter-textobjects.select").select_textobject("@function.outer", "textobjects")
@@ -90,53 +72,36 @@ return {
 				require("nvim-treesitter-textobjects.swap").swap_previous("@parameter.inner")
 			end, { desc = "Swap previous argument" })
 
-			-- move keymaps (Helix-like)
-			vim.keymap.set({ "n", "x", "o" }, "]f", function()
-				require("nvim-treesitter-textobjects.move").goto_next_start("@function.outer", "textobjects")
-			end, { desc = "Next function start" })
-			vim.keymap.set({ "n", "x", "o" }, "[f", function()
-				require("nvim-treesitter-textobjects.move").goto_previous_start("@function.outer", "textobjects")
-			end, { desc = "Previous function start" })
-			vim.keymap.set({ "n", "x", "o" }, "]c", function()
-				require("nvim-treesitter-textobjects.move").goto_next_start("@class.outer", "textobjects")
-			end, { desc = "Next class start" })
-			vim.keymap.set({ "n", "x", "o" }, "[c", function()
-				require("nvim-treesitter-textobjects.move").goto_previous_start("@class.outer", "textobjects")
-			end, { desc = "Previous class start" })
-			vim.keymap.set({ "n", "x", "o" }, "]a", function()
-				require("nvim-treesitter-textobjects.move").goto_next_start("@parameter.inner", "textobjects")
-			end, { desc = "Next argument start" })
-			vim.keymap.set({ "n", "x", "o" }, "[a", function()
-				require("nvim-treesitter-textobjects.move").goto_previous_start("@parameter.inner", "textobjects")
-			end, { desc = "Previous argument start" })
+			local bracket_repeat = require("utils.bracket-repeat")
+			local structural_moves = {
+				{ key = "f", query = "@function.outer", edge = "start", label = "function" },
+				{ key = "c", query = "@class.outer", edge = "start", label = "class" },
+				{ key = "a", query = "@parameter.inner", edge = "start", label = "argument" },
+				{ key = "l", query = "@loop.outer", edge = "start", label = "loop" },
+				{ key = "i", query = "@conditional.outer", edge = "start", label = "conditional" },
+				{ key = "F", query = "@function.outer", edge = "end", label = "function" },
+				{ key = "C", query = "@class.outer", edge = "end", label = "class" },
+			}
 
-			-- Additional navigation
-			vim.keymap.set({ "n", "x", "o" }, "]l", function()
-				require("nvim-treesitter-textobjects.move").goto_next_start("@loop.outer", "textobjects")
-			end, { desc = "Next loop start" })
-			vim.keymap.set({ "n", "x", "o" }, "[l", function()
-				require("nvim-treesitter-textobjects.move").goto_previous_start("@loop.outer", "textobjects")
-			end, { desc = "Previous loop start" })
-			vim.keymap.set({ "n", "x", "o" }, "]i", function()
-				require("nvim-treesitter-textobjects.move").goto_next_start("@conditional.outer", "textobjects")
-			end, { desc = "Next conditional start" })
-			vim.keymap.set({ "n", "x", "o" }, "[i", function()
-				require("nvim-treesitter-textobjects.move").goto_previous_start("@conditional.outer", "textobjects")
-			end, { desc = "Previous conditional start" })
-
-			-- End of object moves
-			vim.keymap.set({ "n", "x", "o" }, "]F", function()
-				require("nvim-treesitter-textobjects.move").goto_next_end("@function.outer", "textobjects")
-			end, { desc = "Next function end" })
-			vim.keymap.set({ "n", "x", "o" }, "[F", function()
-				require("nvim-treesitter-textobjects.move").goto_previous_end("@function.outer", "textobjects")
-			end, { desc = "Previous function end" })
-			vim.keymap.set({ "n", "x", "o" }, "]C", function()
-				require("nvim-treesitter-textobjects.move").goto_next_end("@class.outer", "textobjects")
-			end, { desc = "Next class end" })
-			vim.keymap.set({ "n", "x", "o" }, "[C", function()
-				require("nvim-treesitter-textobjects.move").goto_previous_end("@class.outer", "textobjects")
-			end, { desc = "Previous class end" })
+			for _, move in ipairs(structural_moves) do
+				local next_method = move.edge == "start" and "goto_next_start" or "goto_next_end"
+				local previous_method = move.edge == "start" and "goto_previous_start" or "goto_previous_end"
+				bracket_repeat.map_pair(
+					{ "n", "x", "o" },
+					"]" .. move.key,
+					"[" .. move.key,
+					function()
+						require("nvim-treesitter-textobjects.move")[next_method](move.query, "textobjects")
+					end,
+					function()
+						require("nvim-treesitter-textobjects.move")[previous_method](move.query, "textobjects")
+					end,
+					{
+						next_desc = "Next " .. move.label .. " " .. move.edge,
+						previous_desc = "Previous " .. move.label .. " " .. move.edge,
+					}
+				)
+			end
 
 			-- Native incremental selection (Neovim 0.12+)
 			-- Mimicing helix

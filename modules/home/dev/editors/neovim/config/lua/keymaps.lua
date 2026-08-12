@@ -69,19 +69,47 @@ vim.keymap.set("n", "<leader>]t", "<cmd>tabnext<CR>", { desc = "Next tab" })
 vim.keymap.set("n", "<leader>[t", "<cmd>tabprev<CR>", { desc = "Previous tab" })
 
 -- Diagnostic navigation
-vim.keymap.set("n", "]d", function()
-	require("utils.diag").jump_next()
-end, { desc = "Next diagnostic (prioritized)" })
-vim.keymap.set("n", "[d", function()
-	require("utils.diag").jump_prev()
-end, { desc = "Previous diagnostic (prioritized)" })
+local bracket_repeat = require("utils.bracket-repeat")
+bracket_repeat.map_pair(
+	{ "n" },
+	"]d",
+	"[d",
+	function()
+		require("utils.diag").jump_next()
+	end,
+	function()
+		require("utils.diag").jump_prev()
+	end,
+	{ next_desc = "Next diagnostic (prioritized)", previous_desc = "Previous diagnostic (prioritized)" }
+)
 
-vim.keymap.set("n", "]D", function()
-	require("utils.diag").jump_all_next()
-end, { desc = "Next diagnostic (any)" })
-vim.keymap.set("n", "[D", function()
-	require("utils.diag").jump_all_prev()
-end, { desc = "Previous diagnostic (any)" })
+bracket_repeat.map_pair(
+	{ "n" },
+	"]D",
+	"[D",
+	function()
+		require("utils.diag").jump_all_next()
+	end,
+	function()
+		require("utils.diag").jump_all_prev()
+	end,
+	{ next_desc = "Next diagnostic (any)", previous_desc = "Previous diagnostic (any)" }
+)
+
+for _, mode in ipairs({ "n", "x", "o" }) do
+	vim.keymap.set(mode, "]]", function()
+		bracket_repeat.repeat_move("next")
+	end, { desc = "Repeat next bracket navigation" })
+	vim.keymap.set(mode, "[[", function()
+		bracket_repeat.repeat_move("previous")
+	end, { desc = "Repeat previous bracket navigation" })
+	vim.keymap.set(mode, "}", function()
+		bracket_repeat.repeat_move("next")
+	end, { desc = "Repeat next bracket navigation" })
+	vim.keymap.set(mode, "{", function()
+		bracket_repeat.repeat_move("previous")
+	end, { desc = "Repeat previous bracket navigation" })
+end
 
 -- Window management
 vim.keymap.set("n", "<leader>w", "<C-w>", { desc = "Window management" })

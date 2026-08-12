@@ -15,6 +15,7 @@ return {
 				},
 				on_attach = function(bufnr)
 					local gs = package.loaded.gitsigns
+					local bracket_repeat = require("utils.bracket-repeat")
 
 					local function map(mode, l, r, opts)
 						opts = opts or {}
@@ -23,13 +24,21 @@ return {
 					end
 
 					-- Navigation
+					local hunk_moves = bracket_repeat.wrap(function()
+						vim.schedule(function()
+							gs.next_hunk()
+						end)
+					end, function()
+						vim.schedule(function()
+							gs.prev_hunk()
+						end)
+					end, { "n", "x" })
+
 					map({ "n", "v" }, "]h", function()
 						if vim.wo.diff then
 							return "]h"
 						end
-						vim.schedule(function()
-							gs.next_hunk()
-						end)
+						hunk_moves.next()
 						return "<Ignore>"
 					end, { expr = true, desc = "Next hunk" })
 
@@ -37,9 +46,7 @@ return {
 						if vim.wo.diff then
 							return "[h"
 						end
-						vim.schedule(function()
-							gs.prev_hunk()
-						end)
+						hunk_moves.previous()
 						return "<Ignore>"
 					end, { expr = true, desc = "Previous hunk" })
 

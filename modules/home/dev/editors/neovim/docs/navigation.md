@@ -27,6 +27,14 @@ Move through the code hierarchy without breaking syntax.
 - `]l` / `[l`: Next/Prev **loop** start.
 - `]i` / `[i`: Next/Prev **conditional** start.
 
+## Repeat Bracket Navigation
+
+- `]]` / `[[`: Repeat the most recent bracket navigation forward/backward.
+- `}` / `{`: Aliases for `]]` / `[[`.
+- Repeats cover structural jumps, Git hunks, and diagnostics. Before one of
+  those motions has run, the repeat keys show a short status message instead
+  of moving.
+
 ## 󰘦 Buffer & Search
 
 - `gn` / `gp`: **Next/Prev** Buffer.
