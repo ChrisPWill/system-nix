@@ -219,13 +219,18 @@ local function navigate_changed_file(direction)
 	end)
 end
 
-vim.keymap.set("n", "<leader>]f", function()
-	navigate_changed_file(1)
-end, { desc = "Next changed file" })
-
-vim.keymap.set("n", "<leader>[f", function()
-	navigate_changed_file(-1)
-end, { desc = "Previous changed file" })
+require("utils.bracket-repeat").map_pair(
+	{ "n" },
+	"<leader>]f",
+	"<leader>[f",
+	function()
+		navigate_changed_file(1)
+	end,
+	function()
+		navigate_changed_file(-1)
+	end,
+	{ next_desc = "Next changed file", previous_desc = "Previous changed file" }
+)
 
 -- ── Grep ──────────────────────────────────────────────────────────────────────
 

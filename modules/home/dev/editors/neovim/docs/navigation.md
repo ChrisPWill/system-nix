@@ -31,9 +31,11 @@ Move through the code hierarchy without breaking syntax.
 
 - `]]` / `[[`: Repeat the most recent bracket navigation forward/backward.
 - `}` / `{`: Aliases for `]]` / `[[`.
-- Repeats cover structural jumps, Git hunks, and diagnostics. Before one of
-  those motions has run, the repeat keys show a short status message instead
-  of moving.
+- Repeats cover structural jumps, Git hunks, diagnostics, changed-file
+  navigation, and Neovim's native bracket navigation (buffers, tabs,
+  quickfix/location lists, and tag-stack traversal). Before one of those
+  motions has run, the repeat keys show a short status message instead of
+  moving.
 
 ## 󰘦 Buffer & Search
 

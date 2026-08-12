@@ -53,6 +53,28 @@ local function new()
 		return moves
 	end
 
+	-- Neovim 0.12 exposes its built-in bracket navigation as internal callback
+	-- mappings. Discover matching [x/]x pairs so new built-ins participate
+	-- without duplicating their implementation or maintaining a key list here.
+	function M.track_builtin_pairs()
+		local mappings = {}
+		for _, mapping in ipairs(vim.api.nvim_get_keymap("n")) do
+			mappings[mapping.lhs] = mapping
+		end
+
+		for next_lhs, next_mapping in pairs(mappings) do
+			if next_lhs:sub(1, 1) == "]" and next_mapping.sid == -8 and type(next_mapping.callback) == "function" then
+				local previous_lhs = "[" .. next_lhs:sub(2)
+				local previous_mapping = mappings[previous_lhs]
+				if previous_mapping and previous_mapping.sid == -8 and type(previous_mapping.callback) == "function" then
+					local moves = M.wrap(next_mapping.callback, previous_mapping.callback, { "n" })
+					vim.keymap.set("n", next_lhs, moves.next, { desc = next_mapping.desc })
+					vim.keymap.set("n", previous_lhs, moves.previous, { desc = previous_mapping.desc })
+				end
+			end
+		end
+	end
+
 	return M
 end
 

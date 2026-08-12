@@ -111,5 +111,7 @@ for _, mode in ipairs({ "n", "x", "o" }) do
 	end, { desc = "Repeat previous bracket navigation" })
 end
 
+bracket_repeat.track_builtin_pairs()
+
 -- Window management
 vim.keymap.set("n", "<leader>w", "<C-w>", { desc = "Window management" })

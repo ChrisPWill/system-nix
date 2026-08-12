@@ -8,6 +8,7 @@ local original_notify = vim.notify
 local original_mode = vim.api.nvim_get_mode
 local mappings = {}
 local original_keymap_set = vim.keymap.set
+local original_get_keymap = vim.api.nvim_get_keymap
 
 vim.notify = function(message)
 	table.insert(notifications, message)
@@ -61,6 +62,28 @@ current_mode = "v"
 bracket_repeat.repeat_move("next")
 assert_equal(table.concat(calls, ","), "previous,next,previous,next", "visual mode should normalize to x")
 
+vim.api.nvim_get_keymap = function()
+	return {
+		{ lhs = "]b", sid = -8, callback = function()
+			table.insert(calls, "buffer-next")
+		end, desc = ":bnext" },
+		{ lhs = "[b", sid = -8, callback = function()
+			table.insert(calls, "buffer-previous")
+		end, desc = ":bprevious" },
+		{ lhs = "]x", sid = 42, callback = function() end, desc = "custom mapping" },
+		{ lhs = "[x", sid = 42, callback = function() end, desc = "custom mapping" },
+	}
+end
+bracket_repeat.track_builtin_pairs()
+assert_equal(mappings["]b"].opts.desc, ":bnext", "built-in next mapping description")
+assert_equal(mappings["[b"].opts.desc, ":bprevious", "built-in previous mapping description")
+current_mode = "n"
+mappings["]b"].rhs()
+bracket_repeat.repeat_move("previous")
+assert_equal(table.concat(calls, ","), "previous,next,previous,next,buffer-next,buffer-previous", "built-in pair should register")
+assert_equal(mappings["]x"], nil, "custom mapping must not be wrapped")
+
 vim.notify = original_notify
 vim.api.nvim_get_mode = original_mode
 vim.keymap.set = original_keymap_set
+vim.api.nvim_get_keymap = original_get_keymap
