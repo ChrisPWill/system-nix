@@ -159,10 +159,51 @@ tail -n 100 ~/Library/Logs/skhd.err.log
 tail -n 100 ~/Library/Logs/skhd.out.log
 ```
 
-After changing permissions, restart the agent:
+After each system switch, use the health check to confirm that the stable binary
+is still code-signed, that its LaunchAgent is active, and that macOS still
+accepts its permission grants:
+
+```bash
+skhd-healthcheck          # scans the last 20m of tccd activity
+skhd-healthcheck --probe  # restarts the agent to force a fresh check now
+```
+
+Use `--probe` when the plain run reports `INCONCLUSIVE`, which just means no
+permission check happened to occur inside the log window.
+
+Both `/Library/Application Support/Skhd/skhd` grants matter, and they fail
+differently:
+
+- **Accessibility** — skhd checks this once at startup and aborts without it,
+  so a failure is loud and lands in `~/Library/Logs/skhd.err.log`.
+- **Input Monitoring** — what the `CGEventTap` actually needs. skhd never
+  checks it, so losing this grant is silent: the process stays running, logs
+  nothing, and every hotkey does nothing.
+
+That binary is locally code-signed with a persistent identity so both grants
+survive normal Nix package upgrades; do not grant permission to a
+`/nix/store/...` skhd path. If the signing certificate in the System keychain
+is ever lost, activation mints a new one, which changes the code requirement
+and invalidates both grants.
+
+To re-grant, first stop the agent. Revoking a permission from a running input
+client can leave Secure Event Input stuck on, which kills the keyboard until
+you reboot:
 
 ```bash
 launchctl bootout gui/$(id -u) ~/Library/LaunchAgents/org.nix-community.home.skhd.plist 2>/dev/null || true
+```
+
+Then in System Settings → Privacy & Security, under **both** Accessibility and
+Input Monitoring, select the skhd entry and click `-` to delete it, then `+` to
+re-add `/Library/Application Support/Skhd/skhd`. Toggling the switch off and on
+is not enough — it leaves the stale code requirement in place. `tccutil reset`
+cannot target skhd either, because it is not an app bundle and so has no bundle
+identifier.
+
+Finally, restart the agent:
+
+```bash
 launchctl bootstrap gui/$(id -u) ~/Library/LaunchAgents/org.nix-community.home.skhd.plist
 launchctl kickstart -k gui/$(id -u)/org.nix-community.home.skhd
 ```
