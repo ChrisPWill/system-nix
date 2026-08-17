@@ -127,12 +127,15 @@ return {
 					end
 				end,
 			})
-			-- Folding
-			vim.o.foldmethod = "expr"
-			vim.o.foldexpr = "v:lua.vim.treesitter.foldexpr()"
-			-- Force re-evaluation so foldlevelstart is respected immediately
+			-- Folding options live in global-options so every window gets them;
+			-- windows opened before this point only hold fold levels from before
+			-- treesitter was available, so re-evaluate them all once it is.
 			vim.schedule(function()
-				vim.cmd("normal! zx")
+				for _, win in ipairs(vim.api.nvim_list_wins()) do
+					pcall(vim.api.nvim_win_call, win, function()
+						vim.cmd("normal! zx")
+					end)
+				end
 			end)
 		end,
 	},

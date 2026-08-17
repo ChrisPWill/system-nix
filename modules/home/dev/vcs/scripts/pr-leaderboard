@@ -1,0 +1,64 @@
+#!/usr/bin/env nu
+
+# PR leaderboard for a squash-merge repo.
+#
+# This repo squash-merges, so there are no merge commits: one merged PR == one
+# commit whose subject ends in "(#1234)". That suffix is what we count, so
+# direct-to-main pushes (no PR number) are excluded.
+#
+# Authors are merged by name, not email — the same person commits under several
+# addresses (github noreply, work, personal).
+
+# Turn a friendly period into a git --since expression.
+def period-to-since [period: string]: nothing -> string {
+    match ($period | str lowercase | str trim) {
+        "week" | "last week" => "1 week ago"
+        "month" | "last month" => "1 month ago"
+        "quarter" | "last quarter" => "3 months ago"
+        "year" | "last year" => "1 year ago"
+        _ => { error make { msg: $"unknown period '($period)': use week | month | quarter | year, or --since <git date>" } }
+    }
+}
+
+# Merged PRs in the window, one row per PR.
+export def "pr list" [
+    period?: string = "month"   # week | month | quarter | year
+    --since (-s): string        # any git date expression, e.g. "2026-07-18" — overrides period
+    --repo (-r): path = "."     # repository to inspect
+]: nothing -> table {
+    let window = if $since == null { period-to-since $period } else { $since }
+
+    ^git -C $repo log --since $window --pretty="%H%x09%an%x09%ae%x09%aI%x09%s"
+    | lines
+    | where ($it | is-not-empty)
+    | split column "\t" sha author email date subject
+    | where subject =~ '\(#\d+\)$'
+    | insert pr { |row| $row.subject | parse -r '\(#(?<n>\d+)\)$' | get n.0 | into int }
+    | update date { into datetime }
+}
+
+# Ranking table: PRs per author, most first, with dense ranks for ties.
+export def main [
+    period?: string = "month"   # week | month | quarter | year
+    --since (-s): string        # any git date expression, e.g. "2026-07-18" — overrides period
+    --repo (-r): path = "."     # repository to inspect
+]: nothing -> table {
+    let prs = if $since == null { pr list $period --repo $repo } else { pr list --since $since --repo $repo }
+    let total = ($prs | length)
+
+    if $total == 0 { return [] }
+
+    let ranked = $prs
+        | group-by author
+        | transpose author rows
+        | insert prs { |r| $r.rows | length }
+        | reject rows
+        | sort-by prs --reverse
+
+    # Dense rank: equal PR counts share a position.
+    let counts = ($ranked | get prs | uniq)
+    $ranked
+        | insert rank { |r| ($counts | enumerate | where item == $r.prs | get index.0) + 1 }
+        | insert share { |r| (($r.prs * 100.0 / $total) | math round --precision 1 | $"($in)%") }
+        | move rank --before author
+}

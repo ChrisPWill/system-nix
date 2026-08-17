@@ -94,5 +94,11 @@ vim.g.netrw_liststyle = 0
 vim.g.netrw_banner = 0
 
 -- [[ Folding ]]
+-- 'foldmethod'/'foldexpr' are window-local, so they must be set here at startup
+-- rather than from a plugin's load hook: windows that already exist when a
+-- lazy-loaded plugin runs would otherwise keep the default manual folding.
+-- vim.treesitter.foldexpr() safely reports no folds until a parser is attached.
 vim.opt.foldenable = true
 vim.opt.foldlevelstart = 2
+vim.opt.foldmethod = "expr"
+vim.opt.foldexpr = "v:lua.vim.treesitter.foldexpr()"
