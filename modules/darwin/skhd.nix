@@ -96,6 +96,23 @@ in {
           /bin/echo "OK: TCC accepted skhd's code requirement (Accessibility and Input Monitoring)."
         fi
 
+        # skhd itself can be perfectly healthy while the *targets* of its
+        # bindings are broken. In particular, OmniWM keys shell out to
+        # `omniwmctl`, which talks to the long-running OmniWM.app process --
+        # a `brew bundle` upgrade (part of `sw`) rewrites that app on disk
+        # without restarting it, so the running server can end up on an
+        # older IPC protocol than the newly-installed `omniwmctl` client
+        # expects. That shows up as every OmniWM-bound key silently no-op'ing
+        # with "protocol_mismatch" in ~/Library/Logs/skhd.out.log, while this
+        # healthcheck's TCC/signature checks above stay green. Run the
+        # broader stale-app check to catch that (and the equivalent case for
+        # Docker Desktop) here rather than making people rediscover it.
+        if /usr/bin/command -v stale-cask-apps-check >/dev/null 2>&1; then
+          /bin/echo ""
+          /bin/echo "Checking for cask apps still running old code after a brew upgrade..."
+          stale-cask-apps-check || status=1
+        fi
+
         exit "$status"
       '')
     ];
