@@ -1,30 +1,19 @@
--- Shared "what kind of construct is this node" logic, used by every
--- treesitter feature that needs to categorize nodes generically (find the
--- function enclosing a node, list declarations for an outline, ...).
+-- Shared "what kind of construct is this node" logic: find the function
+-- enclosing a node, categorize nodes generically, etc.
 local M = {}
 
--- Node type substrings that mark a function-like scope. Kept generic
--- (rather than an explicit per-language node list) so this works across
--- whatever treesitter grammar is active.
+-- Generic across grammars, not a per-language node list.
 local FUNCTION_PATTERNS = { "function", "method", "lambda" }
-
--- Node type substrings that mark a type/class-like declaration: class,
--- struct, interface, enum, trait, impl block, or Kotlin/Rust's `object`
--- singleton/expression.
 local CLASS_PATTERNS = { "class", "struct", "interface", "enum", "trait", "impl", "object" }
 
--- A node's type containing a stem word like "function" isn't enough on its
--- own: `function_body` and `function_value_parameters` contain "function"
--- too, and a bare keyword token's type is literally "class"/"fun" etc. This
--- suffix marks the node as an actual declaration/definition, not one of
--- its substructures or a keyword leaf.
+-- A stem word alone isn't enough: `function_body` contains "function" too,
+-- and a bare keyword token's type is literally "class"/"fun". This suffix
+-- marks an actual declaration, not one of its substructures or a keyword.
 local DECLARATION_SUFFIXES = { "_declaration", "_definition", "_item" }
 
--- Anonymous closure-literal node types don't follow the declaration-suffix
--- convention above (there's no enclosing "declaration" — the literal *is*
--- the whole node), but they're still genuine function scopes (a TS arrow
--- function's body, a Kotlin lambda's body, ...), so they're allowed through
--- by exact type match instead.
+-- Closure literals (no enclosing "declaration" — the literal *is* the
+-- whole node) don't follow the suffix convention above, so they're
+-- allowed through by exact type instead.
 local ANONYMOUS_FUNCTION_TYPES = {
 	arrow_function = true,
 	lambda_expression = true,
@@ -33,13 +22,34 @@ local ANONYMOUS_FUNCTION_TYPES = {
 	anonymous_function = true,
 }
 
-local function has_stem(ntype, patterns)
+--- Does `ntype` contain any of `patterns`? Exported for reuse by other
+--- features doing their own substring categorization (e.g. the
+--- argument/parameter-list detection behind smart argument insertion).
+function M.matches_any(ntype, patterns)
 	for _, pattern in ipairs(patterns) do
 		if ntype:find(pattern) then
 			return true
 		end
 	end
 	return false
+end
+local has_stem = M.matches_any
+
+--- Walk up from `node` (inclusive) to the nearest ancestor matching
+--- `predicate`, or nil. The shape behind find_enclosing_function below,
+--- reusable by any feature needing "the nearest ancestor matching X".
+---@param node TSNode
+---@param predicate fun(node: TSNode): boolean
+---@return TSNode?
+function M.find_enclosing(node, predicate)
+	local current = node
+	while current do
+		if predicate(current) then
+			return current
+		end
+		current = current:parent()
+	end
+	return nil
 end
 
 local function is_declaration_shaped(ntype)
@@ -68,42 +78,29 @@ end
 ---@param node TSNode
 ---@return TSNode?
 function M.find_enclosing_function(node)
-	local current = node
-	while current do
-		if M.is_function_node(current) then
-			return current
-		end
-		current = current:parent()
-	end
-	return nil
+	return M.find_enclosing(node, M.is_function_node)
 end
 
--- Node type substrings for a "flat statement list" container: a function
--- body, a class body, a plain `{ }` block, the whole file, or (Markdown)
--- a heading's `section`, which nests recursively and can otherwise swallow
--- almost a whole document before this stops it. A node whose *parent* is
--- one of these is a top-level statement within it.
+-- A "flat statement list" container: a function/class body, a plain
+-- `{ }` block, the whole file, or (Markdown) a heading's `section`,
+-- which nests and can otherwise swallow almost a whole document.
 local BLOCK_PATTERNS = { "block", "body", "statements", "program", "source_file", "section" }
 
 function M.is_block_node(node)
-	-- The tree root is always a flat statement container, whatever its type
-	-- happens to be named (Lua: "chunk", Python: "module", C:
-	-- "translation_unit", ...) — checking parent-less-ness here means we
-	-- don't have to keep enumerating every grammar's root node name, and a
-	-- root name we haven't seen before can't silently fall through to
-	-- "climb past the whole file" the way BLOCK_PATTERNS alone would.
+	-- The tree root is always block-like, whatever it's named (Lua:
+	-- "chunk", Python: "module", ...) — this avoids enumerating every
+	-- grammar's root name, and a name we haven't seen can't silently
+	-- fall through to "climb past the whole file".
 	if not node:parent() then
 		return true
 	end
 	return has_stem(node:type(), BLOCK_PATTERNS)
 end
 
---- Walk up from `node` to the statement that directly contains it within
---- its nearest enclosing block — i.e. as far as "the whole logical
---- statement this belongs to", but no further (never up into e.g. the
---- whole enclosing function). Useful for expanding a narrow range (a diff
---- hunk, a single token) to what it's structurally part of, without also
---- swallowing everything else living in the same function/class.
+--- Walk up from `node` to the statement directly containing it within its
+--- nearest enclosing block — the whole logical statement, but no further
+--- (never into the enclosing function). Used to expand a narrow range (a
+--- diff hunk, a token) to what it's structurally part of.
 ---@param node TSNode
 ---@return TSNode
 function M.find_enclosing_statement(node)

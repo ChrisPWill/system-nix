@@ -58,6 +58,7 @@ This configuration uses a **Hybrid Philosophy** (Helix-inspired navigation + Neo
 | `<leader>Cr` | **Highlight Return Positions** |
 | `<leader>Cm` | **Highlight Mutation Sites**   |
 | `<leader>Co` | **Outline (Functions/Classes)** |
+| `<leader>Ca` | **Add Argument/Parameter**      |
 
 ## 󰘦 Global Search & Pickers
 

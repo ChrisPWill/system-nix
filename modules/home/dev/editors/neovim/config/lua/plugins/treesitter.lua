@@ -140,6 +140,13 @@ return {
 				require("utils.treesitter.mutations").highlight_mutation_sites()
 			end, { desc = "Highlight mutation sites" })
 
+			-- Jump to where a new argument/parameter goes in the call or
+			-- function signature enclosing the cursor (inserting a
+			-- separating comma/space first if needed) and start typing.
+			vim.keymap.set("n", "<leader>Ca", function()
+				require("utils.treesitter.argument_insert").insert_argument()
+			end, { desc = "Add argument/parameter" })
+
 			-- Toggle: expand git/jj diff hunks to the statement(s) they
 			-- structurally belong to, layered on top of gitsigns' own
 			-- sign column. Off by default per buffer.

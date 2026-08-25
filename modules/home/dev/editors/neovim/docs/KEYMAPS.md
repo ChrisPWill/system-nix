@@ -91,7 +91,7 @@ Secondary tools are organized into mnemonic groups:
 - `<leader>c`: **Code Group** (Format: `cf`, Testing: `ct`, Breakpoints: `cb`)
 - `<leader>A`: **AI Group** (Ask: `Aa`, Toggle: `At`)
 - `<leader>t`: **Toggles** (Diagnostics: `td`, Formatting: `tf`, Markview: `tm`, Trouble: `tx`/`ts`/`tl`/`tq`/`tL`, Hunk context highlighting: `tg`)
-- `<leader>C`: **Less-common code tools** (Highlight return positions: `Cr`, Highlight mutation sites: `Cm`, Outline: `Co`)
+- `<leader>C`: **Less-common code tools** (Highlight return positions: `Cr`, Highlight mutation sites: `Cm`, Outline: `Co`, Add argument/parameter: `Ca`)
 - `<leader>un`: Dismiss notifications
 - `<leader>k`: **Knowledge & Snippets** (Cheat-sheet: `kc`, Keymaps: `km`, Snippets: `ks`/`ka`)
 

@@ -26,6 +26,14 @@ live under `lua/utils/treesitter/` and are wired up in
   enclosing class/function) via a Snacks picker, and jump to the selected
   one. Built entirely from the treesitter parse tree, so it works even in
   a buffer with no LSP attached.
+- `<leader>Ca`: Jump to where a new **argument/parameter** goes — the
+  call/signature enclosing the cursor, or (from anywhere inside its body)
+  the signature of the nearest enclosing function or class, including a
+  Kotlin-style primary constructor — and start typing. Inserts whatever
+  separator is needed first — a comma and space after the last existing
+  argument, or just a space if there's already a trailing comma (e.g.
+  rustfmt's multi-line style) — so you never hand-manage commas or hunt
+  for the closing paren.
 
 ## 󰘦 Structural Fold Summaries
 
@@ -83,12 +91,15 @@ multi-line call highlights just that literal, not the raw changed line.
 The above features share several small modules, kept generic on purpose so
 a future feature can reuse them without re-deriving the same logic:
 
-- `utils/treesitter/scope.lua`: find the function-like node enclosing a
-  given node, find the top-level statement enclosing a node within its
-  nearest block, and categorize a node as function-like, class-like, or
-  block-like (a declaration/definition/item node, not one of its
+- `utils/treesitter/scope.lua`: a generic `find_enclosing(node, predicate)`
+  climber (and a `matches_any(type, patterns)` substring-check helper) that
+  the rest of this module's own function/class/block detection is built
+  from — reusable by any feature that needs "the nearest ancestor
+  matching X" for its own X, like the argument/parameter-list detection
+  behind `<leader>Ca`. Also home to the function-like/class-like/block-like
+  categorization (a declaration/definition/item node, not one of its
   substructures — a function's own body/parameter-list share its name but
-  aren't it).
+  aren't it) and the "top-level statement within its nearest block" walk.
 - `utils/treesitter/identifier.lua`: resolve "the identifier this node is
   really about" (e.g. the `count` in a `self.count` member access).
 - `utils/treesitter/motion.lua`: move the cursor to the nearest of a list of
