@@ -2,37 +2,6 @@ local scope = require("utils.treesitter.scope")
 
 local M = {}
 
--- Node type substrings for the annotation/modifier/decorator/attribute
--- metadata that commonly precedes a declaration on its own line (Kotlin's
--- `@ProviderMethod`, Java annotations, Rust attributes, ...). A
--- declaration's overall span starts at its first child, so without this,
--- "the declaration's header line" would resolve to that metadata line
--- instead of the actual `fun`/`class` line.
-local METADATA_PATTERNS = { "modifier", "annotation", "decorator", "attribute" }
-
-local function is_metadata_node(node)
-	local ntype = node:type()
-	for _, pattern in ipairs(METADATA_PATTERNS) do
-		if ntype:find(pattern) then
-			return true
-		end
-	end
-	return false
-end
-
--- The first child of `node` that isn't leading metadata — i.e. the actual
--- `fun`/`class`/... keyword onward. Falls back to `node` itself if every
--- child looks like metadata (shouldn't happen for a real declaration, but
--- better than erroring).
-local function skip_leading_metadata(node)
-	for child in node:iter_children() do
-		if not is_metadata_node(child) then
-			return child
-		end
-	end
-	return node
-end
-
 --- The declaration's own header line — trimmed, single line — starting
 -- from its `fun`/`class`/... keyword rather than any metadata above it.
 ---@param bufnr integer
@@ -40,7 +9,7 @@ end
 ---@return string text
 ---@return integer row 0-indexed
 local function header_line(bufnr, node)
-	local header_node = skip_leading_metadata(node)
+	local header_node = scope.skip_leading_metadata(node)
 	local srow = header_node:range()
 	local line = vim.api.nvim_buf_get_lines(bufnr, srow, srow + 1, false)[1] or ""
 	local trimmed = line:gsub("^%s+", ""):gsub("%s+$", "")

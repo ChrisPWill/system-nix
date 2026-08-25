@@ -114,4 +114,42 @@ function M.find_enclosing_statement(node)
 	end
 end
 
+--- The node at `row`'s first non-blank column, or nil for a blank line
+--- (nothing there to anchor to).
+---@param bufnr integer
+---@param row integer 0-indexed
+---@return TSNode?
+function M.node_at_line(bufnr, row)
+	local line = vim.api.nvim_buf_get_lines(bufnr, row, row + 1, false)[1] or ""
+	local col = #line:match("^%s*")
+	if col >= #line then
+		return nil
+	end
+	return vim.treesitter.get_node({ bufnr = bufnr, pos = { row, col } })
+end
+
+-- Annotations/decorators/attributes that commonly precede a declaration
+-- on their own line (Kotlin's `@ProviderMethod`, Java annotations, Rust
+-- attributes, ...) and sit ahead of it in the tree — so a declaration's
+-- own span starts at the metadata, not at its `fun`/`class` keyword.
+local METADATA_PATTERNS = { "modifier", "annotation", "decorator", "attribute" }
+
+function M.is_metadata_node(node)
+	return has_stem(node:type(), METADATA_PATTERNS)
+end
+
+--- The first child of `node` that isn't leading metadata — i.e. its
+--- actual `fun`/`class`/... keyword onward. Falls back to `node` itself
+--- if every child looks like metadata.
+---@param node TSNode
+---@return TSNode
+function M.skip_leading_metadata(node)
+	for child in node:iter_children() do
+		if not M.is_metadata_node(child) then
+			return child
+		end
+	end
+	return node
+end
+
 return M

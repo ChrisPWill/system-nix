@@ -114,17 +114,13 @@ end
 -- available (pure additions, or line-count-changing edits).
 local function statements_touching(bufnr, start_row, end_row, seen, results)
 	for row = start_row, end_row do
-		local line = vim.api.nvim_buf_get_lines(bufnr, row, row + 1, false)[1] or ""
-		local col = #line:match("^%s*")
-		if col < #line then -- skip blank lines: nothing there to anchor to
-			local node = vim.treesitter.get_node({ bufnr = bufnr, pos = { row, col } })
-			if node then
-				local stmt = range_of(scope.find_enclosing_statement(node))
-				local key = key_for(stmt)
-				if not seen[key] then
-					seen[key] = true
-					table.insert(results, stmt)
-				end
+		local node = scope.node_at_line(bufnr, row)
+		if node then
+			local stmt = range_of(scope.find_enclosing_statement(node))
+			local key = key_for(stmt)
+			if not seen[key] then
+				seen[key] = true
+				table.insert(results, stmt)
 			end
 		end
 	end

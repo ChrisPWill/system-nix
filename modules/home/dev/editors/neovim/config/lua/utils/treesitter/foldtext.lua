@@ -2,6 +2,8 @@
 -- folded", synthesize a one-line summary from the folded node itself (a
 -- function's signature, an if/else chain's branch structure, a match/when's
 -- arms, ...). Wired up via `vim.opt.foldtext` in plugins/treesitter.lua.
+local scope = require("utils.treesitter.scope")
+
 local M = {}
 
 -- `node:type():find("if")` (a plain substring search) would false-positive
@@ -137,9 +139,7 @@ end
 -- node that exactly spans the fold. Nested nodes sharing the same start
 -- row (e.g. a function's own name identifier) aren't the folded construct.
 local function find_fold_node(bufnr, srow, erow)
-	local line = vim.api.nvim_buf_get_lines(bufnr, srow, srow + 1, false)[1] or ""
-	local scol = #line:match("^%s*")
-	local node = vim.treesitter.get_node({ bufnr = bufnr, pos = { srow, scol } })
+	local node = scope.node_at_line(bufnr, srow)
 
 	while node do
 		local nsrow, _, nerow = node:range()

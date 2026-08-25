@@ -100,6 +100,10 @@ a future feature can reuse them without re-deriving the same logic:
   categorization (a declaration/definition/item node, not one of its
   substructures — a function's own body/parameter-list share its name but
   aren't it) and the "top-level statement within its nearest block" walk.
+  Also has `node_at_line(bufnr, row)` (the node at a line's first
+  non-blank column, nil for a blank line) and
+  `skip_leading_metadata(node)` (a declaration's real start, skipping any
+  `@Annotation`/decorator/attribute above it).
 - `utils/treesitter/identifier.lua`: resolve "the identifier this node is
   really about" (e.g. the `count` in a `self.count` member access).
 - `utils/treesitter/motion.lua`: move the cursor to the nearest of a list of
