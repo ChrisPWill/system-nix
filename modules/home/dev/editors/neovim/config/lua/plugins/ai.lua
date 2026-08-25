@@ -120,6 +120,12 @@ return {
 			-- (Skip these if you put them in 'startupPlugins' in nixCats).
 			vim.cmd("packadd plenary.nvim")
 			vim.cmd("packadd nui.nvim")
+			-- avante pulls in render-markdown.nvim as a dependency, but its plugin/
+			-- script auto-runs setup() and starts rendering markdown buffers on load.
+			-- That fights with markview.nvim (ui.lua, <leader>tm), which is our chosen
+			-- markdown renderer. Disable render-markdown's own rendering so it's only
+			-- available as a library for avante, not an active competing renderer.
+			vim.g.render_markdown_config = { enabled = false }
 			vim.cmd("packadd render-markdown.nvim")
 			vim.cmd("packadd dressing.nvim")
 			vim.cmd("packadd blink.compat")
