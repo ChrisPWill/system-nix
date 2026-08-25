@@ -50,6 +50,12 @@ This configuration uses a **Hybrid Philosophy** (Helix-inspired navigation + Neo
 | `<leader>tq / tL` | **Quickfix / Loclist**    |
 | `<leader>un`      | **Dismiss Notifications** |
 
+## 󰘦 Less-common Code Tools (<leader>C)
+
+| Key          | Action                        |
+| :----------- | :----------------------------- |
+| `<leader>Cr` | **Highlight Return Positions** |
+
 ## 󰘦 Global Search & Pickers
 
 | Key          | Action                    |

@@ -112,6 +112,14 @@ return {
 			vim.keymap.set("x", "<A-i>", "in", { remap = true, desc = "Incremental Selection (Shrink)" })
 			vim.keymap.set("n", "<A-i>", "vin", { remap = true, desc = "Incremental Selection (Shrink)" })
 
+			-- Highlight return positions (explicit `return`s, or the implicit
+			-- tail-expression return for languages like Rust/Ruby) in the
+			-- function enclosing the cursor.
+			vim.api.nvim_set_hl(0, "TreesitterReturnHighlight", { link = "IncSearch", default = true })
+			vim.keymap.set("n", "<leader>Cr", function()
+				require("utils.treesitter.returns").highlight_return_positions()
+			end, { desc = "Highlight return positions" })
+
 			require("treesitter-context").setup({})
 			vim.api.nvim_create_autocmd("FileType", {
 				pattern = "*",
