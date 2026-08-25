@@ -103,6 +103,19 @@ return {
 				)
 			end
 
+			bracket_repeat.map_pair(
+				{ "n", "x", "o" },
+				"]R",
+				"[R",
+				function()
+					require("utils.treesitter.returns").goto_next_return()
+				end,
+				function()
+					require("utils.treesitter.returns").goto_previous_return()
+				end,
+				{ next_desc = "Next return position", previous_desc = "Previous return position" }
+			)
+
 			-- Native incremental selection (Neovim 0.12+)
 			-- Mimicing helix
 			-- Expand selection

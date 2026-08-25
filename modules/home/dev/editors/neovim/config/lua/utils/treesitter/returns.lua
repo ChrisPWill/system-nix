@@ -148,4 +148,66 @@ function M.highlight_return_positions(bufnr)
 	})
 end
 
+local function cursor_pos()
+	local cursor = vim.api.nvim_win_get_cursor(0)
+	return cursor[1] - 1, cursor[2]
+end
+
+local function move_to(node)
+	local srow, scol = node:range()
+	vim.api.nvim_win_set_cursor(0, { srow + 1, scol })
+end
+
+--- Move the cursor to the next return position in the enclosing function.
+---@param bufnr integer? defaults to the current buffer
+function M.goto_next_return(bufnr)
+	bufnr = bufnr or vim.api.nvim_get_current_buf()
+	local fn_node, returns = M.find_return_positions(bufnr)
+	if not fn_node or #returns == 0 then
+		vim.notify("No return positions found in this function", vim.log.levels.INFO, { title = "Treesitter returns" })
+		return
+	end
+	table.sort(returns, function(a, b)
+		local arow, acol = a:range()
+		local brow, bcol = b:range()
+		return arow < brow or (arow == brow and acol < bcol)
+	end)
+
+	local crow, ccol = cursor_pos()
+	for _, ret in ipairs(returns) do
+		local srow, scol = ret:range()
+		if srow > crow or (srow == crow and scol > ccol) then
+			move_to(ret)
+			return
+		end
+	end
+	vim.notify("No next return position", vim.log.levels.INFO, { title = "Treesitter returns" })
+end
+
+--- Move the cursor to the previous return position in the enclosing function.
+---@param bufnr integer? defaults to the current buffer
+function M.goto_previous_return(bufnr)
+	bufnr = bufnr or vim.api.nvim_get_current_buf()
+	local fn_node, returns = M.find_return_positions(bufnr)
+	if not fn_node or #returns == 0 then
+		vim.notify("No return positions found in this function", vim.log.levels.INFO, { title = "Treesitter returns" })
+		return
+	end
+	table.sort(returns, function(a, b)
+		local arow, acol = a:range()
+		local brow, bcol = b:range()
+		return arow < brow or (arow == brow and acol < bcol)
+	end)
+
+	local crow, ccol = cursor_pos()
+	for i = #returns, 1, -1 do
+		local srow, scol = returns[i]:range()
+		if srow < crow or (srow == crow and scol < ccol) then
+			move_to(returns[i])
+			return
+		end
+	end
+	vim.notify("No previous return position", vim.log.levels.INFO, { title = "Treesitter returns" })
+end
+
 return M

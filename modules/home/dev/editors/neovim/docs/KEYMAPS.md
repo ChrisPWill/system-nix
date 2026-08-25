@@ -106,6 +106,7 @@ Secondary tools are organized into mnemonic groups:
 - `]A / [A`: Swap with Next/Previous Argument
 - `]l / [l`: Next/Previous Loop
 - `]i / [i`: Next/Previous Conditional (If)
+- `]R / [R`: Next/Previous return position (explicit `return`, or the implicit tail-expression return for languages like Rust/Ruby)
 - `]] / [[` or `} / {`: Repeat next/previous bracket navigation (structural jumps, Git hunks, diagnostics, and native bracket navigation)
 
 ## 10. Enhancement over Defaults
