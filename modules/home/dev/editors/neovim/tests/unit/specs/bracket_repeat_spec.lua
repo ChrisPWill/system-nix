@@ -1,5 +1,7 @@
 local source = debug.getinfo(1, "S").source:sub(2)
-local config_root = vim.fs.dirname(vim.fs.dirname(source)) .. "/config/lua"
+local specs_dir = vim.fs.dirname(source)
+local unit_dir = vim.fs.dirname(specs_dir)
+local config_root = vim.fs.dirname(vim.fs.dirname(unit_dir)) .. "/config/lua"
 package.path = config_root .. "/?.lua;" .. config_root .. "/?/init.lua;" .. package.path
 
 local bracket_repeat = require("utils.bracket-repeat").new()

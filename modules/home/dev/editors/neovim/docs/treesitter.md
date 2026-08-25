@@ -175,3 +175,51 @@ a future feature can reuse them without re-deriving the same logic:
 - `utils/treesitter/highlight.lua`: highlight a list of node ranges, with
   the highlight auto-clearing once the cursor leaves a given node's line
   range.
+
+## Testing
+
+`tests/unit/` holds a plain Lua regression suite for these modules —
+framework-free (`error()`-based asserts, matching the pre-existing
+`bracket_repeat_spec.lua`), run headlessly rather than interactively:
+
+- `tests/unit/specs/*_spec.lua`: one file per module/behavior area. A spec
+  is a plain script that `error()`s on assertion failure; `run_specs.lua`
+  runs every spec so one failure doesn't stop the others, and reports a
+  pass/fail summary.
+- `tests/unit/fixtures/<language>/*`: real source files the specs load via
+  `helpers.load_fixture("kotlin/empty_catch.kt")`, rather than inline
+  string tables in the spec — keeps a spec's fixture readable/diffable on
+  its own, and lets several assertions reference the same scenario. Each
+  fixture is scoped to one buffer per spec — don't have two specs mutate
+  the same fixture file, since `load_fixture` returns the same buffer
+  (with whatever an earlier spec left in it) if the path's already loaded
+  in that process.
+- `tests/unit/helpers.lua`: `assert_equal`/`assert_true`/`assert_nil`, and
+  `load_fixture`.
+
+Run the whole suite:
+
+```sh
+nvim --headless -n -l modules/home/dev/editors/neovim/tests/unit/run_specs.lua
+```
+
+or as a Nix check (this is what CI/`nix flake check` runs, building the
+real `meow` package first):
+
+```sh
+nix build .#checks.<system>.neovim-lua-tests
+```
+
+**When fixing a bug, add a regression spec for it** — most of this suite
+exists because a manually-found bug this session (Kotlin's `when_entry`
+sharing a prefix with `when_expression`, the bare `if` keyword token
+double-counting nesting depth, `get_parser` returning `ok=true, parser=nil`
+for special buffers, ...) would otherwise have no way to stay caught. A
+spec that encodes a real bug is worth more than one that only re-asserts
+the happy path.
+
+This suite is separate from `tests/check.nix`/`tests/lsp_harness.lua`
+(the pre-existing LSP integration test, driven by `tests/fixtures/` full
+project fixtures per language) — that one exercises real language
+servers end-to-end; this one is pure-Lua unit tests with no LSP
+involved, so it stays fast enough to run on every change.

@@ -49,6 +49,7 @@ The system implements a **Global Leader** capability using **Kanata** for keyboa
     3. Define `home.packages` and/or `programs.<name>`.
     4. Add `./<tool>.nix` to `modules/home/<domain>/default.nix`.
   - **Knowledge Base:** Maintain reference guides in `modules/home/dev/editors/neovim/docs/`. Keep `cheatsheet.md` as the primary entry point.
+  - **Neovim Lua Regression Tests:** When adding or fixing a Lua feature under `modules/home/dev/editors/neovim/config/lua/` (especially `utils/treesitter/*`), add or update a spec under `modules/home/dev/editors/neovim/tests/unit/specs/`. Prefer a spec per bug found, not just per feature — a real regression once found is cheap insurance against it coming back silently. Use real fixture files under `tests/unit/fixtures/<language>/` (loaded via `helpers.load_fixture`) rather than inline source strings in the spec. Run the whole suite with `nvim --headless -n -l modules/home/dev/editors/neovim/tests/unit/run_specs.lua`, or as a full Nix check with `nix build .#checks.<system>.neovim-lua-tests`; both must pass before considering the change done. See `docs/treesitter.md`'s Testing section for the fixture/spec conventions in more detail.
 - **Blueprint Structure:** Files in `hosts/` are entry points; `modules/` are shared components. High-iteration files (e.g., `wezterm.lua`) use `mkOutOfStoreSymlink` for immediate testing.
 - **Workflow:** Jujutsu (`jj`) is preferred for version control. Use `jj st` for status.
 
