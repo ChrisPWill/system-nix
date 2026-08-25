@@ -134,6 +134,43 @@ vim.api.nvim_create_autocmd("FileType", {
 	end,
 })
 
+-- Read-only viewer for `jar://<archive>!/<entry>` locations. LSPs that resolve
+-- definitions into JDK/library sources (kotlin-lsp into the JDK's src.zip,
+-- Metals into dependency jars, etc.) hand back this URI convention directly —
+-- it's a real file inside a zip on disk, not a server-side virtual document,
+-- so it can be read with `unzip` rather than any LSP request. Without this,
+-- `vim.lsp.buf.definition` opens an empty buffer for the URI and then crashes
+-- trying to move the cursor to a line that doesn't exist (`nvim_win_set_cursor`:
+-- "Invalid cursor line: out of range").
+au("BufReadCmd", "jar://*", function(args)
+	local archive, entry = args.match:match("^jar://(.-)!/(.*)$")
+	if not archive or not entry then
+		vim.notify("Could not parse jar URI: " .. args.match, vim.log.levels.ERROR)
+		return
+	end
+
+	local lines = vim.fn.systemlist({ "unzip", "-p", archive, entry })
+	if vim.v.shell_error ~= 0 then
+		vim.notify(("Failed to read %s from %s"):format(entry, archive), vim.log.levels.ERROR)
+		return
+	end
+
+	vim.bo[args.buf].modifiable = true
+	vim.api.nvim_buf_set_lines(args.buf, 0, -1, false, lines)
+	vim.bo[args.buf].modifiable = false
+	vim.bo[args.buf].modified = false
+	vim.bo[args.buf].buftype = "nofile"
+	vim.bo[args.buf].readonly = true
+	-- NOTE: deliberately not attaching an LSP client to this buffer. Sending
+	-- textDocument/didOpen for a jar:// URI has been observed to crash
+	-- kotlin-lsp's IntelliJ-platform backend — it disposes its entire analyzer
+	-- project seconds after opening one of these buffers (see
+	-- ~/.cache/nvim/kotlin-lsp/system/log/intellij-server.log), taking down
+	-- the client for the whole real project along with it. This is a
+	-- read-only source viewer only; gd/hover do not work inside it.
+	vim.bo[args.buf].filetype = vim.filetype.match({ buf = args.buf, filename = entry }) or ""
+end)
+
 -- Grug-far buffer-local keybindings
 local grug_far_group = vim.api.nvim_create_augroup("GrugFarKeybindings", { clear = true })
 vim.api.nvim_create_autocmd("FileType", {

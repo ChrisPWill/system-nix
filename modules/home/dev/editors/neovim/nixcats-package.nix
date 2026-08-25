@@ -116,6 +116,9 @@
       ];
       kotlin = with pkgs; [
         kotlinLsp
+        # Unzips jar:// definition targets (JDK/library sources) resolved by
+        # kotlin-lsp — see config/lua/autocmds.lua's BufReadCmd for jar://.
+        unzip
       ];
       codex = with pkgs; [
         codex-acp
