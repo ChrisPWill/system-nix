@@ -9,5 +9,6 @@ M.motion = require("utils.treesitter.motion")
 M.highlight = require("utils.treesitter.highlight")
 M.returns = require("utils.treesitter.returns")
 M.mutations = require("utils.treesitter.mutations")
+M.foldtext = require("utils.treesitter.foldtext")
 
 return M

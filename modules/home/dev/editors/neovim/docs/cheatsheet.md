@@ -124,6 +124,7 @@ Find more info in these dedicated reference guides (Browse with `<leader>/k`):
 - **[lsp.md](./lsp.md):** LSP navigation, definitions, and code actions.
 - **[refactoring.md](./refactoring.md):** Structural edits and search/replace.
 - **[navigation.md](./navigation.md):** Movement and navigation tools.
+- **[treesitter.md](./treesitter.md):** Custom treesitter tooling (return/mutation highlighting, fold summaries).
 - **[vcs.md](./vcs.md):** Git workflow and Jujutsu integration.
 - **[snippets.md](./snippets.md):** Managing and using Snippets.
 - **[testing.md](./testing.md):** Integrated test runner.

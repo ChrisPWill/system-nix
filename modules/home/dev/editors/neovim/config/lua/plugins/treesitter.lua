@@ -140,6 +140,11 @@ return {
 				require("utils.treesitter.mutations").highlight_mutation_sites()
 			end, { desc = "Highlight mutation sites" })
 
+			-- Structural fold summaries (a folded function shows its
+			-- signature, a folded if/else chain shows its branch structure,
+			-- ...) instead of the default "N lines folded".
+			vim.opt.foldtext = "v:lua.require'utils.treesitter.foldtext'.render()"
+
 			require("treesitter-context").setup({})
 			vim.api.nvim_create_autocmd("FileType", {
 				pattern = "*",
