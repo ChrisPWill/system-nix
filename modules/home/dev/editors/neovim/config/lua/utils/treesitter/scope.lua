@@ -78,4 +78,43 @@ function M.find_enclosing_function(node)
 	return nil
 end
 
+-- Node type substrings for a "flat statement list" container: a function
+-- body, a class body, a plain `{ }` block, the whole file, or (Markdown)
+-- a heading's `section`, which nests recursively and can otherwise swallow
+-- almost a whole document before this stops it. A node whose *parent* is
+-- one of these is a top-level statement within it.
+local BLOCK_PATTERNS = { "block", "body", "statements", "program", "source_file", "section" }
+
+function M.is_block_node(node)
+	-- The tree root is always a flat statement container, whatever its type
+	-- happens to be named (Lua: "chunk", Python: "module", C:
+	-- "translation_unit", ...) — checking parent-less-ness here means we
+	-- don't have to keep enumerating every grammar's root node name, and a
+	-- root name we haven't seen before can't silently fall through to
+	-- "climb past the whole file" the way BLOCK_PATTERNS alone would.
+	if not node:parent() then
+		return true
+	end
+	return has_stem(node:type(), BLOCK_PATTERNS)
+end
+
+--- Walk up from `node` to the statement that directly contains it within
+--- its nearest enclosing block — i.e. as far as "the whole logical
+--- statement this belongs to", but no further (never up into e.g. the
+--- whole enclosing function). Useful for expanding a narrow range (a diff
+--- hunk, a single token) to what it's structurally part of, without also
+--- swallowing everything else living in the same function/class.
+---@param node TSNode
+---@return TSNode
+function M.find_enclosing_statement(node)
+	local current = node
+	while true do
+		local parent = current:parent()
+		if not parent or M.is_block_node(parent) then
+			return current
+		end
+		current = parent
+	end
+end
+
 return M

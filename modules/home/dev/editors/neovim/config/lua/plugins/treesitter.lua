@@ -140,6 +140,13 @@ return {
 				require("utils.treesitter.mutations").highlight_mutation_sites()
 			end, { desc = "Highlight mutation sites" })
 
+			-- Toggle: expand git/jj diff hunks to the statement(s) they
+			-- structurally belong to, layered on top of gitsigns' own
+			-- sign column. Off by default per buffer.
+			vim.keymap.set("n", "<leader>tg", function()
+				require("utils.treesitter.hunk_highlight").toggle()
+			end, { desc = "Toggle hunk context highlighting" })
+
 			-- LSP-free outline of functions/classes in the buffer, reusing
 			-- the same declaration-detection as the highlight/motion
 			-- features above — works even with no LSP attached.

@@ -11,5 +11,6 @@ M.returns = require("utils.treesitter.returns")
 M.mutations = require("utils.treesitter.mutations")
 M.foldtext = require("utils.treesitter.foldtext")
 M.outline = require("utils.treesitter.outline")
+M.hunk_highlight = require("utils.treesitter.hunk_highlight")
 
 return M

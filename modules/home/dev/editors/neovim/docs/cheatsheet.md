@@ -48,6 +48,7 @@ This configuration uses a **Hybrid Philosophy** (Helix-inspired navigation + Neo
 | `<leader>ts`      | **Symbols (Trouble)**     |
 | `<leader>tl`      | **LSP (Trouble)**         |
 | `<leader>tq / tL` | **Quickfix / Loclist**    |
+| `<leader>tg`      | **Hunk Context Highlighting** |
 | `<leader>un`      | **Dismiss Notifications** |
 
 ## 󰘦 Less-common Code Tools (<leader>C)
