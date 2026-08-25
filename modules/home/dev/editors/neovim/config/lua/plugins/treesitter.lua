@@ -120,6 +120,13 @@ return {
 				require("utils.treesitter.returns").highlight_return_positions()
 			end, { desc = "Highlight return positions" })
 
+			-- Highlight mutation sites (assignment/augmented-assignment/
+			-- increment) of the identifier under the cursor.
+			vim.api.nvim_set_hl(0, "TreesitterMutationHighlight", { link = "WarningMsg", default = true })
+			vim.keymap.set("n", "<leader>Cm", function()
+				require("utils.treesitter.mutations").highlight_mutation_sites()
+			end, { desc = "Highlight mutation sites" })
+
 			require("treesitter-context").setup({})
 			vim.api.nvim_create_autocmd("FileType", {
 				pattern = "*",

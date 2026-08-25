@@ -55,6 +55,7 @@ This configuration uses a **Hybrid Philosophy** (Helix-inspired navigation + Neo
 | Key          | Action                        |
 | :----------- | :----------------------------- |
 | `<leader>Cr` | **Highlight Return Positions** |
+| `<leader>Cm` | **Highlight Mutation Sites**   |
 
 ## 󰘦 Global Search & Pickers
 

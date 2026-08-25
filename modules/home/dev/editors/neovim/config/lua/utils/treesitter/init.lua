@@ -3,6 +3,8 @@
 -- module gives a single entry point to discover what's available.
 local M = {}
 
+M.scope = require("utils.treesitter.scope")
 M.returns = require("utils.treesitter.returns")
+M.mutations = require("utils.treesitter.mutations")
 
 return M

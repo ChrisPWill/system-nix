@@ -1,46 +1,26 @@
+local scope = require("utils.treesitter.scope")
+
 local M = {}
 
 local ns = vim.api.nvim_create_namespace("treesitter_returns")
 local clear_augroup = vim.api.nvim_create_augroup("TreesitterReturnHighlightClear", { clear = true })
-
--- Node type substrings that mark an enclosing function-like scope. Kept
--- generic (rather than an explicit per-language node list) so this works
--- across whatever treesitter grammar is active.
-local FUNCTION_PATTERNS = { "function", "method", "lambda", "arrow_function" }
 
 -- Languages whose grammar treats a block's trailing expression as an
 -- implicit return (no `return` keyword). Everything else relies purely on
 -- explicit `return`-shaped nodes.
 local IMPLICIT_RETURN_LANGS = { rust = true, ruby = true }
 
-local function is_function_node(node)
-	local ntype = node:type()
-	for _, pattern in ipairs(FUNCTION_PATTERNS) do
-		if ntype:find(pattern) then
-			return true
-		end
-	end
-	return false
-end
-
--- Walk up from `node` to the nearest enclosing function-like node.
-function M.find_enclosing_function(node)
-	local current = node
-	while current do
-		if is_function_node(current) then
-			return current
-		end
-		current = current:parent()
-	end
-	return nil
-end
+-- Kept as a thin re-export: existing callers (and this file) refer to
+-- `M.find_enclosing_function`; the logic itself is shared with other
+-- treesitter features via utils.treesitter.scope.
+M.find_enclosing_function = scope.find_enclosing_function
 
 -- Depth-first collection of explicit `return`-shaped nodes belonging to
 -- `node`, without descending into nested function-like nodes (their returns
 -- belong to them, not to the enclosing function).
 local function collect_explicit_returns(node, results)
 	for child in node:iter_children() do
-		if is_function_node(child) then
+		if scope.is_function_node(child) then
 			goto continue
 		end
 		if child:type():find("return") then
