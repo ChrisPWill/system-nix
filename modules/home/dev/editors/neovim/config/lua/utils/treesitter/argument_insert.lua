@@ -6,55 +6,11 @@ local scope = require("utils.treesitter.scope")
 
 local M = {}
 
--- Plural/container list types ("arguments", "value_arguments",
--- "parameters", "function_value_parameters", ...) — not the singular
--- per-item wrapper some grammars use (Kotlin's "value_argument"), which
--- climbing hits first and a bare substring match would mistake for the
--- list itself.
-local LIST_PATTERNS = { "arguments", "parameters", "argument_list", "parameter_list" }
-
--- Kotlin's primary constructor (`class Foo(val a: Int)`) holds its
--- parameters directly, with no "parameters"-named wrapper.
-local LIST_EXACT_TYPES = { primary_constructor = true }
-
-local function is_list_node(node)
-	local ntype = node:type()
-	if LIST_EXACT_TYPES[ntype] then
-		return true
-	end
-	-- A generic type-parameter list (`<T, U>`) also matches "parameter"
-	-- but isn't a place a value goes.
-	if ntype:find("type_parameter") then
-		return false
-	end
-	return scope.matches_any(ntype, LIST_PATTERNS)
-end
-
 --- Walk up from `node` to the nearest enclosing argument/parameter list.
 ---@param node TSNode
 ---@return TSNode?
 function M.find_enclosing_list(node)
-	return scope.find_enclosing(node, is_list_node)
-end
-
--- The list in `node`'s own signature: a direct child, or one level
--- deeper, but never inside a block-like child — otherwise this could
--- wander into a function's body and find an unrelated call's arguments.
-local function find_signature_list(node)
-	for child in node:iter_children() do
-		if is_list_node(child) then
-			return child
-		end
-	end
-	for child in node:iter_children() do
-		if not scope.is_block_node(child) then
-			local found = find_signature_list(child)
-			if found then
-				return found
-			end
-		end
-	end
-	return nil
+	return scope.find_enclosing(node, scope.is_list_node)
 end
 
 local function is_function_or_class(node)
@@ -74,7 +30,7 @@ function M.find_target_list(node)
 	end
 
 	local enclosing_scope = scope.find_enclosing(node, is_function_or_class)
-	return enclosing_scope and find_signature_list(enclosing_scope)
+	return enclosing_scope and scope.find_signature_list(enclosing_scope)
 end
 
 -- Where a new argument/parameter goes, and what separator (if any) it

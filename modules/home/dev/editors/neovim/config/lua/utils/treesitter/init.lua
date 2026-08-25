@@ -14,5 +14,6 @@ M.outline = require("utils.treesitter.outline")
 M.hunk_highlight = require("utils.treesitter.hunk_highlight")
 M.argument_insert = require("utils.treesitter.argument_insert")
 M.references = require("utils.treesitter.references")
+M.diagnostics = require("utils.treesitter.diagnostics")
 
 return M

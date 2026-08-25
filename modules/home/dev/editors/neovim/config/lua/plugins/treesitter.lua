@@ -144,6 +144,13 @@ return {
 				{ next_desc = "Next reference", previous_desc = "Previous reference" }
 			)
 
+			-- Ambient "code smell" diagnostics from generic treesitter
+			-- structural checks (empty catch, too many parameters, deep
+			-- nesting, missing catch-all arm) — surfaced through the normal
+			-- vim.diagnostic UI alongside LSP/nvim-lint diagnostics. Required
+			-- eagerly for the same reason as the reference highlighter above.
+			require("utils.treesitter.diagnostics")
+
 			-- Highlight return positions (explicit `return`s, or the implicit
 			-- tail-expression return for languages like Rust/Ruby) in the
 			-- function enclosing the cursor.

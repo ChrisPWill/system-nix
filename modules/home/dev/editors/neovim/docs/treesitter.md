@@ -55,6 +55,39 @@ nothing lingers stale while you're actively moving around.
   repeat-bracket conventions as the other structural motions in
   [navigation.md](./navigation.md).
 
+## 󰘦 Ambient Code-Smell Diagnostics
+
+A handful of structural checks run ambiently and surface through the
+normal `vim.diagnostic` UI — gutter signs, virtual text, `<leader>d` — right
+alongside LSP and `nvim-lint` diagnostics, not a separate system. Refreshes
+on the same trigger set `nvim-lint` already uses (`CursorHold`,
+`BufWritePost`, `InsertLeave`, see `plugins/coding.lua`), so both feel like
+one cohesive "checked when you pause" experience rather than two different
+cadences.
+
+These are heuristics from the parse tree, not semantic analysis, so some
+false positives are expected and accepted as a trade-off for not needing
+an LSP or type information:
+
+- **Empty catch/except block** (WARN) — nothing in its body, or a lone
+  `pass` — silently swallows whatever it caught.
+- **Too many parameters** (HINT) — a function, method, or constructor
+  with more than 5 parameters.
+- **Deeply nested conditionals/loops** (HINT) — more than 3 levels deep
+  within one function. Only the node where nesting *first* crosses the
+  threshold is flagged, not every level beyond it.
+- **Missing catch-all arm** (HINT) — a `match`/`when`/`switch` with no
+  `_`/`else`/`default` branch. Can't tell that a `when` over a sealed
+  class/enum is already exhaustive at the language level, so it may flag
+  matches that don't actually need one — hence HINT rather than WARN.
+  `if`/`else` chains are deliberately not checked: an `if` with no `else`
+  is common and usually intentional, not a smell.
+
+The parameter-count and nesting-depth thresholds are fixed for now
+(`utils/treesitter/diagnostics.lua`); if they turn out consistently too
+noisy for a particular language/stack, that's the place to make them
+configurable rather than a fixed default.
+
 ## 󰘦 Structural Fold Summaries
 
 Closed folds show a one-line structural summary instead of Neovim's default
@@ -121,9 +154,20 @@ a future feature can reuse them without re-deriving the same logic:
   substructures — a function's own body/parameter-list share its name but
   aren't it) and the "top-level statement within its nearest block" walk.
   Also has `node_at_line(bufnr, row)` (the node at a line's first
-  non-blank column, nil for a blank line) and
+  non-blank column, nil for a blank line),
   `skip_leading_metadata(node)` (a declaration's real start, skipping any
-  `@Annotation`/decorator/attribute above it).
+  `@Annotation`/decorator/attribute above it),
+  `find_signature_list(node)` (the argument/parameter list in a
+  function/class's own signature, used by both `<leader>Ca` and the
+  too-many-params diagnostic), and if/branch/arm/loop categorization
+  (`is_if_node`, `is_branch_node`, `is_arm_node`, `is_loop_node`,
+  `is_nesting_node`) shared by the fold summaries and the deep-nesting/
+  missing-arm diagnostics — each requires an actual construct-shaped
+  suffix (`starts_with_any`/`ends_with_any`), not just a prefix, since a
+  bare anonymous keyword token (the literal `if`/`for` node inside its
+  own `if_expression`/`for_statement`) or an arm-internal node (Kotlin's
+  `when_entry`/`when_condition`) can share a prefix with the real
+  construct without being one.
 - `utils/treesitter/identifier.lua`: resolve "the identifier this node is
   really about" (e.g. the `count` in a `self.count` member access).
 - `utils/treesitter/motion.lua`: move the cursor to the nearest of a list of

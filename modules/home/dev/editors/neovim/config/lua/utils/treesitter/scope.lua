@@ -35,6 +35,66 @@ function M.matches_any(ntype, patterns)
 end
 local has_stem = M.matches_any
 
+--- Does `ntype` *start with* any of `prefixes`? Unlike matches_any, a
+--- plain substring search would false-positive on types like
+--- "identifier" or "modifier", which happen to contain "if" mid-word.
+function M.starts_with_any(ntype, prefixes)
+	for _, prefix in ipairs(prefixes) do
+		if ntype:sub(1, #prefix) == prefix then
+			return true
+		end
+	end
+	return false
+end
+
+--- Does `ntype` *end with* any of `suffixes`?
+function M.ends_with_any(ntype, suffixes)
+	for _, suffix in ipairs(suffixes) do
+		if ntype:sub(-#suffix) == suffix then
+			return true
+		end
+	end
+	return false
+end
+
+local IF_PREFIXES = { "if" }
+-- match/when/switch-style multi-arm conditionals.
+local BRANCH_PREFIXES = { "match", "when", "switch" }
+local ARM_PATTERNS = { "arm", "case", "clause", "entry" }
+local LOOP_PREFIXES = { "for", "while", "loop" }
+
+-- A prefix alone isn't enough: Kotlin's `when_entry`/`when_condition`
+-- share the "when" prefix with `when_expression` without being one, and
+-- a bare anonymous keyword token (the literal `if`/`for` node inside its
+-- own `if_expression`/`for_statement`) shares the prefix with the whole
+-- construct wrapping it. Requiring this suffix excludes both.
+local CONSTRUCT_SUFFIXES = { "_expression", "_statement" }
+
+function M.is_if_node(node)
+	local ntype = node:type()
+	return M.starts_with_any(ntype, IF_PREFIXES) and M.ends_with_any(ntype, CONSTRUCT_SUFFIXES)
+end
+
+function M.is_branch_node(node)
+	local ntype = node:type()
+	return M.starts_with_any(ntype, BRANCH_PREFIXES) and M.ends_with_any(ntype, CONSTRUCT_SUFFIXES)
+end
+
+function M.is_arm_node(node)
+	return has_stem(node:type(), ARM_PATTERNS)
+end
+
+function M.is_loop_node(node)
+	local ntype = node:type()
+	return M.starts_with_any(ntype, LOOP_PREFIXES) and M.ends_with_any(ntype, CONSTRUCT_SUFFIXES)
+end
+
+--- Is `node` a conditional or loop — anything that adds a level of
+--- nesting for complexity-style checks.
+function M.is_nesting_node(node)
+	return M.is_if_node(node) or M.is_branch_node(node) or M.is_loop_node(node)
+end
+
 --- Walk up from `node` (inclusive) to the nearest ancestor matching
 --- `predicate`, or nil. The shape behind find_enclosing_function below,
 --- reusable by any feature needing "the nearest ancestor matching X".
@@ -53,12 +113,7 @@ function M.find_enclosing(node, predicate)
 end
 
 local function is_declaration_shaped(ntype)
-	for _, suffix in ipairs(DECLARATION_SUFFIXES) do
-		if ntype:sub(-#suffix) == suffix then
-			return true
-		end
-	end
-	return false
+	return M.ends_with_any(ntype, DECLARATION_SUFFIXES)
 end
 
 function M.is_function_node(node)
@@ -150,6 +205,52 @@ function M.skip_leading_metadata(node)
 		end
 	end
 	return node
+end
+
+-- Plural/container list types ("arguments", "value_arguments",
+-- "parameters", "function_value_parameters", ...) — not the singular
+-- per-item wrapper some grammars use (Kotlin's "value_argument"), which
+-- a bare substring match would mistake for the list itself.
+local LIST_PATTERNS = { "arguments", "parameters", "argument_list", "parameter_list" }
+
+-- Kotlin's primary constructor (`class Foo(val a: Int)`) holds its
+-- parameters directly, with no "parameters"-named wrapper.
+local LIST_EXACT_TYPES = { primary_constructor = true }
+
+function M.is_list_node(node)
+	local ntype = node:type()
+	if LIST_EXACT_TYPES[ntype] then
+		return true
+	end
+	-- A generic type-parameter list (`<T, U>`) also matches "parameter"
+	-- but isn't a place a value goes.
+	if ntype:find("type_parameter") then
+		return false
+	end
+	return has_stem(ntype, LIST_PATTERNS)
+end
+
+--- The argument/parameter list in `node`'s own signature: a direct
+--- child, or one level deeper, but never inside a block-like child —
+--- otherwise this could wander into a function's body and find an
+--- unrelated call's arguments.
+---@param node TSNode
+---@return TSNode?
+function M.find_signature_list(node)
+	for child in node:iter_children() do
+		if M.is_list_node(child) then
+			return child
+		end
+	end
+	for child in node:iter_children() do
+		if not M.is_block_node(child) then
+			local found = M.find_signature_list(child)
+			if found then
+				return found
+			end
+		end
+	end
+	return nil
 end
 
 return M

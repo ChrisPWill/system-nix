@@ -6,40 +6,9 @@ local scope = require("utils.treesitter.scope")
 
 local M = {}
 
--- `node:type():find("if")` (a plain substring search) would false-positive
--- on node types like "identifier" or "modifier", which happen to contain
--- "if" mid-word. Anchoring at the start avoids that.
-local function starts_with_any(ntype, prefixes)
-	for _, prefix in ipairs(prefixes) do
-		if ntype:sub(1, #prefix) == prefix then
-			return true
-		end
-	end
-	return false
-end
-
-local IF_PREFIXES = { "if" }
--- match/when/switch-style multi-arm conditionals.
-local BRANCH_PREFIXES = { "match", "when", "switch" }
-local ARM_PATTERNS = { "arm", "case", "clause", "entry" }
-
-local function is_if_node(node)
-	return starts_with_any(node:type(), IF_PREFIXES)
-end
-
-local function is_branch_node(node)
-	return starts_with_any(node:type(), BRANCH_PREFIXES)
-end
-
-local function is_arm_node(node)
-	local ntype = node:type()
-	for _, pattern in ipairs(ARM_PATTERNS) do
-		if ntype:find(pattern) then
-			return true
-		end
-	end
-	return false
-end
+local is_if_node = scope.is_if_node
+local is_branch_node = scope.is_branch_node
+local is_arm_node = scope.is_arm_node
 
 -- The literal first source line of `node`, trimmed of trailing whitespace.
 -- Most summaries are just this: a function's signature line, an if's
