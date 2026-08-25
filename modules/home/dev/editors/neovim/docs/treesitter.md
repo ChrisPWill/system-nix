@@ -35,6 +35,26 @@ live under `lua/utils/treesitter/` and are wired up in
   rustfmt's multi-line style) — so you never hand-manage commas or hunt
   for the closing paren.
 
+## 󰘦 Ambient Reference Highlighting (`]r` / `[r`)
+
+Every other occurrence of the identifier under the cursor lights up
+automatically — illuminate-style, always on, no keypress needed. Refreshes
+on `CursorHold` (the same idle-debounce every other "highlight after you
+stop moving" plugin relies on) and clears immediately on `CursorMoved` so
+nothing lingers stale while you're actively moving around.
+
+- Scoped like mutation-site highlighting: the enclosing function if
+  there is one, else the whole buffer — so a same-named local in an
+  unrelated sibling function doesn't light up too.
+- The occurrence under the cursor gets its own highlight
+  (`TreesitterReferenceCurrent`: underline only, no background — the
+  cursor already marks the spot) distinct from the others
+  (`TreesitterReferenceOther`, linked to `IncSearch`, which is what's
+  meant to catch your eye elsewhere).
+- `]r` / `[r`: jump to the next/previous occurrence, following the same
+  repeat-bracket conventions as the other structural motions in
+  [navigation.md](./navigation.md).
+
 ## 󰘦 Structural Fold Summaries
 
 Closed folds show a one-line structural summary instead of Neovim's default

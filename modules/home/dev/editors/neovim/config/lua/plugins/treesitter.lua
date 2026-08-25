@@ -125,6 +125,25 @@ return {
 			vim.keymap.set("x", "<A-i>", "in", { remap = true, desc = "Incremental Selection (Shrink)" })
 			vim.keymap.set("n", "<A-i>", "vin", { remap = true, desc = "Incremental Selection (Shrink)" })
 
+			-- Illuminate-style ambient highlighting of every other occurrence
+			-- of the identifier under the cursor, scoped to its enclosing
+			-- function. Required eagerly (not from inside a keymap) since its
+			-- CursorHold/CursorMoved autocmds need to be live from startup,
+			-- not just after some other keymap happens to trigger a require.
+			local references = require("utils.treesitter.references")
+			bracket_repeat.map_pair(
+				{ "n", "x", "o" },
+				"]r",
+				"[r",
+				function()
+					references.goto_next_reference()
+				end,
+				function()
+					references.goto_previous_reference()
+				end,
+				{ next_desc = "Next reference", previous_desc = "Previous reference" }
+			)
+
 			-- Highlight return positions (explicit `return`s, or the implicit
 			-- tail-expression return for languages like Rust/Ruby) in the
 			-- function enclosing the cursor.

@@ -107,6 +107,7 @@ Secondary tools are organized into mnemonic groups:
 - `]l / [l`: Next/Previous Loop
 - `]i / [i`: Next/Previous Conditional (If)
 - `]R / [R`: Next/Previous return position (explicit `return`, or the implicit tail-expression return for languages like Rust/Ruby)
+- `]r / [r`: Next/Previous occurrence of the identifier under the cursor (see also: ambient reference highlighting in [treesitter.md](./treesitter.md))
 - `]] / [[` or `} / {`: Repeat next/previous bracket navigation (structural jumps, Git hunks, diagnostics, and native bracket navigation)
 
 ## 10. Enhancement over Defaults
