@@ -1,9 +1,8 @@
 local scope = require("utils.treesitter.scope")
+local identifier = require("utils.treesitter.identifier")
+local highlight = require("utils.treesitter.highlight").new("mutations")
 
 local M = {}
-
-local ns = vim.api.nvim_create_namespace("treesitter_mutations")
-local clear_augroup = vim.api.nvim_create_augroup("TreesitterMutationHighlightClear", { clear = true })
 
 -- Node type substrings for nodes that write to a target: plain/augmented
 -- assignment (`x = 1`, `x += 1`) and increment/decrement (`x++`). Kept
@@ -37,28 +36,6 @@ local function get_target(node)
 	return node:named_child(0)
 end
 
--- The write target is often wrapped (e.g. `self.count += 1`'s target is a
--- `field_expression`/`member_expression`, not a bare identifier). Find the
--- identifier actually being written to, so `x` matches both `x = 1` and,
--- say, a rewritten `x += 1`.
-local function target_identifier(node)
-	if not node then
-		return nil
-	end
-	if node:type():find("identifier") then
-		return node
-	end
-	-- Prefer the last identifier child (e.g. the `count` in `self.count`),
-	-- since that's the actual binding being written to.
-	local last
-	for child in node:iter_children() do
-		if child:type():find("identifier") then
-			last = child
-		end
-	end
-	return last
-end
-
 -- Depth-first collection of mutation nodes targeting `name`. Deliberately
 -- descends into nested function-like nodes too: a closure capturing and
 -- mutating an outer variable (e.g. Kotlin's `list.forEach { x += it }`) is a
@@ -68,7 +45,7 @@ end
 local function collect_mutations(node, name, bufnr, results)
 	for child in node:iter_children() do
 		if is_mutation_node(child) then
-			local ident = target_identifier(get_target(child))
+			local ident = identifier.resolve(get_target(child))
 			if ident and vim.treesitter.get_node_text(ident, bufnr) == name then
 				table.insert(results, child)
 			end
@@ -94,7 +71,7 @@ function M.find_mutation_sites(bufnr, node)
 		return nil, {}
 	end
 
-	local ident = target_identifier(node) or target_identifier(node:parent())
+	local ident = identifier.resolve(node) or identifier.resolve(node:parent())
 	if not ident then
 		return nil, {}
 	end
@@ -123,7 +100,6 @@ end
 ---@param bufnr integer? defaults to the current buffer
 function M.highlight_mutation_sites(bufnr)
 	bufnr = bufnr or vim.api.nvim_get_current_buf()
-	vim.api.nvim_buf_clear_namespace(bufnr, ns, 0, -1)
 
 	local ident, mutations, search_scope = M.find_mutation_sites(bufnr)
 	if not ident then
@@ -135,25 +111,8 @@ function M.highlight_mutation_sites(bufnr)
 		return
 	end
 
-	for _, mutation in ipairs(mutations) do
-		local srow, scol, erow, ecol = mutation:range()
-		vim.hl.range(bufnr, ns, "TreesitterMutationHighlight", { srow, scol }, { erow, ecol })
-	end
-
 	local range_node = search_scope or mutations[1]:tree():root()
-	local range_srow, _, range_erow, _ = range_node:range()
-	vim.api.nvim_clear_autocmds({ group = clear_augroup, buffer = bufnr })
-	vim.api.nvim_create_autocmd("CursorMoved", {
-		group = clear_augroup,
-		buffer = bufnr,
-		callback = function()
-			local row = vim.api.nvim_win_get_cursor(0)[1] - 1
-			if row < range_srow or row > range_erow then
-				vim.api.nvim_buf_clear_namespace(bufnr, ns, 0, -1)
-				return true -- delete this autocmd, it's done its job
-			end
-		end,
-	})
+	highlight.apply(bufnr, "TreesitterMutationHighlight", mutations, range_node)
 end
 
 return M

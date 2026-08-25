@@ -4,6 +4,9 @@
 local M = {}
 
 M.scope = require("utils.treesitter.scope")
+M.identifier = require("utils.treesitter.identifier")
+M.motion = require("utils.treesitter.motion")
+M.highlight = require("utils.treesitter.highlight")
 M.returns = require("utils.treesitter.returns")
 M.mutations = require("utils.treesitter.mutations")
 

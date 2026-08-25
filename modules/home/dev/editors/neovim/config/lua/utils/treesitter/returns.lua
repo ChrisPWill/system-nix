@@ -1,9 +1,8 @@
 local scope = require("utils.treesitter.scope")
+local motion = require("utils.treesitter.motion")
+local highlight = require("utils.treesitter.highlight").new("returns")
 
 local M = {}
-
-local ns = vim.api.nvim_create_namespace("treesitter_returns")
-local clear_augroup = vim.api.nvim_create_augroup("TreesitterReturnHighlightClear", { clear = true })
 
 -- Languages whose grammar treats a block's trailing expression as an
 -- implicit return (no `return` keyword). Everything else relies purely on
@@ -81,8 +80,8 @@ end
 --- grammar has no `return` keyword for the common case) the implicit
 --- tail-expression return.
 ---
---- Exposed standalone so other features (e.g. a future "jump to next
---- return" motion) can reuse it without re-highlighting.
+--- Exposed standalone so other features (e.g. the return-position motion
+--- below) can reuse it without re-highlighting.
 ---@param bufnr integer? defaults to the current buffer
 ---@param node TSNode? node to search from; defaults to the node under the cursor
 ---@return TSNode? fn_node the enclosing function-like node, or nil if none was found
@@ -116,7 +115,6 @@ end
 ---@param bufnr integer? defaults to the current buffer
 function M.highlight_return_positions(bufnr)
 	bufnr = bufnr or vim.api.nvim_get_current_buf()
-	vim.api.nvim_buf_clear_namespace(bufnr, ns, 0, -1)
 
 	local fn_node, returns = M.find_return_positions(bufnr)
 	if not fn_node then
@@ -128,34 +126,7 @@ function M.highlight_return_positions(bufnr)
 		return
 	end
 
-	for _, ret in ipairs(returns) do
-		local srow, scol, erow, ecol = ret:range()
-		vim.hl.range(bufnr, ns, "TreesitterReturnHighlight", { srow, scol }, { erow, ecol })
-	end
-
-	local fn_srow, _, fn_erow, _ = fn_node:range()
-	vim.api.nvim_clear_autocmds({ group = clear_augroup, buffer = bufnr })
-	vim.api.nvim_create_autocmd("CursorMoved", {
-		group = clear_augroup,
-		buffer = bufnr,
-		callback = function()
-			local row = vim.api.nvim_win_get_cursor(0)[1] - 1
-			if row < fn_srow or row > fn_erow then
-				vim.api.nvim_buf_clear_namespace(bufnr, ns, 0, -1)
-				return true -- delete this autocmd, it's done its job
-			end
-		end,
-	})
-end
-
-local function cursor_pos()
-	local cursor = vim.api.nvim_win_get_cursor(0)
-	return cursor[1] - 1, cursor[2]
-end
-
-local function move_to(node)
-	local srow, scol = node:range()
-	vim.api.nvim_win_set_cursor(0, { srow + 1, scol })
+	highlight.apply(bufnr, "TreesitterReturnHighlight", returns, fn_node)
 end
 
 --- Move the cursor to the next return position in the enclosing function.
@@ -163,25 +134,11 @@ end
 function M.goto_next_return(bufnr)
 	bufnr = bufnr or vim.api.nvim_get_current_buf()
 	local fn_node, returns = M.find_return_positions(bufnr)
-	if not fn_node or #returns == 0 then
-		vim.notify("No return positions found in this function", vim.log.levels.INFO, { title = "Treesitter returns" })
+	if not fn_node then
+		vim.notify("No enclosing function found", vim.log.levels.WARN, { title = "Treesitter returns" })
 		return
 	end
-	table.sort(returns, function(a, b)
-		local arow, acol = a:range()
-		local brow, bcol = b:range()
-		return arow < brow or (arow == brow and acol < bcol)
-	end)
-
-	local crow, ccol = cursor_pos()
-	for _, ret in ipairs(returns) do
-		local srow, scol = ret:range()
-		if srow > crow or (srow == crow and scol > ccol) then
-			move_to(ret)
-			return
-		end
-	end
-	vim.notify("No next return position", vim.log.levels.INFO, { title = "Treesitter returns" })
+	motion.goto_nearest(returns, "next", "return position")
 end
 
 --- Move the cursor to the previous return position in the enclosing function.
@@ -189,25 +146,11 @@ end
 function M.goto_previous_return(bufnr)
 	bufnr = bufnr or vim.api.nvim_get_current_buf()
 	local fn_node, returns = M.find_return_positions(bufnr)
-	if not fn_node or #returns == 0 then
-		vim.notify("No return positions found in this function", vim.log.levels.INFO, { title = "Treesitter returns" })
+	if not fn_node then
+		vim.notify("No enclosing function found", vim.log.levels.WARN, { title = "Treesitter returns" })
 		return
 	end
-	table.sort(returns, function(a, b)
-		local arow, acol = a:range()
-		local brow, bcol = b:range()
-		return arow < brow or (arow == brow and acol < bcol)
-	end)
-
-	local crow, ccol = cursor_pos()
-	for i = #returns, 1, -1 do
-		local srow, scol = returns[i]:range()
-		if srow < crow or (srow == crow and scol < ccol) then
-			move_to(returns[i])
-			return
-		end
-	end
-	vim.notify("No previous return position", vim.log.levels.INFO, { title = "Treesitter returns" })
+	motion.goto_nearest(returns, "previous", "return position")
 end
 
 return M
