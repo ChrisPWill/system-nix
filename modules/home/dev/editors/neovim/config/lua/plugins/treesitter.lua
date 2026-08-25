@@ -140,6 +140,37 @@ return {
 				require("utils.treesitter.mutations").highlight_mutation_sites()
 			end, { desc = "Highlight mutation sites" })
 
+			-- LSP-free outline of functions/classes in the buffer, reusing
+			-- the same declaration-detection as the highlight/motion
+			-- features above — works even with no LSP attached.
+			vim.keymap.set("n", "<leader>Co", function()
+				local outline = require("utils.treesitter.outline")
+				local items = outline.list()
+				if #items == 0 then
+					vim.notify("No functions or classes found", vim.log.levels.INFO, { title = "Treesitter outline" })
+					return
+				end
+
+				local win = vim.api.nvim_get_current_win()
+				require("snacks").picker.pick({
+					items = items,
+					title = "Outline (functions/classes)",
+					format = function(item)
+						return {
+							{ string.rep("  ", item.depth) },
+							{ "[" .. item.kind .. "] ", item.kind == "class" and "SnacksPickerDir" or "SnacksPickerLabel" },
+							{ item.text, "SnacksPickerComment" },
+						}
+					end,
+					confirm = function(picker, item)
+						picker:close()
+						if item then
+							vim.api.nvim_win_set_cursor(win, item.pos)
+						end
+					end,
+				})
+			end, { desc = "Outline (functions/classes)" })
+
 			-- Structural fold summaries (a folded function shows its
 			-- signature, a folded if/else chain shows its branch structure,
 			-- ...) instead of the default "N lines folded".

@@ -195,6 +195,11 @@ function M.summarize(bufnr, foldstart, foldend)
 	return string.format("%s%s (%d lines)", indent, summary, line_count)
 end
 
+-- Thin re-export: other features (e.g. the outline picker) want the same
+-- "this node's own header/signature line" text this module already builds
+-- fold summaries from.
+M.first_line = first_line
+
 --- `vim.opt.foldtext` entry point (called with `v:foldstart`/`v:foldend`
 --- set). Falls back to a plain line-count summary on any error, so a
 --- grammar quirk never breaks folding itself.

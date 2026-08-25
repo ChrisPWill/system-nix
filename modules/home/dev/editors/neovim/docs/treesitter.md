@@ -21,6 +21,11 @@ live under `lua/utils/treesitter/` and are wired up in
 - `]R` / `[R`: Jump to the next/previous return position (see `<leader>Cr`
   above), following the same repeat-bracket conventions as the other
   structural motions in [navigation.md](./navigation.md).
+- `<leader>Co`: Open an **outline** of every function/class-like
+  declaration in the buffer (nested entries indented under their
+  enclosing class/function) via a Snacks picker, and jump to the selected
+  one. Built entirely from the treesitter parse tree, so it works even in
+  a buffer with no LSP attached.
 
 ## 󰘦 Structural Fold Summaries
 
@@ -47,7 +52,9 @@ The above features share several small modules, kept generic on purpose so
 a future feature can reuse them without re-deriving the same logic:
 
 - `utils/treesitter/scope.lua`: find the function-like node enclosing a
-  given node.
+  given node, and categorize a node as function-like or class-like (a
+  declaration/definition/item node, not one of its substructures — a
+  function's own body/parameter-list share its name but aren't it).
 - `utils/treesitter/identifier.lua`: resolve "the identifier this node is
   really about" (e.g. the `count` in a `self.count` member access).
 - `utils/treesitter/motion.lua`: move the cursor to the nearest of a list of

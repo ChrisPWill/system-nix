@@ -1,21 +1,67 @@
--- Shared "what counts as a function-like scope" logic, used by every
--- treesitter feature that needs to find the function enclosing a node
--- (return highlighting, mutation-site highlighting, ...).
+-- Shared "what kind of construct is this node" logic, used by every
+-- treesitter feature that needs to categorize nodes generically (find the
+-- function enclosing a node, list declarations for an outline, ...).
 local M = {}
 
 -- Node type substrings that mark a function-like scope. Kept generic
 -- (rather than an explicit per-language node list) so this works across
 -- whatever treesitter grammar is active.
-local FUNCTION_PATTERNS = { "function", "method", "lambda", "arrow_function" }
+local FUNCTION_PATTERNS = { "function", "method", "lambda" }
 
-function M.is_function_node(node)
-	local ntype = node:type()
-	for _, pattern in ipairs(FUNCTION_PATTERNS) do
+-- Node type substrings that mark a type/class-like declaration: class,
+-- struct, interface, enum, trait, impl block, or Kotlin/Rust's `object`
+-- singleton/expression.
+local CLASS_PATTERNS = { "class", "struct", "interface", "enum", "trait", "impl", "object" }
+
+-- A node's type containing a stem word like "function" isn't enough on its
+-- own: `function_body` and `function_value_parameters` contain "function"
+-- too, and a bare keyword token's type is literally "class"/"fun" etc. This
+-- suffix marks the node as an actual declaration/definition, not one of
+-- its substructures or a keyword leaf.
+local DECLARATION_SUFFIXES = { "_declaration", "_definition", "_item" }
+
+-- Anonymous closure-literal node types don't follow the declaration-suffix
+-- convention above (there's no enclosing "declaration" — the literal *is*
+-- the whole node), but they're still genuine function scopes (a TS arrow
+-- function's body, a Kotlin lambda's body, ...), so they're allowed through
+-- by exact type match instead.
+local ANONYMOUS_FUNCTION_TYPES = {
+	arrow_function = true,
+	lambda_expression = true,
+	lambda_literal = true,
+	function_expression = true,
+	anonymous_function = true,
+}
+
+local function has_stem(ntype, patterns)
+	for _, pattern in ipairs(patterns) do
 		if ntype:find(pattern) then
 			return true
 		end
 	end
 	return false
+end
+
+local function is_declaration_shaped(ntype)
+	for _, suffix in ipairs(DECLARATION_SUFFIXES) do
+		if ntype:sub(-#suffix) == suffix then
+			return true
+		end
+	end
+	return false
+end
+
+function M.is_function_node(node)
+	local ntype = node:type()
+	if ANONYMOUS_FUNCTION_TYPES[ntype] then
+		return true
+	end
+	return is_declaration_shaped(ntype) and has_stem(ntype, FUNCTION_PATTERNS)
+end
+
+function M.is_class_node(node)
+	local ntype = node:type()
+	return is_declaration_shaped(ntype) and has_stem(ntype, CLASS_PATTERNS)
 end
 
 --- Walk up from `node` to the nearest enclosing function-like node.
