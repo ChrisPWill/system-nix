@@ -17,10 +17,45 @@ local SOURCE = "treesitter-smells"
 local SEVERITY = vim.diagnostic.severity
 
 -- Fixed for now; pull these into a setup() table if a particular
--- language/stack finds them consistently too noisy (e.g. a codebase
--- that idiomatically takes 6+ constructor params).
+-- language/stack finds them consistently too noisy.
 local MAX_PARAMS = 5
+-- A class's own constructor commonly takes more params than a typical
+-- function without being a smell (dependency injection, a config/builder
+-- style class, ...), so it gets a higher bar than MAX_PARAMS.
+local MAX_CONSTRUCTOR_PARAMS = 8
 local MAX_NESTING = 3
+
+-- Modifier marking a class as a plain data holder (Kotlin's `data
+-- class`) rather than one with real behavior — its constructor is
+-- expected to enumerate every field, so treating that like "too many
+-- arguments to a function" is a false positive by design. Skipped
+-- entirely, not just given a higher threshold.
+local DATA_CLASS_MODIFIERS = { data = true }
+
+-- Recursively search `node` (expected to be a class's `modifiers`
+-- child) for a leaf type in `types`. Not anchored to a specific nesting
+-- depth since that's a grammar-specific detail (Kotlin nests it two
+-- levels: modifiers -> class_modifier -> data).
+local function modifiers_contain(node, types)
+	for child in node:iter_children() do
+		if types[child:type()] then
+			return true
+		end
+		if modifiers_contain(child, types) then
+			return true
+		end
+	end
+	return false
+end
+
+local function is_data_class(node)
+	for child in node:iter_children() do
+		if child:type() == "modifiers" and modifiers_contain(child, DATA_CLASS_MODIFIERS) then
+			return true
+		end
+	end
+	return false
+end
 
 local CATCH_PATTERNS = { "catch", "except" }
 -- Excludes the bare anonymous `catch`/`except` keyword token, which
@@ -96,20 +131,29 @@ local function check_empty_catch(root, results)
 	end
 end
 
--- A function or class whose own signature has more than MAX_PARAMS
--- parameters — often a sign it should take a struct/object instead.
+-- A function whose own signature has more than MAX_PARAMS parameters,
+-- or a (non-data) class whose constructor has more than
+-- MAX_CONSTRUCTOR_PARAMS — either is often a sign it should take a
+-- struct/object instead.
 local function check_too_many_params(root, results)
 	for child in root:iter_children() do
-		if scope.is_function_node(child) or scope.is_class_node(child) then
+		local max_params
+		if scope.is_function_node(child) then
+			max_params = MAX_PARAMS
+		elseif scope.is_class_node(child) and not is_data_class(child) then
+			max_params = MAX_CONSTRUCTOR_PARAMS
+		end
+
+		if max_params then
 			local list = scope.find_signature_list(child)
 			if list then
 				local count = list:named_child_count()
-				if count > MAX_PARAMS then
+				if count > max_params then
 					table.insert(
 						results,
 						diagnostic(
 							list,
-							string.format("%d parameters (recommended max %d)", count, MAX_PARAMS),
+							string.format("%d parameters (recommended max %d)", count, max_params),
 							SEVERITY.HINT
 						)
 					)

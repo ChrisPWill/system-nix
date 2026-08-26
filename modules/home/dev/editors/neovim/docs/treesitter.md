@@ -71,8 +71,13 @@ an LSP or type information:
 
 - **Empty catch/except block** (WARN) — nothing in its body, or a lone
   `pass` — silently swallows whatever it caught.
-- **Too many parameters** (HINT) — a function, method, or constructor
-  with more than 5 parameters.
+- **Too many parameters** (HINT) — a function/method with more than 5
+  parameters, or a class's own constructor with more than 8 (constructors
+  commonly take more than a typical function without being a smell — DI,
+  a config/builder-style class, ...). A `data class` (Kotlin) is skipped
+  entirely regardless of count: its constructor is expected to enumerate
+  every field, so the same check that flags a function needing too many
+  arguments would be a false positive here by design.
 - **Deeply nested conditionals/loops** (HINT) — more than 3 levels deep
   within one function. Only the node where nesting *first* crosses the
   threshold is flagged, not every level beyond it.
