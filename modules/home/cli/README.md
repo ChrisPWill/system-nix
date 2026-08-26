@@ -24,3 +24,40 @@ We use a selection of modern alternatives to classic Unix commands:
 - **`ripgrep` (rg)**: An extremely fast alternative to `grep`.
 - **`atuin`**: A replacement for shell history with a SQLite backend.
 - **`procs`**: A modern replacement for `ps`.
+
+## 󰣇 Cross-Platform Command Names (Fish)
+
+`os-compat.nix` defines Fish abbreviations so familiar command names work on the
+other platform. They are abbreviations, not aliases: the real command expands in
+place at the prompt, because these pairs share a name but not a flag set.
+
+### On macOS (Linux names → macOS equivalents)
+
+| Abbreviation                     | Expands to                                                      |
+| :------------------------------- | :-------------------------------------------------------------- |
+| `xdg-open`                       | `open`                                                          |
+| `lsblk`                          | `diskutil list`                                                 |
+| `port`                           | `lsof -nP -iTCP:<port> -sTCP:LISTEN` (cursor lands on the port) |
+| `flushdns`                       | `dscacheutil -flushcache` plus an mDNSResponder restart         |
+| `ss`                             | `lsof -iTCP -sTCP:LISTEN -n -P`                                 |
+| `xclip` / `xclip-o`              | `pbcopy` / `pbpaste`                                            |
+| `free`                           | `memory_pressure`                                               |
+| `journalctl`                     | `log show --last 1h`                                            |
+| `journalctl-f`                   | `log stream --level info`                                       |
+| `locate`                         | `mdfind -name`                                                  |
+| `ldd`                            | `otool -L`                                                      |
+| `lshw` / `dmidecode`             | `system_profiler SPHardwareDataType`                            |
+| `sleepnow` / `systemctl-suspend` | `pmset sleepnow`                                                |
+| `sensors` / `powertop`           | `macmon`                                                        |
+
+Suspend is not bound to `suspend`, which would shadow Fish's builtin of that name.
+
+### On Linux (macOS names → Linux equivalents)
+
+| Abbreviation | Expands to |
+| :----------- | :--------- |
+| `open`       | `xdg-open` |
+| `pbcopy`     | `wl-copy`  |
+| `pbpaste`    | `wl-paste` |
+
+Clipboard access assumes Wayland, matching the only graphical Linux host.
