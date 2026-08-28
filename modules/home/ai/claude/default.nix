@@ -1,8 +1,20 @@
 {
   config,
+  lib,
   pkgs,
   ...
-}: {
+}: let
+  # `programs.claude-code.skills` validates its source inside the build sandbox,
+  # which cannot follow an out-of-store symlink. Linking each skill directly
+  # keeps SKILL.md editable without a rebuild, the same way rules are wired.
+  sharedSkills = builtins.attrNames (builtins.readDir ../shared-skills);
+in {
+  home.file = builtins.listToAttrs (map (name:
+    lib.nameValuePair ".claude/skills/${name}" {
+      source = config.lib.file.mkOutOfStoreSymlink "${config.homeModuleDir}/ai/shared-skills/${name}";
+    })
+  sharedSkills);
+
   programs.claude-code = {
     enable = true;
     # Homebrew supplies the fast-moving CLI on work Macs; Home Manager still
