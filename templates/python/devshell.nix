@@ -11,7 +11,7 @@ in
 
     shellHook = ''
       export PIP_PREFIX="${
-        if stdenv.isDarwin
+        if stdenv.hostPlatform.isDarwin
         then "/Users"
         else "/home"
       }/cwilliams/.pip_packages"

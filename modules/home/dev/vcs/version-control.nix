@@ -29,7 +29,7 @@ in {
       enable = true;
       enableDefaultConfig = false;
 
-      extraConfig = lib.optionalString pkgs.stdenv.isDarwin ''
+      extraConfig = lib.optionalString pkgs.stdenv.hostPlatform.isDarwin ''
         IgnoreUnknown UseKeychain
         UseKeychain yes
       '';

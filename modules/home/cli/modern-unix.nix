@@ -101,7 +101,7 @@
       # Retrieve files from the web
       wget
     ]
-    ++ lib.optionals pkgs.stdenv.isLinux [
+    ++ lib.optionals pkgs.stdenv.hostPlatform.isLinux [
       # Display Gtk+ dialog boxes from shell scripts
       zenity
     ];

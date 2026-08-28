@@ -245,9 +245,9 @@
     '';
   };
 in {
-  home.packages = lib.optionals pkgs.stdenv.isDarwin [mergeSettings];
+  home.packages = lib.optionals pkgs.stdenv.hostPlatform.isDarwin [mergeSettings];
 
-  home.activation.mergeOmniwmSettings = lib.mkIf pkgs.stdenv.isDarwin (lib.hm.dag.entryAfter ["writeBoundary"] ''
+  home.activation.mergeOmniwmSettings = lib.mkIf pkgs.stdenv.hostPlatform.isDarwin (lib.hm.dag.entryAfter ["writeBoundary"] ''
     run ${lib.getExe mergeSettings}
   '');
 }

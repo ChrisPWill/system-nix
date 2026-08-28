@@ -37,7 +37,7 @@
               append "/run/current-system/sw/bin" |
               append "/nix/var/nix/profiles/default/bin"
           ''
-          + lib.optionalString pkgs.stdenv.isDarwin ''
+          + lib.optionalString pkgs.stdenv.hostPlatform.isDarwin ''
             |
             append "/opt/homebrew/bin"
           ''

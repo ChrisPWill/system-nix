@@ -11,8 +11,8 @@
     with pkgs; [
       btop
     ]
-    # you can check if host is darwin by using pkgs.stdenv.isDarwin
-    #++ (pkgs.lib.optionals pkgs.stdenv.isDarwin [pkgs.xbar])
+    # you can check if host is darwin by using pkgs.stdenv.hostPlatform.isDarwin
+    #++ (pkgs.lib.optionals pkgs.stdenv.hostPlatform.isDarwin [pkgs.xbar])
     ;
 
   programs.zsh.enable = true;

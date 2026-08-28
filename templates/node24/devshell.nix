@@ -13,7 +13,7 @@ in
     env = {
       # Set npm global packages path
       npm_config_prefix = "${
-        if stdenv.isDarwin
+        if stdenv.hostPlatform.isDarwin
         then "/Users"
         else "/home"
       }/cwilliams/.node24-packages";
@@ -23,7 +23,7 @@ in
     shellHook = ''
       # Add node24 packages bin to PATH
       export PATH="${
-        if stdenv.isDarwin
+        if stdenv.hostPlatform.isDarwin
         then "/Users"
         else "/home"
       }/cwilliams/.node24-packages/bin:$PATH"

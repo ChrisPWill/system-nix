@@ -40,7 +40,7 @@
     ]
     ++ config.kanata.globalLeader.extraArgs;
 in {
-  config = lib.mkIf pkgs.stdenv.isDarwin {
+  config = lib.mkIf pkgs.stdenv.hostPlatform.isDarwin {
     # macOS normally translates the physical F-row into consumer/media events.
     # Kanata intercepts the underlying F1-F12 events before that translation, so
     # reproduce it in the Kanata layer and use Fn to access real function keys.

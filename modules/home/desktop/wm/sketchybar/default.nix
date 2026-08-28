@@ -20,7 +20,7 @@
     "/sbin"
   ];
 in {
-  config = lib.mkIf pkgs.stdenv.isDarwin {
+  config = lib.mkIf pkgs.stdenv.hostPlatform.isDarwin {
     launchd.agents.sketchybar-omniwm-watch = {
       # Disabled in preference to built-in OmniWM bar
       enable = false;

@@ -29,7 +29,7 @@
         automatic = true;
         options = "--delete-older-than 30d";
       }
-      // lib.optionalAttrs pkgs.stdenv.isLinux {
+      // lib.optionalAttrs pkgs.stdenv.hostPlatform.isLinux {
         dates = "weekly";
       };
   };

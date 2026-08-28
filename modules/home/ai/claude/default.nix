@@ -20,7 +20,7 @@ in {
     # Homebrew supplies the fast-moving CLI on work Macs; Home Manager still
     # owns its rules and LSP configuration.
     package =
-      if pkgs.stdenv.isDarwin && config.isWorkMachine
+      if pkgs.stdenv.hostPlatform.isDarwin && config.isWorkMachine
       then null
       else pkgs.claude-code;
 

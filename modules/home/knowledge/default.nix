@@ -41,7 +41,7 @@ in {
     ];
 
   # PDF viewer
-  programs.zathura.enable = !pkgs.stdenv.isDarwin; # Disabled on MacOS due to https://github.com/NixOS/nixpkgs/issues/514566
+  programs.zathura.enable = !pkgs.stdenv.hostPlatform.isDarwin; # Disabled on MacOS due to https://github.com/NixOS/nixpkgs/issues/514566
 
   home.sessionPath = [scriptDir];
   home.sessionVariables.LOGSEQ_QUICK_CAPTURE_JOURNALS_DIR = "${config.home.homeDirectory}/knowledge-base/${

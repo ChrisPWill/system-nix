@@ -27,7 +27,7 @@
           src = craneLib.cleanCargoSource ./.;
           strictDeps = true;
 
-          buildInputs = pkgs.lib.optionals pkgs.stdenv.isDarwin [
+          buildInputs = pkgs.lib.optionals pkgs.stdenv.hostPlatform.isDarwin [
             # Additional darwin specific inputs can be set here
             # pkgs.libiconv
           ];

@@ -13,7 +13,7 @@
     "...." = "cd ../../..";
   };
 
-  darwinAliases = lib.optionalAttrs pkgs.stdenv.isDarwin {
+  darwinAliases = lib.optionalAttrs pkgs.stdenv.hostPlatform.isDarwin {
     cafe = "caffeinate -d -t 5400";
   };
 

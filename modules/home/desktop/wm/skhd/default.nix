@@ -31,7 +31,7 @@ in {
     ../shared-keybinds.nix
   ];
 
-  config = lib.mkIf pkgs.stdenv.isDarwin {
+  config = lib.mkIf pkgs.stdenv.hostPlatform.isDarwin {
     home.packages = [pkgs.skhd];
 
     xdg.configFile."skhd/skhdrc".text = skhdBinds;
