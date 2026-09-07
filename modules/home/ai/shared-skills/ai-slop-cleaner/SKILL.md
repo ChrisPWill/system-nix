@@ -96,6 +96,32 @@ Use these as review prompts, not absolute bans. Keep intentional brand, accessib
 - **Layout rhythm:** avoid overly perfect 3- or 4-column uniform grids when the product context benefits from rhythm, emphasis, asymmetry, carousel/bento treatment, or varied card weights.
 - **Gradient restraint:** tone down extreme gradients unless the brand deliberately owns that visual language.
 
+### Comment Hygiene
+
+Treat comments as part of the cleanup surface. Review only comments introduced by the
+current change; leave pre-existing comments alone unless the requested scope includes them.
+
+- Keep comments that explain a non-obvious **why**: a constraint, tradeoff, workaround,
+  race, invariant, compatibility issue, or external requirement.
+- Delete comments that merely narrate the next line, restate an obvious declaration, record
+  edit history, label a section, or form decorative banners. Treat filler such as “this
+  function is responsible for”, “we need to”, and “note that” as a prompt to rewrite or delete.
+- Prefer plain English and the fewest words that preserve the explanation. Keep doc comments
+  concise; their summary is useful, but filler and implementation narration are not. As a
+  review threshold, question non-doc comments longer than 15 words, doc comments over 60 words
+  total (or 30 words before tags), three or more consecutive comment lines, and three or more
+  comments that exceed 30% of added code lines.
+- A concise “why” comment may legitimately resemble narration or restatement. Signals include
+  an explanation of a constraint or consequence (for example, “because”, “otherwise”,
+  “workaround”, “race”, “must”, “deprecated”, a spec/RFC, or an issue reference); inspect the
+  surrounding code before removing it.
+- Preserve directives, TODO/FIXME notes, URLs, license/copyright headers, and shebangs unless
+  they are independently in scope for removal.
+- When a comment is disputed but protects real context, retain it and make the reason explicit
+  rather than deleting it to satisfy a mechanical rule.
+- Avoid treating comment heuristics as infallible: verify the surrounding code and allow an
+  explicit keep marker or documented exception when a terse comment is genuinely necessary.
+
 4. **Run one smell-focused pass at a time**
    - **Pass 1: Dead code deletion**
    - **Pass 2: Duplicate removal**
