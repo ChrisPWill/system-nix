@@ -166,6 +166,21 @@ you're almost certainly explaining the diff or narrating the work.
 <One line for prior work. One line for follow-up work.>
 ```
 
+## When the Body Won't Fit
+
+Sometimes the body runs long not because it is padded but because the PR carries
+several unrelated changes, each needing its own why. That is a signal about the
+PR, not the description.
+
+Say so, once, and name the seams you would cut along — "this is a schema
+migration, a new endpoint, and an unrelated logging fix; the first two want
+separate PRs". Then hand the decision over: offer the split, and if the user
+declines or the work is already merged into one branch, write the best single
+description you can with a `## What changed` bullet per independent concern.
+
+Do not split branches, reorder commits, or raise PRs on your own to fix this —
+suggest, then follow the user's call.
+
 ## Workflow
 
 1. **Read the actual diff** — `gh pr diff` or `git diff <base>...HEAD`. Never
@@ -176,7 +191,8 @@ you're almost certainly explaining the diff or narrating the work.
 3. **Draft against the structure above.**
 4. **Run a cut pass.** Delete every line a reviewer would learn from the diff
    itself. Delete every sentence that survives as a fragment. Count the words —
-   over 200 means cutting, not rewording.
+   over 200 means cutting, not rewording, unless the length is coming from the
+   PR doing several things at once (see above).
 5. **Check the rules**: ticket in title and description, no tags, related work
    within its line budget, risk kept to a line each unless a risk is genuinely
    likely and hard to undo, every table and diagram earning its space, nothing
