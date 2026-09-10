@@ -62,6 +62,18 @@ the work belongs to existing scope.
    add how it would show up and what the rollback is. Anything unlikely or
    trivially reversible gets a clause, not a paragraph. If the risk section is
    longer than the "what changed" section, it is overwritten.
+7. **Describe the end state, not the journey.** Never narrate the PR's own
+   history — no "review turned up", "initially I tried", "this was found while
+   testing". A fix made during review is simply part of the change. The reader
+   needs what the code does, not how it got there.
+8. **Don't explain the wiring.** Leave out how the change is assembled —
+   factories, injection points, where a value is bound — even when the shape is
+   unusual. That's what the diff is for. If the approach needs defending, defend
+   it in a reply to whoever questions it, not pre-emptively in the body.
+9. **Risk means production risk.** A design-purity caveat ("this is convention,
+   not compiler-enforced") isn't a risk, it's a code comment, and it belongs at
+   the site. If it's already a comment in the diff, it does not go in the
+   description as well.
 
 ## Voice
 
@@ -83,6 +95,13 @@ note.
   items say it.
 - The first sentence carries information. Do not open with a summary of the
   summary.
+- Open with the deficiency stated flatly, not with a hook. "X lacks sufficient
+  filtering" beats "X couldn't answer the question it was added for".
+- Prefer the flattest accurate verb. "billing runs get mixed in", not "the run's
+  share swamps the series". No figurative verbs for ordinary mechanics.
+- Don't assign work. "The total is unverified" is a fact; "someone should
+  confirm before merge" is an instruction, and routing belongs in review or
+  chat.
 
 ## Tables and Diagrams
 
@@ -128,6 +147,9 @@ When you do include one:
 
 Drop any heading that would be empty. Most PRs need only the first two.
 
+Target under 200 words for the body. Most land between 100 and 200. Past 250
+you're almost certainly explaining the diff or narrating the work.
+
 ```markdown
 <Why this change, and the decision made. 1-3 sentences.>
 
@@ -153,7 +175,8 @@ Drop any heading that would be empty. Most PRs need only the first two.
    alternatives, the risk, the review path.
 3. **Draft against the structure above.**
 4. **Run a cut pass.** Delete every line a reviewer would learn from the diff
-   itself. Delete every sentence that survives as a fragment.
+   itself. Delete every sentence that survives as a fragment. Count the words —
+   over 200 means cutting, not rewording.
 5. **Check the rules**: ticket in title and description, no tags, related work
    within its line budget, risk kept to a line each unless a risk is genuinely
    likely and hard to undo, every table and diagram earning its space, nothing
