@@ -20,6 +20,7 @@ in {
   };
 
   imports = [
+    ./shared-skills.nix
     ./claude
     ./ollama.nix
     ./opencode.nix
