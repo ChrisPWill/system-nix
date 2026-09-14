@@ -98,7 +98,7 @@ in {
 
       wl-clipboard # wl-copy and wl-paste
 
-      gcr # Gnome Keyring system prompter
+      gcr_3 # Gnome Keyring system prompter
     ];
 
     programs.nix-monitor = {
