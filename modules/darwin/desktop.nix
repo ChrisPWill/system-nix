@@ -25,24 +25,17 @@
 
   # `brew bundle` (run as part of `sw`) upgrades cask app bundles on disk in
   # place, but never restarts whatever GUI process already has the old
-  # bundle open. A long-lived app (OmniWM, Docker Desktop) then keeps running
-  # old code against files that no longer match on disk: OmniWM's IPC
-  # protocol version drifts from `omniwmctl` (breaking every OmniWM skhd
-  # binding with "protocol_mismatch") and Docker's helper processes can end
-  # up in a similarly inconsistent state. Neither failure mode is loud, so
-  # check for it explicitly rather than waiting to notice hotkeys are dead.
+  # bundle open. A long-lived app (OmniWM) then keeps running old code
+  # against files that no longer match on disk: OmniWM's IPC protocol
+  # version drifts from `omniwmctl`, breaking every OmniWM skhd binding with
+  # "protocol_mismatch". That failure mode is not loud, so check for it
+  # explicitly rather than waiting to notice hotkeys are dead.
   staleCaskApps = [
     {
       name = "OmniWM";
       bundle = "/Applications/OmniWM.app";
       binary = "/Applications/OmniWM.app/Contents/MacOS/OmniWM";
       restartHint = "osascript -e 'quit app \"OmniWM\"'; open -a OmniWM";
-    }
-    {
-      name = "Docker Desktop";
-      bundle = "/Applications/Docker.app";
-      binary = "/Applications/Docker.app/Contents/MacOS/Docker Desktop.app/Contents/MacOS/Docker Desktop";
-      restartHint = "osascript -e 'quit app \"Docker\"'; open -a Docker";
     }
   ];
 
@@ -109,7 +102,6 @@ in {
 
   homebrew.casks = [
     "cleanshot"
-    "docker-desktop"
     "ghostty"
     "imageoptim"
     "omniwm"
