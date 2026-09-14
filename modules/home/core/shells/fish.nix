@@ -23,8 +23,28 @@
         # Enables vi(m)-like key bindings (insert mode by default)
         fish_vi_key_bindings
 
+        # Complete `detach` as if its arguments were a command line of their own
+        complete -c detach -xa '(__fish_complete_subcommand)'
+
         ${pkgs.fastfetch}/bin/fastfetch -s title:separator:os:cpu:memory:host:chassis:kernel:de:wm:wmtheme:swap:disk:battery:poweradapter:uptime:separator:shell:font:terminal:terminalfont:break:colors
       '';
+
+      functions = {
+        detach = {
+          description = "Launch any application detached in the background";
+          body = ''
+            if test (count $argv) -eq 0
+                echo "Usage: detach <command> [arguments]" >&2
+                return 1
+            end
+
+            # $argv as a command resolves functions and builtins too, not just
+            # binaries, so this stays a general-purpose launcher.
+            $argv &>/dev/null &
+            disown
+          '';
+        };
+      };
 
       plugins = let
         fishP = name: {
