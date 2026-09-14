@@ -20,6 +20,11 @@
     nix-darwin.url = "github:LnL7/nix-darwin";
     nix-darwin.inputs.nixpkgs.follows = "nixpkgs";
     nix-homebrew.url = "github:zhaofengli-wip/nix-homebrew";
+    # Wraps nixpkgs .app bundles in trampolines so Spotlight, the Dock and
+    # TCC permissions keep working across store path changes. Without it,
+    # GUI apps installed from nixpkgs are worse than their Homebrew casks.
+    mac-app-util.url = "github:hraban/mac-app-util";
+    mac-app-util.inputs.nixpkgs.follows = "nixpkgs";
 
     home-manager.url = "github:nix-community/home-manager";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";

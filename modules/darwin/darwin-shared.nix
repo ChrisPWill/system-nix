@@ -9,6 +9,7 @@
 in {
   imports = [
     inputs.nix-homebrew.darwinModules.nix-homebrew
+    inputs.mac-app-util.darwinModules.default
     inputs.stylix.darwinModules.stylix
     inputs.self.modules.theming.theme
     ./desktop.nix
