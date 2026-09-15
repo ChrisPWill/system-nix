@@ -6,12 +6,7 @@
   # Shared skills are linked into ~/.claude/skills by ../shared-skills.nix.
   programs.claude-code = {
     enable = true;
-    # Homebrew supplies the fast-moving CLI on work Macs; Home Manager still
-    # owns its rules and LSP configuration.
-    package =
-      if pkgs.stdenv.hostPlatform.isDarwin && config.isWorkMachine
-      then null
-      else pkgs.claude-code;
+    package = pkgs.claude-code;
 
     rulesDir = config.lib.file.mkOutOfStoreSymlink "${config.homeModuleDir}/ai/shared-rules";
 

@@ -3,7 +3,6 @@ _: {
     "cap"
     "chatgpt"
     "claude"
-    "claude-code"
     "datagrip"
     "google-drive"
     "granola"

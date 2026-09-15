@@ -98,7 +98,13 @@
     exit "$status"
   '';
 in {
-  environment.systemPackages = [staleCaskAppsCheckScript];
+  environment.systemPackages = [
+    staleCaskAppsCheckScript
+    # Small, free and without a self-updater, so nixpkgs can own it without
+    # fighting the app over its own version. mac-app-util keeps its
+    # Accessibility grant stable across store paths.
+    pkgs.scroll-reverser
+  ];
 
   homebrew.casks = [
     "cleanshot"
@@ -106,7 +112,6 @@ in {
     "imageoptim"
     "omniwm"
     "raycast"
-    "scroll-reverser"
     "vivaldi"
   ];
 
