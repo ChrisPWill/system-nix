@@ -7,7 +7,10 @@
     enable = true;
 
     globalConfig = {
-      tools.node = "latest";
+      tools = {
+        node = "latest";
+        pnpm = "latest";
+      };
       settings.idiomatic_version_file_enable_tools = ["node"];
     };
   };
