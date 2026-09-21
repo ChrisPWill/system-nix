@@ -49,6 +49,39 @@ in {
           status=1
         fi
 
+        # macOS starves every third-party CGEventTap while any process holds
+        # Secure Event Input. skhd tests for that only at startup, where it
+        # aborts loudly; if the grab is taken afterwards skhd keeps running and
+        # logs nothing while every binding silently no-ops. Nothing else in this
+        # script can see that -- the LaunchAgent, signature and TCC checks all
+        # stay green -- so read the session's current holder directly.
+        secure_input_pid="$(/usr/sbin/ioreg -l -w 0 \
+          | /usr/bin/grep -o '"kCGSSessionSecureInputPID"=[0-9]*' \
+          | /usr/bin/head -1 | /usr/bin/sed 's/.*=//')" || true
+
+        if [ -z "$secure_input_pid" ]; then
+          /bin/echo "OK: no process holds Secure Event Input."
+        else
+          secure_input_name="$(/bin/ps -o comm= -p "$secure_input_pid" 2>/dev/null)" || true
+
+          if [ -z "$secure_input_name" ]; then
+            /bin/echo "FAIL: Secure Event Input is held by dead pid $secure_input_pid." >&2
+            /bin/echo "  The holder exited without releasing the grab, so it is stuck and no" >&2
+            /bin/echo "  event tap will receive keys. Log out and back in to clear it." >&2
+          else
+            /bin/echo "FAIL: Secure Event Input is held by $secure_input_name (pid $secure_input_pid)." >&2
+            /bin/echo "  skhd receives no keys until that process releases it." >&2
+            /bin/echo "" >&2
+            /bin/echo "  Terminal.app is the usual culprit: its Shell > Secure Keyboard Entry" >&2
+            /bin/echo "  setting persists across launches. Clear it with" >&2
+            /bin/echo "    defaults write com.apple.Terminal SecureKeyboardEntry -bool false" >&2
+            /bin/echo "  then quit Terminal -- it holds the grab for its whole lifetime, so" >&2
+            /bin/echo "  merely moving focus elsewhere is not enough." >&2
+          fi
+
+          status=1
+        fi
+
         # skhd only checks Accessibility at startup, but its CGEventTap needs
         # Input Monitoring (kTCCServiceListenEvent). When only the latter is
         # broken skhd stays running and logs nothing, so hotkeys die silently --
@@ -58,7 +91,12 @@ in {
         # helper can query skhd's grant; it would report its own. tccd's log is
         # the only privilege-free evidence: it names the subject path when a
         # stored code requirement no longer matches the binary's current one.
-        if [ "$probe" -eq 1 ]; then
+        if [ "$probe" -eq 1 ] && [ -n "$secure_input_pid" ]; then
+          /bin/echo "" >&2
+          /bin/echo "Skipping probe: skhd aborts at startup while Secure Event Input is" >&2
+          /bin/echo "held, so restarting it now would stop it outright rather than tell" >&2
+          /bin/echo "us anything about TCC. Clear the grab above, then re-probe." >&2
+        elif [ "$probe" -eq 1 ]; then
           # Force WindowServer to re-evaluate now rather than waiting for an
           # incidental check to happen to land inside the log window.
           /bin/echo "Probing: restarting $skhd_service to force a fresh TCC check..."
