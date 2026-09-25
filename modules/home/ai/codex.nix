@@ -8,10 +8,11 @@
   sharedRuleFiles = [
     ./shared-rules/code-style.md
     ./shared-rules/source-control.md
+    ./shared-rules/graphiti-memory.md
   ];
-  sharedContext = builtins.toFile "shared-ai-rules.md" (
-    lib.concatMapStringsSep "\n\n" builtins.readFile sharedRuleFiles
-  );
+  # Must stay a string of content: programs.codex.context only treats a Nix
+  # path value as a file, so a store-path *string* would be written verbatim.
+  sharedContext = lib.concatMapStringsSep "\n\n" builtins.readFile sharedRuleFiles;
 in {
   config = lib.mkMerge [
     (lib.mkIf (cfg.agentProvider == "codex") {

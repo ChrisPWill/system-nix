@@ -1,0 +1,63 @@
+# Mounted over the image's /app/mcp/config/config.yaml. Values come from the
+# compose environment generated in ./default.nix, so the Nix options stay the
+# single source of truth; this file only fixes the shape.
+
+server:
+  transport: "http"
+  host: "0.0.0.0" # inside the container; the host port is bound to loopback
+  port: 8000
+
+llm:
+  # "openai" with a non-OpenAI api_url makes Graphiti use its generic
+  # chat-completions client, which is what Ollama speaks.
+  provider: "openai"
+  model: ${MODEL_NAME}
+  max_tokens: 8192
+  # Local models accept json_schema but don't reliably honour it; json_object
+  # puts the schema in the prompt instead, which they follow far better.
+  structured_output_mode: "json_object"
+  providers:
+    openai:
+      api_key: ${OPENAI_API_KEY}
+      api_url: ${OPENAI_API_URL}
+
+embedder:
+  provider: "openai"
+  model: ${EMBEDDER_MODEL}
+  dimensions: ${EMBEDDER_DIMENSIONS}
+  providers:
+    openai:
+      api_key: ${OPENAI_API_KEY}
+      api_url: ${OPENAI_API_URL}
+
+database:
+  provider: "falkordb"
+  providers:
+    falkordb:
+      # Combined image: FalkorDB runs in the same container.
+      uri: "redis://localhost:6379"
+      database: "default_db"
+
+graphiti:
+  group_id: ${GRAPHITI_GROUP_ID}
+  user_id: "mcp_user"
+  # Upstream's defaults, minus Location, and without Preference being
+  # "prioritised": the graph holds engineering knowledge, not a chat user's
+  # profile, so that bias would misclassify most facts.
+  entity_types:
+    - name: "Preference"
+      description: "Choices, conventions, or opinions someone has stated"
+    - name: "Requirement"
+      description: "Specific needs, features, or functionality that must be fulfilled"
+    - name: "Procedure"
+      description: "Standard operating procedures and sequential instructions"
+    - name: "Event"
+      description: "Time-bound activities, occurrences, or experiences"
+    - name: "Organization"
+      description: "Companies, institutions, groups, or formal entities"
+    - name: "Document"
+      description: "Information content in various forms (books, articles, reports, etc.)"
+    - name: "Topic"
+      description: "Subject of conversation, interest, or knowledge domain (use as last resort)"
+    - name: "Object"
+      description: "Physical items, tools, devices, or possessions (use as last resort)"

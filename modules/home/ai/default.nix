@@ -23,6 +23,7 @@ in {
     ./shared-skills.nix
     ./claude
     ./ollama.nix
+    ./memory
     ./opencode.nix
     ./codex.nix
     ./gemini.nix
