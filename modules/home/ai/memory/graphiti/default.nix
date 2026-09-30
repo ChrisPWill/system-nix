@@ -39,6 +39,10 @@
         GRAPHITI_TELEMETRY_ENABLED = "false";
         BROWSER = "0";
       };
+      # Shares the Colima VM with project service stacks; a cap means memory
+      # pressure kills Graphiti (which launchd restarts) rather than, say, a
+      # local Postgres. Observed use is ~600MB during ingestion.
+      mem_limit = "2g";
       extra_hosts = ["host.docker.internal:host-gateway"];
       ports = ["127.0.0.1:${toString cfg.port}:8000"];
       volumes = [
@@ -70,6 +74,7 @@
       mkdir -p ${lib.escapeShellArg cfg.dataDir}
       install -D -m 0644 ${./config.yaml} ${lib.escapeShellArg mountedConfig}
 
+      # shellcheck disable=SC2329 # invoked via trap
       shutdown() {
         redis SAVE >/dev/null || echo "graphiti: final FalkorDB save failed" >&2
         compose stop
@@ -86,7 +91,13 @@
       done
       redis CONFIG SET save "60 1" >/dev/null
 
-      wait "$up_pid"
+      # Reaching here means the container stopped without our shutdown trap
+      # (e.g. an OOM kill). `compose up` still exits 0 in that case, and
+      # launchd only restarts on failure, so report it as one.
+      status=0
+      wait "$up_pid" || status=$?
+      echo "graphiti: container exited unexpectedly (compose status $status)" >&2
+      exit 1
     '';
   };
 
@@ -98,7 +109,7 @@
       echo "== health (${mcpUrl})"
       curl -fsS --max-time 5 http://127.0.0.1:${toString cfg.port}/health && echo || echo "unreachable"
       echo "== container"
-      docker-compose -f ${composeFile} ps
+      docker-compose -f ${composeFile} ps -a
       echo "== ollama models loaded"
       curl -fsS --max-time 5 http://127.0.0.1:11434/api/ps || echo "ollama unreachable"
       echo
