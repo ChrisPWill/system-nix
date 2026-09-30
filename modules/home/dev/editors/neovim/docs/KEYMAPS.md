@@ -87,7 +87,7 @@ High-frequency actions mapped to single keys under the `<leader>` (Space) prefix
 Secondary tools are organized into mnemonic groups:
 
 - `<leader>/`: **Search / Pick** ([G]rep, [h]elp, [s]ymbols, Find Class / [t]ype, [u]ndo, [k]nowledge base, etc.)
-- `<leader>g`: **Git Group** (LazyGit: `gg`, LazyJJ: `gj`, Tig Blame: `gb`, Inline Blame: `gl`, Stage: `gs`, Reset: `gr`, etc.)
+- `<leader>g`: **Git Group** (LazyGit: `gg`, jjui: `gj`, Tig Blame: `gb`, Inline Blame: `gl`, Stage: `gs`, Reset: `gr`, etc.)
 - `<leader>c`: **Code Group** (Format: `cf`, Testing: `ct`, Breakpoints: `cb`)
 - `<leader>A`: **AI Group** (Ask: `Aa`, Toggle: `At`)
 - `<leader>t`: **Toggles** (Diagnostics: `td`, Formatting: `tf`, Markview: `tm`, Trouble: `tx`/`ts`/`tl`/`tq`/`tL`, Hunk context highlighting: `tg`)

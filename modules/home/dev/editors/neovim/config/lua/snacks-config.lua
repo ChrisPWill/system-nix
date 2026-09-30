@@ -65,8 +65,8 @@ vim.keymap.set("n", "<leader>gg", function()
 end, { desc = "LazyGit" })
 
 vim.keymap.set("n", "<leader>gj", function()
-	Snacks.terminal.open("lazyjj")
-end, { desc = "Jujutsu (LazyJJ)" })
+	Snacks.terminal.open("jjui")
+end, { desc = "Jujutsu (jjui)" })
 
 vim.keymap.set("n", "<leader>gb", function()
 	Snacks.terminal.open("tig blame " .. vim.fn.expand("%"))

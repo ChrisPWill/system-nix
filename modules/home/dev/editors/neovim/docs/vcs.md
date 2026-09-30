@@ -25,6 +25,6 @@ When you open a `gitcommit` or `jjdescription` buffer:
 ## 󰘦 External Tools
 
 - `<leader>_`: Open **Lazygit** (Snacks.lazygit).
-- `<leader>j`: Open **LazyJJ** (Snacks.terminal).
+- `<leader>j`: Open **jjui** (Snacks.terminal).
 - `<leader>ggb`: Open **Tig Blame** for the current file.
 - `<leader>ggg`: **Open in Browser** (GitHub/Lab permalink).

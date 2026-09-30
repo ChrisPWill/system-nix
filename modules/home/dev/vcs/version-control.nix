@@ -5,12 +5,10 @@
   ...
 }: let
   scriptDir = "${config.homeModuleDir}/dev/vcs/scripts";
+  # Kept as a stub so muscle memory gets a pointer instead of "command not found".
+  ljjReplacedMessage = "ljj (lazyjj) has been replaced by jjui. Run `jjui`, or press Alt-g.";
 in {
   home.packages = with pkgs; [
-    # Neat TUI for jujutsu
-    # https://github.com/Cretezy/lazyjj
-    lazyjj
-
     # Another fancy git UI
     tig
   ];
@@ -22,8 +20,32 @@ in {
         $env.PATH = ($env.PATH | split row (char esep) | append "${scriptDir}")
       '';
       shellAliases.lg = "lazygit";
-      shellAliases.ljj = "lazyjj";
+      shellAliases.ljj = "print '${ljjReplacedMessage}'";
+      extraConfig = ''
+        $env.config = (
+          $env.config
+          | upsert keybindings (
+              $env.config.keybindings
+              | append [
+                  {
+                      name: open_vcs,
+                      modifier: Alt,
+                      keycode: char_g,
+                      mode: [vi_normal, vi_insert, emacs],
+                      event: {
+                          send: executehostcommand,
+                          cmd: "open-vcs"
+                      }
+                  }
+              ]
+          )
+        )
+      '';
     };
+
+    # Neat TUI for jujutsu
+    # https://github.com/idursun/jjui
+    jjui.enable = true;
 
     ssh = {
       enable = true;
@@ -68,15 +90,34 @@ in {
     # Neat TUI for git
     # https://github.com/jesseduffield/lazygit
     lazygit.enable = true;
-    zsh.shellAliases = {
-      lg = "lazygit";
-      ljj = "lazyjj";
+    zsh = {
+      shellAliases = {
+        lg = "lazygit";
+        ljj = "echo '${ljjReplacedMessage}'";
+      };
+      initContent = ''
+        open-vcs-widget() {
+          zle -I
+          open-vcs < /dev/tty
+          zle reset-prompt
+        }
+
+        zle -N open-vcs-widget
+
+        typeset -ga zvm_after_init_commands
+        zvm_after_init_commands+=("zvm_bindkey viins '^[g' open-vcs-widget")
+      '';
     };
     fish = {
       shellAliases = {
         lg = "lazygit";
-        ljj = "lazyjj";
+        ljj = "echo '${ljjReplacedMessage}'";
       };
+      interactiveShellInit = lib.mkAfter ''
+        for mode in default insert
+            bind --mode $mode \eg 'open-vcs; commandline -f repaint'
+        end
+      '';
       shellAbbrs = {
         jjrm = "jj rebase -s @ -d master@origin";
         jjnm = {

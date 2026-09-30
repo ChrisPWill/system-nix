@@ -1,7 +1,7 @@
 #!/usr/bin/env nu
 
 # ---
-# Opens lazyjj or lazygit depending on what type of repo it is
+# Opens jjui or lazygit depending on what type of repo it is
 # ---
 
 let root = (do -i { ^repo-root | str trim })
@@ -16,7 +16,7 @@ let has_jj = ($root | path join ".jj" | path exists)
 let has_git = ($root | path join ".git" | path exists)
 
 if $has_jj {
-    ^lazyjj
+    ^jjui
 } else if $has_git {
     ^lazygit
 } else {

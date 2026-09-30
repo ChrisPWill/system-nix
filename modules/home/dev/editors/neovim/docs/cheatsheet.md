@@ -28,7 +28,7 @@ This configuration uses a **Hybrid Philosophy** (Helix-inspired navigation + Neo
 | Key                 | Action                     |
 | :------------------ | :------------------------- |
 | `<leader>gg`        | **LazyGit**                |
-| `<leader>gj`        | **Jujutsu (LazyJJ)**       |
+| `<leader>gj`        | **Jujutsu (jjui)**       |
 | `<leader>gb`        | **Tig Blame**              |
 | `<leader>gl`        | **Blame Line (Inline)**    |
 | `<leader>go / gO`   | **Open in Browser**        |

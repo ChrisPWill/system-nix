@@ -33,7 +33,7 @@ These depend on prompt design, model behavior, and interactive retry UX. They ca
     - For Nushell scripts, either wrap `nu <script>` with declared runtime inputs or use a small packaging helper.
 2.  **Dependency Attachment:**
     - `repo-root`: `jj`, `git`
-    - `open-vcs`: `lazyjj`, `lazygit`, `repo-root`
+    - `open-vcs`: `jjui`, `lazygit`, `repo-root`
     - `tv-nvim`: `television`, `neovim`
     - `test-iso-vm`: `nix`, `qemu`
     - `toggle-pinned`: `nushell`, `niri`, `omniwmctl`, `osascript` on Darwin where applicable

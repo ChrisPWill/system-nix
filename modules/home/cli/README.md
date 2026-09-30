@@ -9,6 +9,7 @@ These hotkeys are available across all interactive shells (Fish, Zsh, Nushell).
 | Key      | Action                    | Description                                                    |
 | :------- | :------------------------ | :------------------------------------------------------------- |
 | `Alt-o`  | **Television (tv-nvim)**  | Launch the Television file picker (integrated with Neovim).    |
+| `Alt-g`  | **VCS TUI (open-vcs)**    | Open `jjui` in a jj repo, otherwise `lazygit`.                 |
 | `Alt-w`  | **Viddy (Watch Command)** | Wrap the current command line in `viddy` and execute it.       |
 | `Ctrl-r` | **Atuin Search**          | Search shell history using Atuin.                              |
 | `Ctrl-t` | **Smart Autocomplete**    | Television-powered smart autocomplete for the current context. |
