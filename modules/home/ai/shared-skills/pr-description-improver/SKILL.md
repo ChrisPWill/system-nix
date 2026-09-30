@@ -29,8 +29,7 @@ Every PR references its ticket in both places:
 - **Title** — the ticket key, following the repo's existing convention. Check
   recent merged titles (`gh pr list --state merged --limit 10`) rather than
   assuming a format.
-- **Description** — a link to the ticket, either in the opening line or under
-  `## Related`.
+- **Description** — a link to the ticket in the opening line.
 
 If no ticket exists, stop and ask. Do not raise a PR against an invented key and
 do not quietly omit it — an unticketed change is either a tracking gap or a sign
@@ -40,9 +39,8 @@ the work belongs to existing scope.
 
 1. **Cut what the diff says.** Do not restate file-by-file changes, function
    names, or the shape of the code. Explain an implementation detail only when a
-   reviewer would otherwise misread it — a non-obvious ordering constraint, a
-   deliberate deviation from the surrounding pattern, a workaround for an
-   upstream bug.
+   reviewer would otherwise misread it and a comment wouldn't be a better mechanism,
+   for example, when there is a known gap that is left to a follow-up ticket/PR.
 2. **Lead with why.** The first paragraph states the problem and the decision.
    If the ticket already states the problem, link it and go straight to the
    decision.
@@ -55,25 +53,14 @@ the work belongs to existing scope.
    one line each, maximum. Let PR and ticket numbers do the work:
    `Follows #412. Deletes the legacy path in ENG-1180.` If a follow-up needs a
    paragraph, it needs its own ticket.
-6. **Flag risk, briefly.** Migrations, feature flags, config or infra changes,
-   and anything not covered by tests get named — silence reads as "no risk".
-   One line each is the default: the thing, and its blast radius. Spend more
-   than a line only when a risk is both likely to bite and hard to undo; then
-   add how it would show up and what the rollback is. Anything unlikely or
-   trivially reversible gets a clause, not a paragraph. If the risk section is
-   longer than the "what changed" section, it is overwritten.
-7. **Describe the end state, not the journey.** Never narrate the PR's own
+6. **Describe the end state, not the journey.** Never narrate the PR's own
    history — no "review turned up", "initially I tried", "this was found while
    testing". A fix made during review is simply part of the change. The reader
    needs what the code does, not how it got there.
-8. **Don't explain the wiring.** Leave out how the change is assembled —
+7. **Don't explain the wiring.** Leave out how the change is assembled —
    factories, injection points, where a value is bound — even when the shape is
    unusual. That's what the diff is for. If the approach needs defending, defend
    it in a reply to whoever questions it, not pre-emptively in the body.
-9. **Risk means production risk.** A design-purity caveat ("this is convention,
-   not compiler-enforced") isn't a risk, it's a code comment, and it belongs at
-   the site. If it's already a comment in the diff, it does not go in the
-   description as well.
 
 ## Voice
 
@@ -151,19 +138,19 @@ Target under 200 words for the body. Most land between 100 and 200. Past 250
 you're almost certainly explaining the diff or narrating the work.
 
 ```markdown
-<Why this change, and the decision made. 1-3 sentences.>
+<Why this change, and the decision made. 1-2 sentences.>
 
 ## What changed
-<Bullets at the level of behavior, not code. 2-5 lines.>
+<Bullets at the level of behavior, not code. 1-5 lines. Omit this section if the title/opener covers it sufficiently.>
 
 ## Review notes
-<Where to start, what to look at hardest, anything non-obvious.>
+<Where to start, what to look at hardest, anything non-obvious. Omit this section by default, only include if the changes are complex.>
 
 ## Risk
-<One line per risk. Expand only for the likely-and-hard-to-undo ones.>
+<Any risk that is likely to lead to an incident. Omit by default, only include if there is risk beyond a normal engineering expectation.>
 
 ## Related
-<One line for prior work. One line for follow-up work.>
+<One line for prior work. One line for follow-up work. Omit if there is no prior/follow-up>
 ```
 
 ## When the Body Won't Fit
@@ -220,15 +207,12 @@ Redis so that limits hold cluster-wide rather than per-instance.
 cc @sarah @mike for review
 ```
 
-**After** — title `ENG-1187: Rate-limit vendor API calls client-side`
+**After** — title `fix(vendor): Rate-limit vendor API calls client-side [ENG-1187]`
 
 ```markdown
 The vendor API started returning 429s under normal load, and our retry logic
 made it worse by amplifying bursts. Adds client-side token-bucket limiting so we
 shape traffic before it leaves the process. [ENG-1187](https://linear.app/…)
-
-Bucket size is hardcoded to the vendor's documented ceiling — per-tenant tuning
-needs usage data we do not have yet.
 
 ## Risk
 Limiter state is per-pod, so the effective cluster limit scales with replica
