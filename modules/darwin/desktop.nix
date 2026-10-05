@@ -104,6 +104,7 @@ in {
     # fighting the app over its own version. mac-app-util keeps its
     # Accessibility grant stable across store paths.
     pkgs.scroll-reverser
+    pkgs.t3code
   ];
 
   homebrew.casks = [
