@@ -20,7 +20,10 @@
     monitorOrientationOverrides = [];
     monitorRoutingOverrides = [];
 
-    appearance.mode = "dark";
+    appearance = {
+      mode = "dark";
+      tabRailAppIcons = false;
+    };
 
     borders = {
       enabled = false;
@@ -39,6 +42,7 @@
 
     clipboard = {
       historyEnabled = false;
+      ignoredTypes = [];
       maxItemBytes = 8388608;
       maxItems = 200;
       maxTotalBytes = 67108864;
@@ -64,6 +68,7 @@
     };
 
     general = {
+      animationSpeed = 1.0;
       animationsEnabled = true;
       defaultLayoutType = "niri";
       hotkeysEnabled = false;
@@ -77,6 +82,8 @@
       fingerCount = 3;
       invertDirection = true;
       mouseResizeModifierKey = "option";
+      overviewGestureEnabled = false;
+      overviewGestureFingerCount = 4;
       scrollEnabled = true;
       scrollModifierKey = "optionShift";
       scrollSensitivity = 5.0;
@@ -87,6 +94,11 @@
       workspaceSwipeEnabled = true;
       workspaceSwipeFingerCount = 3;
       workspaceSwipeAxis = "vertical";
+      windowGestureSensitivity = 1.0;
+      windowMoveEnabled = false;
+      windowMoveFingerCount = 4;
+      windowResizeEnabled = false;
+      windowResizeFingerCount = 3;
     };
 
     mouseWarp = {
@@ -104,12 +116,17 @@
         0.6666666666666666
       ];
       defaultContainerPrimarySpan = 0.5;
+      edgeGaps = true;
       infiniteLoop = false;
       singleWindowFit = "fill";
       visibleContainerCount = 2;
     };
 
     overview = {
+      enabled = true;
+      invertScrollDirection = false;
+      matchFocusBorder = true;
+      mouseScrollSpeed = 1.0;
       zoom = 1.0;
       backdrop = {
         red = 0.05;
@@ -171,16 +188,23 @@
       excludedBundleIDs = [];
       height = 24.0;
       hideEmptyWorkspaces = false;
+      hoverPreviewsEnabled = true;
       iconOverrides = {};
       notchActiveZoneWidth = 180.0;
       notchMode = "moveBelowMenuBar";
+      notificationBadgeRefreshIntervalSeconds = 5.0;
+      notificationBadges = "off";
       position = "overlappingMenuBar";
       reserveLayoutSpace = true;
       revealModifier = "off";
       revealHoldMilliseconds = 200.0;
+      showAccentHighlights = true;
       showFloatingWindows = false;
+      showItemBackgrounds = true;
       showLabels = true;
+      solidBlackBackground = false;
       systemStatsButton = false;
+      transparentBackground = false;
       windowLevel = "popup";
       xOffset = 0.0;
       yOffset = 0.0;
@@ -188,12 +212,20 @@
       textColor = stylixColor "base05";
     };
 
-    # Bound via skhd (cmd+alt+shift-slash -> omniwmctl command open-command-palette, see
-    # shared-keybinds.nix) instead, since the built-in binding clashes with macOS's
-    # "select previous input source" shortcut.
     hotkeys = [
+      # Bound via skhd (cmd+alt+shift-slash -> omniwmctl command open-command-palette, see
+      # shared-keybinds.nix) instead, since the built-in binding clashes with macOS's
+      # "select previous input source" shortcut.
       {
         id = "openCommandPalette";
+        binding = "Unassigned";
+      }
+      {
+        id = "setWindowMark";
+        binding = "Unassigned";
+      }
+      {
+        id = "removeWindowMark";
         binding = "Unassigned";
       }
     ];
