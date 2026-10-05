@@ -83,7 +83,8 @@
         eslint_d
         graphql-language-service-cli
         prettier
-        typescript
+        # typescript-tools.nvim drives tsserver, which TypeScript 7 (the Go port) no longer ships.
+        typescript_5
         typescript-language-server
         vscode-js-debug
       ];

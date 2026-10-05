@@ -29,7 +29,7 @@
       clients = "typescript-tools";
       trigger = "fixtureTargetAl";
       completion = "fixtureTargetAlpha";
-      executables = "typescript-language-server,prettierd";
+      executables = "tsserver,typescript-language-server,prettierd";
       formatter = "prettierd";
       linter = "eslint_d";
       expectDiagnostics = true;
@@ -45,8 +45,8 @@
       forbiddenFormatter = "ktlint";
       forbiddenLinter = "ktlint";
       lspFormatting = true;
-      waitForProgress = "Importing project";
-      formattedText = "    if (true) {\n        val styleIssue = \"EditorConfig should control formatting\"";
+      waitForProgress = "Importing";
+      formattedText = "  if(true) {\n    val styleIssue = \"EditorConfig should control formatting\"";
       expectDiagnostics = false;
     };
     nix = {

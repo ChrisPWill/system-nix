@@ -347,6 +347,18 @@ local function track_server_progress(expected_title)
 		end
 	end
 
+	-- kotlin-lsp reports per-folder import outcomes here; log message wording varies between releases.
+	vim.lsp.handlers["intellij/workspaceImportState"] = function(_, result)
+		if not result or result.phase ~= "FINISHED" then
+			return
+		end
+		for _, folder in ipairs(result.folders or {}) do
+			if folder.status ~= "SUCCESS" then
+				state.error = "workspace import failed: " .. vim.inspect(folder)
+			end
+		end
+	end
+
 	return state
 end
 
