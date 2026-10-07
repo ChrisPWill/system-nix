@@ -2,6 +2,7 @@
   config,
   lib,
   pkgs,
+  inputs,
   ...
 }: {
   options = with lib; {
@@ -49,6 +50,11 @@
   config = lib.mkMerge [
     {
       nix.settings.experimental-features = ["nix-command" "flakes"];
+
+      # Resolve `nixpkgs#…` to this flake's locked input rather than the
+      # Determinate-provided global entry (nixpkgs-weekly), so ad-hoc
+      # `nix run`/`nix shell` see the same package versions the system builds.
+      nix.registry.nixpkgs.flake = inputs.nixpkgs;
 
       home.stateVersion = "25.05";
 
