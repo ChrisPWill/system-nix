@@ -6,7 +6,7 @@ script_dir=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 repository_root=$(cd "$script_dir/.." && pwd)
 metadata_file="$repository_root/packages/kotlin-lsp.json"
 github_api_url=${KOTLIN_LSP_GITHUB_API_URL:-https://api.github.com/repos/Kotlin/kotlin-lsp/releases?per_page=100}
-download_base_url=${KOTLIN_LSP_DOWNLOAD_BASE_URL:-https://download-cdn.jetbrains.com/language-server/kotlin-server}
+download_base_url=${KOTLIN_LSP_DOWNLOAD_BASE_URL:-https://download.jetbrains.com/language-server/kotlin-server}
 requested_version=${1:-}
 
 if [ "$#" -gt 1 ]; then

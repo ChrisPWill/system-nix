@@ -5,11 +5,11 @@
   inherit (release) version;
   sources = {
     aarch64-darwin = {
-      url = "https://download-cdn.jetbrains.com/language-server/kotlin-server/${version}/kotlin-server-${version}-aarch64.sit";
+      url = "https://download.jetbrains.com/language-server/kotlin-server/${version}/kotlin-server-${version}-aarch64.sit";
       hash = release.hashes.aarch64-darwin;
     };
     x86_64-linux = {
-      url = "https://download-cdn.jetbrains.com/language-server/kotlin-server/${version}/kotlin-server-${version}.tar.gz";
+      url = "https://download.jetbrains.com/language-server/kotlin-server/${version}/kotlin-server-${version}.tar.gz";
       hash = release.hashes.x86_64-linux;
     };
   };
