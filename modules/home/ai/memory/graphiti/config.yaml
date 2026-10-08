@@ -13,9 +13,11 @@ llm:
   provider: "openai"
   model: ${MODEL_NAME}
   max_tokens: 8192
-  # Local models accept json_schema but don't reliably honour it; json_object
-  # puts the schema in the prompt instead, which they follow far better.
-  structured_output_mode: "json_object"
+  # Ollama enforces json_schema by constrained decoding. json_object only
+  # pastes the schema into the prompt, and qwen3 then sometimes echoes the
+  # schema back instead of answering, which fails validation and silently
+  # drops the whole episode.
+  structured_output_mode: "json_schema"
   providers:
     openai:
       api_key: ${OPENAI_API_KEY}

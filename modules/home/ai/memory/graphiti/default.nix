@@ -17,6 +17,9 @@
   # Colima only shares $HOME with its VM, so bind-mount sources must live
   # there; a /nix/store path would appear as an empty directory in the container.
   mountedConfig = "${config.xdg.dataHome}/graphiti/config.yaml";
+  mountedQueueService = "${config.xdg.dataHome}/graphiti/queue_service.py";
+
+  logFile = "${config.home.homeDirectory}/Library/Logs/graphiti.launchd.log";
 
   composeFile = (pkgs.formats.yaml {}).generate "graphiti-compose.yaml" {
     name = project;
@@ -33,8 +36,9 @@
         # Graphiti refuses to start without a key; Ollama ignores it.
         OPENAI_API_KEY = "ollama";
         GRAPHITI_GROUP_ID = cfg.defaultGroupId;
-        # A local model serves requests roughly one at a time; more in-flight
-        # episodes only turn into timeouts.
+        # Caps parallel LLM and database calls within one episode. It does not
+        # stop episodes for different groups overlapping; ./queue_service.py
+        # serialises those.
         SEMAPHORE_LIMIT = toString cfg.concurrency;
         GRAPHITI_TELEMETRY_ENABLED = "false";
         BROWSER = "0";
@@ -47,6 +51,7 @@
       ports = ["127.0.0.1:${toString cfg.port}:8000"];
       volumes = [
         "${mountedConfig}:/app/mcp/config/config.yaml:ro"
+        "${mountedQueueService}:/app/mcp/src/services/queue_service.py:ro"
         "${cfg.dataDir}:/var/lib/falkordb/data"
       ];
     };
@@ -73,6 +78,7 @@
       done
       mkdir -p ${lib.escapeShellArg cfg.dataDir}
       install -D -m 0644 ${./config.yaml} ${lib.escapeShellArg mountedConfig}
+      install -D -m 0644 ${./queue_service.py} ${lib.escapeShellArg mountedQueueService}
 
       # shellcheck disable=SC2329 # invoked via trap
       shutdown() {
@@ -101,9 +107,12 @@
     '';
   };
 
+  # add_memory returns before extraction runs, so an episode that fails
+  # (typically an LLM answer that doesn't validate) is discarded without the
+  # saving agent ever finding out. The log is the only record of it.
   graphitiStatus = pkgs.writeShellApplication {
     name = "graphiti-status";
-    runtimeInputs = [pkgs.docker-compose pkgs.curl];
+    runtimeInputs = [pkgs.docker-compose pkgs.curl pkgs.gawk pkgs.gnused];
     runtimeEnv.DOCKER_HOST = dockerHost;
     text = ''
       echo "== health (${mcpUrl})"
@@ -113,7 +122,82 @@
       echo "== ollama models loaded"
       curl -fsS --max-time 5 http://127.0.0.1:11434/api/ps || echo "ollama unreachable"
       echo
-      echo "logs: ~/Library/Logs/graphiti.launchd.log"
+      echo "== dropped episodes since container start (UTC)"
+      dropped=$(
+        awk '/Starting FalkorDB\.\.\./ { n = 0 } /Failed to process episode/ { lines[n++] = $0 }
+             END { for (i = 0; i < n; i++) print lines[i] }' ${lib.escapeShellArg logFile} 2>/dev/null |
+          sed -E 's/.*\| ([0-9-]+ [0-9:]+) - .* for group ([^:]+): (.*)/\1  \2  \3/'
+      )
+      if [ -n "$dropped" ]; then
+        echo "$dropped"
+        echo "$(grep -c . <<<"$dropped") dropped; re-save them, since add_memory reported success"
+      else
+        echo "none"
+      fi
+      echo
+      echo "logs: ${logFile}"
+    '';
+  };
+
+  # The MCP server's get_episodes reads whichever graph the shared driver last
+  # pointed at, so FalkorDB is queried directly. FalkorDB keeps each group in
+  # a graph of the same name, so a mismatch means an episode was misfiled.
+  graphitiEpisodes = pkgs.writeShellApplication {
+    name = "graphiti-episodes";
+    runtimeInputs = [pkgs.docker-compose pkgs.jq];
+    runtimeEnv.DOCKER_HOST = dockerHost;
+    text = ''
+      usage() { echo "usage: graphiti-episodes [--content] [graph]" >&2; }
+      redis() { docker-compose -f ${composeFile} exec -T graphiti redis-cli "$@"; }
+
+      content=false
+      graphs=()
+      for arg in "$@"; do
+        case "$arg" in
+          --content) content=true ;;
+          -h | --help) usage; exit 0 ;;
+          -*) usage; exit 2 ;;
+          *) graphs+=("$arg") ;;
+        esac
+      done
+
+      mapfile -t existing < <(redis GRAPH.LIST)
+      if [ ''${#graphs[@]} -eq 0 ]; then
+        graphs=("''${existing[@]}")
+      fi
+
+      query="MATCH (e:Episodic) RETURN e.group_id, e.name, e.created_at"
+      if $content; then query+=", e.content"; fi
+      query+=" ORDER BY e.created_at"
+
+      if [ -t 1 ]; then flag=$'\e[1;31m'; reset=$'\e[0m'; else flag=""; reset=""; fi
+
+      misfiled=0
+      for graph in "''${graphs[@]}"; do
+        echo "== $graph"
+        if ! printf '%s\n' "''${existing[@]}" | grep -qxF -- "$graph"; then
+          echo "no such graph"
+          continue
+        fi
+        rows=$(redis --json GRAPH.QUERY "$graph" "$query" | jq -c '.[1][]')
+        [ -n "$rows" ] || { echo "(no episodes)"; continue; }
+        while IFS= read -r row; do
+          group=$(jq -r '.[0]' <<<"$row")
+          line=$(jq -r '"\(.[2])  \(.[1])"' <<<"$row")
+          if [ "$group" != "$graph" ]; then
+            misfiled=$((misfiled + 1))
+            echo "''${flag}$line  [MISFILED: group_id $group]''${reset}"
+          else
+            echo "$line"
+          fi
+          if $content; then jq -r '.[3]' <<<"$row" | sed 's/^/    /'; echo; fi
+        done <<<"$rows"
+      done
+
+      if [ "$misfiled" -gt 0 ]; then
+        echo
+        echo "''${flag}$misfiled episode(s) stored in a graph that doesn't match their group_id''${reset}"
+      fi
     '';
   };
 in {
@@ -162,8 +246,13 @@ in {
 
     concurrency = lib.mkOption {
       type = lib.types.ints.positive;
-      default = 2;
-      description = "Episodes processed in parallel (Graphiti's SEMAPHORE_LIMIT).";
+      # Ollama serves one request at a time, so parallel calls only queue
+      # there and risk timing out.
+      default = 1;
+      description = ''
+        Parallel LLM and database calls within one episode (Graphiti's
+        SEMAPHORE_LIMIT). Episodes themselves always run one at a time.
+      '';
     };
 
     dataDir = lib.mkOption {
@@ -195,7 +284,7 @@ in {
       keepAlive = lib.mkDefault "10m";
     };
 
-    home.packages = [graphitiStatus];
+    home.packages = [graphitiStatus graphitiEpisodes];
 
     launchd.agents.graphiti = {
       enable = true;
@@ -206,8 +295,8 @@ in {
           SuccessfulExit = false;
         };
         EnvironmentVariables.HOME = config.home.homeDirectory;
-        StandardOutPath = "${config.home.homeDirectory}/Library/Logs/graphiti.launchd.log";
-        StandardErrorPath = "${config.home.homeDirectory}/Library/Logs/graphiti.launchd.log";
+        StandardOutPath = logFile;
+        StandardErrorPath = logFile;
       };
     };
 
