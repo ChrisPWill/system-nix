@@ -34,7 +34,8 @@ in {
       dank-material-shell.niri = {
         enableKeybinds = true;
         enableSpawn = true;
-        # https://github.com/AvengeMedia/DankMaterialShell/pull/1239/files
+        # DMS includes would take over niri/config.kdl, which this module
+        # symlinks to its own config.kdl that already includes the dms/ files.
         includes.enable = false;
       };
 

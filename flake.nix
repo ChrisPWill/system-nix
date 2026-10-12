@@ -71,9 +71,13 @@
       inherit inputs;
 
       nixpkgs.config.allowUnfree = true;
-      # Allow EOL electron-39.8.10 which is required by various desktop applications (e.g. element-desktop, signal-desktop, discord)
-      nixpkgs.config.permittedInsecurePackages = [
-        "electron-39.8.10"
-      ];
+      # TODO: delete once nothing depends on EOL electron-39.8.10 (e.g.
+      # element-desktop, signal-desktop, discord).
+      nixpkgs.config.permittedInsecurePackages =
+        inputs.nixpkgs.lib.warn
+        "flake.nix permits insecure electron-39.8.10; remove it once no package needs it"
+        [
+          "electron-39.8.10"
+        ];
     };
 }
