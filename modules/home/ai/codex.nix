@@ -9,6 +9,7 @@
     ./shared-rules/code-style.md
     ./shared-rules/source-control.md
     ./shared-rules/graphiti-memory.md
+    ./shared-rules/writing.md
   ];
   # Must stay a string of content: programs.codex.context only treats a Nix
   # path value as a file, so a store-path *string* would be written verbatim.
