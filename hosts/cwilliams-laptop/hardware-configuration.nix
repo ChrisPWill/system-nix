@@ -13,7 +13,6 @@
     initrd = {
       availableKernelModules = ["xhci_pci" "ahci" "nvme" "usbhid" "usb_storage" "sd_mod"];
       kernelModules = [];
-      systemd.enable = true; # needed for lz4 zswap algorithm
       luks.devices."luks-3064df00-c86d-44b5-8aa1-3c9dacf3cbbf".device = "/dev/disk/by-uuid/3064df00-c86d-44b5-8aa1-3c9dacf3cbbf";
     };
     kernelPackages = pkgs.cachyosKernels.linuxPackages-cachyos-latest-lto-x86_64-v3;
