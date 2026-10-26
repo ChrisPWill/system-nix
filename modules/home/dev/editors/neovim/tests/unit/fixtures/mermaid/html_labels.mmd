@@ -1,0 +1,12 @@
+graph TB
+  linkStyle default fill:#ffffff
+
+  subgraph billing ["billing"]
+    style billing fill:#ffffff,stroke:#555555,stroke-dasharray:5
+
+    loader["<div style='font-weight: bold'>ScheduleLoader</div><div style='font-size: 70%'>[Component: Kotlin]</div>"]
+    style loader fill:#85bbf0,stroke:#5d82a8,color:#000000
+  end
+
+  lookup["<div>LookupService</div>"]
+  loader-. "<div>findGrants</div>" .->lookup

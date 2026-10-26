@@ -27,6 +27,7 @@ local EXT_TO_FILETYPE = {
 	rs = "rust",
 	lua = "lua",
 	md = "markdown",
+	mmd = "mermaid",
 }
 
 --- Open `tests/unit/fixtures/<relative_path>` as a real file-backed

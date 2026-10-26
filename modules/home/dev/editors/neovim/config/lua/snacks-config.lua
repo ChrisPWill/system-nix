@@ -9,6 +9,9 @@ local function is_openable_file(item)
 	return vim.uv.fs_stat(path) ~= nil
 end
 
+-- queries/mermaid/images.scm needs is-root? before snacks.image runs it.
+require("utils.treesitter.predicates").setup()
+
 require("snacks").setup({
 	explorer = {},
 	picker = {},
