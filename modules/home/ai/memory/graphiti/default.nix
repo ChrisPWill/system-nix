@@ -66,7 +66,7 @@
   # Hence the tighter snapshot interval and the explicit SAVE before stopping.
   runGraphiti = pkgs.writeShellApplication {
     name = "graphiti-run";
-    runtimeInputs = [pkgs.docker-compose pkgs.curl pkgs.coreutils];
+    runtimeInputs = [pkgs.docker-compose pkgs.curl pkgs.coreutils pkgs.colima];
     runtimeEnv.DOCKER_HOST = dockerHost;
     text = ''
       compose() { docker-compose -f ${composeFile} "$@"; }
@@ -76,6 +76,14 @@
       until curl -fsS --unix-socket "''${DOCKER_HOST#unix://}" http://docker/_ping >/dev/null 2>&1; do
         sleep 2
       done
+
+      # Redis snapshots by forking, and under the kernel's default heuristic
+      # overcommit that fork can be refused, after which FalkorDB rejects
+      # writes. The sysctl is VM-wide, so compose's `sysctls:` can't set it,
+      # and Colima resets it on every VM boot, so it is reapplied here.
+      colima ssh -- sudo sysctl -qw vm.overcommit_memory=1 \
+        || echo "graphiti: could not enable vm.overcommit_memory" >&2
+
       mkdir -p ${lib.escapeShellArg cfg.dataDir}
       install -D -m 0644 ${./config.yaml} ${lib.escapeShellArg mountedConfig}
       install -D -m 0644 ${./queue_service.py} ${lib.escapeShellArg mountedQueueService}
