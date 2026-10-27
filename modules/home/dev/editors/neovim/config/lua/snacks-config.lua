@@ -16,7 +16,18 @@ require("snacks").setup({
 	explorer = {},
 	picker = {},
 	bigfile = {},
-	image = {},
+	image = {
+		-- Snacks never upscales, so diagrams show at their rendered pixel size
+		-- capped by these. The 80x40 default left architecture diagrams
+		-- unreadable; mmdc's 2x scale gives them the pixels to fill the space.
+		doc = { max_width = 200, max_height = 80 },
+		convert = {
+			mermaid = function()
+				local theme = vim.o.background == "light" and "neutral" or "dark"
+				return { "-i", "{src}", "-o", "{file}", "-b", "transparent", "-t", theme, "-s", "2" }
+			end,
+		},
+	},
 	lazygit = {},
 	terminal = {},
 	win = {},
@@ -56,6 +67,47 @@ end
 vim.keymap.set("n", "-", function()
 	Snacks.explorer.open()
 end, { desc = "Explorer" })
+
+-- The terminal can only scale an image down; hand it to the OS for real zoom.
+-- Mermaid goes out as SVG so zooming stays sharp, wrapped in an HTML page:
+-- the default .svg handler is often not a viewer (e.g. ImageOptim on macOS)
+-- and only browsers draw mermaid's HTML labels, while .html opens in the
+-- default browser on macOS, Linux and WSL alike.
+local function open_svg_in_browser(svg)
+	local html = svg:gsub("%.svg$", ".html")
+	local page = {
+		"<!doctype html>",
+		"<meta charset='utf-8'>",
+		"<title>" .. vim.fs.basename(svg) .. "</title>",
+		"<body style='margin:0;background:#fff'>",
+	}
+	vim.list_extend(page, vim.fn.readfile(svg))
+	vim.fn.writefile(page, html)
+	vim.ui.open(html)
+end
+
+vim.keymap.set("n", "<leader>I", function()
+	Snacks.image.doc.at_cursor(function(src)
+		if not src then
+			vim.notify("No image under cursor", vim.log.levels.WARN)
+			return
+		end
+		if not src:match("%.mmd$") then
+			vim.ui.open(src)
+			return
+		end
+		local svg = src:gsub("%.mmd$", ".svg")
+		vim.system({ "mmdc", "-i", src, "-o", svg }, {}, function(result)
+			vim.schedule(function()
+				if result.code ~= 0 then
+					vim.notify(result.stderr, vim.log.levels.ERROR)
+				else
+					open_svg_in_browser(svg)
+				end
+			end)
+		end)
+	end)
+end, { desc = "Open Image in Viewer" })
 
 vim.keymap.set({ "n", "t" }, "<c-\\>", function()
 	Snacks.terminal.toggle()
