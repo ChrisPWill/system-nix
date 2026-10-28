@@ -6,7 +6,21 @@
   # Shared skills are linked into ~/.claude/skills by ../shared-skills.nix.
   programs.claude-code = {
     enable = true;
-    package = pkgs.claude-code;
+    # nixpkgs' wrapper defaults CLAUDE_CODE_CERT_STORE to "system" (since
+    # 2.1.308), but Claude Code's read of the macOS store can't build the chain
+    # to api.anthropic.com, so every request fails with
+    # UNABLE_TO_GET_ISSUER_CERT_LOCALLY. It's set in a wrapper rather than
+    # home.sessionVariables because terminals started before a switch keep
+    # __HM_SESS_VARS_SOURCED and never pick up new session variables.
+    package = pkgs.symlinkJoin {
+      name = "claude-code-${pkgs.claude-code.version}";
+      paths = [pkgs.claude-code];
+      nativeBuildInputs = [pkgs.makeWrapper];
+      postBuild = ''
+        wrapProgram $out/bin/claude --set CLAUDE_CODE_CERT_STORE bundled
+      '';
+      inherit (pkgs.claude-code) meta version;
+    };
 
     rulesDir = config.lib.file.mkOutOfStoreSymlink "${config.homeModuleDir}/ai/shared-rules";
 
