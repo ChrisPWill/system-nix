@@ -1,6 +1,15 @@
-{config, ...}: {
+{
+  config,
+  lib,
+  ...
+}: {
   programs.opencode = {
     enable = true;
+
+    # Stylix still selects its theme through tui.json, which OpenCode 2 ignores
+    # in favour of cli.json.
+    tui = lib.mkForce {};
+    cli.theme.name = "stylix";
 
     settings = {
       provider.ollama = {

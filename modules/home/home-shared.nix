@@ -58,6 +58,10 @@
 
       home.stateVersion = "25.05";
 
+      # Rofi isn't used, and Stylix's rofi target still sets the renamed
+      # programs.rofi.font option, which warns on every build.
+      stylix.targets.rofi.enable = false;
+
       # Can likely remove this later
       # gtk.gtk4.theme = config.gtk.theme;
     }
