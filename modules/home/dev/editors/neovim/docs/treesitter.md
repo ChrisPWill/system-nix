@@ -79,7 +79,7 @@ an LSP or type information:
   every field, so the same check that flags a function needing too many
   arguments would be a false positive here by design.
 - **Deeply nested conditionals/loops** (HINT) — more than 3 levels deep
-  within one function. Only the node where nesting *first* crosses the
+  within one function. Only the node where nesting _first_ crosses the
   threshold is flagged, not every level beyond it.
 - **Missing catch-all arm** (HINT) — a `match`/`when`/`switch` with no
   `_`/`else`/`default` branch. Can't tell that a `when` over a sealed

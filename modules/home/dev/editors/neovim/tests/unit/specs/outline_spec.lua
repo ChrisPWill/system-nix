@@ -21,7 +21,10 @@ h.assert_equal(class_item.kind, "class", "first entry should be the outer class"
 h.assert_equal(class_item.depth, 0, "outer class should be at depth 0")
 
 h.assert_equal(method_item.kind, "function", "second entry should be the method")
-h.assert_true(method_item.text:find("^fun provideThing") ~= nil, "method text should start at 'fun', not the annotation above it")
+h.assert_true(
+	method_item.text:find("^fun provideThing") ~= nil,
+	"method text should start at 'fun', not the annotation above it"
+)
 h.assert_equal(method_item.depth, 1, "method should be nested one level under the class")
 
 h.assert_equal(nested_item.kind, "class", "third entry should be the nested class")

@@ -175,7 +175,11 @@ local function check_nesting(node, depth, results)
 			if child_depth == MAX_NESTING + 1 then
 				table.insert(
 					results,
-					diagnostic(child, string.format("Nested %d levels deep (recommended max %d)", child_depth, MAX_NESTING), SEVERITY.HINT)
+					diagnostic(
+						child,
+						string.format("Nested %d levels deep (recommended max %d)", child_depth, MAX_NESTING),
+						SEVERITY.HINT
+					)
 				)
 			end
 			check_nesting(child, child_depth, results)

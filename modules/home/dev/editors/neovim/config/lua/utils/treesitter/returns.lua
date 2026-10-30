@@ -38,7 +38,9 @@ local function collect_tail_expressions(node, results)
 	local ntype = node:type()
 	if ntype:find("if") or ntype:find("match") or ntype:find("case") then
 		for child in node:iter_children() do
-			if child:named() and (child:type():find("block") or child:type():find("arm") or child:type():find("body")) then
+			if
+				child:named() and (child:type():find("block") or child:type():find("arm") or child:type():find("body"))
+			then
 				collect_tail_expressions(child, results)
 			end
 		end

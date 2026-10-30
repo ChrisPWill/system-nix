@@ -237,8 +237,7 @@ return {
 				vim.fs.joinpath(vim.fn.stdpath("cache"), "kotlin-lsp"),
 			},
 			cmd_env = {
-				IJ_JAVA_OPTIONS = "-Duser.home="
-					.. vim.fs.joinpath(vim.fn.stdpath("cache"), "kotlin-lsp-home"),
+				IJ_JAVA_OPTIONS = "-Duser.home=" .. vim.fs.joinpath(vim.fn.stdpath("cache"), "kotlin-lsp-home"),
 			},
 			filetypes = { "kotlin" },
 			root_markers = {

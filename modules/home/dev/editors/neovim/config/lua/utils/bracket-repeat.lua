@@ -66,7 +66,11 @@ local function new()
 			if next_lhs:sub(1, 1) == "]" and next_mapping.sid == -8 and type(next_mapping.callback) == "function" then
 				local previous_lhs = "[" .. next_lhs:sub(2)
 				local previous_mapping = mappings[previous_lhs]
-				if previous_mapping and previous_mapping.sid == -8 and type(previous_mapping.callback) == "function" then
+				if
+					previous_mapping
+					and previous_mapping.sid == -8
+					and type(previous_mapping.callback) == "function"
+				then
 					local moves = M.wrap(next_mapping.callback, previous_mapping.callback, { "n" })
 					vim.keymap.set("n", next_lhs, moves.next, { desc = next_mapping.desc })
 					vim.keymap.set("n", previous_lhs, moves.previous, { desc = previous_mapping.desc })

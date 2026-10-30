@@ -28,7 +28,11 @@ vim.api.nvim_set_current_buf(ctor_bufnr)
 vim.api.nvim_win_set_cursor(0, { 1, 12 }) -- inside the constructor param list
 argument_insert.insert_argument(ctor_bufnr)
 vim.cmd("stopinsert")
-h.assert_equal(line(ctor_bufnr, 1), "class Foo(val a: Int, val b: Int, ) {", "should target the primary constructor's own param list")
+h.assert_equal(
+	line(ctor_bufnr, 1),
+	"class Foo(val a: Int, val b: Int, ) {",
+	"should target the primary constructor's own param list"
+)
 
 -- Regression: invoking this from inside a function's *body* (not its
 -- signature) should still target that function's own signature — the

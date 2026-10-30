@@ -111,7 +111,7 @@ catch. Name them explicitly. The recurring shapes:
 The centrepiece of the guide. One row per claim the change depends on:
 
 | Claim | What it rests on | Test that pins it |
-|---|---|---|
+| ----- | ---------------- | ----------------- |
 
 A row whose final cell reads `nothing` is your strongest finding, and the table makes it undeniable
 rather than asserted. Build this before writing the findings list — the empty cells generate most
@@ -131,14 +131,15 @@ orientation to judgement.
    reasoning lives. If the commits are well-formed, tell them to read commit-by-commit and say so.
 3. **The correctness argument, and where to attack it.** The table above.
 4. **Findings to raise.** Triaged, ordered by what you would hold the PR on:
-   - *block* — ask before approving
-   - *probe* — ask, accept a good answer
-   - *nit* — optional, grouped into a single entry
-   - *checked* — you verified it against the tree and it holds; do not re-litigate
-   - *out of scope* — interface-imposed idiom, or legacy the PR correctly leaves alone
+   - _block_ — ask before approving
+   - _probe_ — ask, accept a good answer
+   - _nit_ — optional, grouped into a single entry
+   - _checked_ — you verified it against the tree and it holds; do not re-litigate
+   - _out of scope_ — interface-imposed idiom, or legacy the PR correctly leaves alone
 
    Each substantive finding: what it is, the mechanism, then an italicised **Ask:** line the
    reviewer can paste.
+
 5. **Test review checklist.** Checkboxes for spot-checking, not a summary of every test. Include the
    gaps as unchecked items so the absence is visible next to the coverage.
 6. **Verify locally.** The commands, plus explicitly: which claim in the description is the one they

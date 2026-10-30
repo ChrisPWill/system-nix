@@ -4,31 +4,31 @@ This configuration uses a **Hybrid Philosophy** (Helix-inspired navigation + Neo
 
 ## 󰌌 Essential Custom Mappings
 
-| Key             | Action                                 |
-| :-------------- | :------------------------------------- |
-| `Ctrl-C`        | **Comment Line / Selection**           |
-| `Ctrl-Alt-J/K`  | **Move Selection Down / Up**           |
-| `Alt-n / Alt-N` | **Search & Select Next / Prev**        |
-| `gn / gp`       | **Next / Prev Buffer**                 |
+| Key             | Action                                    |
+| :-------------- | :---------------------------------------- |
+| `Ctrl-C`        | **Comment Line / Selection**              |
+| `Ctrl-Alt-J/K`  | **Move Selection Down / Up**              |
+| `Alt-n / Alt-N` | **Search & Select Next / Prev**           |
+| `gn / gp`       | **Next / Prev Buffer**                    |
 | `]] / [[`       | **Repeat Next / Prev Bracket Navigation** |
-| `} / {`         | **Aliases for Bracket Repeat**         |
-| `[t / ]t`       | **Next / Prev Tab**                    |
-| `-`             | **Explorer**                           |
-| `Ctrl-\`        | **Terminal**                           |
-| `\`             | **Jump to characters**                 |
-| `;`             | **Jump to marked line**                |
-| `<leader>;`     | **Jump to marked file**                |
-| `ms / md / mr`  | **Add / Delete / Replace Surround**    |
-| `mf / mh / mn`  | **Find / Highlight / Update Surround** |
-| `ma`            | **Align (Regex)**                      |
-| `mA`            | **Align (Interactive)**                |
+| `} / {`         | **Aliases for Bracket Repeat**            |
+| `[t / ]t`       | **Next / Prev Tab**                       |
+| `-`             | **Explorer**                              |
+| `Ctrl-\`        | **Terminal**                              |
+| `\`             | **Jump to characters**                    |
+| `;`             | **Jump to marked line**                   |
+| `<leader>;`     | **Jump to marked file**                   |
+| `ms / md / mr`  | **Add / Delete / Replace Surround**       |
+| `mf / mh / mn`  | **Find / Highlight / Update Surround**    |
+| `ma`            | **Align (Regex)**                         |
+| `mA`            | **Align (Interactive)**                   |
 
 ## 󰘦 Git Group (<leader>g)
 
 | Key                 | Action                     |
 | :------------------ | :------------------------- |
 | `<leader>gg`        | **LazyGit**                |
-| `<leader>gj`        | **Jujutsu (jjui)**       |
+| `<leader>gj`        | **Jujutsu (jjui)**         |
 | `<leader>gb`        | **Tig Blame**              |
 | `<leader>gl`        | **Blame Line (Inline)**    |
 | `<leader>go / gO`   | **Open in Browser**        |
@@ -38,43 +38,43 @@ This configuration uses a **Hybrid Philosophy** (Helix-inspired navigation + Neo
 
 ## 󰘦 Toggles & UI (<leader>t / <leader>u)
 
-| Key               | Action                    |
-| :---------------- | :------------------------ |
-| `<leader>td`      | **In-buffer Diagnostics** |
-| `<leader>tf`      | **Autoformat**            |
-| `<leader>tm`      | **Markview**              |
-| `<leader>th`      | **Highlight Colors**      |
-| `<leader>tx`      | **Diagnostics (Trouble)** |
-| `<leader>ts`      | **Symbols (Trouble)**     |
-| `<leader>tl`      | **LSP (Trouble)**         |
-| `<leader>tq / tL` | **Quickfix / Loclist**    |
+| Key               | Action                        |
+| :---------------- | :---------------------------- |
+| `<leader>td`      | **In-buffer Diagnostics**     |
+| `<leader>tf`      | **Autoformat**                |
+| `<leader>tm`      | **Markview**                  |
+| `<leader>th`      | **Highlight Colors**          |
+| `<leader>tx`      | **Diagnostics (Trouble)**     |
+| `<leader>ts`      | **Symbols (Trouble)**         |
+| `<leader>tl`      | **LSP (Trouble)**             |
+| `<leader>tq / tL` | **Quickfix / Loclist**        |
 | `<leader>tg`      | **Hunk Context Highlighting** |
-| `<leader>un`      | **Dismiss Notifications** |
+| `<leader>un`      | **Dismiss Notifications**     |
 
 ## 󰘦 Less-common Code Tools (<leader>C)
 
-| Key          | Action                        |
-| :----------- | :----------------------------- |
-| `<leader>Cr` | **Highlight Return Positions** |
-| `<leader>Cm` | **Highlight Mutation Sites**   |
+| Key          | Action                          |
+| :----------- | :------------------------------ |
+| `<leader>Cr` | **Highlight Return Positions**  |
+| `<leader>Cm` | **Highlight Mutation Sites**    |
 | `<leader>Co` | **Outline (Functions/Classes)** |
 | `<leader>Ca` | **Add Argument/Parameter**      |
 
 ## 󰘦 Global Search & Pickers
 
-| Key          | Action                    |
-| :----------- | :------------------------ |
-| `<leader>f`  | **Find Files**            |
-| `<leader>gf`       | **Find VCS Files**                  |
-| `<leader>gc`       | **Find Changed Files**              |
-| `<leader>[f / ]f`  | **Previous / Next Changed File**   |
-| `<leader>F`        | **Smart Find**                      |
-| `<leader>b`  | **Search Buffers**        |
-| `<leader>d`  | **Buffer Diagnostics**    |
-| `<leader>D`  | **Workspace Diagnostics** |
-| `<leader>s`  | **Document Symbols**      |
-| `<leader>S`  | **Workspace Symbols**     |
-| `<leader>a`  | **Code Actions**          |
+| Key               | Action                           |
+| :---------------- | :------------------------------- |
+| `<leader>f`       | **Find Files**                   |
+| `<leader>gf`      | **Find VCS Files**               |
+| `<leader>gc`      | **Find Changed Files**           |
+| `<leader>[f / ]f` | **Previous / Next Changed File** |
+| `<leader>F`       | **Smart Find**                   |
+| `<leader>b`       | **Search Buffers**               |
+| `<leader>d`       | **Buffer Diagnostics**           |
+| `<leader>D`       | **Workspace Diagnostics**        |
+| `<leader>s`       | **Document Symbols**             |
+| `<leader>S`       | **Workspace Symbols**            |
+| `<leader>a`       | **Code Actions**                 |
 
 ## 󰘦 Refactor & Replace (<leader>r)
 

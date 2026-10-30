@@ -27,7 +27,7 @@ decide how to word it.
 - creating a ticket from scratch — use the ticket-creation skill, then come back to this
   before handing the batch over
 - writing a PR description — use `pr-description-improver`
-- the ask is to *do* the work the ticket describes; refinement is not implementation
+- the ask is to _do_ the work the ticket describes; refinement is not implementation
 
 ## Refinement can subtract
 
@@ -47,12 +47,12 @@ Do this before any other test. "Done" means something different for each type, a
 it wrong is what turns a small decision into a research project, or makes a parent ticket
 restate every child's criteria.
 
-| Type | What "done" means |
-| --- | --- |
-| **Implementation** | Behaviour changed, and the change was validated. |
-| **Investigation** | A stated question is answered with evidence, and a recommendation is recorded. |
-| **Decision** | A choice is recorded, with the person who owns it. Implementation criteria only if implementation is already in scope. |
-| **Parent** | The child outcomes landed, plus any validation that is only possible once they are combined. |
+| Type               | What "done" means                                                                                                      |
+| ------------------ | ---------------------------------------------------------------------------------------------------------------------- |
+| **Implementation** | Behaviour changed, and the change was validated.                                                                       |
+| **Investigation**  | A stated question is answered with evidence, and a recommendation is recorded.                                         |
+| **Decision**       | A choice is recorded, with the person who owns it. Implementation criteria only if implementation is already in scope. |
+| **Parent**         | The child outcomes landed, plus any validation that is only possible once they are combined.                           |
 
 If a ticket is two types at once — "work out whether we should, then do it" — say which
 part this ticket completes. Usually it should be split, but report that rather than
@@ -97,8 +97,8 @@ otherwise disappear — never to keep a narrative intact.
   worse than seven readable ones — and usually mean the ticket is too big, or that most of
   those requirements are implementation detail.
 - Not `the type is correct` → `a customer grant cannot be created with a schedule`
-- Not `nothing else breaks` → `the existing acceptance tests pass unchanged, and drawdown
-  for schedule-level grants behaves as it does today`
+- Not `nothing else breaks` →
+  `the existing acceptance tests pass unchanged, and drawdown for schedule-level grants behaves as it does today`
 
 Regression claims especially need a named way to check them.
 
@@ -139,7 +139,7 @@ for credit to apply`); where it isn't, the mechanism is the outcome.
 ### 5. The people who matter are named
 
 Hunt for unowned phrases — "this makes it findable", "everything else builds on this",
-"the dashboard needs it". Ask *what* or *who*, specifically.
+"the dashboard needs it". Ask _what_ or _who_, specifically.
 
 Name the users affected, the consumers of the change, and whoever owns an open decision.
 Don't list everyone tangentially involved; a roll-call dilutes the two names that matter.
@@ -158,7 +158,7 @@ Watch for this after any scope change: criteria written before a decision often 
 
 ### 7. Deferrals are interrogated, not inherited
 
-For anything marked blocked or deferred, ask *precisely* what it's waiting on. Bundled
+For anything marked blocked or deferred, ask _precisely_ what it's waiting on. Bundled
 deferrals are common: one part genuinely blocked, another part free, deferred together out
 of caution.
 
@@ -182,7 +182,7 @@ A dated observation must stay dated. "No usage in production on 27 Aug" must nev
 label them as such, give the basis, and say how uncertain they are.
 
 For every figure, quote, and claim, know where it came from and whether it was verified
-*now* or inherited from an earlier write-up. Inherited numbers are fine; inherited numbers
+_now_ or inherited from an earlier write-up. Inherited numbers are fine; inherited numbers
 presented as current are not. Give an absolute date — "as of 27 Aug", never "recently",
 because the ticket outlives the conversation.
 

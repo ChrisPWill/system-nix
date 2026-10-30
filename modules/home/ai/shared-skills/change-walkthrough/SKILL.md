@@ -63,7 +63,7 @@ Pick one:
   the reader sees where the boundary is.
 
   | Case | Before | Now | What picks it up next |
-  |---|---|---|---|
+  | ---- | ------ | --- | --------------------- |
 
 - **Flow diagram** (the default otherwise): a mermaid `flowchart` of the path a
   request, job or record takes, with the new or changed edges labelled. Keep each
@@ -77,7 +77,7 @@ numbers to quote (dates, amounts, ids). Take them from the test; never invent th
 Number them, starting at 1, most important first. Each one uses exactly these
 labels:
 
-```
+````
 ### N. <one-line claim in plain language>
 - **Before:** what happened, as someone would observe it
 - **Now:** what happens instead
@@ -90,14 +90,14 @@ labels:
 - old line
 + new line
 ```
-```
+````
 
 Rules for the diff:
 
 - Before → after, trimmed to the lines that carry the decision: 3–12 lines.
   Keep one or two context lines only if they're needed to make sense
 - If the change is a new file or a new function, show only the core of the new
-  code in a ```kotlin``` block (or whatever the language is), plus th
+  code in a `kotlin` block (or whatever the language is), plus th
   code if it replaced something.
 - Never paste a whole file. If one diff can't show the logic, add a s
   block with a one-line comment above it.
@@ -112,3 +112,4 @@ Continue the numbering. Use the shorter label set:
 - **Now:** …
 - **Proof:** test name, or "covered by existing tests"
 - **Where:** `path:line`
+```

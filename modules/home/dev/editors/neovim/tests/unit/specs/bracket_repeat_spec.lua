@@ -35,29 +35,30 @@ bracket_repeat.repeat_move("next")
 assert_equal(notifications[1], "No bracket navigation to repeat", "empty repeat should notify")
 
 local calls = {}
-local moves = bracket_repeat.map_pair(
-	{ "n", "x" },
-	"]t",
-	"[t",
-	function()
-		table.insert(calls, "next")
-	end,
-	function()
-		table.insert(calls, "previous")
-	end,
-	{ next_desc = "Next test", previous_desc = "Previous test" }
-)
+local moves = bracket_repeat.map_pair({ "n", "x" }, "]t", "[t", function()
+	table.insert(calls, "next")
+end, function()
+	table.insert(calls, "previous")
+end, { next_desc = "Next test", previous_desc = "Previous test" })
 
 assert_equal(mappings["]t"].opts.desc, "Next test", "next mapping description")
 assert_equal(mappings["[t"].opts.desc, "Previous test", "previous mapping description")
 moves.previous()
 bracket_repeat.repeat_move("next")
 bracket_repeat.repeat_move("previous")
-assert_equal(table.concat(calls, ","), "previous,next,previous", "repeat direction should be independent of last direction")
+assert_equal(
+	table.concat(calls, ","),
+	"previous,next,previous",
+	"repeat direction should be independent of last direction"
+)
 
 current_mode = "o"
 bracket_repeat.repeat_move("next")
-assert_equal(notifications[#notifications], "Previous bracket navigation is unavailable in this mode", "unsupported mode should notify")
+assert_equal(
+	notifications[#notifications],
+	"Previous bracket navigation is unavailable in this mode",
+	"unsupported mode should notify"
+)
 assert_equal(table.concat(calls, ","), "previous,next,previous", "unsupported mode should not execute")
 
 current_mode = "v"
@@ -66,12 +67,22 @@ assert_equal(table.concat(calls, ","), "previous,next,previous,next", "visual mo
 
 vim.api.nvim_get_keymap = function()
 	return {
-		{ lhs = "]b", sid = -8, callback = function()
-			table.insert(calls, "buffer-next")
-		end, desc = ":bnext" },
-		{ lhs = "[b", sid = -8, callback = function()
-			table.insert(calls, "buffer-previous")
-		end, desc = ":bprevious" },
+		{
+			lhs = "]b",
+			sid = -8,
+			callback = function()
+				table.insert(calls, "buffer-next")
+			end,
+			desc = ":bnext",
+		},
+		{
+			lhs = "[b",
+			sid = -8,
+			callback = function()
+				table.insert(calls, "buffer-previous")
+			end,
+			desc = ":bprevious",
+		},
 		{ lhs = "]x", sid = 42, callback = function() end, desc = "custom mapping" },
 		{ lhs = "[x", sid = 42, callback = function() end, desc = "custom mapping" },
 	}
@@ -82,7 +93,11 @@ assert_equal(mappings["[b"].opts.desc, ":bprevious", "built-in previous mapping 
 current_mode = "n"
 mappings["]b"].rhs()
 bracket_repeat.repeat_move("previous")
-assert_equal(table.concat(calls, ","), "previous,next,previous,next,buffer-next,buffer-previous", "built-in pair should register")
+assert_equal(
+	table.concat(calls, ","),
+	"previous,next,previous,next,buffer-next,buffer-previous",
+	"built-in pair should register"
+)
 assert_equal(mappings["]x"], nil, "custom mapping must not be wrapped")
 
 vim.notify = original_notify

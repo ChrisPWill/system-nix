@@ -10,6 +10,7 @@ Use this skill to clean AI-generated code slop without drifting scope or changin
 ## When to Use
 
 Use this skill when:
+
 - the user explicitly says `deslop`, `anti-slop`, or `AI slop`
 - the request is to clean up or refactor code that feels noisy, repetitive, or overly abstract
 - follow-up implementation left duplicate logic, dead code, wrapper layers, boundary leaks, or weak regression coverage
@@ -19,6 +20,7 @@ Use this skill when:
 ## When Not to Use
 
 Do not use this skill when:
+
 - the task is mainly a new feature build or product change
 - the user wants a broad redesign instead of an incremental cleanup pass
 - the request is a generic refactor with no simplification or anti-slop intent
@@ -54,6 +56,7 @@ This skill can be bounded to an explicit file list or changed-file scope when th
 - The same pass must not both write and self-approve high-impact cleanup without a separate review step.
 
 In review mode:
+
 1. Do **not** start by editing files.
 2. Review the cleanup plan, changed files, and regression coverage.
 3. Check specifically for:

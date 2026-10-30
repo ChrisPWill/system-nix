@@ -218,7 +218,10 @@ local function changed_files(callback)
 	vim.system({ command, unpack(args) }, { cwd = root, text = true }, function(result)
 		if result.code ~= 0 then
 			vim.schedule(function()
-				vim.notify(result.stderr ~= "" and result.stderr or "Could not read changed files", vim.log.levels.ERROR)
+				vim.notify(
+					result.stderr ~= "" and result.stderr or "Could not read changed files",
+					vim.log.levels.ERROR
+				)
 			end)
 			return
 		end
@@ -274,18 +277,11 @@ local function navigate_changed_file(direction)
 	end)
 end
 
-require("utils.bracket-repeat").map_pair(
-	{ "n" },
-	"<leader>]f",
-	"<leader>[f",
-	function()
-		navigate_changed_file(1)
-	end,
-	function()
-		navigate_changed_file(-1)
-	end,
-	{ next_desc = "Next changed file", previous_desc = "Previous changed file" }
-)
+require("utils.bracket-repeat").map_pair({ "n" }, "<leader>]f", "<leader>[f", function()
+	navigate_changed_file(1)
+end, function()
+	navigate_changed_file(-1)
+end, { next_desc = "Next changed file", previous_desc = "Previous changed file" })
 
 -- ── Grep ──────────────────────────────────────────────────────────────────────
 

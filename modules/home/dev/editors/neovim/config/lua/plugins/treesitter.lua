@@ -86,35 +86,21 @@ return {
 			for _, move in ipairs(structural_moves) do
 				local next_method = move.edge == "start" and "goto_next_start" or "goto_next_end"
 				local previous_method = move.edge == "start" and "goto_previous_start" or "goto_previous_end"
-				bracket_repeat.map_pair(
-					{ "n", "x", "o" },
-					"]" .. move.key,
-					"[" .. move.key,
-					function()
-						require("nvim-treesitter-textobjects.move")[next_method](move.query, "textobjects")
-					end,
-					function()
-						require("nvim-treesitter-textobjects.move")[previous_method](move.query, "textobjects")
-					end,
-					{
-						next_desc = "Next " .. move.label .. " " .. move.edge,
-						previous_desc = "Previous " .. move.label .. " " .. move.edge,
-					}
-				)
+				bracket_repeat.map_pair({ "n", "x", "o" }, "]" .. move.key, "[" .. move.key, function()
+					require("nvim-treesitter-textobjects.move")[next_method](move.query, "textobjects")
+				end, function()
+					require("nvim-treesitter-textobjects.move")[previous_method](move.query, "textobjects")
+				end, {
+					next_desc = "Next " .. move.label .. " " .. move.edge,
+					previous_desc = "Previous " .. move.label .. " " .. move.edge,
+				})
 			end
 
-			bracket_repeat.map_pair(
-				{ "n", "x", "o" },
-				"]R",
-				"[R",
-				function()
-					require("utils.treesitter.returns").goto_next_return()
-				end,
-				function()
-					require("utils.treesitter.returns").goto_previous_return()
-				end,
-				{ next_desc = "Next return position", previous_desc = "Previous return position" }
-			)
+			bracket_repeat.map_pair({ "n", "x", "o" }, "]R", "[R", function()
+				require("utils.treesitter.returns").goto_next_return()
+			end, function()
+				require("utils.treesitter.returns").goto_previous_return()
+			end, { next_desc = "Next return position", previous_desc = "Previous return position" })
 
 			-- Native incremental selection (Neovim 0.12+)
 			-- Mimicing helix
@@ -131,18 +117,11 @@ return {
 			-- CursorHold/CursorMoved autocmds need to be live from startup,
 			-- not just after some other keymap happens to trigger a require.
 			local references = require("utils.treesitter.references")
-			bracket_repeat.map_pair(
-				{ "n", "x", "o" },
-				"]r",
-				"[r",
-				function()
-					references.goto_next_reference()
-				end,
-				function()
-					references.goto_previous_reference()
-				end,
-				{ next_desc = "Next reference", previous_desc = "Previous reference" }
-			)
+			bracket_repeat.map_pair({ "n", "x", "o" }, "]r", "[r", function()
+				references.goto_next_reference()
+			end, function()
+				references.goto_previous_reference()
+			end, { next_desc = "Next reference", previous_desc = "Previous reference" })
 
 			-- Ambient "code smell" diagnostics from generic treesitter
 			-- structural checks (empty catch, too many parameters, deep
@@ -198,7 +177,10 @@ return {
 					format = function(item)
 						return {
 							{ string.rep("  ", item.depth) },
-							{ "[" .. item.kind .. "] ", item.kind == "class" and "SnacksPickerDir" or "SnacksPickerLabel" },
+							{
+								"[" .. item.kind .. "] ",
+								item.kind == "class" and "SnacksPickerDir" or "SnacksPickerLabel",
+							},
 							{ item.text, "SnacksPickerComment" },
 						}
 					end,

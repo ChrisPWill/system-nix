@@ -4,15 +4,15 @@ Integrated VCS with `gitsigns`, `lazygit`, and your custom **Koji** conventional
 
 ## 󰘦 Gitsigns (Hunk Management)
 
-| Key          | Action                 | Mode          |
-| :----------- | :--------------------- | :------------ |
-| `]h` / `[h`  | **Next/Prev** Hunk     | Normal/Visual |
-| `<leader>gs` | **Stage** Hunk         | Normal/Visual |
-| `<leader>gr` | **Reset** Hunk         | Normal/Visual |
-| `<leader>gp` | **Preview** Hunk       | Normal        |
-| `<leader>gb` | **Blame** Line         | Normal        |
-| `<leader>gd`       | **Diff** against Index              | Normal        |
-| `<leader>[f / ]f`  | **Previous/Next** changed file      | Normal        |
+| Key               | Action                         | Mode          |
+| :---------------- | :----------------------------- | :------------ |
+| `]h` / `[h`       | **Next/Prev** Hunk             | Normal/Visual |
+| `<leader>gs`      | **Stage** Hunk                 | Normal/Visual |
+| `<leader>gr`      | **Reset** Hunk                 | Normal/Visual |
+| `<leader>gp`      | **Preview** Hunk               | Normal        |
+| `<leader>gb`      | **Blame** Line                 | Normal        |
+| `<leader>gd`      | **Diff** against Index         | Normal        |
+| `<leader>[f / ]f` | **Previous/Next** changed file | Normal        |
 
 ## 󰘦 Committing with Koji
 

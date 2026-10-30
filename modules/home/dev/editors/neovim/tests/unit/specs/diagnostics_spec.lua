@@ -36,9 +36,19 @@ h.assert_equal(catch_ds[1].severity, vim.diagnostic.severity.WARN, "empty catch 
 -- smell the same way a function needing many arguments is.
 local params_bufnr = h.load_fixture("kotlin/too_many_params.kt")
 local params_msgs, params_ds = messages(params_bufnr)
-h.assert_equal(#params_msgs, 2, "should flag Service's 9-param constructor and manyParams' 6 params, not Config (data class) or SmallService (6 <= 8)")
-h.assert_true(params_msgs[1]:find("6 parameters", 1, true) ~= nil, "should report manyParams' actual count against the function threshold")
-h.assert_true(params_msgs[2]:find("9 parameters", 1, true) ~= nil, "should report Service's actual count against the constructor threshold")
+h.assert_equal(
+	#params_msgs,
+	2,
+	"should flag Service's 9-param constructor and manyParams' 6 params, not Config (data class) or SmallService (6 <= 8)"
+)
+h.assert_true(
+	params_msgs[1]:find("6 parameters", 1, true) ~= nil,
+	"should report manyParams' actual count against the function threshold"
+)
+h.assert_true(
+	params_msgs[2]:find("9 parameters", 1, true) ~= nil,
+	"should report Service's actual count against the constructor threshold"
+)
 for _, d in ipairs(params_ds) do
 	h.assert_equal(d.severity, vim.diagnostic.severity.HINT, "too-many-params should be HINT")
 end

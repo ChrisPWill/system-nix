@@ -125,8 +125,9 @@ When you do include one:
 ```
 ````
 
-  Reach for a subgraph only when the grouping is itself the point — nodes that
-  share a boundary, a process, or a trust zone.
+Reach for a subgraph only when the grouping is itself the point — nodes that
+share a boundary, a process, or a trust zone.
+
 - Every diagram needs a heading or lead-in saying what it shows. An unlabelled
   diagram is a puzzle.
 
@@ -141,15 +142,19 @@ you're almost certainly explaining the diff or narrating the work.
 <Why this change, and the decision made. 1-2 sentences.>
 
 ## What changed
+
 <Bullets at the level of behavior, not code. 1-5 lines. Omit this section if the title/opener covers it sufficiently.>
 
 ## Review notes
+
 <Where to start, what to look at hardest, anything non-obvious. Omit this section by default, only include if the changes are complex.>
 
 ## Risk
+
 <Any risk that is likely to lead to an incident. Omit by default, only include if there is risk beyond a normal engineering expectation.>
 
 ## Related
+
 <One line for prior work. One line for follow-up work. Omit if there is no prior/follow-up>
 ```
 
@@ -215,9 +220,11 @@ made it worse by amplifying bursts. Adds client-side token-bucket limiting so we
 shape traffic before it leaves the process. [ENG-1187](https://linear.app/…)
 
 ## Risk
+
 Limiter state is per-pod, so the effective cluster limit scales with replica
 count — acceptable at current fleet size (ENG-1204).
 
 ## Related
+
 Builds on #388 (retry handling). Follow-up: ENG-1204.
 ```

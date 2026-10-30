@@ -78,7 +78,10 @@ local when_entry = find_type(if_root, "when_entry")
 
 h.assert_true(scope.is_if_node(if_expr), "if_expression should be an if node")
 h.assert_true(scope.is_branch_node(when_expr), "when_expression should be a branch node")
-h.assert_true(not scope.is_branch_node(when_entry), "when_entry shares the 'when' prefix but is not the branch construct")
+h.assert_true(
+	not scope.is_branch_node(when_entry),
+	"when_entry shares the 'when' prefix but is not the branch construct"
+)
 
 -- The bare "if" keyword token itself (if_expression's first child) must
 -- not independently count as another nesting level.
@@ -106,7 +109,11 @@ h.assert_equal(lua_root:type(), "chunk", "sanity check: Lua's root node is calle
 local assignment = find_containing(lua_root, "assignment_statement", "foo", lua_bufnr)
 h.assert_true(assignment ~= nil, "expected to find the M.foo assignment")
 local stmt = scope.find_enclosing_statement(assignment)
-h.assert_equal(range_str(stmt), range_str(assignment), "enclosing statement should be the assignment itself, not the whole chunk")
+h.assert_equal(
+	range_str(stmt),
+	range_str(assignment),
+	"enclosing statement should be the assignment itself, not the whole chunk"
+)
 
 -- Regression: Markdown's `section` nests recursively (a top-level
 -- heading's section can span almost the whole document) and needs to be
@@ -117,7 +124,11 @@ local md_root = vim.treesitter.get_parser(md_bufnr):parse(true)[1]:root()
 local paragraph = find_type(md_root, "paragraph")
 h.assert_true(paragraph ~= nil, "expected to find a paragraph node")
 local md_stmt = scope.find_enclosing_statement(paragraph)
-h.assert_equal(md_stmt:type(), "paragraph", "enclosing statement in Markdown should stop at the paragraph, not balloon out to the whole section")
+h.assert_equal(
+	md_stmt:type(),
+	"paragraph",
+	"enclosing statement in Markdown should stop at the paragraph, not balloon out to the whole section"
+)
 
 -- node_at_line: nil for a blank line, since there's nothing there to
 -- anchor a node to.

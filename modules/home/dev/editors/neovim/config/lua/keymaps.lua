@@ -70,31 +70,17 @@ vim.keymap.set("n", "<leader>[t", "<cmd>tabprev<CR>", { desc = "Previous tab" })
 
 -- Diagnostic navigation
 local bracket_repeat = require("utils.bracket-repeat")
-bracket_repeat.map_pair(
-	{ "n" },
-	"]d",
-	"[d",
-	function()
-		require("utils.diag").jump_next()
-	end,
-	function()
-		require("utils.diag").jump_prev()
-	end,
-	{ next_desc = "Next diagnostic (prioritized)", previous_desc = "Previous diagnostic (prioritized)" }
-)
+bracket_repeat.map_pair({ "n" }, "]d", "[d", function()
+	require("utils.diag").jump_next()
+end, function()
+	require("utils.diag").jump_prev()
+end, { next_desc = "Next diagnostic (prioritized)", previous_desc = "Previous diagnostic (prioritized)" })
 
-bracket_repeat.map_pair(
-	{ "n" },
-	"]D",
-	"[D",
-	function()
-		require("utils.diag").jump_all_next()
-	end,
-	function()
-		require("utils.diag").jump_all_prev()
-	end,
-	{ next_desc = "Next diagnostic (any)", previous_desc = "Previous diagnostic (any)" }
-)
+bracket_repeat.map_pair({ "n" }, "]D", "[D", function()
+	require("utils.diag").jump_all_next()
+end, function()
+	require("utils.diag").jump_all_prev()
+end, { next_desc = "Next diagnostic (any)", previous_desc = "Previous diagnostic (any)" })
 
 for _, mode in ipairs({ "n", "x", "o" }) do
 	vim.keymap.set(mode, "]]", function()
