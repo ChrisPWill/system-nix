@@ -13,7 +13,7 @@
       power-profiles-daemon # performance mode, etc.
     ];
 
-    services.displayManager.dms-greeter = {
+    services.displayManager.dux-greeter = {
       enable = true;
       compositor.name = "niri";
     };

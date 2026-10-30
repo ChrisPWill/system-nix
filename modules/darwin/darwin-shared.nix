@@ -8,35 +8,6 @@
     ./skhd.nix
   ];
   nixpkgs.overlays = [
-    # TODO: delete once cache.nixos.org serves an aarch64-darwin codex-acp
-    # (https://hydra.nixos.org/job/nixpkgs/unstable/codex-acp.aarch64-darwin).
-    # Its test suite spawns Codex, which fails to read macOS managed
-    # preferences as the sandboxed nixbld user, so Hydra never caches it and
-    # local builds fail the same way.
-    (final: prev: {
-      codex-acp =
-        lib.warn
-        "codex-acp ${prev.codex-acp.version}: tests disabled by an overlay in modules/darwin/darwin-shared.nix; remove it once Hydra builds codex-acp.aarch64-darwin"
-        (prev.codex-acp.overrideAttrs {doCheck = false;});
-    })
-    # TODO: delete once nixos-unstable moves past the debugpy 1.8.22 build that
-    # failed on Hydra (https://hydra.nixos.org/build/348649076); nixpkgs-unstable
-    # already has a passing, cached build. Until then it builds locally, where
-    # test_lldb_command fails.
-    (final: prev: {
-      pythonPackagesExtensions =
-        prev.pythonPackagesExtensions
-        ++ [
-          (pyFinal: pyPrev: {
-            debugpy =
-              lib.warn
-              "debugpy ${pyPrev.debugpy.version}: test_lldb_command disabled by an overlay in modules/darwin/darwin-shared.nix; remove it once nixos-unstable has a cached debugpy"
-              (pyPrev.debugpy.overridePythonAttrs (old: {
-                disabledTests = (old.disabledTests or []) ++ ["test_lldb_command"];
-              }));
-          })
-        ];
-    })
     # TODO: delete once nixpkgs disables zathura's tests-x11/tests-wayland
     # features on Darwin. nixpkgs forces meson auto features on, so configure
     # demands xvfb-run, which is Linux-only, even though doCheck is off there.

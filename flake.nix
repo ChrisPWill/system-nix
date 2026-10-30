@@ -68,7 +68,7 @@
 
       nixpkgs.config.allowUnfree = true;
       # TODO: delete once nothing depends on EOL electron-39.8.10 (e.g.
-      # element-desktop, signal-desktop, discord).
+      # logseq 0.10.15).
       nixpkgs.config.permittedInsecurePackages =
         inputs.nixpkgs.lib.warn
         "flake.nix permits insecure electron-39.8.10; remove it once no package needs it"

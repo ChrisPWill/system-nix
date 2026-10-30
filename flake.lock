@@ -485,11 +485,11 @@
         "utils": "utils"
       },
       "locked": {
-        "lastModified": 1783526771,
-        "narHash": "sha256-ehnSir0BJsIeQ1ff1jDDElDM4g+5+S/7PtVQo4/Pwx8=",
+        "lastModified": 1793376805,
+        "narHash": "sha256-4XFzRQqLJdE+g6cP8Xdj9qQg+HdWhOy1F934kqBDO9o=",
         "owner": "ChrisPWill",
         "repo": "knowledge-base",
-        "rev": "733e25ff884e61dd7824bfa1a231f4d077d7313f",
+        "rev": "1e21347a1844f2c78c998c0d913e108245e3495b",
         "type": "github"
       },
       "original": {

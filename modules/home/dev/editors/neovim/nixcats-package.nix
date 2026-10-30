@@ -250,7 +250,7 @@
 
     # nixpkgs' mermaid-cli only bundles Chromium on Linux; on macOS mmdc
     # needs a browser to render, so reuse the system Chrome install.
-    environmentVariables = lib.optionalAttrs pkgs.stdenv.isDarwin {
+    environmentVariables = lib.optionalAttrs pkgs.stdenv.hostPlatform.isDarwin {
       general.PUPPETEER_EXECUTABLE_PATH = "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome";
     };
 
