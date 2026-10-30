@@ -1,4 +1,4 @@
-{...}: {
+{pkgs, ...}: {
   imports = [
     ../lsps.nix
   ];
@@ -152,7 +152,7 @@
             command = "nixd";
             config = {
               nixpkgs = {
-                expr = "import <nixpkgs> {}";
+                expr = "import ${pkgs.path} {}";
               };
             };
           };

@@ -52,9 +52,6 @@
         extended = true;
         expireDuplicatesFirst = true;
       };
-
-      shellAliases = {
-      };
     };
   };
 }

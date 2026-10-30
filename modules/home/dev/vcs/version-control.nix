@@ -5,8 +5,6 @@
   ...
 }: let
   scriptDir = "${config.homeModuleDir}/dev/vcs/scripts";
-  # Kept as a stub so muscle memory gets a pointer instead of "command not found".
-  ljjReplacedMessage = "ljj (lazyjj) has been replaced by jjui. Run `jjui`, or press Alt-g.";
 in {
   home.packages = with pkgs; [
     # Another fancy git UI
@@ -20,7 +18,6 @@ in {
         $env.PATH = ($env.PATH | split row (char esep) | append "${scriptDir}")
       '';
       shellAliases.lg = "lazygit";
-      shellAliases.ljj = "print '${ljjReplacedMessage}'";
       extraConfig = ''
         $env.config = (
           $env.config
@@ -93,7 +90,6 @@ in {
     zsh = {
       shellAliases = {
         lg = "lazygit";
-        ljj = "echo '${ljjReplacedMessage}'";
       };
       initContent = ''
         open-vcs-widget() {
@@ -111,7 +107,6 @@ in {
     fish = {
       shellAliases = {
         lg = "lazygit";
-        ljj = "echo '${ljjReplacedMessage}'";
       };
       interactiveShellInit = lib.mkAfter ''
         for mode in default insert

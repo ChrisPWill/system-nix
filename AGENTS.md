@@ -7,9 +7,6 @@ Modular Nix system configuration managed with [numtide/blueprint](https://github
 | Alias       | Action                                                        |
 | :---------- | :------------------------------------------------------------ |
 | `sw`        | Preferred smart switch via `nh` using this flake/current host |
-| `hms`       | Deprecated compatibility command for `nh home switch`         |
-| `nrs`       | Deprecated compatibility command for `nh os switch`           |
-| `drs`       | Deprecated compatibility command for `nh darwin switch`       |
 | `nd <name>` | `nix develop .#<name>`                                        |
 
 ## Global Leader

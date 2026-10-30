@@ -1,12 +1,4 @@
-{inputs, ...}: {
-  config,
-  lib,
-  pkgs,
-  ...
-}: let
-  primaryUser = config.system.primaryUser;
-  primaryUserHome = "/Users/${primaryUser}";
-in {
+{inputs, ...}: {lib, ...}: {
   imports = [
     inputs.nix-homebrew.darwinModules.nix-homebrew
     inputs.mac-app-util.darwinModules.default
@@ -65,13 +57,6 @@ in {
     })
   ];
 
-  nix.settings.experimental-features = ["nix-command" "flakes"];
-  nix.gc.interval = {
-    Hour = 3;
-    Minute = 15;
-    Weekday = 2;
-  };
-
   # Home Manager owns the interactive zsh prompt and completions. Leaving the
   # nix-darwin defaults on runs compinit before Home Manager runs it again.
   programs.zsh = {
@@ -111,25 +96,6 @@ in {
         trusted = true;
       }
     ];
-  };
-
-  services.sketchybar = {
-    # Disabled in preference to built-in OmniWM bar
-    enable = false;
-    extraPackages = [pkgs.jq];
-    config = ''
-      #!/bin/zsh
-
-      export USER="${primaryUser}"
-      export HOME="${primaryUserHome}"
-      export PATH="/opt/homebrew/bin:/opt/homebrew/sbin:$HOME/.nix-profile/bin:/etc/profiles/per-user/$USER/bin:/run/current-system/sw/bin:/nix/var/nix/profiles/default/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:$PATH"
-      export CONFIG_DIR="$HOME/.config/sketchybar"
-      export SKETCHYBAR_BIN="${pkgs.sketchybar}/bin/sketchybar"
-
-      if [[ -r "$CONFIG_DIR/sketchybarrc" ]]; then
-        source "$CONFIG_DIR/sketchybarrc"
-      fi
-    '';
   };
 
   # See https://github.com/nix-darwin/nix-darwin/issues/1817 - maybe can remove shortly

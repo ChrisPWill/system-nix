@@ -59,7 +59,7 @@
     };
 
     home.packages = with pkgs; [
-      fzf # required by fifc, not used universally
+      fzf # used by the forgit plugin
     ];
   };
 }

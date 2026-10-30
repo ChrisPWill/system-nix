@@ -28,9 +28,7 @@ in {
     };
   };
 
-  # config = lib.mkIf cfg.enable (lib.mkMerge [
-  # Disabled until I figure out the knowledge-base input
-  config = lib.mkIf config.services.logseq-capture.enable (lib.mkMerge [
+  config = lib.mkIf cfg.enable (lib.mkMerge [
     {
       programs = {
         zsh.shellAliases = commonAliases;

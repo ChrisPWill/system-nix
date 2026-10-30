@@ -30,6 +30,6 @@ Tool-specific settings, plugins, and init scripts are encapsulated within their 
 
 ## Role and Host Modules
 
-- **`personal-machine.nix`** and **`work-machine.nix`**: Set the high-level role flags consumed by domain modules.
+- **`personal-machine.nix`**: Sets the `isPersonalMachine` role flag consumed by domain modules. Work hosts get `isWorkMachine` from `sequence/`.
 - **`standalone.nix`**: Adds Stylix and shared theming for standalone Home Manager profiles such as WSL2.
 - **[sequence/](./sequence)**: Applies the employer-specific work role, email, GitHub settings, and envoluntary mappings.

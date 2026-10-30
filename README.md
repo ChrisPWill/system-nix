@@ -97,9 +97,6 @@ nix flake init -t .#rust-simple
 | Alias       | Command                | Description                                         |
 | :---------- | :--------------------- | :-------------------------------------------------- |
 | `sw`        | `nh <platform> switch` | Smart switch using this flake and the current host. |
-| `hms`       | `nh home switch`       | Deprecated shim using this flake and home config.   |
-| `nrs`       | `nh os switch`         | Deprecated shim using this flake and current host.  |
-| `drs`       | `nh darwin switch`     | Deprecated shim using this flake and current host.  |
 | `nd <name>` | `nix develop .#<name>` | Enter a devshell (e.g., `nd node24`).               |
 
 ---
