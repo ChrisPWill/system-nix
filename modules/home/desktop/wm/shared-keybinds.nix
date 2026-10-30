@@ -238,10 +238,6 @@ in {
   };
 
   config = {
-    programs.nushell.extraEnv = ''
-      $env.PATH = ($env.PATH | split row (char esep) | append "${scriptDir}")
-    '';
-
     home = {
       sessionPath = [scriptDir];
       desktop.wm.lib = {

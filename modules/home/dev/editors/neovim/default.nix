@@ -75,9 +75,6 @@ in {
             )
           )
         '';
-        extraEnv = ''
-          $env.PATH = ($env.PATH | split row (char esep) | append "${scriptDir}")
-        '';
       };
     };
 

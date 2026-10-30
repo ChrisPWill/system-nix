@@ -49,8 +49,4 @@ in {
     then "personal"
     else "work"
   }/journals";
-
-  programs.nushell.extraEnv = ''
-    $env.PATH = ($env.PATH | split row (char esep) | append "${scriptDir}")
-  '';
 }

@@ -12,8 +12,5 @@ in {
 
   config = {
     home.sessionPath = [scriptDir];
-    programs.nushell.extraEnv = ''
-      $env.PATH = ($env.PATH | split row (char esep) | append "${scriptDir}")
-    '';
   };
 }

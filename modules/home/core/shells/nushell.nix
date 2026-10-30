@@ -17,6 +17,7 @@
     '');
     programs.nushell = {
       enable = true;
+      loadSessionVariables = true;
 
       settings = {
         show_banner = false;
