@@ -4,7 +4,7 @@
   ...
 }: {
   programs.opencode = {
-    enable = true;
+    enable = config.appApproved.opencode;
 
     # Stylix still selects its theme through tui.json, which OpenCode 2 ignores
     # in favour of cli.json.
@@ -27,6 +27,8 @@
     };
   };
 
-  xdg.configFile."opencode/AGENTS.md".source = config.lib.file.mkOutOfStoreSymlink "${config.homeModuleDir}/ai/rules/AGENTS.md";
-  xdg.configFile."opencode/general-guidelines.md".source = config.lib.file.mkOutOfStoreSymlink "${config.homeModuleDir}/ai/rules/general-guidelines.md";
+  xdg.configFile = lib.mkIf config.appApproved.opencode {
+    "opencode/AGENTS.md".source = config.lib.file.mkOutOfStoreSymlink "${config.homeModuleDir}/ai/rules/AGENTS.md";
+    "opencode/general-guidelines.md".source = config.lib.file.mkOutOfStoreSymlink "${config.homeModuleDir}/ai/rules/general-guidelines.md";
+  };
 }

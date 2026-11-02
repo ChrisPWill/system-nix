@@ -1,4 +1,5 @@
 {
+  config,
   lib,
   pkgs,
   ...
@@ -13,7 +14,7 @@
   skhdCertCommonName = "org.nixos.skhd-codesign";
   skhdCodesignIdentifier = "org.nixos.skhd";
 in {
-  config = lib.mkIf pkgs.stdenv.hostPlatform.isDarwin {
+  config = lib.mkIf (pkgs.stdenv.hostPlatform.isDarwin && config.appApproved.skhd) {
     environment.systemPackages = [
       pkgs.skhd
       (pkgs.writeShellScriptBin "skhd-healthcheck" ''

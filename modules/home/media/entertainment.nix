@@ -10,7 +10,7 @@
       steamcmd
       steam-tui
     ]
-    ++ [
+    ++ lib.optionals config.appApproved.spotify [
       spotify
     ];
 }

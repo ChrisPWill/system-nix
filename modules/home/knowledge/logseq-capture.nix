@@ -18,7 +18,8 @@ in {
   options.services.logseq-capture = {
     enable = lib.mkOption {
       type = lib.types.bool;
-      default = true;
+      # Its tokens come from sops, so it needs both approved.
+      default = config.appApproved.logseq && config.appApproved.sops;
       description = "Whether to enable the Logseq Capture Bot";
     };
     workingDirectory = lib.mkOption {

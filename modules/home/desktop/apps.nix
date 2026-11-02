@@ -5,7 +5,7 @@
   ...
 }: {
   home.packages = with pkgs;
-    [
+    lib.optionals config.appApproved.element [
       # Matrix chat
       element-desktop
     ]

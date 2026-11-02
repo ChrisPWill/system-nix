@@ -9,7 +9,7 @@
     inputs.sops-nix.homeManagerModules.sops
   ];
 
-  config = {
+  config = lib.mkIf config.appApproved.sops {
     home.packages = with pkgs; [
       sops
       age

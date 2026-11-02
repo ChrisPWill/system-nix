@@ -21,6 +21,6 @@ in {
   # Linking entry by entry rather than the whole directory leaves each agent's
   # skills/ as a real directory, so agent-installed skills can coexist.
   home.file =
-    linkSkillsInto ".claude/skills"
+    lib.optionalAttrs config.appApproved.claude-code (linkSkillsInto ".claude/skills")
     // lib.optionalAttrs (cfg.agentProvider == "codex") (linkSkillsInto ".codex/skills");
 }

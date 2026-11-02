@@ -1,5 +1,10 @@
-{inputs, ...}: {lib, ...}: {
+{inputs, ...}: {
+  config,
+  lib,
+  ...
+}: {
   imports = [
+    ./approved-apps.nix
     inputs.nix-homebrew.darwinModules.nix-homebrew
     inputs.mac-app-util.darwinModules.default
     inputs.stylix.darwinModules.stylix
@@ -57,7 +62,7 @@
     onActivation = {
       autoUpdate = true;
       upgrade = true;
-      cleanup = "uninstall";
+      cleanup = lib.mkDefault "uninstall";
     };
 
     taps = [
@@ -73,8 +78,9 @@
   documentation.enable = false;
   system.tools.darwin-uninstaller.enable = false;
 
+  # Borders only help to see which window OmniWM has focused.
   services.jankyborders = {
-    enable = true;
+    enable = config.appApproved.omniwm;
     width = 7.0;
     blacklist = ["Loom"];
   };

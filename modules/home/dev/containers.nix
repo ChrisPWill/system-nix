@@ -31,7 +31,7 @@ in {
   };
 
   # Linux hosts get the daemon and CLI from virtualisation.docker instead.
-  config = lib.mkIf pkgs.stdenv.hostPlatform.isDarwin {
+  config = lib.mkIf (pkgs.stdenv.hostPlatform.isDarwin && config.appApproved.colima) {
     home.packages = [
       pkgs.colima
       pkgs.docker

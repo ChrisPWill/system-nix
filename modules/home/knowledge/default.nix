@@ -6,6 +6,7 @@
   ...
 }: let
   scriptDir = "${config.homeModuleDir}/knowledge/scripts";
+  approved = config.appApproved;
 in {
   imports = [
     ./logseq-capture.nix
@@ -13,7 +14,7 @@ in {
   ];
 
   programs.knowledge-base.logseqShellSummary = {
-    enable = true;
+    enable = approved.logseq;
     package = inputs.knowledge-base.packages.${pkgs.stdenv.hostPlatform.system}.knowledge-base-summary;
     personalPath = "${config.home.homeDirectory}/knowledge-base/personal";
     workPath = "${config.home.homeDirectory}/knowledge-base/work";
@@ -23,9 +24,9 @@ in {
   };
 
   home.packages = with pkgs;
-    [
+    [gum]
+    ++ lib.optionals approved.logseq [
       # Note taking
-      gum
       logseq
     ]
     ++ lib.optionals config.isPersonalMachine [
@@ -41,10 +42,10 @@ in {
     ];
 
   # PDF viewer
-  programs.zathura.enable = true;
+  programs.zathura.enable = approved.zathura;
 
-  home.sessionPath = [scriptDir];
-  home.sessionVariables.LOGSEQ_QUICK_CAPTURE_JOURNALS_DIR = "${config.home.homeDirectory}/knowledge-base/${
+  home.sessionPath = lib.optionals approved.logseq [scriptDir];
+  home.sessionVariables.LOGSEQ_QUICK_CAPTURE_JOURNALS_DIR = lib.mkIf approved.logseq "${config.home.homeDirectory}/knowledge-base/${
     if config.isPersonalMachine
     then "personal"
     else "work"

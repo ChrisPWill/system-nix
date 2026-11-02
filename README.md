@@ -42,12 +42,13 @@ Following a **Domain-Driven Design (DDD)** approach, configuration is organized 
 
 ## 🖥️ Machine Matrix
 
-| Hostname                | OS        | Role                                               |
-| :---------------------- | :-------- | :------------------------------------------------- |
-| `cwilliams-laptop`      | **NixOS** | Primary Personal Machine (CachyOS kernel, Niri).   |
-| `cwilliams-work-laptop` | **macOS** | Work Environment (nix-darwin).                     |
-| `personal-pc-win`       | **WSL2**  | Standalone Home Manager on Windows.                |
-| `installer`             | **ISO**   | Custom installation media with pre-baked settings. |
+| Hostname                  | OS        | Role                                                                                                                        |
+| :------------------------ | :-------- | :-------------------------------------------------------------------------------------------------------------------------- |
+| `cwilliams-laptop`        | **NixOS** | Primary Personal Machine (CachyOS kernel, Niri).                                                                            |
+| `cwilliams-work-laptop`   | **macOS** | Work Environment (nix-darwin).                                                                                              |
+| `cwilliams-intuit-laptop` | **macOS** | Locked-down work laptop; Home Manager first, nix-darwin later. See [its README](./hosts/cwilliams-intuit-laptop/README.md). |
+| `personal-pc-win`         | **WSL2**  | Standalone Home Manager on Windows.                                                                                         |
+| `installer`               | **ISO**   | Custom installation media with pre-baked settings.                                                                          |
 
 ---
 

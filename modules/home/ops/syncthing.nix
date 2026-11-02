@@ -1,6 +1,6 @@
-_: {
+{config, ...}: {
   services.syncthing = {
-    enable = true;
+    enable = config.appApproved.syncthing;
     # Web UI will be available at http://127.0.0.1:8384
   };
 }

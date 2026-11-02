@@ -276,10 +276,12 @@
       ${builtins.readFile ./merge-settings.sh}
     '';
   };
-in {
-  home.packages = lib.optionals pkgs.stdenv.hostPlatform.isDarwin [mergeSettings];
 
-  home.activation.mergeOmniwmSettings = lib.mkIf pkgs.stdenv.hostPlatform.isDarwin (lib.hm.dag.entryAfter ["writeBoundary"] ''
+  active = pkgs.stdenv.hostPlatform.isDarwin && config.appApproved.omniwm;
+in {
+  home.packages = lib.optionals active [mergeSettings];
+
+  home.activation.mergeOmniwmSettings = lib.mkIf active (lib.hm.dag.entryAfter ["writeBoundary"] ''
     run ${lib.getExe mergeSettings}
   '');
 }

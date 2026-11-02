@@ -4,6 +4,9 @@
   ...
 }: let
   scriptDir = "${config.homeModuleDir}/ai/scripts";
+  # ai-ask and ai-commit shell out to an agent CLI, so without one the
+  # scripts and their keybindings only produce errors.
+  hasAgentCli = config.appApproved.claude-code || config.home.ai.agentProvider != "none";
 in {
   options.home.ai = {
     agentProvider = lib.mkOption {
@@ -29,7 +32,7 @@ in {
     ./gemini.nix
   ];
 
-  config = {
+  config = lib.mkIf hasAgentCli {
     home.sessionPath = [scriptDir];
     programs = {
       nushell = {

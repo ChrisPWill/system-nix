@@ -5,7 +5,7 @@
 }: {
   # Shared skills are linked into ~/.claude/skills by ../shared-skills.nix.
   programs.claude-code = {
-    enable = true;
+    enable = config.appApproved.claude-code;
     # nixpkgs' wrapper defaults CLAUDE_CODE_CERT_STORE to "system" (since
     # 2.1.308), but Claude Code's read of the macOS store can't build the chain
     # to api.anthropic.com, so every request fails with

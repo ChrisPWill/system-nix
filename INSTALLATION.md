@@ -6,6 +6,10 @@ install Nix, activate nix-darwin, and convert the checkout to Jujutsu.
 
 ## Fast Path: macOS
 
+For a locked-down Mac where admin rights need approval, such as
+`cwilliams-intuit-laptop`, follow
+[that host's README](./hosts/cwilliams-intuit-laptop/README.md) instead.
+
 Run this from a macOS admin account. The bootstrap script verifies sudo access
 before it tries to install Nix or activate nix-darwin.
 

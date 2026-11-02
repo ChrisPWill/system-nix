@@ -1,4 +1,5 @@
 {
+  config,
   pkgs,
   lib,
   ...
@@ -95,11 +96,12 @@
       # Glamorous shell scripts
       gum
 
-      # Terminal-based websocket client
-      websocat
-
       # Retrieve files from the web
       wget
+    ]
+    ++ lib.optionals config.appApproved.websocat [
+      # Terminal-based websocket client
+      websocat
     ]
     ++ lib.optionals pkgs.stdenv.hostPlatform.isLinux [
       # Display Gtk+ dialog boxes from shell scripts

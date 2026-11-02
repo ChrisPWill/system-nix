@@ -31,5 +31,6 @@ Tool-specific settings, plugins, and init scripts are encapsulated within their 
 ## Role and Host Modules
 
 - **`personal-machine.nix`**: Sets the `isPersonalMachine` role flag consumed by domain modules. Work hosts get `isWorkMachine` from `sequence/`.
+- **`approvedApps`** (option in `home-shared.nix`): Locked-down machines, such as `cwilliams-intuit-laptop`, list the gated apps IT has approved. Gated apps are GUI apps, background services and tools that send data off the machine. Unset, every gated app is installed. Modules check `config.appApproved.<name>`, and new gated apps go in the `gatedApps` list.
 - **`standalone.nix`**: Adds Stylix and shared theming for standalone Home Manager profiles such as WSL2.
 - **[sequence/](./sequence)**: Applies the employer-specific work role, email, GitHub settings, and envoluntary mappings.

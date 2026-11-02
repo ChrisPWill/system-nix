@@ -4,6 +4,7 @@
   pkgs,
   ...
 }: let
+  approved = config.appApproved;
   primaryUser = config.system.primaryUser;
   primaryUserHome = "/Users/${primaryUser}";
   omniwmLaunchScript = pkgs.writeShellScript "launch-omniwm-after-kanata" ''
@@ -98,16 +99,16 @@
     exit "$status"
   '';
 in {
-  environment.systemPackages = [
-    staleCaskAppsCheckScript
+  environment.systemPackages =
+    [staleCaskAppsCheckScript]
     # Small, free and without a self-updater, so nixpkgs can own it without
     # fighting the app over its own version. mac-app-util keeps its
     # Accessibility grant stable across store paths.
-    pkgs.scroll-reverser
-    pkgs.t3code
-  ];
+    ++ lib.optionals approved.scroll-reverser [pkgs.scroll-reverser]
+    ++ lib.optionals approved.t3code [pkgs.t3code];
 
-  homebrew.casks = [
+  # Each cask shares its name with its gated app.
+  homebrew.casks = lib.filter (cask: approved.${cask}) [
     "cleanshot"
     "ghostty"
     "imageoptim"
@@ -116,7 +117,7 @@ in {
     "vivaldi"
   ];
 
-  launchd.user.agents.omniwm = {
+  launchd.user.agents.omniwm = lib.mkIf approved.omniwm {
     serviceConfig = {
       ProgramArguments = [
         "${omniwmLaunchScript}"

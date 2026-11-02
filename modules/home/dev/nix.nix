@@ -6,6 +6,7 @@
 }: let
   flakePath = config.nixConfigDir;
   homeUsername = config.home.username;
+  flakeHostName = config.dev.nix.flakeHostName;
   nhWrapper = name: text:
     pkgs.writeShellApplication {
       inherit name text;
@@ -17,6 +18,12 @@
 
     current_hostname() {
       local value
+      value=${lib.escapeShellArg (lib.optionalString (flakeHostName != null) flakeHostName)}
+      if [[ -n "$value" ]]; then
+        printf '%s\n' "$value"
+        return
+      fi
+
       value="$(hostname -s 2>/dev/null || hostname 2>/dev/null)"
       value="''${value%%.*}"
 
@@ -64,7 +71,18 @@
     }
   '';
 in {
-  programs = {
+  options.dev.nix.flakeHostName = lib.mkOption {
+    type = lib.types.nullOr lib.types.str;
+    default = null;
+    example = "cwilliams-intuit-laptop";
+    description = ''
+      Directory under hosts/ that `sw` builds. Null uses this machine's
+      hostname. Set it where IT names the machine and changing the hostname
+      needs admin rights.
+    '';
+  };
+
+  config.programs = {
     nh = {
       enable = true;
       flake = config.nixConfigDir;
@@ -87,7 +105,7 @@ in {
     };
   };
 
-  home.packages = [
+  config.home.packages = [
     (nhWrapper "sw" ''
       ${nhWrapperPrelude}
 
@@ -96,7 +114,13 @@ in {
 
       case "$(uname -s)" in
         Darwin)
-          exec nh darwin switch "$flake" "''${host_args[@]}" "$@"
+          # Without nix-darwin (e.g. a locked-down laptop) only Home Manager
+          # manages this machine.
+          if [[ -e /run/current-system/darwin-version ]]; then
+            exec nh darwin switch "$flake" "''${host_args[@]}" "$@"
+          fi
+
+          exec nh home switch "$flake" "''${home_args[@]}" "$@"
           ;;
         Linux)
           if [[ -e /etc/NIXOS ]]; then
