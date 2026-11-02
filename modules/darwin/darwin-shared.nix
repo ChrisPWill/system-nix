@@ -4,7 +4,7 @@
   ...
 }: {
   imports = [
-    ./approved-apps.nix
+    inputs.self.modules.shared.approved-apps
     inputs.nix-homebrew.darwinModules.nix-homebrew
     inputs.mac-app-util.darwinModules.default
     inputs.stylix.darwinModules.stylix
@@ -86,8 +86,15 @@
   };
 
   launchd.user.agents.set-gui-path = {
-    script = ''
-      /bin/launchctl setenv PATH "/run/current-system/sw/bin:/etc/profiles/per-user/$USER/bin:$PATH"
+    # Home Manager installs into /etc/profiles/per-user when nix-darwin runs
+    # it, and into the user's own profile when it runs standalone.
+    script = let
+      userBin =
+        if config.home-manager.users ? ${config.system.primaryUser}
+        then "/etc/profiles/per-user/$USER/bin"
+        else "$HOME/.nix-profile/bin";
+    in ''
+      /bin/launchctl setenv PATH "/run/current-system/sw/bin:${userBin}:$PATH"
     '';
     serviceConfig = {
       Label = "set-gui-path";

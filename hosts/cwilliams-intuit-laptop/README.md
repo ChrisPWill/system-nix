@@ -7,12 +7,12 @@ fonts until you approve more.
 It runs in two stages:
 
 1. **Now: standalone Home Manager.** Installing Nix needs admin rights once.
-   After that, switching never needs sudo.
-2. **Later: nix-darwin.** Once you have admin rights for it, nix-darwin manages
-   the system too (Homebrew, macOS settings, Kanata). Every switch then needs
-   sudo.
+   After that, `sw` never needs sudo.
+2. **Later: nix-darwin as well.** Once you have admin rights for it, nix-darwin
+   manages the system (Homebrew, macOS settings, Kanata) through `sw-system`,
+   which needs sudo. Home Manager stays separate, so `sw` still needs no sudo.
 
-Both stages use the same `users/cwilliams.nix`, so the app list carries over.
+Both stages read the approved apps from `approved-apps.nix`.
 
 ## Before you start
 
@@ -67,25 +67,25 @@ Both stages use the same `users/cwilliams.nix`, so the app list carries over.
    gh ssh-key add ~/.ssh/id_ed25519.pub
    ```
 
-From now on, run `sw` to apply changes. It notices that nix-darwin isn't
-installed and switches Home Manager instead.
+From now on, run `sw` to apply changes to your user setup.
 
 WezTerm is installed to `~/Applications/Home Manager Apps`. Spotlight may not
 find it there; open it from Finder the first time.
 
 ## Adding an app once IT approves it
 
-Add its name to `approvedApps` in `users/cwilliams.nix`, then run `sw`:
+Add its name to `approved-apps.nix`, then run `sw`:
 
 ```nix
-approvedApps = ["spotify"];
+["spotify"]
 ```
 
-The names you can use are in `gatedApps` in `modules/home/home-shared.nix`.
-A misspelt name stops the build with an error. Some apps only install under
-nix-darwin, because they come from Homebrew or run as system services:
-`cleanshot`, `ghostty`, `imageoptim`, `kanata`, `raycast`, `scroll-reverser`,
-`t3code`, `vivaldi`, and the macOS parts of `omniwm` and `skhd`.
+The names you can use are in `gatedApps` in
+`modules/shared/approved-apps.nix`. A misspelt name stops the build with an
+error. Some apps only install under nix-darwin, because they come from
+Homebrew or run as system services: `cleanshot`, `ghostty`, `imageoptim`,
+`kanata`, `raycast`, `scroll-reverser`, `t3code`, `vivaldi`, and the macOS
+parts of `omniwm` and `skhd`. For those, run `sw-system` too.
 
 To gate a new app, add its name to `gatedApps` and wrap its module in
 `config.appApproved.<name>`.
@@ -97,7 +97,9 @@ activated on a real machine yet, so expect to fix things on the first run.
 
 What changes when you switch:
 
-- Every `sw` needs sudo.
+- `sw-system` switches the system and needs sudo. Run it only when you change
+  `darwin-configuration.nix`, `modules/darwin/` or a nix-darwin app's approval.
+  `sw` keeps switching Home Manager without sudo.
 - nix-darwin installs Homebrew into `/opt/homebrew`. If IT already installed
   Homebrew, nix-homebrew takes over that installation. Homebrew cleanup is
   off for this host, so it won't remove anything IT installed.
@@ -114,10 +116,8 @@ To switch:
    ~/.system-nix/scripts/bootstrap-macos --host cwilliams-intuit-laptop
    ```
 
-   If Home Manager stops because an existing file is in the way, move that
-   file aside and run the script again.
-
-3. From then on, `sw` runs a nix-darwin switch.
+3. From then on, use `sw-system` for system changes and `sw` for everything
+   else.
 
 To add your keyboard and window-manager setup, approve `kanata`, `skhd` and
 `omniwm` (and `raycast` if you want it). Then follow the macOS permissions step

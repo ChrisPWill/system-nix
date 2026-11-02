@@ -1,25 +1,20 @@
 # Intuit-managed MacBook. Admin rights need an IT request and each app needs
-# approval. It starts as standalone Home Manager, so switching never needs
-# sudo, and moves to nix-darwin (../darwin-configuration.nix) once admin
-# rights allow. This file serves both; see ../README.md.
+# approval, so Home Manager always runs standalone: switching it never needs
+# sudo, even once nix-darwin (../darwin-configuration.nix) manages the
+# system. See ../README.md.
 {
   inputs,
   lib,
   ...
-} @ args: let
-  # nix-darwin passes osConfig to Home Manager; standalone Home Manager
-  # doesn't. A default value wouldn't work here: the module system ignores it
-  # and looks the argument up in config, which imports can't depend on.
-  isStandalone = !(args ? osConfig);
-in {
-  # nix-darwin's Stylix module already loads Stylix into Home Manager, so
-  # only load it here when running without nix-darwin.
-  imports =
-    [inputs.self.homeModules.home-shared]
-    ++ lib.optionals isStandalone [inputs.self.homeModules.standalone];
+}: {
+  imports = [
+    inputs.self.homeModules.home-shared
+    inputs.self.homeModules.standalone
+  ];
 
   usesDeterminateNix = true;
-  programs.home-manager.enable = isStandalone;
+  programs.home-manager.enable = true;
+  dev.nix.separateHomeManager = true;
 
   isWorkMachine = true;
 
@@ -32,10 +27,7 @@ in {
   # this directory. Rename both together.
   dev.nix.flakeHostName = "cwilliams-intuit-laptop";
 
-  # Add a name once IT approves the app. The full list of names is gatedApps
-  # in modules/home/home-shared.nix. nix-darwin reads this list too, for
-  # casks and system services such as Kanata.
-  approvedApps = [];
+  approvedApps = import ../approved-apps.nix;
 
   home.ai = {
     agentProvider = "none";

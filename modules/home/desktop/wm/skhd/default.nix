@@ -7,7 +7,7 @@
   commandPath = lib.concatStringsSep ":" [
     "/opt/homebrew/bin"
     "/opt/homebrew/sbin"
-    "/etc/profiles/per-user/${config.home.username}/bin"
+    "${config.home.profileDirectory}/bin"
     "/run/current-system/sw/bin"
     "/nix/var/nix/profiles/default/bin"
     "$PATH"

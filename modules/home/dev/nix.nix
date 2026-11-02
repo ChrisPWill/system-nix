@@ -71,6 +71,12 @@
     }
   '';
 in {
+  options.dev.nix.separateHomeManager = lib.mkEnableOption ''
+    switching Home Manager on its own, without sudo. `sw` then switches only
+    Home Manager, and on macOS `sw-system` switches nix-darwin. The host's
+    nix-darwin config must leave out Home Manager
+  '';
+
   options.dev.nix.flakeHostName = lib.mkOption {
     type = lib.types.nullOr lib.types.str;
     default = null;
@@ -105,34 +111,46 @@ in {
     };
   };
 
-  config.home.packages = [
-    (nhWrapper "sw" ''
-      ${nhWrapperPrelude}
+  config.home.packages =
+    [
+      (nhWrapper "sw" (
+        if config.dev.nix.separateHomeManager
+        then ''
+          ${nhWrapperPrelude}
 
-      mapfile -t host_args < <(hostname_args "$@")
-      mapfile -t home_args < <(home_configuration_args "$@")
-
-      case "$(uname -s)" in
-        Darwin)
-          # Without nix-darwin (e.g. a locked-down laptop) only Home Manager
-          # manages this machine.
-          if [[ -e /run/current-system/darwin-version ]]; then
-            exec nh darwin switch "$flake" "''${host_args[@]}" "$@"
-          fi
-
+          mapfile -t home_args < <(home_configuration_args "$@")
           exec nh home switch "$flake" "''${home_args[@]}" "$@"
-          ;;
-        Linux)
-          if [[ -e /etc/NIXOS ]]; then
-            exec nh os switch "$flake" "''${host_args[@]}" "$@"
-          fi
+        ''
+        else ''
+          ${nhWrapperPrelude}
 
-          exec nh home switch "$flake" "''${home_args[@]}" "$@"
-          ;;
-        *)
-          exec nh home switch "$flake" "''${home_args[@]}" "$@"
-          ;;
-      esac
-    '')
-  ];
+          mapfile -t host_args < <(hostname_args "$@")
+          mapfile -t home_args < <(home_configuration_args "$@")
+
+          case "$(uname -s)" in
+            Darwin)
+              exec nh darwin switch "$flake" "''${host_args[@]}" "$@"
+              ;;
+            Linux)
+              if [[ -e /etc/NIXOS ]]; then
+                exec nh os switch "$flake" "''${host_args[@]}" "$@"
+              fi
+
+              exec nh home switch "$flake" "''${home_args[@]}" "$@"
+              ;;
+            *)
+              exec nh home switch "$flake" "''${home_args[@]}" "$@"
+              ;;
+          esac
+        ''
+      ))
+    ]
+    ++ lib.optionals (config.dev.nix.separateHomeManager && pkgs.stdenv.hostPlatform.isDarwin) [
+      (nhWrapper "sw-system" ''
+        ${nhWrapperPrelude}
+
+        mapfile -t host_args < <(hostname_args "$@")
+        exec nh darwin switch "$flake" "''${host_args[@]}" "$@"
+      '')
+    ];
 }

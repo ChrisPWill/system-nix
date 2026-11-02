@@ -1,5 +1,6 @@
-# Not used until admin rights allow nix-darwin; until then the laptop runs
-# standalone Home Manager from users/cwilliams.nix. See README.md.
+# Not used until admin rights allow nix-darwin. Home Manager stays standalone
+# (users/cwilliams.nix) even then, so it can switch without sudo. See
+# README.md.
 {
   inputs,
   lib,
@@ -15,6 +16,13 @@
   ];
 
   usesDeterminateNix = true;
+
+  approvedApps = import ./approved-apps.nix;
+
+  # Blueprint would run users/cwilliams.nix through nix-darwin, which makes
+  # every Home Manager switch need sudo. That file is switched on its own
+  # instead.
+  home-manager.users = lib.mkForce {};
 
   nixpkgs.hostPlatform = "aarch64-darwin";
   # networking.hostName is left unset: IT names this machine, and `sw` finds
