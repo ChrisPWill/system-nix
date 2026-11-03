@@ -83,7 +83,7 @@ labels:
 - **Now:** what happens instead
 - **Why:** the reason, as a consequence for a person or a job
 - **Notice:** who or what sees the difference, or "none"
-- **Proof:** `TestClass` › *test name*, the test that would fail with
+- **Proof:** `TestClass` › *test name*, the test that would fail without this change
 - **Where:** `repo/relative/path/File.kt:123`
 
 ```diff
@@ -95,11 +95,11 @@ labels:
 Rules for the diff:
 
 - Before → after, trimmed to the lines that carry the decision: 3–12 lines.
-  Keep one or two context lines only if they're needed to make sense
+  Keep one or two context lines only if they're needed to make sense of the change.
 - If the change is a new file or a new function, show only the core of the new
-  code in a `kotlin` block (or whatever the language is), plus th
+  code in a `kotlin` block (or whatever the language is), plus the old
   code if it replaced something.
-- Never paste a whole file. If one diff can't show the logic, add a s
+- Never paste a whole file. If one diff can't show the logic, add a second
   block with a one-line comment above it.
 
 ### 3. Refactors (no behaviour change)
@@ -113,3 +113,37 @@ Continue the numbering. Use the shorter label set:
 - **Proof:** test name, or "covered by existing tests"
 - **Where:** `path:line`
 ```
+
+### 4. Removed code
+
+List deleted branches, classes and tests that the sections above don't already
+cover. One line each: what was removed and why nothing needs it any more. Leave
+this section out if it would be empty.
+
+### 5. Who notices
+
+One row per audience that sees any difference. Leave out audiences that see
+nothing, and say "No one outside the code notices" if no row is left.
+
+| Who               | What they see                                            | From change |
+| ----------------- | -------------------------------------------------------- | ----------- |
+| Customers         | Corrections invoice the same day instead of the next run | 1           |
+| On-call           | New `CorrectionSkipped` warning in logs                  | 3           |
+| Finance dashboard | none                                                     | –           |
+
+Cover customers, the UI, API callers, scheduled jobs, dashboards and alerts,
+on-call engineers, and data or finance reports.
+
+### 6. Open questions
+
+Things the diff doesn't settle: a behaviour change with no test, a claim in
+the PR description that the code doesn't back up, or a migration with no
+backfill. Leave this section out if there are none.
+
+## Before you send
+
+- Every numbered item has every label. Write "none", never leave one out.
+- Every `file:line` was checked with `grep -n` against HEAD.
+- Every number in the worked example comes from a test or fixture.
+- Every refactor's "same inputs, same outputs" claim holds. If it doesn't, move
+  the item to Behaviour changes.
