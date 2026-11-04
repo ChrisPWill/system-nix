@@ -24,7 +24,7 @@ in {
   };
 
   home.packages = with pkgs;
-    [gum]
+    config.filterApproved {inherit gum;}
     ++ lib.optionals approved.logseq [
       # Note taking
       logseq

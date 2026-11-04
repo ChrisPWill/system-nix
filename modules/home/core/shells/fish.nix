@@ -3,7 +3,9 @@
   pkgs,
   config,
   ...
-}: {
+}: let
+  approved = config.appApproved;
+in {
   options = with lib; {
     programs.fish.enableDefaultInteractive = mkEnableOption "make default interactive shell";
   };
@@ -16,18 +18,22 @@
       fi
     '');
     programs.fish = {
-      enable = true;
-      enableDefaultInteractive = true;
+      enable = approved.fish;
+      # zsh execs fish when this is on, so it must never outlive fish itself.
+      enableDefaultInteractive = approved.fish;
 
-      interactiveShellInit = ''
-        # Enables vi(m)-like key bindings (insert mode by default)
-        fish_vi_key_bindings
+      interactiveShellInit =
+        ''
+          # Enables vi(m)-like key bindings (insert mode by default)
+          fish_vi_key_bindings
 
-        # Complete `detach` as if its arguments were a command line of their own
-        complete -c detach -xa '(__fish_complete_subcommand)'
+          # Complete `detach` as if its arguments were a command line of their own
+          complete -c detach -xa '(__fish_complete_subcommand)'
+        ''
+        + lib.optionalString approved.fastfetch ''
 
-        ${pkgs.fastfetch}/bin/fastfetch -s title:separator:os:cpu:memory:host:chassis:kernel:de:wm:wmtheme:swap:disk:battery:poweradapter:uptime:separator:shell:font:terminal:terminalfont:break:colors
-      '';
+          ${pkgs.fastfetch}/bin/fastfetch -s title:separator:os:cpu:memory:host:chassis:kernel:de:wm:wmtheme:swap:disk:battery:poweradapter:uptime:separator:shell:font:terminal:terminalfont:break:colors
+        '';
 
       functions = {
         detach = {
@@ -51,15 +57,16 @@
           inherit name;
           inherit (pkgs.fishPlugins.${name}) src;
         };
-      in [
-        # interactive selectors for git
-        # See https://github.com/wfxr/forgit for list
-        (fishP "forgit")
-      ];
+      in
+        lib.optionals approved.forgit [
+          # interactive selectors for git
+          # See https://github.com/wfxr/forgit for list
+          (fishP "forgit")
+        ];
     };
 
-    home.packages = with pkgs; [
-      fzf # used by the forgit plugin
-    ];
+    home.packages = config.filterApproved {
+      inherit (pkgs) fzf; # used by the forgit plugin
+    };
   };
 }

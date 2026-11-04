@@ -1,19 +1,24 @@
-{pkgs, ...}: {
-  home.packages = with pkgs; [
-    # Easy zipper/unzipper
-    ouch
-
-    # Command line archiver with high compression ratio
-    p7zip
-  ];
+{
+  config,
+  pkgs,
+  ...
+}: {
+  home.packages = config.filterApproved {
+    inherit
+      (pkgs)
+      # Easy zipper/unzipper
+      ouch
+      # Command line archiver with high compression ratio
+      p7zip
+      ;
+  };
 
   programs.yazi = {
-    enable = true;
+    enable = config.appApproved.yazi;
     shellWrapperName = "y";
-    extraPackages = with pkgs; [
-      ouch
-      glow
-    ];
+    extraPackages = config.filterApproved {
+      inherit (pkgs) ouch glow;
+    };
     plugins = let
       yz = pkgs.yaziPlugins;
     in {

@@ -90,7 +90,7 @@ in {
 
   config.programs = {
     nh = {
-      enable = true;
+      enable = config.appApproved.nh;
       flake = config.nixConfigDir;
       homeFlake = config.nixConfigDir;
       osFlake = config.nixConfigDir;
@@ -111,7 +111,8 @@ in {
     };
   };
 
-  config.home.packages =
+  # sw and sw-system are wrappers around nh.
+  config.home.packages = lib.optionals config.appApproved.nh (
     [
       (nhWrapper "sw" (
         if config.dev.nix.separateHomeManager
@@ -152,5 +153,6 @@ in {
         mapfile -t host_args < <(hostname_args "$@")
         exec nh darwin switch "$flake" "''${host_args[@]}" "$@"
       '')
-    ];
+    ]
+  );
 }

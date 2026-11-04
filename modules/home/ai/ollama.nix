@@ -65,7 +65,7 @@ in {
     };
   };
 
-  config = mkIf cfg.enable (mkMerge [
+  config = mkIf (cfg.enable && config.appApproved.ollama) (mkMerge [
     {
       home.packages = [ollamaPkg];
     }

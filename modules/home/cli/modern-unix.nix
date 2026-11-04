@@ -3,7 +3,9 @@
   pkgs,
   lib,
   ...
-}: {
+}: let
+  approved = config.appApproved;
+in {
   programs = {
     zsh.initContent = ''
       viddy-widget() {
@@ -50,61 +52,55 @@
 
     # Nice colourful cat alternative
     # https://github.com/sharkdp/bat
-    bat.enable = true;
+    bat.enable = approved.bat;
 
     # Auto use flakes when in directory (and allowed)
     # Remember to `direnv allow` in a project to get it going
-    direnv.enable = true;
+    direnv.enable = approved.direnv;
 
     # ls alternative
     # https://github.com/eza-community/eza
     eza = {
-      enable = true;
+      enable = approved.eza;
       git = true;
       icons = "auto";
     };
 
     # Nice fast autojump command
     # https://github.com/ajeetdsouza/zoxide
-    zoxide.enable = true;
+    zoxide.enable = approved.zoxide;
 
     # Command history
-    atuin.enable = true;
+    atuin.enable = approved.atuin;
 
     # Autocompletion in shell
-    carapace.enable = true;
+    carapace.enable = approved.carapace;
   };
 
-  home.packages = with pkgs;
-    [
-      # Fast alternative to find
-      # https://github.com/sharkdp/fd
-      fd
-
-      # Fast grep
-      ripgrep
-
-      # Rust-based ps replacement
-      procs
-
-      # Watch progress of cp/mv/dd/tar/etc. `tldr progress` for info
-      progress
-
-      # Modern watch replacement
-      viddy
-
-      # Glamorous shell scripts
-      gum
-
-      # Retrieve files from the web
-      wget
-    ]
-    ++ lib.optionals config.appApproved.websocat [
-      # Terminal-based websocket client
-      websocat
-    ]
-    ++ lib.optionals pkgs.stdenv.hostPlatform.isLinux [
+  home.packages = config.filterApproved ({
+      inherit
+        (pkgs)
+        # Fast alternative to find
+        # https://github.com/sharkdp/fd
+        fd
+        # Fast grep
+        ripgrep
+        # Rust-based ps replacement
+        procs
+        # Watch progress of cp/mv/dd/tar/etc. `tldr progress` for info
+        progress
+        # Modern watch replacement
+        viddy
+        # Glamorous shell scripts
+        gum
+        # Retrieve files from the web
+        wget
+        # Terminal-based websocket client
+        websocat
+        ;
+    }
+    // lib.optionalAttrs pkgs.stdenv.hostPlatform.isLinux {
       # Display Gtk+ dialog boxes from shell scripts
-      zenity
-    ];
+      inherit (pkgs) zenity;
+    });
 }

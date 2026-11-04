@@ -4,6 +4,7 @@
 # counterpart but not a flag set, so expanding in place keeps the real command
 # visible before it runs.
 {
+  config,
   lib,
   pkgs,
   ...
@@ -46,9 +47,9 @@
 in {
   programs.fish.shellAbbrs = darwinAbbrs // linuxAbbrs;
 
-  home.packages = lib.optionals pkgs.stdenv.hostPlatform.isDarwin [
+  home.packages = lib.optionals pkgs.stdenv.hostPlatform.isDarwin (config.filterApproved {
     # Reads Apple Silicon sensors without sudo, unlike powermetrics
     # https://github.com/vladkens/macmon
-    pkgs.macmon
-  ];
+    inherit (pkgs) macmon;
+  });
 }

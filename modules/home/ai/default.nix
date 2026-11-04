@@ -6,7 +6,12 @@
   scriptDir = "${config.homeModuleDir}/ai/scripts";
   # ai-ask and ai-commit shell out to an agent CLI, so without one the
   # scripts and their keybindings only produce errors.
-  hasAgentCli = config.appApproved.claude-code || config.home.ai.agentProvider != "none";
+  inherit (config) appApproved;
+  inherit (config.home.ai) agentProvider;
+  hasAgentCli =
+    appApproved.claude-code
+    || (agentProvider == "codex" && appApproved.codex)
+    || (agentProvider == "gemini" && appApproved.gemini-cli);
 in {
   options.home.ai = {
     agentProvider = lib.mkOption {

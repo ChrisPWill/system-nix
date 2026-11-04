@@ -3,7 +3,7 @@
   lib,
   ...
 }: {
-  programs.mise = lib.mkIf config.isWorkMachine {
+  programs.mise = lib.mkIf (config.isWorkMachine && config.appApproved.mise) {
     enable = true;
 
     globalConfig = {

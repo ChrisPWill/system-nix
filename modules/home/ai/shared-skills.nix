@@ -22,5 +22,5 @@ in {
   # skills/ as a real directory, so agent-installed skills can coexist.
   home.file =
     lib.optionalAttrs config.appApproved.claude-code (linkSkillsInto ".claude/skills")
-    // lib.optionalAttrs (cfg.agentProvider == "codex") (linkSkillsInto ".codex/skills");
+    // lib.optionalAttrs (cfg.agentProvider == "codex" && config.appApproved.codex) (linkSkillsInto ".codex/skills");
 }

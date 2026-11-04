@@ -1,8 +1,8 @@
 # cwilliams-intuit-laptop
 
-An Intuit-managed MacBook. Admin rights need an IT request and each app needs
-approval, so this host installs only local command-line tools, WezTerm and
-fonts until you approve more.
+An Intuit-managed MacBook. Admin rights need an IT request and every app needs
+approval, command-line tools included. This host installs only the apps named
+in `approved-apps.nix`; everything else in this repository is left out.
 
 It runs in two stages:
 
@@ -74,21 +74,28 @@ find it there; open it from Finder the first time.
 
 ## Adding an app once IT approves it
 
-Add its name to `approved-apps.nix`, then run `sw`:
+Add its name to `approved-apps.nix`, then run `sw`. The list starts with the
+command-line tools, editors and WezTerm; remove any that IT doesn't approve.
 
-```nix
-["spotify"]
-```
-
-The names you can use are in `gatedApps` in
-`modules/shared/approved-apps.nix`. A misspelt name stops the build with an
-error. Some apps only install under nix-darwin, because they come from
+There is one name per tool. The names you can use are in `gatedApps` in
+`modules/shared/approved-apps.nix`, and a misspelt name stops the build with an
+error. Plugins bundled into an app come with it: approving `neovim` brings its
+plugins and the language servers it bundles. Standalone tools have their own
+names, such as `nixd` for running the Nix language server outside Neovim. Some apps only install under nix-darwin, because they come from
 Homebrew or run as system services: `cleanshot`, `ghostty`, `imageoptim`,
 `kanata`, `raycast`, `scroll-reverser`, `t3code`, `vivaldi`, and the macOS
 parts of `omniwm` and `skhd`. For those, run `sw-system` too.
 
-To gate a new app, add its name to `gatedApps` and wrap its module in
-`config.appApproved.<name>`.
+When you add a tool to any module, gate it too: add its name to `gatedApps`
+and wrap it in `config.appApproved.<name>`, or list it in
+`config.filterApproved`. The `approved-apps` flake check fails if anything
+installs on this laptop with nothing approved:
+
+```bash
+nix build .#checks.aarch64-darwin.approved-apps
+```
+
+Fonts, Stylix theme files and Home Manager itself are exempt.
 
 ## Moving to nix-darwin (stage 2)
 

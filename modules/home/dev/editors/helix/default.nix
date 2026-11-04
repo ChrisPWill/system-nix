@@ -1,4 +1,8 @@
-{pkgs, ...}: {
+{
+  config,
+  pkgs,
+  ...
+}: {
   imports = [
     ../lsps.nix
   ];
@@ -7,7 +11,7 @@
     stylix.targets.helix.enable = false;
 
     programs.helix = {
-      enable = true;
+      enable = config.appApproved.helix;
 
       # Using onedark to match Neovim's onedark-nvim
       settings = {

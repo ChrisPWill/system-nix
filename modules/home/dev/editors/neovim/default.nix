@@ -32,7 +32,7 @@ in {
     };
   };
 
-  config = {
+  config = lib.mkIf config.appApproved.neovim {
     programs = {
       zsh.shellAliases."nvimconfig" = "(cd ${config.homeModuleDir}/dev/editors/neovim; ${mainNixCatsPackageName} ./config/init.lua)";
       zsh.initContent = ''

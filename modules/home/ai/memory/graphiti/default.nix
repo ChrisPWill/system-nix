@@ -270,7 +270,7 @@ in {
     };
   };
 
-  config = lib.mkIf cfg.enable {
+  config = lib.mkIf (cfg.enable && config.appApproved.graphiti) {
     assertions = [
       {
         # Linux needs a different route from the container to a loopback-only

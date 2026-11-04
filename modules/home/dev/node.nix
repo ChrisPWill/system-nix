@@ -11,7 +11,7 @@
 in {
   home = {
     # Work repositories declare their runtime versions through Mise metadata.
-    packages = lib.optionals (!config.isWorkMachine) [pkgs.nodejs_latest];
+    packages = lib.optionals (!config.isWorkMachine && config.appApproved.nodejs) [pkgs.nodejs_latest];
 
     # Keep globally installed npm/pnpm packages outside the immutable Nix store.
     sessionVariables = {

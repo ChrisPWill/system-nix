@@ -35,7 +35,7 @@ in {
 
       # Shared shell-related programs
       starship = {
-        enable = true;
+        enable = config.appApproved.starship;
         settings = {
           format = "$all$character";
           right_format = "$git_branch$git_commit$custom $os$shell$memory_usage";

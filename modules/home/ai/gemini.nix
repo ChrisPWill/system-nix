@@ -5,7 +5,7 @@
 }: let
   cfg = config.home.ai;
 in {
-  config = lib.mkIf (cfg.agentProvider == "gemini" || cfg.neovimProvider == "gemini") {
+  config = lib.mkIf ((cfg.agentProvider == "gemini" || cfg.neovimProvider == "gemini") && config.appApproved.gemini-cli) {
     programs = {
       gemini-cli = {
         enable = true;

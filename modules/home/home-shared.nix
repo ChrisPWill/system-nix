@@ -52,6 +52,9 @@
     {
       nix.settings.experimental-features = ["nix-command" "flakes"];
 
+      # Home Manager installs man-db unless told otherwise.
+      programs.man.enable = config.appApproved.man-db;
+
       # Resolve `nixpkgs#…` to this flake's locked input rather than the
       # Determinate-provided global entry (nixpkgs-weekly), so ad-hoc
       # `nix run`/`nix shell` see the same package versions the system builds.

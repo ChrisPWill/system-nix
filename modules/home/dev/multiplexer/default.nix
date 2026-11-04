@@ -3,7 +3,7 @@
 {config, ...}: {
   programs = {
     zellij = {
-      enable = true;
+      enable = config.appApproved.zellij;
       settings = {
         default_layout = "compact";
         scroll_buffer_size = 10000;
@@ -124,6 +124,7 @@
   };
 
   xdg.configFile."zellij/layouts" = {
+    enable = config.appApproved.zellij;
     source = config.lib.file.mkOutOfStoreSymlink "${config.homeModuleDir}/dev/multiplexer/layouts";
   };
 }

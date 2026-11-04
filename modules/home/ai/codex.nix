@@ -16,14 +16,14 @@
   sharedContext = lib.concatMapStringsSep "\n\n" builtins.readFile sharedRuleFiles;
 in {
   config = lib.mkMerge [
-    (lib.mkIf (cfg.agentProvider == "codex") {
+    (lib.mkIf (cfg.agentProvider == "codex" && config.appApproved.codex) {
       programs.codex = {
         enable = true;
         package = pkgs.codex;
         context = sharedContext;
       };
     })
-    (lib.mkIf (cfg.neovimProvider == "codex") {
+    (lib.mkIf (cfg.neovimProvider == "codex" && config.appApproved.codex) {
       home.packages = [pkgs.codex-acp];
     })
   ];

@@ -16,7 +16,7 @@
       fi
     '');
     programs.nushell = {
-      enable = true;
+      enable = config.appApproved.nushell;
       loadSessionVariables = true;
 
       settings = {
@@ -44,7 +44,7 @@
           ''
           + ")");
       };
-      extraConfig = ''
+      extraConfig = lib.optionalString config.appApproved.fastfetch ''
         # Shows system information on startup
         ${pkgs.fastfetch}/bin/fastfetch -s title:separator:os:cpu:memory:host:chassis:kernel:de:wm:wmtheme:swap:disk:battery:poweradapter:uptime:separator:shell:font:terminal:terminalfont:break:colors
       '';

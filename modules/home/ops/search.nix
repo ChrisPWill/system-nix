@@ -1,4 +1,8 @@
-{pkgs, ...}: {
+{
+  config,
+  pkgs,
+  ...
+}: {
   programs = {
     zsh.initContent = ''
       typeset -ga zvm_after_init_commands
@@ -8,7 +12,7 @@
     # FZF replacement
     # Use Ctrl-T for smart finding on lots of commands
     television = {
-      enable = true;
+      enable = config.appApproved.television;
       settings = {
         ui.theme = "onedark";
         shell_integration.channel_triggers = {
@@ -27,13 +31,16 @@
     };
 
     nix-search-tv = {
-      enable = true;
-      enableTelevisionIntegration = true;
+      enable = config.appApproved.nix-search-tv;
+      enableTelevisionIntegration = config.appApproved.television;
     };
   };
 
-  home.packages = with pkgs; [
-    tealdeer
-    nix-search-cli # useful for searching for packages
-  ];
+  home.packages = config.filterApproved {
+    inherit
+      (pkgs)
+      tealdeer
+      nix-search-cli # useful for searching for packages
+      ;
+  };
 }

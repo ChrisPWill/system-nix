@@ -3,6 +3,7 @@
 # sudo, even once nix-darwin (../darwin-configuration.nix) manages the
 # system. See ../README.md.
 {
+  config,
   inputs,
   lib,
   ...
@@ -35,7 +36,7 @@
   };
 
   programs.gh = {
-    enable = true;
+    enable = config.appApproved.gh;
     settings.git_protocol = "ssh";
   };
 }

@@ -1,11 +1,12 @@
 {
   config,
+  lib,
   pkgs,
   ...
 }: {
   config = {
     programs.zsh = {
-      enable = true;
+      enable = config.appApproved.zsh;
       completionInit = ''
         autoload -Uz compinit
         if [[ -n ''${ZDOTDIR:-$HOME}/.zcompdump(#qN.mh+24) ]]; then
@@ -31,7 +32,7 @@
         }
       '';
 
-      plugins = [
+      plugins = lib.optionals config.appApproved.zsh-vi-mode [
         {
           name = "vi-mode";
           src = pkgs.zsh-vi-mode;

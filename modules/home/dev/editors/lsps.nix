@@ -1,53 +1,49 @@
 {
+  config,
   inputs,
   pkgs,
   ...
 }: {
   # Mirroring the LSP/Formatter setup from Neovim
-  home.packages = with pkgs; [
-    # Nix
-    nixd
-    alejandra
-    deadnix
-    statix
-
-    # Python
-    basedpyright
-    ruff
-
-    # Rust (usually in devshell, but good to have)
-    rust-analyzer
-    rustfmt
-
-    # Go
-    gopls
-    go-tools
-
-    # Lua
-    lua-language-server
-    stylua
-
-    # Web/JS/TS
-    typescript-language-server
-    prettierd
-    vscode-langservers-extracted # HTML/CSS/JSON
-    yaml-language-server
-
-    # Shell
-    bash-language-server
-    shellcheck
-    shfmt
-    fish-lsp
-
-    # C++
-    clang-tools
-    gdb
-    lldb
-
-    # Markdown
-    marksman
+  home.packages = config.filterApproved {
+    inherit
+      (pkgs)
+      # Nix
+      nixd
+      alejandra
+      deadnix
+      statix
+      # Python
+      basedpyright
+      ruff
+      # Rust (usually in devshell, but good to have)
+      rust-analyzer
+      rustfmt
+      # Go
+      gopls
+      go-tools
+      # Lua
+      lua-language-server
+      stylua
+      # Web/JS/TS
+      typescript-language-server
+      prettierd
+      vscode-langservers-extracted # HTML/CSS/JSON
+      yaml-language-server
+      # Shell
+      bash-language-server
+      shellcheck
+      shfmt
+      fish-lsp
+      # C++
+      clang-tools
+      gdb
+      lldb
+      # Markdown
+      marksman
+      ;
 
     # Kotlin
-    inputs.self.packages.${pkgs.stdenv.hostPlatform.system}.kotlin-lsp
-  ];
+    kotlin-lsp = inputs.self.packages.${pkgs.stdenv.hostPlatform.system}.kotlin-lsp;
+  };
 }

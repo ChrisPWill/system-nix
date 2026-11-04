@@ -5,11 +5,12 @@
   ...
 }: let
   scriptDir = "${config.homeModuleDir}/dev/vcs/scripts";
+  approved = config.appApproved;
 in {
-  home.packages = with pkgs; [
+  home.packages = config.filterApproved {
     # Another fancy git UI
-    tig
-  ];
+    inherit (pkgs) tig;
+  };
 
   home.sessionPath = [scriptDir];
   programs = {
@@ -39,7 +40,7 @@ in {
 
     # Neat TUI for jujutsu
     # https://github.com/idursun/jjui
-    jjui.enable = true;
+    jjui.enable = approved.jjui;
 
     ssh = {
       enable = true;
@@ -62,9 +63,9 @@ in {
     };
 
     git = {
-      enable = true;
+      enable = approved.git;
 
-      lfs.enable = true;
+      lfs.enable = approved.git-lfs;
 
       settings = {
         user.name = "Chris Williams";
@@ -79,11 +80,11 @@ in {
       };
     };
 
-    diff-so-fancy.enable = true;
+    diff-so-fancy.enable = approved.diff-so-fancy;
 
     # Neat TUI for git
     # https://github.com/jesseduffield/lazygit
-    lazygit.enable = true;
+    lazygit.enable = approved.lazygit;
     zsh = {
       shellAliases = {
         lg = "lazygit";
@@ -123,41 +124,44 @@ in {
     # VCS built on top of git
     # Experimenting with this for personal projects
     jujutsu = {
-      enable = true;
+      enable = approved.jujutsu;
       settings = {
         user.name = "Chris Williams";
         user.email = config.userEmail;
 
-        fix.tools = {
-          "1-treefmt" = {
-            command = ["nix" "fmt" "--" "--stdin" "$path"];
-            patterns = ["glob:**/*"];
-          };
+        fix.tools =
+          {
+            "1-treefmt" = {
+              command = ["nix" "fmt" "--" "--stdin" "$path"];
+              patterns = ["glob:**/*"];
+            };
+          }
+          // lib.optionalAttrs approved.statix {
+            "2-statix" = {
+              command = ["${pkgs.statix}/bin/statix" "fix" "--stdin" "--config" "$root"];
+              patterns = ["glob:**/*.nix"];
+            };
+          }
+          // lib.optionalAttrs approved.deadnix {
+            "3-deadnix" = {
+              command = [
+                "sh"
+                "-c"
+                ''
+                  tmp="$(mktemp "''${TMPDIR:-/tmp}/jj-deadnix.XXXXXX.nix")"
+                  trap 'rm -f "$tmp"' EXIT
 
-          "2-statix" = {
-            command = ["${pkgs.statix}/bin/statix" "fix" "--stdin" "--config" "$root"];
-            patterns = ["glob:**/*.nix"];
+                  cat > "$tmp"
+                  ${pkgs.deadnix}/bin/deadnix --edit --quiet "$tmp" >/dev/null
+                  cat "$tmp"
+                ''
+              ];
+              patterns = ["glob:**/*.nix"];
+            };
           };
-
-          "3-deadnix" = {
-            command = [
-              "sh"
-              "-c"
-              ''
-                tmp="$(mktemp "''${TMPDIR:-/tmp}/jj-deadnix.XXXXXX.nix")"
-                trap 'rm -f "$tmp"' EXIT
-
-                cat > "$tmp"
-                ${pkgs.deadnix}/bin/deadnix --edit --quiet "$tmp" >/dev/null
-                cat "$tmp"
-              ''
-            ];
-            patterns = ["glob:**/*.nix"];
-          };
-        };
       };
     };
   };
 
-  services.ssh-agent.enable = true;
+  services.ssh-agent.enable = approved.ssh-agent;
 }
