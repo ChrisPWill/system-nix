@@ -15,7 +15,7 @@
     })
     .config;
 
-  home = withNothingApproved inputs.self.legacyPackages.${system}.homeConfigurations."cwilliams@cwilliams-intuit-laptop";
+  home = withNothingApproved inputs.self.legacyPackages.${system}.homeConfigurations."cwilliams82@cwilliams-intuit-laptop";
   darwin = withNothingApproved inputs.self.darwinConfigurations.cwilliams-intuit-laptop;
 
   # Fonts, theming and the tools that apply this configuration aren't apps.

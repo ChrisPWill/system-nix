@@ -1,5 +1,5 @@
 # Not used until admin rights allow nix-darwin. Home Manager stays standalone
-# (users/cwilliams.nix) even then, so it can switch without sudo. See
+# (users/cwilliams82.nix) even then, so it can switch without sudo. See
 # README.md.
 {
   inputs,
@@ -19,7 +19,7 @@
 
   approvedApps = import ./approved-apps.nix;
 
-  # Blueprint would run users/cwilliams.nix through nix-darwin, which makes
+  # Blueprint would run users/cwilliams82.nix through nix-darwin, which makes
   # every Home Manager switch need sudo. That file is switched on its own
   # instead.
   home-manager.users = lib.mkForce {};
@@ -32,10 +32,10 @@
   # anything not declared here on every switch.
   homebrew.onActivation.cleanup = lib.mkForce "none";
 
-  users.users.cwilliams.home = /Users/cwilliams;
+  users.users.cwilliams82.home = /Users/cwilliams82;
 
   system = {
-    primaryUser = "cwilliams";
+    primaryUser = "cwilliams82";
 
     # Keep the logical layout aligned with the laptop's physical UK keyboard.
     defaults.CustomUserPreferences."com.apple.HIToolbox" = let

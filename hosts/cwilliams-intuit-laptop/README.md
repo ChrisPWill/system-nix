@@ -19,11 +19,9 @@ Both stages read the approved apps from `approved-apps.nix`.
 - **Ask IT to approve Determinate Nix.** Also ask whether they use binary
   allow-listing (for example Santa). If they do, Nix-built tools may be blocked
   until approved.
-- **Check your macOS username.** This config assumes `cwilliams`. If yours is
-  different, rename `users/cwilliams.nix` to match, and change
-  `users.users.cwilliams` and `primaryUser` in `darwin-configuration.nix`.
-- **Set your email.** Replace `REPLACE-ME@intuit.com` in `users/cwilliams.nix`.
-  Until you do, every build warns, and git commits use the placeholder.
+- **Your macOS username is `cwilliams82`.** If IT changes it, rename
+  `users/cwilliams82.nix` to match, and change `users.users.cwilliams82` and
+  `primaryUser` in `darwin-configuration.nix`.
 
 ## Install (stage 1: standalone Home Manager)
 
@@ -50,7 +48,7 @@ Both stages read the approved apps from `approved-apps.nix`.
 
    ```bash
    cd ~/.system-nix
-   nix run --inputs-from . home-manager -- switch --flake .#cwilliams@cwilliams-intuit-laptop
+   nix run --inputs-from . home-manager -- switch --flake .#cwilliams82@cwilliams-intuit-laptop
    ```
 
 5. Open a new terminal again, then convert the clone to Jujutsu:
@@ -135,4 +133,4 @@ also needs the Karabiner system extension approved, which IT may block.
 
 IT names the machine, so `sw` finds this config through
 `dev.nix.flakeHostName` rather than the hostname. To rename the host, rename
-this directory and update `dev.nix.flakeHostName` in `users/cwilliams.nix`.
+this directory and update `dev.nix.flakeHostName` in `users/cwilliams82.nix`.

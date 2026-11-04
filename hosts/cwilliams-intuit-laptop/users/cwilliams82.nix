@@ -5,7 +5,6 @@
 {
   config,
   inputs,
-  lib,
   ...
 }: {
   imports = [
@@ -19,10 +18,7 @@
 
   isWorkMachine = true;
 
-  userEmail =
-    lib.warn
-    "hosts/cwilliams-intuit-laptop: userEmail is a placeholder, so git commits use a made-up address; set your Intuit email"
-    "REPLACE-ME@intuit.com";
+  userEmail = "chris_williams2@intuit.com";
 
   # IT controls the machine's hostname, so `sw` can't rely on it matching
   # this directory. Rename both together.

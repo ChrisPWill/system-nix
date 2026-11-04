@@ -54,7 +54,7 @@
     enable = true;
     enableRosetta = true;
     autoMigrate = true;
-    user = "cwilliams";
+    user = config.system.primaryUser;
   };
 
   homebrew = {
