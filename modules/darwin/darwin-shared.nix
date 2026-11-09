@@ -10,6 +10,7 @@
     inputs.stylix.darwinModules.stylix
     inputs.self.modules.theming.theme
     ./desktop.nix
+    ./keychain-ca-bundle.nix
     ./skhd.nix
   ];
   nixpkgs.overlays = [

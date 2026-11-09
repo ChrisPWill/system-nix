@@ -6,6 +6,7 @@ in {
     ./monitor.nix
     ./file-io.nix
     ./security.nix
+    ./keychain-ca-bundle.nix
     ./sops.nix
     ./syncthing.nix
   ];

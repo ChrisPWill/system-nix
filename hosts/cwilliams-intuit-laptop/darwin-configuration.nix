@@ -17,6 +17,9 @@
 
   usesDeterminateNix = true;
 
+  # Intuit's network intercepts HTTPS through Zscaler.
+  keychainCaBundle.enable = true;
+
   approvedApps = import ./approved-apps.nix;
 
   # Blueprint would run users/cwilliams82.nix through nix-darwin, which makes

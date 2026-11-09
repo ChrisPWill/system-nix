@@ -44,20 +44,48 @@ Both stages read the approved apps from `approved-apps.nix`.
    curl -fsSL https://install.determinate.systems/nix | sh -s -- install
    ```
 
-4. Open a new terminal so `nix` is on your `PATH`, then do the first switch:
+4. Open a new terminal so `nix` is on your `PATH`, then make Nix trust Intuit's
+   Zscaler certificate. Zscaler intercepts HTTPS, and the Nix daemon doesn't
+   read the macOS keychain, so without this any build that downloads source
+   fails with `unable to get local issuer certificate`. This also needs admin
+   rights, once:
 
    ```bash
    cd ~/.system-nix
+   sudo ./scripts/export-keychain-ca-bundle /etc/nix/ca-bundle.pem
+   printf 'ssl-cert-file = /etc/nix/ca-bundle.pem\n' | sudo tee /etc/nix/nix.custom.conf
+   sudo launchctl kickstart -k system/systems.determinate.nix-daemon
+   ```
+
+   The second command replaces the comment-only file the Nix installer wrote.
+   Keep it to exactly that one line: nix-darwin recognises it and can take the
+   file over later. If the last command can't find the daemon, look up its
+   name with `sudo launchctl list | grep -i nix`.
+
+   Your own `nix` commands need the certificates too until the first switch
+   sets them up:
+
+   ```bash
+   ./scripts/export-keychain-ca-bundle ~/.local/share/ca-certificates/keychain.pem
+   export NIX_SSL_CERT_FILE=~/.local/share/ca-certificates/keychain.pem
+   ```
+
+5. Do the first switch:
+
+   ```bash
    nix run --inputs-from . home-manager -- switch --flake .#cwilliams82@cwilliams-intuit-laptop
    ```
 
-5. Open a new terminal again, then convert the clone to Jujutsu:
+   From then on, every `sw` re-exports your certificate bundle and points Nix,
+   git, curl, gh, Python and Node at it.
+
+6. Open a new terminal again, then convert the clone to Jujutsu:
 
    ```bash
    cd ~/.system-nix && jj git init --colocate
    ```
 
-6. Create an SSH key and add it to GitHub:
+7. Create an SSH key and add it to GitHub:
 
    ```bash
    ssh-keygen -t ed25519
@@ -69,6 +97,10 @@ From now on, run `sw` to apply changes to your user setup.
 
 WezTerm is installed to `~/Applications/Home Manager Apps`. Spotlight may not
 find it there; open it from Finder the first time.
+
+If Intuit replaces its Zscaler certificate, builds fail with the certificate
+error again. Re-run the first command in step 4 to refresh the daemon's copy.
+After you move to nix-darwin, `sw-system` refreshes it for you.
 
 ## Adding an app once IT approves it
 
@@ -111,6 +143,8 @@ What changes when you switch:
 - macOS settings from `modules/darwin/darwin-shared.nix` apply: Dock, Finder,
   key repeat, trackpad, Touch ID for sudo, and a UK keyboard layout. IT's
   device management may override some of them.
+- nix-darwin takes over the Nix daemon's certificate setting from step 4 and
+  re-exports the bundle on every `sw-system`.
 
 To switch:
 
