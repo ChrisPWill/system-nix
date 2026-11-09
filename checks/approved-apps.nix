@@ -69,7 +69,9 @@
     "Home Manager files" = lib.filter (f: !(exempt exemptFilePatterns f)) (lib.attrNames (lib.filterAttrs (_: f: f.enable) home.home.file));
     "Home Manager launchd agents" = lib.attrNames (lib.filterAttrs (_: a: a.enable) home.launchd.agents);
     "nix-darwin packages" = lib.filter (p: !(lib.elem p exemptSystemPackages)) (map nameOf darwin.environment.systemPackages);
+    "Homebrew taps" = map (t: t.name) darwin.homebrew.taps;
     "Homebrew casks" = map (c: c.name) darwin.homebrew.casks;
+    "Homebrew formulae" = map (b: b.name) darwin.homebrew.brews;
     "nix-darwin daemons" = lib.remove "activate-system" (lib.attrNames darwin.launchd.daemons);
     "nix-darwin user agents" = lib.remove "set-gui-path" (lib.attrNames darwin.launchd.user.agents);
   };

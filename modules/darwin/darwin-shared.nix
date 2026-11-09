@@ -66,7 +66,7 @@
       cleanup = lib.mkDefault "uninstall";
     };
 
-    taps = [
+    taps = lib.optionals config.appApproved.omniwm [
       # Tap for OmniWM window manager
       {
         name = "BarutSRB/tap";
