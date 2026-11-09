@@ -90,4 +90,14 @@
 
   # Language runtimes
   "mise"
+
+  # AI
+  "claude-code"
+
+  # Desktop apps
+  "omniwm"
+  "kanata"
+  # "raycast"
+  "scroll-reverser"
+  "skhd"
 ]
