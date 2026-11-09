@@ -4,24 +4,23 @@
   pkgs,
   ...
 }: let
-  bundle = "${config.xdg.dataHome}/ca-certificates/keychain.pem";
+  # Determinate Nix keeps this up to date from the macOS keychain.
+  bundle = "/etc/nix/macos-keychain.crt";
 in {
   options.ops.keychainCaBundle.enable = lib.mkEnableOption ''
     trusting the macOS keychain's certificates in tools from Nix. Needed on a
     network that intercepts HTTPS, such as Zscaler, whose root certificate is
-    installed only in the keychain. The Nix daemon needs the same fix
-    separately; see modules/darwin/keychain-ca-bundle.nix
+    installed only in the keychain. Builds need the same fix in the Nix
+    daemon; see modules/darwin/keychain-ca-bundle.nix
   '';
 
   config = lib.mkIf (config.ops.keychainCaBundle.enable && pkgs.stdenv.hostPlatform.isDarwin) {
-    # Exported on every switch, so a rotated root certificate is picked up.
-    home.activation.exportKeychainCaBundle = lib.hm.dag.entryAfter ["writeBoundary"] ''
-      run ${../../../scripts/export-keychain-ca-bundle} ${lib.escapeShellArg bundle} \
-        || warnEcho "Could not export keychain certificates; HTTPS through the corporate proxy may fail."
-    '';
-
-    # Downloads the nix command makes itself, such as flake inputs.
-    nix.settings.ssl-cert-file = bundle;
+    assertions = [
+      {
+        assertion = config.usesDeterminateNix;
+        message = "ops.keychainCaBundle relies on the keychain bundle Determinate Nix maintains.";
+      }
+    ];
 
     home.sessionVariables = {
       # nixpkgs' OpenSSL reads this, so it covers git, curl and others from Nix.

@@ -25,15 +25,17 @@
           extra-substituters = ${lib.concatStringsSep " " config.nix.settings.substituters}
           extra-trusted-public-keys = ${lib.concatStringsSep " " config.nix.settings.trusted-public-keys}
         ''
-        + lib.optionalString (config.nix.settings ? ssl-cert-file) ''
-          ssl-cert-file = ${config.nix.settings.ssl-cert-file}
+        # impure-env is behind an experimental feature in Determinate Nix.
+        + lib.optionalString (config.nix.settings ? impure-env) ''
+          extra-experimental-features = configurable-impure-env
+          impure-env = ${config.nix.settings.impure-env}
         '';
       knownSha256Hashes = [
         # The comment-only file the Determinate installer writes.
         "3bd68ef979a42070a44f8d82c205cfd8e8cca425d91253ec2c10a88179bb34aa"
-        # The one-line file from the manual certificate fix in
+        # The file from the manual certificate fix in
         # hosts/cwilliams-intuit-laptop/README.md.
-        "9a161a75fa3ec3268115b25f9de59fc46050c28afb8bc0ff0892f5c5e05bc39d"
+        "65d5d52c13f33b8f380a6909193cce78f7f40af47edc0e6792fcac492aae15fb"
       ];
     };
   };

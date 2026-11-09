@@ -44,31 +44,32 @@ Both stages read the approved apps from `approved-apps.nix`.
    curl -fsSL https://install.determinate.systems/nix | sh -s -- install
    ```
 
-4. Open a new terminal so `nix` is on your `PATH`, then make Nix trust Intuit's
-   Zscaler certificate. Zscaler intercepts HTTPS, and the Nix daemon doesn't
-   read the macOS keychain, so without this any build that downloads source
-   fails with `unable to get local issuer certificate`. This also needs admin
-   rights, once:
+4. Open a new terminal so `nix` is on your `PATH`, then make builds trust
+   Intuit's Zscaler certificate. This needs admin rights, once.
+
+   Zscaler intercepts HTTPS. Determinate Nix already copies the keychain's
+   certificates, Zscaler's included, into `/etc/nix/macos-keychain.crt`, but
+   builds that download source code (such as Neovim plugins from GitHub)
+   don't read it. Without this step they fail with
+   `unable to get local issuer certificate`.
+
+   First check that Determinate's file trusts github.com through Zscaler. This
+   should print `Verify return code: 0 (ok)`:
 
    ```bash
-   cd ~/.system-nix
-   sudo ./scripts/export-keychain-ca-bundle /etc/nix/ca-bundle.pem
-   printf 'ssl-cert-file = /etc/nix/ca-bundle.pem\n' | sudo tee /etc/nix/nix.custom.conf
+   openssl s_client -connect github.com:443 -CAfile /etc/nix/macos-keychain.crt </dev/null 2>/dev/null | grep 'Verify return code'
+   ```
+
+   Then pass the file to builds and restart the Nix daemon:
+
+   ```bash
+   printf 'extra-experimental-features = configurable-impure-env\nimpure-env = NIX_SSL_CERT_FILE=/etc/nix/macos-keychain.crt\n' | sudo tee /etc/nix/nix.custom.conf
    sudo launchctl kickstart -k system/systems.determinate.nix-daemon
    ```
 
-   The second command replaces the comment-only file the Nix installer wrote.
-   Keep it to exactly that one line: nix-darwin recognises it and can take the
-   file over later. If the last command can't find the daemon, look up its
-   name with `sudo launchctl list | grep -i nix`.
-
-   Your own `nix` commands need the certificates too until the first switch
-   sets them up:
-
-   ```bash
-   ./scripts/export-keychain-ca-bundle ~/.local/share/ca-certificates/keychain.pem
-   export NIX_SSL_CERT_FILE=~/.local/share/ca-certificates/keychain.pem
-   ```
+   The first command replaces `/etc/nix/nix.custom.conf`. Keep it to exactly
+   those two lines: nix-darwin recognises them and can take the file over
+   later.
 
 5. Do the first switch:
 
@@ -76,8 +77,8 @@ Both stages read the approved apps from `approved-apps.nix`.
    nix run --inputs-from . home-manager -- switch --flake .#cwilliams82@cwilliams-intuit-laptop
    ```
 
-   From then on, every `sw` re-exports your certificate bundle and points Nix,
-   git, curl, gh, Python and Node at it.
+   After this switch, git, curl, gh, Python and Node in new terminals use the
+   same certificate file.
 
 6. Open a new terminal again, then convert the clone to Jujutsu:
 
@@ -98,9 +99,10 @@ From now on, run `sw` to apply changes to your user setup.
 WezTerm is installed to `~/Applications/Home Manager Apps`. Spotlight may not
 find it there; open it from Finder the first time.
 
-If Intuit replaces its Zscaler certificate, builds fail with the certificate
-error again. Re-run the first command in step 4 to refresh the daemon's copy.
-After you move to nix-darwin, `sw-system` refreshes it for you.
+If Intuit replaces its Zscaler certificate, Determinate Nix updates
+`/etc/nix/macos-keychain.crt` itself. If the certificate error comes back
+anyway, run the `openssl` check in step 4 to see whether that file is out of
+date.
 
 ## Adding an app once IT approves it
 
@@ -143,8 +145,7 @@ What changes when you switch:
 - macOS settings from `modules/darwin/darwin-shared.nix` apply: Dock, Finder,
   key repeat, trackpad, Touch ID for sudo, and a UK keyboard layout. IT's
   device management may override some of them.
-- nix-darwin takes over the Nix daemon's certificate setting from step 4 and
-  re-exports the bundle on every `sw-system`.
+- nix-darwin takes over the certificate setting from step 4.
 
 To switch:
 
