@@ -22,6 +22,10 @@ in {
       }
     ];
 
+    # In git's config rather than GIT_SSL_CAINFO, because Homebrew clears the
+    # environment before it runs git to clone taps.
+    programs.git.settings.http.sslCAInfo = bundle;
+
     home.sessionVariables = {
       # nixpkgs' OpenSSL reads this, so it covers git, curl and others from Nix.
       NIX_SSL_CERT_FILE = bundle;

@@ -21,5 +21,16 @@
     # sources, such as fetchgit, read NIX_SSL_CERT_FILE from their environment
     # instead and would otherwise fall back to Nix's public certificates.
     nix.settings.impure-env = "NIX_SSL_CERT_FILE=/etc/nix/macos-keychain.crt";
+
+    # Homebrew downloads casks and its package index with curl, after
+    # clearing the environment. It still reads brew.env, which points curl at
+    # a config file naming the same bundle. Git, for taps, is covered by the
+    # Home Manager side of this fix.
+    environment.etc."homebrew/curlrc".text = ''
+      cacert = /etc/nix/macos-keychain.crt
+    '';
+    environment.etc."homebrew/brew.env".text = ''
+      HOMEBREW_CURLRC=/etc/homebrew/curlrc
+    '';
   };
 }
