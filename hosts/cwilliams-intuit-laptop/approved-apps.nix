@@ -96,6 +96,7 @@
   "codex"
 
   # Desktop apps
+  "asyar"
   "omniwm"
   "kanata"
   # "raycast"
