@@ -106,6 +106,8 @@
     "nodejs"
 
     # AI
+    "claude"
+    "chatgpt"
     "claude-code"
     "codex"
     "gemini-cli"

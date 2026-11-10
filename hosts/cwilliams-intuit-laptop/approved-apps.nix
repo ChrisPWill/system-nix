@@ -93,6 +93,7 @@
 
   # AI
   "claude-code"
+  "codex"
 
   # Desktop apps
   "omniwm"

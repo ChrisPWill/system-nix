@@ -109,6 +109,8 @@ in {
 
   # Each cask shares its name with its gated app.
   homebrew.casks = lib.filter (cask: approved.${cask}) [
+    "chatgpt"
+    "claude"
     "cleanshot"
     "ghostty"
     "imageoptim"
