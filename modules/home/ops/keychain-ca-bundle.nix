@@ -26,6 +26,15 @@ in {
     # environment before it runs git to clone taps.
     programs.git.settings.http.sslCAInfo = bundle;
 
+    # The JVM ignores the variables below and can't read a PEM bundle as a
+    # trust store, so Gradle reads the keychain directly. NONE stops the JVM
+    # opening its cacerts file as a keychain. The wrapper reads these too, so
+    # Gradle distribution downloads work.
+    home.file.".gradle/gradle.properties".text = ''
+      systemProp.javax.net.ssl.trustStore=NONE
+      systemProp.javax.net.ssl.trustStoreType=KeychainStore
+    '';
+
     home.sessionVariables = {
       # nixpkgs' OpenSSL reads this, so it covers git, curl and others from Nix.
       NIX_SSL_CERT_FILE = bundle;
