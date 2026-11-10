@@ -30,6 +30,7 @@
     "eza"
     "fd"
     "glow"
+    "google-cloud-sdk"
     "gum"
     "jq"
     "lazyjournal"
