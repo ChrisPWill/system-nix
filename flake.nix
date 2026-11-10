@@ -65,6 +65,10 @@
   outputs = inputs:
     inputs.blueprint {
       inherit inputs;
+      # A path rather than blueprint's default of `inputs.self`, which makes
+      # it export modules and templates as strings. `nix flake check` rejects
+      # those.
+      prefix = ./.;
 
       nixpkgs.config.allowUnfree = true;
       # TODO: delete once nothing depends on EOL electron-39.8.10 (e.g.
