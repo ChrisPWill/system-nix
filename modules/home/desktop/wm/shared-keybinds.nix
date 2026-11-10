@@ -231,6 +231,13 @@ in {
     description = "Shared cross-platform keybindings for skhd and niri";
   };
 
+  options.home.desktop.wm.macosBrowser = mkOption {
+    type = types.str;
+    default = "Vivaldi";
+    example = "Google Chrome";
+    description = "macOS app the browser hotkey opens.";
+  };
+
   options.home.desktop.wm.lib = mkOption {
     type = types.attrsOf types.anything;
     description = "Helper functions for keybinds";
@@ -278,7 +285,7 @@ in {
           {
             key = "cmd+alt-b";
             niri = ''spawn "vivaldi";'';
-            omni = run "open -n -a ${lib.escapeShellArg "Vivaldi"} --background";
+            omni = run "open -n -a ${lib.escapeShellArg config.home.desktop.wm.macosBrowser} --background";
             description = "Browser";
           }
           {

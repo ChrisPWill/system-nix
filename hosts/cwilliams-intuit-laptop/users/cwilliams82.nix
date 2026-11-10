@@ -29,6 +29,9 @@
 
   approvedApps = import ../approved-apps.nix;
 
+  # IT installs and updates Chrome, so it isn't in approvedApps.
+  home.desktop.wm.macosBrowser = "Google Chrome";
+
   home.ai = {
     agentProvider = "none";
     neovimProvider = "none";
