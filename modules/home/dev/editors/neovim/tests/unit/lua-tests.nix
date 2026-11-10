@@ -4,7 +4,9 @@
   ...
 }: let
   meow = inputs.self.packages.${pkgs.stdenv.hostPlatform.system}.meow;
-  unitRoot = ./.;
+  # The whole Neovim folder, not just tests/unit, so specs can read files
+  # under config/ by their path relative to the spec.
+  neovimRoot = ../..;
 in
   pkgs.runCommandLocal "neovim-lua-tests-check" {
     nativeBuildInputs = [pkgs.coreutils];
@@ -24,7 +26,7 @@ in
     export XDG_DATA_HOME="$data"
 
     set +e
-    ${meow}/bin/meow --headless -n -l ${unitRoot}/run_specs.lua > "$TMPDIR/output.log" 2>&1
+    ${meow}/bin/meow --headless -n -l ${neovimRoot}/tests/unit/run_specs.lua > "$TMPDIR/output.log" 2>&1
     status=$?
     set -e
 
