@@ -34,12 +34,19 @@
       enable = config.appApproved.nix-search-tv;
       enableTelevisionIntegration = config.appApproved.television;
     };
+
+    tealdeer = {
+      enable = config.appApproved.tealdeer;
+      # The default backend trusts only certificates built into tealdeer, so
+      # it fails behind a proxy that intercepts HTTPS, such as Zscaler. Native
+      # roots trust whatever the OS trusts, including the macOS keychain.
+      settings.updates.tls_backend = "rustls-with-native-roots";
+    };
   };
 
   home.packages = config.filterApproved {
     inherit
       (pkgs)
-      tealdeer
       nix-search-cli # useful for searching for packages
       ;
   };
