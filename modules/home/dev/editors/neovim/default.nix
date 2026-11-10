@@ -13,6 +13,7 @@
     enableCopilot = config.nixCats.custom.enableCopilot;
     enableLocalOllama = config.services.local-ollama.enable;
     neovimProvider = config.home.ai.neovimProvider;
+    chromiumBrowserApp = config.home.desktop.wm.macosBrowser;
     geminiApiKeyPath =
       if config.home.ai.neovimProvider == "gemini"
       then config.sops.secrets.gemini_api_key.path

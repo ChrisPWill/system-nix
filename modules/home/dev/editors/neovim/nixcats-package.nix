@@ -9,6 +9,8 @@
   enableLocalOllama ? false,
   neovimProvider ? null,
   geminiApiKeyPath ? null,
+  # macOS app name (as in /Applications) that mmdc renders diagrams with.
+  chromiumBrowserApp ? "Google Chrome",
 }: let
   utils = inputs.nixCats.utils;
   mainNixCatsPackageName = "meow";
@@ -249,9 +251,10 @@
     };
 
     # nixpkgs' mermaid-cli only bundles Chromium on Linux; on macOS mmdc
-    # needs a browser to render, so reuse the system Chrome install.
+    # needs a browser to render, so reuse a Chromium-based browser already
+    # installed on the system.
     environmentVariables = lib.optionalAttrs pkgs.stdenv.hostPlatform.isDarwin {
-      general.PUPPETEER_EXECUTABLE_PATH = "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome";
+      general.PUPPETEER_EXECUTABLE_PATH = "/Applications/${chromiumBrowserApp}.app/Contents/MacOS/${chromiumBrowserApp}";
     };
 
     python3.libraries = {};

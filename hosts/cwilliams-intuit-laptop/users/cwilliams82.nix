@@ -29,8 +29,9 @@
 
   approvedApps = import ../approved-apps.nix;
 
-  # IT installs and updates Chrome, so it isn't in approvedApps.
-  home.desktop.wm.macosBrowser = "Google Chrome";
+  # Edge is installed by hand because Nix can't install it on this laptop, so
+  # it isn't in approvedApps.
+  home.desktop.wm.macosBrowser = "Microsoft Edge";
 
   home.ai = {
     agentProvider = "none";
