@@ -89,6 +89,7 @@
   "yaml-language-server"
 
   # Language runtimes
+  "colima"
   "mise"
 
   # AI
