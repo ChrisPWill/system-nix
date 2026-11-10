@@ -113,7 +113,6 @@ in {
     "ghostty"
     "imageoptim"
     "omniwm"
-    "raycast"
     "vivaldi"
   ];
 

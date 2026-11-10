@@ -125,12 +125,12 @@
     "zathura"
 
     # Desktop apps
+    "asyar"
     "cleanshot"
     "element"
     "imageoptim"
     "kanata"
     "omniwm"
-    "raycast"
     "scroll-reverser"
     "skhd"
     "t3code"

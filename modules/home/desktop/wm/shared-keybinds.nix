@@ -281,7 +281,9 @@ in {
           {
             key = "cmd+alt-r";
             niri = ''spawn "dms" "ipc" "call" "spotlight" "toggle";'';
-            omni = openApp "Raycast";
+            # No skhd binding on macOS: Asyar has no command or deep link that
+            # shows its window, so set this key as its launcher shortcut in
+            # Asyar's own settings.
             description = "Application Launcher";
           }
           {
@@ -293,7 +295,7 @@ in {
           {
             key = "cmd+alt-v";
             niri = ''spawn "dms" "ipc" "call" "clipboard" "toggle";'';
-            omni = openUrl "raycast://extensions/raycast/clipboard-history/clipboard-history";
+            omni = openUrl "asyar://extensions/clipboard-history/show-clipboard";
             description = "Clipboard Manager";
           }
           {
@@ -322,7 +324,7 @@ in {
           {
             key = "cmd+alt+shift-n";
             niri = ''spawn "dms" "ipc" "call" "notepad" "toggle";'';
-            omni = openUrl "raycast://extensions/raycast/raycast-notes/raycast-notes";
+            omni = openUrl "asyar://extensions/notes/open-notes";
             description = "Notepad";
           }
           {

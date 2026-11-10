@@ -75,7 +75,7 @@ in
       minHeight = 520.0;
       minWidth = 700.0;
     })
-    (appRule "7E60F6F8-4357-4C90-9F49-56A6585EA291" "com.raycast.macos" {
+    (appRule "D409C277-3DD9-4494-A52F-9AF5422F8D80" "org.asyar" {
       layout = "float";
       minHeight = 420.0;
       minWidth = 600.0;

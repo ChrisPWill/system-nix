@@ -88,6 +88,7 @@ grant:
    - `/Library/Application Support/Kanata/kanata`
    - `OmniWM`
    - `/Library/Application Support/Skhd/skhd`
+   - `asyar`, in `~/Applications/Home Manager Apps`
 2. **Input Monitoring**
    - `/Library/Application Support/Kanata/kanata`
    - `OmniWM`
@@ -97,6 +98,9 @@ grant:
 
 Approve the **pqrs.org Karabiner VirtualHIDDevice** system extension when macOS
 prompts for it. This is required for Kanata's virtual keyboard support.
+
+In Asyar's settings, set its launcher shortcut to Command-Option-R, which
+Caps Lock + R sends. Asyar has no command that skhd could run to open it.
 
 ### 5. Verify the machine
 

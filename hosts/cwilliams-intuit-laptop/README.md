@@ -115,7 +115,7 @@ error. Plugins bundled into an app come with it: approving `neovim` brings its
 plugins and the language servers it bundles. Standalone tools have their own
 names, such as `nixd` for running the Nix language server outside Neovim. Some apps only install under nix-darwin, because they come from
 Homebrew or run as system services: `cleanshot`, `ghostty`, `imageoptim`,
-`kanata`, `raycast`, `scroll-reverser`, `t3code`, `vivaldi`, and the macOS
+`kanata`, `scroll-reverser`, `t3code`, `vivaldi`, and the macOS
 parts of `omniwm` and `skhd`. For those, run `sw-system` too.
 
 When you add a tool to any module, gate it too: add its name to `gatedApps`
@@ -160,9 +160,12 @@ To switch:
    else.
 
 To add your keyboard and window-manager setup, approve `kanata`, `skhd` and
-`omniwm` (and `raycast` if you want it). Then follow the macOS permissions step
-in [INSTALLATION.md](../../INSTALLATION.md#4-grant-macos-permissions). Kanata
-also needs the Karabiner system extension approved, which IT may block.
+`omniwm`, and `asyar` for the launcher, clipboard history and notes. Then
+follow the macOS permissions step in
+[INSTALLATION.md](../../INSTALLATION.md#4-grant-macos-permissions). In Asyar's
+settings, set its launcher shortcut to Command-Option-R, which Caps Lock + R
+sends. Kanata also needs the Karabiner system extension approved, which IT may
+block.
 
 ## Renaming this host
 
