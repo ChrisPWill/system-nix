@@ -17,8 +17,8 @@
     # TODO: delete once nixpkgs disables zathura's tests-x11/tests-wayland
     # features on Darwin. nixpkgs forces meson auto features on, so configure
     # demands xvfb-run, which is Linux-only, even though doCheck is off there.
-    (final: prev: {
-      zathuraPkgs = prev.zathuraPkgs.overrideScope (zFinal: zPrev: {
+    (_final: prev: {
+      zathuraPkgs = prev.zathuraPkgs.overrideScope (_zFinal: zPrev: {
         zathura_core =
           lib.warn
           "zathura ${zPrev.zathura_core.version}: X11/Wayland test features disabled by an overlay in modules/darwin/darwin-shared.nix; remove it once nixpkgs builds zathura on Darwin"

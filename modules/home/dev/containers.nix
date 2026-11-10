@@ -10,8 +10,7 @@
   # plugin binaries on disk. Docker Desktop shipped them inside its own
   # bundle; with a plain client we have to place them ourselves.
   cliPlugins = {
-    docker-compose = pkgs.docker-compose;
-    docker-buildx = pkgs.docker-buildx;
+    inherit (pkgs) docker-compose docker-buildx;
   };
 in {
   options.dev.containers.colima = {

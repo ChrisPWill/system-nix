@@ -23,31 +23,33 @@ in {
     intervalSeconds = 3600;
   };
 
-  home.packages = with pkgs;
-    config.filterApproved {inherit gum;}
-    ++ lib.optionals approved.logseq [
-      # Note taking
-      logseq
-    ]
-    ++ lib.optionals config.isPersonalMachine [
-      anki-bin
-      mplayer # needed by anki
-      mpv # needed by anki
+  home = {
+    packages = with pkgs;
+      config.filterApproved {inherit gum;}
+      ++ lib.optionals approved.logseq [
+        # Note taking
+        logseq
+      ]
+      ++ lib.optionals config.isPersonalMachine [
+        anki-bin
+        mplayer # needed by anki
+        mpv # needed by anki
 
-      # Note taking/docs
-      obsidian
+        # Note taking/docs
+        obsidian
 
-      # Time tracking app for personal projects
-      hours
-    ];
+        # Time tracking app for personal projects
+        hours
+      ];
+
+    sessionPath = lib.optionals approved.logseq [scriptDir];
+    sessionVariables.LOGSEQ_QUICK_CAPTURE_JOURNALS_DIR = lib.mkIf approved.logseq "${config.home.homeDirectory}/knowledge-base/${
+      if config.isPersonalMachine
+      then "personal"
+      else "work"
+    }/journals";
+  };
 
   # PDF viewer
   programs.zathura.enable = approved.zathura;
-
-  home.sessionPath = lib.optionals approved.logseq [scriptDir];
-  home.sessionVariables.LOGSEQ_QUICK_CAPTURE_JOURNALS_DIR = lib.mkIf approved.logseq "${config.home.homeDirectory}/knowledge-base/${
-    if config.isPersonalMachine
-    then "personal"
-    else "work"
-  }/journals";
 }

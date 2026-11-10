@@ -225,23 +225,25 @@ in {
     ./toggle-apps.nix
   ];
 
-  options.home.desktop.wm.keybinds = mkOption {
-    type = types.listOf keybindType;
-    default = [];
-    description = "Shared cross-platform keybindings for skhd and niri";
-  };
+  options.home.desktop.wm = {
+    keybinds = mkOption {
+      type = types.listOf keybindType;
+      default = [];
+      description = "Shared cross-platform keybindings for skhd and niri";
+    };
 
-  options.home.desktop.wm.macosBrowser = mkOption {
-    type = types.str;
-    default = "Vivaldi";
-    example = "Google Chrome";
-    description = "macOS app the browser hotkey opens.";
-  };
+    macosBrowser = mkOption {
+      type = types.str;
+      default = "Vivaldi";
+      example = "Google Chrome";
+      description = "macOS app the browser hotkey opens.";
+    };
 
-  options.home.desktop.wm.lib = mkOption {
-    type = types.attrsOf types.anything;
-    description = "Helper functions for keybinds";
-    default = {};
+    lib = mkOption {
+      type = types.attrsOf types.anything;
+      description = "Helper functions for keybinds";
+      default = {};
+    };
   };
 
   config = {
