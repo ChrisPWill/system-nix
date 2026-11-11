@@ -101,7 +101,7 @@
   "asyar"
   "omniwm"
   "kanata"
-  # "raycast"
   "scroll-reverser"
+  "spotify"
   "skhd"
 ]
