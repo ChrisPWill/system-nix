@@ -5,6 +5,7 @@
     zellij = {
       enable = config.appApproved.zellij;
       settings = {
+        default_shell = "fish";
         default_layout = "compact";
         scroll_buffer_size = 10000;
         copy_on_select = true;
