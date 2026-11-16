@@ -33,7 +33,8 @@
   ];
 
   # Stylix writes theme files for apps whether or not they're installed. The
-  # rest configure Nix, fonts and macOS's built-in ssh.
+  # rest configure Nix, fonts, macOS's built-in ssh and trust in the keychain's
+  # certificates (see modules/home/ops/keychain-ca-bundle.nix).
   exemptFilePatterns = [
     ".*[Ss]tylix.*"
     ".*gtk.*"
@@ -45,6 +46,7 @@
     "Library/Fonts/.*"
     ".*/nix/(nix\\.conf|registry\\.json)"
     "\\.ssh/config"
+    "\\.gradle/gradle\\.properties"
     ".*/\\.keep"
     "Applications/Home Manager Apps"
   ];
@@ -61,6 +63,13 @@
     "zsh"
   ];
 
+  # Makes Node trust the keychain's certificates (see
+  # modules/darwin/keychain-ca-bundle.nix); it installs nothing.
+  exemptSystemUserAgents = [
+    "node-use-system-ca"
+    "set-gui-path"
+  ];
+
   nameOf = p: p.pname or p.name;
   exempt = patterns: path: lib.any (pattern: builtins.match pattern path != null) patterns;
 
@@ -73,7 +82,7 @@
     "Homebrew casks" = map (c: c.name) darwin.homebrew.casks;
     "Homebrew formulae" = map (b: b.name) darwin.homebrew.brews;
     "nix-darwin daemons" = lib.remove "activate-system" (lib.attrNames darwin.launchd.daemons);
-    "nix-darwin user agents" = lib.remove "set-gui-path" (lib.attrNames darwin.launchd.user.agents);
+    "nix-darwin user agents" = lib.filter (a: !(lib.elem a exemptSystemUserAgents)) (lib.attrNames darwin.launchd.user.agents);
   };
 
   failures = lib.filterAttrs (_: found: found != []) unapproved;
