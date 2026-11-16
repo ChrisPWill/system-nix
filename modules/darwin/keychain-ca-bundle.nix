@@ -32,5 +32,13 @@
     environment.etc."homebrew/brew.env".text = ''
       HOMEBREW_CURLRC=/etc/homebrew/curlrc
     '';
+
+    # Apps opened from the Dock don't get the shell's NODE_EXTRA_CA_CERTS,
+    # and Electron apps such as Yogurt ignore it anyway, so their downloads
+    # fail with "fetch failed". This makes Node trust the keychain instead.
+    launchd.user.agents.node-use-system-ca.serviceConfig = {
+      ProgramArguments = ["/bin/launchctl" "setenv" "NODE_USE_SYSTEM_CA" "1"];
+      RunAtLoad = true;
+    };
   };
 }
