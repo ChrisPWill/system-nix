@@ -94,6 +94,8 @@
   "mise"
 
   # AI
+  "claude"
+  "chatgpt"
   "claude-code"
   "codex"
 
