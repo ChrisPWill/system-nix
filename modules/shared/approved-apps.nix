@@ -138,6 +138,7 @@
     "skhd"
     "t3code"
     "vivaldi"
+    "yogurt"
   ];
 in {
   options = with lib; {

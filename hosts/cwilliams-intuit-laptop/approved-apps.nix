@@ -106,4 +106,5 @@
   "scroll-reverser"
   "spotify"
   "skhd"
+  "yogurt" # note taker
 ]
