@@ -16,7 +16,7 @@
   sharedContext = lib.concatMapStringsSep "\n\n" builtins.readFile sharedRuleFiles;
 in {
   config = lib.mkMerge [
-    (lib.mkIf (cfg.agentProvider == "codex" && config.appApproved.codex) {
+    (lib.mkIf cfg.harnessEnabled.codex {
       programs.codex = {
         enable = true;
         package = pkgs.codex;

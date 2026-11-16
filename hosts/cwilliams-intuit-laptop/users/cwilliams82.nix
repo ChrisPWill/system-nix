@@ -33,10 +33,7 @@
   # it isn't in approvedApps.
   home.desktop.wm.macosBrowser = "Microsoft Edge";
 
-  home.ai = {
-    agentProvider = "none";
-    neovimProvider = "none";
-  };
+  home.ai.neovimProvider = "none";
 
   programs.gh = {
     enable = config.appApproved.gh;
