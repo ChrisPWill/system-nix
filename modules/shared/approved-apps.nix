@@ -25,6 +25,7 @@
     # Command-line tools
     "bat"
     "btop"
+    "cloudflared"
     "direnv"
     "envoluntary"
     "eza"

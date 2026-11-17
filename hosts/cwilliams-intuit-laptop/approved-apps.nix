@@ -18,6 +18,7 @@
 
   # Command-line tools
   "bat"
+  "cloudflared"
   "direnv"
   "envoluntary"
   "eza"
