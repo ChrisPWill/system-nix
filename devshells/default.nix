@@ -4,6 +4,8 @@ in
   pkgs.mkShell {
     packages = with pkgs; [
       git
+      # Claude's startup hooks need Python without Apple's SDK-sensitive launcher.
+      python3
     ];
 
     shellHook = ''
