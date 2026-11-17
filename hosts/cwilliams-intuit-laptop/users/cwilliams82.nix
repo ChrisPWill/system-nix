@@ -21,7 +21,7 @@
   # Intuit's network intercepts HTTPS through Zscaler.
   ops.keychainCaBundle.enable = true;
 
-  userEmail = "chris_williams2@intuit.com";
+  userEmail = "chris.williams@sequencehq.com";
 
   # IT controls the machine's hostname, so `sw` can't rely on it matching
   # this directory. Rename both together.
