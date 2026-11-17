@@ -35,7 +35,29 @@ in {
       systemProp.javax.net.ssl.trustStoreType=KeychainStore
     '';
 
+    # Python 3.13+ turns on OpenSSL's VERIFY_X509_STRICT, which rejects any CA
+    # whose Basic Constraints isn't marked critical. Zscaler's root and several
+    # old public roots in the keychain are like that, so every Python tool
+    # (pre-commit, uv, pip) fails against intercepted sites while curl and Go
+    # accept them. Clearing only that flag keeps chain, expiry and hostname
+    # checks. We can't drop the offending CA from the bundle, as Zscaler's is
+    # the one that signs every site.
+    home.file.".local/share/keychain-ca-bundle/python/sitecustomize.py".text = ''
+      import ssl
+
+      _create_default_context = ssl.create_default_context
+
+      def _lenient_default_context(*args, **kwargs):
+          ctx = _create_default_context(*args, **kwargs)
+          ctx.verify_flags &= ~ssl.VERIFY_X509_STRICT
+          return ctx
+
+      ssl.create_default_context = _lenient_default_context
+      ssl._create_default_https_context = _lenient_default_context
+    '';
+
     home.sessionVariables = {
+      PYTHONPATH = "${config.home.homeDirectory}/.local/share/keychain-ca-bundle/python\${PYTHONPATH:+:$PYTHONPATH}";
       # nixpkgs' OpenSSL reads this, so it covers git, curl and others from Nix.
       NIX_SSL_CERT_FILE = bundle;
       # Go programs such as gh, and Python's ssl module.
