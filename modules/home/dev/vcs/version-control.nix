@@ -15,10 +15,17 @@
   });
 
   # jj captures a diff tool's stdout to feed its own pager, so a full-screen
-  # viewer started as a plain tool has nothing to draw on. Talk to the terminal
-  # directly instead. file-by-file mode means this runs once per changed file.
+  # viewer started as a plain tool has nothing to draw on. Attach it to the
+  # terminal instead, by its real device name: on macOS crossterm can't poll
+  # /dev/tty itself and panics with "reader source not set". file-by-file mode
+  # means this runs once per changed file.
   omnidiffTui = pkgs.writeShellScript "jj-omnidiff-tui" ''
-    ${omnidiff}/bin/omnidiff "$1" "$2" </dev/tty >/dev/tty 2>/dev/tty || true
+    tty=$(ps -o tty= -p $$ | tr -d ' ')
+    case "$tty" in
+      "" | "?" | "??") dev=/dev/tty ;;
+      *) dev=/dev/$tty ;;
+    esac
+    ${omnidiff}/bin/omnidiff "$1" "$2" <"$dev" >"$dev" 2>"$dev" || true
   '';
 in {
   home.packages =
