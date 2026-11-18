@@ -15,18 +15,18 @@
   });
 
   # jj captures a diff tool's stdout to feed its own pager, so a full-screen
-  # viewer started as a plain tool has nothing to draw on. Attach it to the
-  # terminal instead, by its real device name: on macOS crossterm can't poll
-  # /dev/tty itself and panics with "reader source not set". file-by-file mode
-  # means this runs once per changed file.
-  omnidiffTui = pkgs.writeShellScript "jj-omnidiff-tui" ''
+  # program started as a plain tool has nothing to draw on. Run it on the
+  # terminal by its real device name instead: some TUI libraries (crossterm on
+  # macOS) can't poll /dev/tty itself.
+  jjTtyTool = pkgs.writeShellScript "jj-tty-tool" ''
     tty=$(ps -o tty= -p $$ | tr -d ' ')
     case "$tty" in
       "" | "?" | "??") dev=/dev/tty ;;
       *) dev=/dev/$tty ;;
     esac
-    ${omnidiff}/bin/omnidiff "$1" "$2" <"$dev" >"$dev" 2>"$dev" || true
+    "$@" <"$dev" >"$dev" 2>"$dev" || true
   '';
+
 in {
   home.packages =
     config.filterApproved {
@@ -94,11 +94,12 @@ in {
         user.name = "Chris Williams";
         user.email = config.userEmail;
         push.autoSetupRemote = true;
-        # `git difftool` opens OmniDiff's interactive viewer; `git diff` stays on
-        # delta because a pager can't host a full-screen TUI.
-        diff.tool = lib.mkIf approved.omnidiff "omnidiff";
+        # `git dt` opens every changed file in one Neovim session; `git diff`
+        # stays on delta because a pager can't host a full-screen editor.
+        alias.dt = lib.mkIf approved.neovim "difftool -d";
+        diff.tool = lib.mkIf approved.neovim "nvim-difftool";
         difftool.prompt = false;
-        difftool.omnidiff.cmd = lib.mkIf approved.omnidiff ''omnidiff "$LOCAL" "$REMOTE"'';
+        difftool.nvim-difftool.cmd = lib.mkIf approved.neovim ''nvim -c "packadd nvim.difftool" -c "DiffTool $LOCAL $REMOTE"'';
         core = {
           # Improved performance on MacOS
           # https://github.blog/2022-06-29-improve-git-monorepo-performance-with-a-file-system-monitor/
@@ -183,13 +184,13 @@ in {
           diff-args = ["$left" "$right"];
           diff-invocation-mode = "file-by-file";
         };
-        merge-tools.omnidiff-tui = lib.mkIf approved.omnidiff {
-          program = "${omnidiffTui}";
-          diff-args = ["$left" "$right"];
-          diff-invocation-mode = "file-by-file";
+        # jj's default invocation mode hands the tool both directory trees.
+        merge-tools.nvim-difftool = lib.mkIf approved.neovim {
+          program = "${jjTtyTool}";
+          diff-args = ["nvim" "-c" "packadd nvim.difftool" "-c" "DiffTool $left $right"];
         };
         # `jj dt` is the interactive viewer; plain `jj diff` stays on delta.
-        aliases.dt = lib.mkIf approved.omnidiff ["diff" "--no-pager" "--tool" "omnidiff-tui"];
+        aliases.dt = lib.mkIf approved.neovim ["diff" "--no-pager" "--tool" "nvim-difftool"];
 
         fix.tools =
           {
