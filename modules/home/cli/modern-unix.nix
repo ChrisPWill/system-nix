@@ -72,9 +72,6 @@ in {
 
     # Command history
     atuin.enable = approved.atuin;
-
-    # Autocompletion in shell
-    carapace.enable = approved.carapace;
   };
 
   home.packages = config.filterApproved ({
