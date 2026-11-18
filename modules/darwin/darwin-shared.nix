@@ -36,9 +36,23 @@
 
   # Home Manager owns the interactive zsh prompt and completions. Leaving the
   # nix-darwin defaults on runs compinit before Home Manager runs it again.
+  # Running `brew shellenv` in every new shell costs ~1.3s of a 1.65s zsh start
+  # on this laptop, because each fresh exec (bash, brew, brew.sh) is slow under
+  # the endpoint-security agents. Its output is constant for this prefix, so the
+  # shells below set the same environment statically instead. Keep these in sync
+  # with `brew shellenv` if the Homebrew prefix ever changes.
   programs.zsh = {
     enableCompletion = false;
     promptInit = "";
+    interactiveShellInit = ''
+      export HOMEBREW_PREFIX="/opt/homebrew"
+      export HOMEBREW_CELLAR="/opt/homebrew/Cellar"
+      export HOMEBREW_REPOSITORY="/opt/homebrew/Library/.homebrew-is-managed-by-nix"
+      fpath[1,0]="/opt/homebrew/share/zsh/site-functions"
+      export FPATH
+      export PATH="/opt/homebrew/bin:/opt/homebrew/sbin''${PATH+:$PATH}"
+      export INFOPATH="/opt/homebrew/share/info:''${INFOPATH:-}"
+    '';
   };
 
   programs.fish = {
@@ -47,7 +61,12 @@
     # in native fish syntax.
     useBabelfish = true;
     interactiveShellInit = lib.mkForce ''
-      brew shellenv fish 2>/dev/null | source || true
+      set --global --export HOMEBREW_PREFIX "/opt/homebrew"
+      set --global --export HOMEBREW_CELLAR "/opt/homebrew/Cellar"
+      set --global --export HOMEBREW_REPOSITORY "/opt/homebrew/Library/.homebrew-is-managed-by-nix"
+      fish_add_path --global --move --path "/opt/homebrew/bin" "/opt/homebrew/sbin"
+      if not set --query INFOPATH; set INFOPATH ""; end
+      set --global --export INFOPATH "/opt/homebrew/share/info" $INFOPATH
     '';
   };
 
@@ -56,6 +75,9 @@
     enableRosetta = true;
     autoMigrate = true;
     user = config.system.primaryUser;
+    # Replaced by the static environment in programs.zsh/fish above.
+    enableZshIntegration = false;
+    enableFishIntegration = false;
   };
 
   homebrew = {
