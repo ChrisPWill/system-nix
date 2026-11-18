@@ -16,7 +16,9 @@ in {
   options.dev.containers.colima = {
     cpus = lib.mkOption {
       type = lib.types.ints.positive;
-      default = 4;
+      # Sized for a local service stack plus Gradle integration tests on a
+      # many-core laptop; four vCPUs left the VM saturated while the host idled.
+      default = 8;
       description = "vCPUs for the Colima VM.";
     };
     memory = lib.mkOption {
@@ -24,8 +26,16 @@ in {
       # Colima's own default (2 GiB) is too small once a local service stack
       # and long-running tools such as Graphiti share the VM: the kernel's OOM
       # killer ends up picking off whichever container is largest.
-      default = 8;
+      default = 16;
       description = "Memory for the Colima VM, in GiB.";
+    };
+    rosetta = lib.mkOption {
+      type = lib.types.bool;
+      default = true;
+      # Some images, such as the Pub/Sub and Bigtable emulators, are
+      # linux/amd64 only. Without Rosetta they run under QEMU user-mode
+      # emulation, which is several times slower to start and run.
+      description = "Run amd64 containers through Rosetta instead of QEMU.";
     };
   };
 
@@ -59,7 +69,8 @@ in {
           (toString cfg.cpus)
           "--memory"
           (toString cfg.memory)
-        ];
+        ]
+        ++ lib.optional cfg.rosetta "--vz-rosetta";
         RunAtLoad = true;
         # Restart only on a crash. A plain `KeepAlive = true` would also
         # relaunch the VM the instant `colima stop` succeeded, which makes

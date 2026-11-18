@@ -10,7 +10,9 @@
       completionInit = ''
         autoload -Uz compinit
         if [[ -n ''${ZDOTDIR:-$HOME}/.zcompdump(#qN.mh+24) ]]; then
-          compinit
+          # -u skips compaudit, a ~35ms walk of every fpath directory. Nix store
+          # paths are read-only, so the insecure-directory check adds nothing.
+          compinit -u
         else
           compinit -C
         fi

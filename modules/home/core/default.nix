@@ -4,6 +4,7 @@
     ./shells/zsh.nix
     ./shells/nushell.nix
     ./shells/fish.nix
+    ./shells/cached-init.nix
     ./fonts.nix
   ];
 }
