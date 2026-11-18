@@ -10,8 +10,11 @@
   # the file instead. A new tool version gives a new store path, so the cache
   # can't go stale.
   #
-  # Not cached: atuin (Home Manager already writes a file for it) and
-  # envoluntary (its module has no switch to turn its own hook off).
+  # Not cached: atuin (Home Manager already writes a file for it), envoluntary
+  # (its module has no switch to turn its own hook off), mise and carapace.
+  # `mise activate` bakes the PATH it sees into its output, and carapace bakes
+  # in its bin directory under $HOME, so a build-time copy would point at the
+  # build sandbox instead of the real user.
   cached = [
     {
       name = "zoxide";
@@ -23,14 +26,6 @@
       # fetch the real script; ask for that script directly.
       args = "init fish --print-full-init";
       guard = ''test "$TERM" != dumb'';
-    }
-    {
-      name = "mise";
-      args = "activate fish";
-    }
-    {
-      name = "carapace";
-      args = "_carapace fish";
     }
     {
       name = "direnv";
