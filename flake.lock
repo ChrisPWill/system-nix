@@ -466,6 +466,24 @@
         "type": "indirect"
       }
     },
+    "flake-utils_2": {
+      "inputs": {
+        "systems": "systems_5"
+      },
+      "locked": {
+        "lastModified": 1731533236,
+        "narHash": "sha256-l0KFg5HjrsfsO/JpG+r7fRrqm12kzFHyUHqHCVpMMbI=",
+        "owner": "numtide",
+        "repo": "flake-utils",
+        "rev": "11707dc2f618dd54ca8739b309ec4fc024de578b",
+        "type": "github"
+      },
+      "original": {
+        "owner": "numtide",
+        "repo": "flake-utils",
+        "type": "github"
+      }
+    },
     "fromYaml": {
       "flake": false,
       "locked": {
@@ -896,6 +914,27 @@
         "type": "github"
       }
     },
+    "omnidiff": {
+      "inputs": {
+        "flake-utils": "flake-utils_2",
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1794564306,
+        "narHash": "sha256-o2Jirrg5OEx7t8Lh/F0kBMLhpmyFRKQzDYz2m2b5FeU=",
+        "owner": "ivankovic",
+        "repo": "omnidiff",
+        "rev": "dc4bbdce7e49f759c06845de38943df157b5bda4",
+        "type": "github"
+      },
+      "original": {
+        "owner": "ivankovic",
+        "repo": "omnidiff",
+        "type": "github"
+      }
+    },
     "plugins-neotest-kotlin": {
       "flake": false,
       "locked": {
@@ -928,6 +967,7 @@
         "nix-monitor": "nix-monitor",
         "nixCats": "nixCats",
         "nixpkgs": "nixpkgs_6",
+        "omnidiff": "omnidiff",
         "plugins-neotest-kotlin": "plugins-neotest-kotlin",
         "sops-nix": "sops-nix",
         "stylix": "stylix",
@@ -988,7 +1028,7 @@
           "nixpkgs"
         ],
         "nur": "nur",
-        "systems": "systems_5",
+        "systems": "systems_6",
         "tinted-kitty": "tinted-kitty",
         "tinted-schemes": "tinted-schemes",
         "tinted-tmux": "tinted-tmux",
@@ -1069,6 +1109,21 @@
       }
     },
     "systems_5": {
+      "locked": {
+        "lastModified": 1681028828,
+        "narHash": "sha256-Vy1rq5AaRuLzOxct8nz4T6wlgyUR7zLU309k9mBC768=",
+        "owner": "nix-systems",
+        "repo": "default",
+        "rev": "da67096a3b9bf56a91d16901293e51ba5b49a27e",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nix-systems",
+        "repo": "default",
+        "type": "github"
+      }
+    },
+    "systems_6": {
       "locked": {
         "lastModified": 1774449309,
         "narHash": "sha256-brhZ8DmuGtzkCYHJg4HEd602amKm89Y9ytsFZ5uWD1w=",

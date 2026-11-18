@@ -15,6 +15,13 @@
       inputs.home-manager.follows = "home-manager";
     };
 
+    # https://github.com/ivankovic/omnidiff
+    # Syntax-aware diff viewer; not in nixpkgs. AGPL-3.0-only.
+    omnidiff = {
+      url = "github:ivankovic/omnidiff";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     # Darwin things
     nix-darwin.url = "github:LnL7/nix-darwin";
     nix-darwin.inputs.nixpkgs.follows = "nixpkgs";

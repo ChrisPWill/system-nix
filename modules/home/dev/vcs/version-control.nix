@@ -1,16 +1,32 @@
 {
   config,
+  inputs,
   lib,
   pkgs,
   ...
 }: let
   scriptDir = "${config.homeModuleDir}/dev/vcs/scripts";
   approved = config.appApproved;
+  # The upstream derivation leaves out pkg-config and oniguruma, which nixpkgs'
+  # Rust build hooks make the onig_sys crate look for, so it fails to build.
+  omnidiff = inputs.omnidiff.packages.${pkgs.stdenv.hostPlatform.system}.default.overrideAttrs (old: {
+    nativeBuildInputs = (old.nativeBuildInputs or []) ++ [pkgs.pkg-config];
+    buildInputs = (old.buildInputs or []) ++ [pkgs.oniguruma];
+  });
+
+  # jj captures a diff tool's stdout to feed its own pager, so a full-screen
+  # viewer started as a plain tool has nothing to draw on. Talk to the terminal
+  # directly instead. file-by-file mode means this runs once per changed file.
+  omnidiffTui = pkgs.writeShellScript "jj-omnidiff-tui" ''
+    ${omnidiff}/bin/omnidiff "$1" "$2" </dev/tty >/dev/tty 2>/dev/tty || true
+  '';
 in {
-  home.packages = config.filterApproved {
-    # Another fancy git UI
-    inherit (pkgs) tig;
-  };
+  home.packages =
+    config.filterApproved {
+      # Another fancy git UI
+      inherit (pkgs) tig;
+    }
+    ++ lib.optionals approved.omnidiff [omnidiff];
 
   home.sessionPath = [scriptDir];
   programs = {
@@ -71,6 +87,11 @@ in {
         user.name = "Chris Williams";
         user.email = config.userEmail;
         push.autoSetupRemote = true;
+        # `git difftool` opens OmniDiff's interactive viewer; `git diff` stays on
+        # delta because a pager can't host a full-screen TUI.
+        diff.tool = lib.mkIf approved.omnidiff "omnidiff";
+        difftool.prompt = false;
+        difftool.omnidiff.cmd = lib.mkIf approved.omnidiff ''omnidiff "$LOCAL" "$REMOTE"'';
         core = {
           # Improved performance on MacOS
           # https://github.blog/2022-06-29-improve-git-monorepo-performance-with-a-file-system-monitor/
@@ -80,11 +101,26 @@ in {
       };
     };
 
-    diff-so-fancy.enable = approved.diff-so-fancy;
+    # Pager for git diff/log/show and lazygit.
+    # https://github.com/dandavison/delta
+    delta = {
+      enable = approved.delta;
+      enableGitIntegration = true;
+      options = {
+        navigate = true;
+        line-numbers = true;
+      };
+    };
 
     # Neat TUI for git
     # https://github.com/jesseduffield/lazygit
-    lazygit.enable = approved.lazygit;
+    lazygit = {
+      enable = approved.lazygit;
+      settings.git.paging = lib.mkIf approved.delta {
+        colorArg = "always";
+        pager = "delta --dark --paging=never";
+      };
+    };
     zsh = {
       shellAliases = {
         lg = "lazygit";
@@ -128,6 +164,25 @@ in {
       settings = {
         user.name = "Chris Williams";
         user.email = config.userEmail;
+
+        ui = lib.mkIf approved.delta {
+          # delta reads git-format diffs.
+          diff-formatter = ":git";
+          pager = "delta";
+        };
+
+        merge-tools.omnidiff = lib.mkIf approved.omnidiff {
+          program = "${omnidiff}/bin/omnidiff";
+          diff-args = ["$left" "$right"];
+          diff-invocation-mode = "file-by-file";
+        };
+        merge-tools.omnidiff-tui = lib.mkIf approved.omnidiff {
+          program = "${omnidiffTui}";
+          diff-args = ["$left" "$right"];
+          diff-invocation-mode = "file-by-file";
+        };
+        # `jj dt` is the interactive viewer; plain `jj diff` stays on delta.
+        aliases.dt = lib.mkIf approved.omnidiff ["diff" "--no-pager" "--tool" "omnidiff-tui"];
 
         fix.tools =
           {

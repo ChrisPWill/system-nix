@@ -56,13 +56,14 @@
     "nh"
 
     # Version control and SSH
-    "diff-so-fancy"
+    "delta"
     "gh"
     "git"
     "git-lfs"
     "jjui"
     "jujutsu"
     "lazygit"
+    "omnidiff"
     "ssh-agent"
     "tig"
 
