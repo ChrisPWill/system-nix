@@ -301,7 +301,9 @@ in {
           {
             key = "cmd+alt-m";
             niri = ''spawn "dms" "ipc" "call" "processlist" "focusOrToggle";'';
-            omni = openApp "Activity Monitor";
+            # btop rather than Activity Monitor: the latter keeps sysmond and
+            # PerfPowerServices pinned at 100%+ CPU while it is open.
+            omni = run "wezterm start -- btop";
             description = "Task Manager";
           }
           {
