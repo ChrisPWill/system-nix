@@ -48,6 +48,7 @@
     "\\.ssh/config"
     "\\.gradle/gradle\\.properties"
     ".*/\\.keep"
+    "\\.local/share/keychain-ca-bundle/.*"
     "Applications/Home Manager Apps"
   ];
 
