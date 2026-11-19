@@ -97,6 +97,16 @@ for _, mode in ipairs({ "n", "x", "o" }) do
 	end, { desc = "Repeat previous bracket navigation" })
 end
 
+-- Diff windows (:DiffTool, jj dt) hold temp files gitsigns never attaches to,
+-- so ]h / [h fall back to Vim's native change motion there.
+for key, native in pairs({ ["]h"] = "]c", ["[h"] = "[c" }) do
+	vim.keymap.set("n", key, function()
+		if vim.wo.diff then
+			vim.cmd.normal({ vim.v.count1 .. native, bang = true })
+		end
+	end, { desc = "Next/previous change (diff windows)" })
+end
+
 bracket_repeat.track_builtin_pairs()
 
 -- Window management

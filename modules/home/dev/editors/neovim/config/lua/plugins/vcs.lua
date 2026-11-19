@@ -36,7 +36,8 @@ return {
 
 					map({ "n", "v" }, "]h", function()
 						if vim.wo.diff then
-							return "]h"
+							vim.cmd.normal({ vim.v.count1 .. "]c", bang = true })
+							return "<Ignore>"
 						end
 						hunk_moves.next()
 						return "<Ignore>"
@@ -44,7 +45,8 @@ return {
 
 					map({ "n", "v" }, "[h", function()
 						if vim.wo.diff then
-							return "[h"
+							vim.cmd.normal({ vim.v.count1 .. "[c", bang = true })
+							return "<Ignore>"
 						end
 						hunk_moves.previous()
 						return "<Ignore>"
