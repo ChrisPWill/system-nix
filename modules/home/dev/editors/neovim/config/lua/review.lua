@@ -12,6 +12,13 @@ local function notify(message, level)
 	vim.notify(message, level or vim.log.levels.INFO, { title = "PR review" })
 end
 
+-- Octo's virtual buffers (octo://..., and <cwd>/octo/null) would each get a swap
+-- file in one shared directory, named after the buffer. Two sessions reviewing
+-- from the same repo then collide with "swap file exists", and a session that
+-- exits uncleanly leaves stale ones behind. Reviews don't edit files, so there
+-- is nothing for a swap file to recover.
+vim.o.swapfile = false
+
 local progress_count = 0
 
 -- A notification that is replaced in place: slow steps read as "working", then
