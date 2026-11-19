@@ -12,13 +12,72 @@ local function notify(message, level)
 	vim.notify(message, level or vim.log.levels.INFO, { title = "PR review" })
 end
 
+local progress_count = 0
+
+-- A notification that is replaced in place: slow steps read as "working", then
+-- as done or failed, instead of as silence. Returns finish(message?, level?);
+-- calling it with no message just closes the notification.
+local function progress(title)
+	progress_count = progress_count + 1
+	local id = "pr-review-" .. progress_count
+	local finished = false
+	local function show(message, level, timeout)
+		Snacks.notifier.notify(
+			message,
+			level or vim.log.levels.INFO,
+			{ id = id, title = "PR review", timeout = timeout }
+		)
+	end
+	show(title .. "…", vim.log.levels.INFO, 0)
+	return function(message, level)
+		if finished then
+			return
+		end
+		finished = true
+		if message then
+			show(message, level, 3000)
+		else
+			Snacks.notifier.hide(id)
+		end
+	end
+end
+
+-- Octo loads asynchronously and reports nothing, so close the notification when
+-- the expected UI appears, or after a while if it never does (e.g. on error).
+local function finish_when(finish, event, pattern)
+	local autocmd = vim.api.nvim_create_autocmd(event, {
+		pattern = pattern,
+		once = true,
+		callback = function()
+			finish()
+		end,
+	})
+	vim.defer_fn(function()
+		pcall(vim.api.nvim_del_autocmd, autocmd)
+		finish()
+	end, 15000)
+end
+
 require("lze").load({
 	{
 		"octo.nvim",
 		enabled = nixCats("review") or false,
 		cmd = "Octo",
 		after = function()
-			require("octo").setup({ picker = "snacks" })
+			-- Octo defaults to nvim-web-devicons, which this config does not
+			-- install; mini.icons already provides the same icons.
+			require("lze").trigger_load("mini.nvim")
+			local icons = require("mini.icons")
+			icons.setup()
+			require("octo").setup({
+				picker = "snacks",
+				file_panel = {
+					icons = function(name)
+						local icon, hl = icons.get("file", name)
+						return icon, hl
+					end,
+				},
+			})
 		end,
 	},
 })
@@ -47,14 +106,24 @@ local function pr_url(pr)
 end
 
 local function fetch_head(number, on_done)
+	local finish = progress(("Fetching PR %s"):format(number))
 	vim.system(
 		{ "git", "fetch", remote, ("pull/%s/head"):format(number) },
 		{ text = true },
 		vim.schedule_wrap(function(result)
 			if result.code ~= 0 then
-				notify("git fetch failed: " .. vim.trim(result.stderr or ""), vim.log.levels.ERROR)
+				local url = vim.trim(vim.fn.system({ "git", "remote", "get-url", remote }))
+				local message = result.stderr:find("couldn't find remote ref", 1, true)
+						and ("PR %s not found on %s (%s). Run this from a clone of the PR's repo."):format(
+							number,
+							remote,
+							url
+						)
+					or ("git fetch failed: " .. vim.trim(result.stderr or ""))
+				finish(message, vim.log.levels.ERROR)
 				return
 			end
+			finish()
 			on_done()
 		end)
 	)
@@ -84,6 +153,7 @@ end
 local function open_pr(arg)
 	if arg == "" then
 		load_octo()
+		picker_opened(progress("Loading PRs"))
 		vim.cmd("Octo pr list")
 		return
 	end
@@ -94,12 +164,18 @@ local function open_pr(arg)
 	end
 	fetch_head(number, function()
 		load_octo()
+		finish_when(progress(("Opening PR %s"):format(number)), "BufEnter", "octo://*")
 		vim.cmd(("Octo pr edit %s%s"):format(repo and (repo .. " ") or "", number))
 	end)
 end
 
+local function picker_opened(finish)
+	finish_when(finish, "FileType", "snacks_picker*")
+end
+
 local function search(query)
 	load_octo()
+	picker_opened(progress("Searching PRs"))
 	vim.cmd("Octo search " .. query)
 end
 
@@ -109,6 +185,7 @@ local function start_review()
 		return
 	end
 	fetch_head(pr.number, function()
+		finish_when(progress(("Starting review of PR %s"):format(pr.number)), "BufEnter", "*OctoChangedFiles*")
 		require("octo.reviews").start_or_resume_review()
 	end)
 end
@@ -141,7 +218,14 @@ local function checks()
 	if pr.in_buffer then
 		vim.cmd("Octo pr checks")
 	else
-		run_in_terminal({ "gh", "pr", "checks", tostring(pr.number), "-R", pr.repo })
+		run_in_terminal({
+			"bash",
+			"-c",
+			'echo "Fetching checks…"; gh pr checks "$1" -R "$2"',
+			"_",
+			tostring(pr.number),
+			pr.repo,
+		})
 	end
 end
 
@@ -153,10 +237,11 @@ local function failing_logs()
 		return
 	end
 	local script = [[
+echo "Finding the failing job…"
 id=$(gh pr checks "$1" -R "$2" --json state,link --jq '[.[] | select(.state == "FAILURE")][0].link // ""' | sed -E 's#.*/runs/([0-9]+).*#\1#')
 case "$id" in
   ""|*[!0-9]*) echo "No failing checks on PR $1"; read -r _ ;;
-  *) gh run view "$id" -R "$2" --log-failed | less -R ;;
+  *) echo "Fetching log of run $id…"; gh run view "$id" -R "$2" --log-failed | less -R ;;
 esac
 ]]
 	run_in_terminal({ "bash", "-c", script, "_", tostring(pr.number), pr.repo })
@@ -182,14 +267,20 @@ local function checkout()
 	end
 
 	local ref = ("pr-%s"):format(pr.number)
+	local finish = progress(("Fetching PR %s"):format(pr.number))
+	local function fail(prefix, result)
+		finish(prefix .. vim.trim(result.stderr or ""), vim.log.levels.ERROR)
+	end
 	vim.system(
 		{ "git", "fetch", remote, ("pull/%s/head:refs/remotes/%s/%s"):format(pr.number, remote, ref) },
 		{ text = true, cwd = root },
 		vim.schedule_wrap(function(fetched)
 			if fetched.code ~= 0 then
-				notify("git fetch failed: " .. vim.trim(fetched.stderr or ""), vim.log.levels.ERROR)
+				fail("git fetch failed: ", fetched)
 				return
 			end
+			finish()
+			finish = progress("Creating workspace")
 			local add = vim.uv.fs_stat(vim.fs.joinpath(root, ".jj"))
 					and { "jj", "workspace", "add", dir, "-r", ("%s@%s"):format(ref, remote) }
 				or { "git", "worktree", "add", "--detach", dir, ("refs/remotes/%s/%s"):format(remote, ref) }
@@ -198,11 +289,11 @@ local function checkout()
 				{ text = true, cwd = root },
 				vim.schedule_wrap(function(created)
 					if created.code ~= 0 then
-						notify("Workspace creation failed: " .. vim.trim(created.stderr or ""), vim.log.levels.ERROR)
+						fail("Workspace creation failed: ", created)
 						return
 					end
 					vim.cmd.tcd(dir)
-					notify("Checked out PR " .. pr.number .. " in " .. dir)
+					finish(("Checked out PR %s in %s"):format(pr.number, dir))
 				end)
 			)
 		end)
