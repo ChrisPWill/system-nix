@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+# PR review in the lean `review` Neovim build.
+#   nvr            PRs waiting on your review
+#   nvr 123        PR 123 in the current repo
+#   nvr <PR URL>   that PR (the current directory must be a clone of its repo)
+set -euo pipefail
+
+if [ $# -eq 0 ]; then
+  exec review -c "PRInbox"
+fi
+exec review -c "PR $1"

@@ -130,6 +130,10 @@
       codex = with pkgs; [
         codex-acp
       ];
+      # Octo shells out to gh for every GitHub call and reuses its auth.
+      review = with pkgs; [
+        gh
+      ];
       web = with pkgs; [
         tailwindcss
         vscode-langservers-extracted
@@ -164,6 +168,9 @@
     };
 
     optionalPlugins = {
+      review = with pkgs.vimPlugins; [
+        octo-nvim
+      ];
       go = with pkgs.vimPlugins; [
         nvim-dap-go
       ];
@@ -290,6 +297,18 @@
         commonCategories
         // {
           local-llm = enableLocalOllama;
+        };
+      extra = commonExtra;
+    };
+
+    # PR review: the daily-driver language support (LSPs, formatters) so code
+    # can be explored while reviewing, without the AI integrations.
+    "review" = _: {
+      settings = commonSettings;
+      categories =
+        commonCategories
+        // {
+          review = true;
         };
       extra = commonExtra;
     };

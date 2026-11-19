@@ -129,6 +129,7 @@ Find more info in these dedicated reference guides (Browse with `<leader>/k`):
 - **[navigation.md](./navigation.md):** Movement and navigation tools.
 - **[treesitter.md](./treesitter.md):** Custom treesitter tooling (return/mutation highlighting, fold summaries).
 - **[vcs.md](./vcs.md):** Git workflow and Jujutsu integration.
+- **[review.md](./review.md):** PR review with Octo in the `review` build (`nvr`).
 - **[snippets.md](./snippets.md):** Managing and using Snippets.
 - **[testing.md](./testing.md):** Integrated test runner.
 - **[languages.md](./languages.md):** Comprehensive language support.

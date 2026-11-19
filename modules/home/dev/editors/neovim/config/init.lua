@@ -48,6 +48,10 @@ if nixCats("leet") then
 	utils.nmap("<leader>lR", "<cmd>Leet restore<CR>", "Leet restore to original code")
 end
 
+if nixCats("review") then
+	require("review")
+end
+
 require("autocmds")
 
 local lsp_utils = require("plugins.lsp")
