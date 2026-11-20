@@ -19,6 +19,7 @@ pcall(vim.keymap.del, "n", "grr")
 pcall(vim.keymap.del, "n", "gra")
 pcall(vim.keymap.del, "n", "gri")
 pcall(vim.keymap.del, "n", "grt")
+pcall(vim.keymap.del, "n", "grx")
 
 -- Remap for dealing with word wrap
 vim.keymap.set("n", "k", "v:count == 0 ? 'gk' : 'k'", { expr = true, silent = true })

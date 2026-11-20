@@ -29,6 +29,7 @@ function M.on_attach(client, bufnr)
 	pcall(vim.keymap.del, "n", "gra", { buffer = bufnr })
 	pcall(vim.keymap.del, "n", "gri", { buffer = bufnr })
 	pcall(vim.keymap.del, "n", "grt", { buffer = bufnr })
+	pcall(vim.keymap.del, "n", "grx", { buffer = bufnr })
 
 	nmap("<leader>rn", function()
 		return ":IncRename " .. vim.fn.expand("<cword>")
