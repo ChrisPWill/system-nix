@@ -245,7 +245,13 @@ return {
 				return vim.lsp.rpc.start({ "kotlin-lsp", "--stdio", "--system-path", vim.fs.joinpath(base, "system") }, dispatchers, {
 					cwd = config.cmd_cwd,
 					-- A private user-home avoids JetBrains' global cache lock too.
-					env = { IJ_JAVA_OPTIONS = "-Duser.home=" .. vim.fs.joinpath(base, "home") },
+					-- Gradle derives its default user home from `user.home`, so the
+					-- override above would hide ~/.gradle (gradle.properties holds the
+					-- corporate TLS trust-store settings). Pin it back explicitly.
+					env = {
+						IJ_JAVA_OPTIONS = "-Duser.home=" .. vim.fs.joinpath(base, "home"),
+						GRADLE_USER_HOME = vim.env.GRADLE_USER_HOME or vim.fs.joinpath(vim.uv.os_homedir(), ".gradle"),
+					},
 				})
 			end,
 			filetypes = { "kotlin" },
