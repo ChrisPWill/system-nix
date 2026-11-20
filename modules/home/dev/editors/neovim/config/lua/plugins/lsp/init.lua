@@ -43,6 +43,12 @@ function M.on_attach(client, bufnr)
 		end
 	end, "Code Actions")
 
+	-- Replaces Neovim's default `grx`, which had to be removed so `gr` fires
+	-- immediately. `<leader>c` is the Code group and `cl` is unused there.
+	if client.server_capabilities.codeLensProvider then
+		nmap("<leader>cl", vim.lsp.codelens.run, "Code Lens (Run)")
+	end
+
 	nmap("gd", vim.lsp.buf.definition, "Definition")
 	nmap("gy", vim.lsp.buf.type_definition, "Type Definition")
 
