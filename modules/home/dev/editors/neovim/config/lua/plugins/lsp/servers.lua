@@ -227,18 +227,27 @@ return {
 		lsp = {
 			-- Keep IntelliJ's indexes between server restarts. The server imports
 			-- the Gradle/Maven workspace, so avoiding a broad VCS-root workspace
-			-- is equally important for its request latency. kotlin-lsp otherwise
-			-- places part of its analyzer database in a global JetBrains cache,
-			-- where it conflicts with other editor clients.
-			cmd = {
-				"kotlin-lsp",
-				"--stdio",
-				"--system-path",
-				vim.fs.joinpath(vim.fn.stdpath("cache"), "kotlin-lsp"),
-			},
-			cmd_env = {
-				IJ_JAVA_OPTIONS = "-Duser.home=" .. vim.fs.joinpath(vim.fn.stdpath("cache"), "kotlin-lsp-home"),
-			},
+			-- is equally important for its request latency.
+			--
+			-- The server takes an exclusive lock on its system-path and exits with
+			-- code 1 if another process holds it. A single shared path therefore
+			-- broke whenever a second Neovim (e.g. the `review` build, or a
+			-- long-lived one in another terminal) had already started a server.
+			-- So the state directory is keyed by workspace root and by the Neovim
+			-- binary: warm indexes survive restarts, and different editors or
+			-- projects never contend for the same lock.
+			cmd = function(dispatchers, config)
+				local root = config.root_dir or vim.fn.getcwd()
+				local key = vim.fn.sha256(root):sub(1, 12)
+				local variant = vim.fs.basename(vim.v.progpath)
+				local base = vim.fs.joinpath(vim.fn.stdpath("cache"), "kotlin-lsp", variant, key)
+				vim.fn.mkdir(base, "p")
+				return vim.lsp.rpc.start({ "kotlin-lsp", "--stdio", "--system-path", vim.fs.joinpath(base, "system") }, dispatchers, {
+					cwd = config.cmd_cwd,
+					-- A private user-home avoids JetBrains' global cache lock too.
+					env = { IJ_JAVA_OPTIONS = "-Duser.home=" .. vim.fs.joinpath(base, "home") },
+				})
+			end,
 			filetypes = { "kotlin" },
 			root_markers = {
 				"settings.gradle",
