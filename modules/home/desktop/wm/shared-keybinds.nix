@@ -575,10 +575,12 @@ in {
           {
             key = "cmd+alt-bracketleft";
             niri = "consume-or-expel-window-left;";
+            omni = omni "consume-or-expel-window-left";
           }
           {
             key = "cmd+alt-bracketright";
             niri = "consume-or-expel-window-right;";
+            omni = omni "consume-or-expel-window-right";
           }
           {
             key = "cmd+alt-period";
