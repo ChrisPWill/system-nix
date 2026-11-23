@@ -55,6 +55,9 @@
       # Home Manager installs man-db unless told otherwise.
       programs.man.enable = config.appApproved.man-db;
 
+      # nixpkgs removed wayprompt, so keep Stylix from enabling its theme target.
+      stylix.targets.wayprompt.enable = false;
+
       # Resolve `nixpkgs#…` to this flake's locked input rather than the
       # Determinate-provided global entry (nixpkgs-weekly), so ad-hoc
       # `nix run`/`nix shell` see the same package versions the system builds.
