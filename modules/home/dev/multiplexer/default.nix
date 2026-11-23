@@ -6,7 +6,9 @@
       enable = config.appApproved.zellij;
       settings = {
         default_shell = "fish";
-        default_layout = "compact";
+        default_layout = "default";
+        # Locked keeps Ctrl+p/n/o/etc. for Neovim; Ctrl+g unlocks Zellij.
+        default_mode = "locked";
         scroll_buffer_size = 10000;
         copy_on_select = true;
         pane_frames = false;

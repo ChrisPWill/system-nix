@@ -37,7 +37,8 @@ layout {
             height "48%"
         }
     }
-    pane size=1 borderless=true {
+    // size=2: line 1 is the mode ribbon, line 2 holds the key hints.
+    pane size=2 borderless=true {
       plugin location="status-bar"
     }
   }
